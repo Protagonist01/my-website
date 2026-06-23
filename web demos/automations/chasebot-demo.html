@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChaseBot — Invoice Chasing Demo</title>
+<style>
+@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
+  --accent:#ef4444;
+  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --r:12px;
+}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.hd-title{font-size:20px;font-weight:700}
+.hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border-strong);font-size:11px;font-weight:500;color:var(--text-sub)}
+.pipeline{width:100%;padding:24px 44px 20px;display:flex;align-items:center;overflow-x:auto}
+.sn{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex-shrink:0}
+.si{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .3s;background:var(--bg2);position:relative;overflow:hidden}
+.si.active{border-color:var(--sc,var(--accent));box-shadow:0 0 0 3px var(--sg);background:var(--sb)}
+.si.done{border-color:rgba(16,163,127,.45);background:rgba(16,163,127,.08)}
+.si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
+.sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:66px;line-height:1.3}
+.sl.active{color:var(--text)}
+.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;overflow:hidden}
+.sc .fill{height:100%;background:rgba(16,163,127,.55);transition:width .5s ease}
+.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#ef4444,#d4903c);transition:width .5s ease;border-radius:2px}
+.demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:420px}
+.ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
+.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.ap-body{flex:1;padding:18px;overflow-y:auto}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
+.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
+pre{white-space:pre-wrap;word-break:break-word}
+.ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
+.cd{flex:1}
+.cd-title{font-size:15px;font-weight:600}
+.cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.06)}
+.btn:active{transform:scale(.98)}
+.btn-play{background:var(--accent);border-color:var(--accent);color: #f5f5f0;padding:8px 22px;display:flex;align-items:center;gap:6px}
+.btn-play:hover{background:#dc2626}
+.btn-restart{padding:8px 14px;font-size:12px;opacity:.6}
+.btn-restart:hover{opacity:1}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadein .35s ease forwards}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes row-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.scr::-webkit-scrollbar{width:3px}
+.scr::-webkit-scrollbar-track{background:transparent}
+.scr::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+.jk{color:#79b8ff}.js{color:#f5c07a}.jn{color:#79dcaa}.jb{color:#f97583}.jp{color:#5a5855}.jc{color:#4a4845;font-size:10px}
+
+/* Invoices table */
+.inv-table{width:100%;border-collapse:collapse;font-size:12px}
+.inv-table th{padding:7px 10px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);border-bottom:1px solid var(--border)}
+.inv-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:middle}
+.inv-table tr:last-child td{border:none}
+.inv-tag{display:inline-flex;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.t7{background:rgba(212,144,60,.15);color:#d4903c}
+.t14{background:rgba(239,68,68,.15);color:#ef4444}
+.t30{background:rgba(168,85,247,.15);color:#c084fc}
+.tskip{background:rgba(255,255,255,.07);color:var(--text-muted)}
+.company{font-weight:500;color:var(--text)}
+.amt{font-family:var(--font-mono);color:#10a37f;font-weight:500}
+
+/* Filter result */
+.pass-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;margin-bottom:6px;font-size:12px;animation:row-in .4s ease forwards;opacity:0}
+.pass-row:nth-child(1){animation-delay:.05s}
+.pass-row:nth-child(2){animation-delay:.15s}
+.pass-row:nth-child(3){animation-delay:.25s}
+.pass-row:nth-child(4){animation-delay:.35s}
+.pass-row:nth-child(5){animation-delay:.45s}
+.pr-pass{background:rgba(16,163,127,.08);border:1px solid rgba(16,163,127,.2)}
+.pr-skip{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);opacity:.5!important}
+.pr-ico{font-size:14px;width:20px;text-align:center}
+.pr-name{flex:1;font-weight:500}
+.pr-reason{font-size:10px;color:var(--text-muted)}
+
+/* Route diagram */
+.route-wrap{display:flex;flex-direction:column;gap:9px}
+.route-row{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:9px;border:1px solid}
+.r7{border-color:rgba(212,144,60,.3);background:rgba(212,144,60,.07)}
+.r14{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.07)}
+.r30{border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
+.route-badge{padding:3px 9px;border-radius:12px;font-size:11px;font-weight:700;min-width:56px;text-align:center}
+.rb7{background:rgba(212,144,60,.2);color:#d4903c}
+.rb14{background:rgba(239,68,68,.2);color:#ef4444}
+.rb30{background:rgba(168,85,247,.2);color:#c084fc}
+.route-client{font-weight:600;font-size:13px;flex:1}
+.route-arrow{color:var(--text-muted);font-size:12px}
+.route-dest{font-size:11px;color:var(--text-sub)}
+
+/* Email preview */
+.email-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.etab{padding:4px 12px;border-radius:7px;border:1px solid var(--border);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.etab.active-t7{background:rgba(212,144,60,.15);border-color:rgba(212,144,60,.4);color:#d4903c}
+.etab.active-t14{background:rgba(239,68,68,.15);border-color:rgba(239,68,68,.4);color:#ef4444}
+.etab.active-t30{background:rgba(168,85,247,.15);border-color:rgba(168,85,247,.4);color:#c084fc}
+.etab:not(.active-t7):not(.active-t14):not(.active-t30){color:var(--text-muted)}
+.email-card{background:#fff;border-radius:10px;overflow:hidden}
+.email-meta{padding:12px 16px;background:#f7f7f5;border-bottom:1px solid #e5e5e5}
+.email-from{font-size:11px;color:#9b9b9b;margin-bottom:3px}
+.email-subj{font-size:14px;font-weight:700;color:#1a1a1a}
+.email-to{font-size:11px;color:#9b9b9b;margin-top:2px}
+.email-body{padding:16px;font-size:13px;color:#333;line-height:1.7;white-space:pre-line}
+
+/* Gmail drafts */
+.gmail-wrap{background:#fff;border-radius:10px;overflow:hidden}
+.gmail-hd{padding:10px 15px;background:#f2f2f2;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;gap:8px}
+.gmail-logo{font-size:16px}
+.gmail-title{font-size:13px;font-weight:600;color:#333}
+.gmail-drafts{padding:0}
+.gmail-draft-row{display:flex;align-items:center;padding:9px 14px;border-bottom:1px solid #f0f0f0;gap:10px;cursor:pointer;transition:background .15s;animation:row-in .4s ease forwards;opacity:0}
+.gmail-draft-row:last-child{border:none}
+.gmail-draft-row:hover{background:#f9f9f9}
+.gmail-draft-row:nth-child(1){animation-delay:.05s}
+.gmail-draft-row:nth-child(2){animation-delay:.2s}
+.gmail-draft-row:nth-child(3){animation-delay:.35s}
+.gd-pen{font-size:13px;color:#999}
+.gd-to{font-size:12px;color:#999;min-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gd-subj{font-size:13px;font-weight:600;color:#202124;flex:1}
+.gd-preview{font-size:12px;color:#999;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gd-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.gd-b7{background:#fef3c7;color:#d97706}
+.gd-b14{background:#fee2e2;color:#dc2626}
+.gd-b30{background:#f3e8ff;color:#9333ea}
+.gd-date{font-size:11px;color:#999}
+
+/* log */
+.log-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(16,163,127,.06);border:1px solid rgba(16,163,127,.15);margin-bottom:6px;font-size:11px;font-family:var(--font-mono);animation:row-in .4s ease forwards;opacity:0}
+.log-row:nth-child(1){animation-delay:.05s}
+.log-row:nth-child(2){animation-delay:.2s}
+.log-row:nth-child(3){animation-delay:.35s}
+.log-check{color:#10a37f;font-size:13px}
+.log-text{color:#c2bfb8;flex:1}
+</style>
+<link rel="stylesheet" href="./automation-exhibit.css">
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="hd-eyebrow">Automation Demo</div>
+    <div class="hd-title">ChaseBot — Automated Invoice Chasing</div>
+  </div>
+  <div style="text-align:right">
+    <div class="hd-eyebrow" style="margin-bottom:8px">Built with</div>
+    <div class="hd-stack">
+      <span class="chip">⚙️ n8n</span>
+      <span class="chip">🤖 OpenRouter</span>
+      <span class="chip">📧 Gmail</span>
+      <span class="chip">🔀 Switch Router</span>
+    </div>
+  </div>
+</div>
+
+<div class="pipeline" id="pipeline"></div>
+<div class="prog"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<div class="demo">
+  <div class="ap" id="ap">
+    <div class="ap-hd" id="ap-hd"></div>
+    <div class="ap-body scr fadein" id="ap-body"></div>
+  </div>
+  <div class="dp">
+    <div class="dp-hd" id="dp-hd"></div>
+    <div class="dp-body scr" id="dp-body"></div>
+  </div>
+</div>
+
+<div class="ctrl">
+  <div class="cd">
+    <div class="cd-title" id="cd-t"></div>
+    <div class="cd-sub" id="cd-s"></div>
+  </div>
+  <div class="ctr" id="ctr">Step 1 / 7</div>
+  <button class="btn" onclick="prev()">← Prev</button>
+  <button class="btn btn-play" id="pbtn" onclick="togglePlay()">
+    <span id="pico">▶</span><span id="plbl">Auto-play</span>
+  </button>
+  <button class="btn" onclick="next()">Next →</button>
+  <button class="btn btn-restart" onclick="restart()">↺</button>
+</div>
+
+<script>
+let activeTab = 0;
+const emails = [
+  {
+    tier:'7', label:'7-day', tabClass:'active-t7', badgeClass:'gd-b7',
+    to:'tony@stark.mock', client:'Stark Industries', inv:'INV-1001', amt:'£1,250.00',
+    subject:'Invoice INV-1001 — Friendly Reminder',
+    body:`Dear Stark Industries,
+
+I hope this message finds you well. I wanted to send a quick, friendly reminder that Invoice INV-1001 for £1,250.00 was due on 2 May 2026 and appears to be outstanding.
+
+I'm sure this may simply be an oversight — if payment has already been arranged, please disregard this message. Otherwise, I'd be grateful if you could process it at your earliest convenience.
+
+Thank you for your continued partnership.
+
+Kind regards`
+  },
+  {
+    tier:'14', label:'14-day', tabClass:'active-t14', badgeClass:'gd-b14',
+    to:'bruce@wayne.mock', client:'Wayne Enterprises', inv:'INV-1002', amt:'£3,400.50',
+    subject:'Invoice INV-1002 — Second Notice',
+    body:`Dear Wayne Enterprises,
+
+This is a follow-up to our previous reminder regarding Invoice INV-1002 for £3,400.50, which was due on 25 April 2026 and is now 16 days overdue.
+
+We have not yet received payment or acknowledgment of this invoice. We kindly ask that you arrange immediate payment or contact us to discuss the matter.
+
+Continued delay may require us to review our terms. We would prefer to resolve this promptly.
+
+Regards`
+  },
+  {
+    tier:'30', label:'30-day', tabClass:'active-t30', badgeClass:'gd-b30',
+    to:'skynet@cyberdyne.mock', client:'Cyberdyne Systems', inv:'INV-1003', amt:'£8,900.00',
+    subject:'URGENT: Invoice INV-1003 — Immediate Payment Required',
+    body:`Dear Cyberdyne Systems,
+
+Invoice INV-1003 for £8,900.00, due on 5 April 2026, is now 36 days overdue. Despite previous reminders, no payment has been received.
+
+Immediate settlement is required. If payment is not received within 7 days, we will be compelled to pursue further action, which may include formal debt recovery proceedings.
+
+This matter requires your immediate attention.`
+  }
+];
+
+const STEPS = [
+{
+  id:'trigger', label:'Trigger', emoji:'▶️',
+  col:'#ef4444', glow:'rgba(239,68,68,.2)', bg:'rgba(239,68,68,.09)',
+  ap:{col:'#ef4444', bg:'rgba(239,68,68,.09)', label:'n8n  ·  Manual Trigger', ico:'▶️', sub:'Test Workflow fired → pipeline starts'},
+  dh:'Trigger event',
+  dt:'Manual trigger fires — 5 mock invoices loaded',
+  ds:'The Manual Trigger kicks off the workflow. In production this would be a Schedule Trigger (e.g. every morning). The next node generates 5 realistic mock invoices with varied overdue statuses — covering every scenario the router needs to handle.',
+  app:`<div style="text-align:center;padding:20px 0 14px">
+    <div style="width:64px;height:64px;border-radius:50%;border:2px solid rgba(239,68,68,.4);display:flex;align-items:center;justify-content:center;font-size:26px;background:rgba(239,68,68,.08);margin:0 auto 14px">▶️</div>
+    <div style="font-size:15px;font-weight:600;color:var(--text)">Workflow triggered</div>
+    <div style="font-size:12px;color:var(--text-muted);margin-top:4px">ChaseBot  ·  Invoice Chasing Pipeline</div>
+  </div>
+  <div style="background:var(--bg3);border-radius:9px;padding:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text-muted)">Trigger type</span><span>Manual</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text-muted)">Invoices to process</span><span>5 mock records</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text-muted)">Expected to pass filter</span><span style="color:#10a37f">3 invoices</span></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:12px"><span style="color:var(--text-muted)">Expected to be skipped</span><span style="color:var(--text-muted)">2 invoices</span></div>
+  </div>
+  <div style="margin-top:12px;display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;background:rgba(239,68,68,.1);color:#ef4444;font-size:11px;font-weight:600">
+    <div style="width:5px;height:5px;border-radius:50%;background:#ef4444;animation:pulse 1.4s infinite"></div>
+    Pipeline running
+  </div>`,
+  data:`<span class="jc">// n8n Manual Trigger output</span>
+<span class="jp">{}</span>
+
+<span class="jc">// Immediately passes to → Generate Mock Invoices
+// 5 invoices injected as array items:</span>
+
+<span class="jc">// INV-1001 · Stark Industries    · 9d overdue</span>
+<span class="jc">// INV-1002 · Wayne Enterprises   · 16d overdue</span>
+<span class="jc">// INV-1003 · Cyberdyne Systems   · 36d overdue</span>
+<span class="jc">// INV-1004 · Oscorp              · 9d BUT already chased</span>
+<span class="jc">// INV-1005 · Daily Bugle         · only 2d overdue</span>`
+},
+{
+  id:'invoices', label:'Invoices', emoji:'🧾',
+  col:'#d4903c', glow:'rgba(212,144,60,.2)', bg:'rgba(212,144,60,.09)',
+  ap:{col:'#d4903c', bg:'rgba(212,144,60,.09)', label:'n8n  ·  Code Node', ico:'🧾', sub:'Generate Mock Invoices → 5 records in pipeline'},
+  dh:'Mock invoice array  (5 items)',
+  dt:'5 invoices enter the pipeline',
+  ds:'A Code node injects 5 mock invoices directly into the pipeline — simulating what a live Xero/QuickBooks API call would return. Each has a different DueDate, amount, and client. Two are edge cases: one already chased, one not yet overdue enough.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">5 invoices in pipeline</div>
+  <table class="inv-table">
+    <thead><tr><th>#</th><th>Client</th><th>Amount</th><th>Due</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1001</td><td class="company">Stark Industries</td><td class="amt">£1,250</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag t7">9d overdue</span></td></tr>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1002</td><td class="company">Wayne Enterprises</td><td class="amt">£3,400</td><td style="font-size:11px;color:var(--text-muted)">25 Apr</td><td><span class="inv-tag t14">16d overdue</span></td></tr>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1003</td><td class="company">Cyberdyne Systems</td><td class="amt">£8,900</td><td style="font-size:11px;color:var(--text-muted)">5 Apr</td><td><span class="inv-tag t30">36d overdue</span></td></tr>
+      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1004</td><td class="company">Oscorp</td><td class="amt">£500</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag tskip">Already chased</span></td></tr>
+      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1005</td><td class="company">Daily Bugle</td><td class="amt">£150</td><td style="font-size:11px;color:var(--text-muted)">9 May</td><td><span class="inv-tag tskip">Only 2d late</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:11px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);text-align:center">↓ all 5 pass to Calculate Overdue Tiers</div>`,
+  data:`<span class="jc">// Invoice #3 of 5 (highest risk)</span>
+<span class="jp">{</span>
+  <span class="jk">"InvoiceID"</span>: <span class="js">"mock-inv-003"</span>,
+  <span class="jk">"InvoiceNumber"</span>: <span class="js">"INV-1003"</span>,
+  <span class="jk">"Reference"</span>: <span class="js">""</span>,
+  <span class="jk">"DueDate"</span>: <span class="js">"2026-04-05T00:00:00"</span>,
+  <span class="jk">"AmountDue"</span>: <span class="jn">8900.00</span>,
+  <span class="jk">"Contact"</span>: <span class="jp">{</span>
+    <span class="jk">"ContactID"</span>: <span class="js">"mock-cont-003"</span>,
+    <span class="jk">"Name"</span>: <span class="js">"Cyberdyne Systems"</span>,
+    <span class="jk">"EmailAddress"</span>: <span class="js">"skynet@cyberdyne.mock"</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span class="jc">// Invoice #4 (will be filtered out — already chased)</span>
+<span class="jp">{</span>
+  <span class="jk">"InvoiceNumber"</span>: <span class="js">"INV-1004"</span>,
+  <span class="jk">"Reference"</span>: <span class="js">"Chased (day7 reminder) 09 May 2026"</span>,
+  <span class="jk">"DueDate"</span>: <span class="js">"2026-05-02T00:00:00"</span>,
+  <span class="jk">"AmountDue"</span>: <span class="jn">500.00</span>
+<span class="jp">}</span>`
+},
+{
+  id:'filter', label:'Filter', emoji:'🔍',
+  col:'#06b6d4', glow:'rgba(6,182,212,.2)', bg:'rgba(6,182,212,.08)',
+  ap:{col:'#06b6d4', bg:'rgba(6,182,212,.08)', label:'n8n  ·  Code Node', ico:'🔍', sub:'Calculate Overdue Tiers → filter + classify'},
+  dh:'Filter logic  (JavaScript)',
+  dt:'Smart filter — 2 skipped, 3 pass through',
+  ds:'The Code node calculates daysOverdue for each invoice and applies two safety filters: skip anything under 7 days old, and skip anything whose Reference already contains the tier name (preventing duplicate chases). Only 3 clean invoices survive.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px">Filter results — 5 invoices evaluated</div>
+  <div class="pass-row pr-pass"><span class="pr-ico">✅</span><span class="pr-name">Stark Industries</span><span class="inv-tag t7" style="font-size:10px">9d → tier: day7</span></div>
+  <div class="pass-row pr-pass"><span class="pr-ico">✅</span><span class="pr-name">Wayne Enterprises</span><span class="inv-tag t14" style="font-size:10px">16d → tier: day14</span></div>
+  <div class="pass-row pr-pass"><span class="pr-ico">✅</span><span class="pr-name">Cyberdyne Systems</span><span class="inv-tag t30" style="font-size:10px">36d → tier: day30</span></div>
+  <div class="pass-row pr-skip"><span class="pr-ico">⏭</span><span class="pr-name">Oscorp</span><span class="pr-reason">Reference contains "day7 reminder" — already chased</span></div>
+  <div class="pass-row pr-skip"><span class="pr-ico">⏭</span><span class="pr-name">Daily Bugle</span><span class="pr-reason">Only 2 days overdue — minimum threshold is 7</span></div>
+  <div style="margin-top:12px;display:flex;gap:8px;font-size:11px;font-family:var(--font-mono)">
+    <span style="color:#10a37f">✓ 3 proceed</span>
+    <span style="color:var(--text-muted)">·</span>
+    <span style="color:var(--text-muted)">2 skipped</span>
+  </div>`,
+  data:`<span class="jc">// Core filter logic</span>
+<span class="jk">const</span> daysOverdue = Math.floor(
+  (today - dueDate) / MS_PER_DAY
+);
+
+<span class="jc">// Rule 1: skip if < 7 days overdue</span>
+<span class="jb">if</span> (daysOverdue < <span class="jn">7</span>) <span class="jb">continue</span>;
+
+<span class="jc">// Rule 2: skip if already chased for this tier</span>
+<span class="jb">if</span> (currentRef.includes(tier + <span class="js">' reminder'</span>)) {
+  <span class="jb">continue</span>;
+}
+
+<span class="jc">// Tier assignment:</span>
+<span class="jb">if</span>      (daysOverdue >= <span class="jn">30</span>) tier = <span class="js">'day30'</span>;
+<span class="jb">else if</span> (daysOverdue >= <span class="jn">14</span>) tier = <span class="js">'day14'</span>;
+<span class="jb">else</span>                          tier = <span class="js">'day7'</span>;
+
+<span class="jc">// Output for Stark Industries:</span>
+<span class="jp">{</span>
+  <span class="jk">"clientName"</span>: <span class="js">"Stark Industries"</span>,
+  <span class="jk">"daysOverdue"</span>: <span class="jn">9</span>,
+  <span class="jk">"tier"</span>: <span class="js">"day7"</span>,
+  <span class="jk">"amountFormatted"</span>: <span class="js">"£1,250.00"</span>,
+  <span class="jk">"dueDateFormatted"</span>: <span class="js">"2 May 2026"</span>,
+  <span class="jk">"EmailAddress"</span>: <span class="js">"tony@stark.mock"</span>
+<span class="jp">}</span>`
+},
+{
+  id:'route', label:'Route', emoji:'🔀',
+  col:'#8b5cf6', glow:'rgba(139,92,246,.2)', bg:'rgba(139,92,246,.08)',
+  ap:{col:'#8b5cf6', bg:'rgba(139,92,246,.08)', label:'n8n  ·  Switch Node', ico:'🔀', sub:'Route by Overdue Tier → 3-way branch'},
+  dh:'Switch node  (3 output branches)',
+  dt:'Each invoice routed to its matching AI tone',
+  ds:'The Switch node reads the tier field on each invoice and routes it down one of three branches — day7 (friendly), day14 (firm second notice), or day30 (urgent final notice). Each branch has a different LLM prompt and Gmail draft.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">3-way routing by overdue tier</div>
+  <div class="route-wrap">
+    <div class="route-row r7">
+      <span class="route-badge rb7">day7</span>
+      <span class="route-client">Stark Industries</span>
+      <span class="route-arrow">→</span>
+      <span class="route-dest">Friendly reminder</span>
+    </div>
+    <div class="route-row r14">
+      <span class="route-badge rb14">day14</span>
+      <span class="route-client">Wayne Enterprises</span>
+      <span class="route-arrow">→</span>
+      <span class="route-dest">Firm second notice</span>
+    </div>
+    <div class="route-row r30">
+      <span class="route-badge rb30">day30</span>
+      <span class="route-client">Cyberdyne Systems</span>
+      <span class="route-arrow">→</span>
+      <span class="route-dest">Urgent final notice</span>
+    </div>
+  </div>
+  <div style="margin-top:14px;background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-mono);color:#c2bfb8;line-height:1.8">
+    <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day7"</span>  → Branch 0 (polite)<br>
+    <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day14"</span> → Branch 1 (firm)<br>
+    <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day30"</span> → Branch 2 (urgent)
+  </div>`,
+  data:`<span class="jc">// Switch node rule (Branch 0 — day7)</span>
+<span class="jp">{</span>
+  <span class="jk">"conditions"</span>: <span class="jp">[{</span>
+    <span class="jk">"leftValue"</span>: <span class="js">"={{ $('Calculate Overdue Tiers').item.json.tier }}"</span>,
+    <span class="jk">"rightValue"</span>: <span class="js">"day7"</span>,
+    <span class="jk">"operator"</span>: <span class="jp">{</span>
+      <span class="jk">"type"</span>: <span class="js">"string"</span>,
+      <span class="jk">"operation"</span>: <span class="js">"equals"</span>
+    <span class="jp">}</span>
+  <span class="jp">}]</span>
+<span class="jp">}</span>
+
+<span class="jc">// Each branch connects to:</span>
+<span class="jc">// Branch 0 → Draft Email - 7 Days  (friendly)</span>
+<span class="jc">// Branch 1 → Draft Email - 14 Days (firm)</span>
+<span class="jc">// Branch 2 → Draft Email - 30 Days (urgent)</span>`
+},
+{
+  id:'ai', label:'AI Drafts', emoji:'🤖',
+  col:'#10a37f', glow:'rgba(16,163,127,.2)', bg:'rgba(16,163,127,.09)',
+  ap:{col:'#10a37f', bg:'rgba(16,163,127,.09)', label:'OpenRouter  ·  LLM Chain  (×3)', ico:'🤖', sub:'3 tone-matched prompts → 3 email drafts'},
+  dh:'LLM prompts  (3 tones)',
+  dt:'AI writes a tone-matched email for each invoice',
+  ds:'Each branch sends its invoice data to OpenRouter with a different system prompt tuned to the urgency level — polite for 7 days, firm for 14, urgent and legal-flavored for 30. The model returns only a JSON object with subject and body.',
+  app:`<div id="email-tabs-wrap">
+    <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Click a tone to preview the draft</div>
+    <div class="email-tabs">
+      <span class="etab active-t7" onclick="showEmail(0,this)">😊 Friendly — Stark</span>
+      <span class="etab" onclick="showEmail(1,this)">😐 Firm — Wayne</span>
+      <span class="etab" onclick="showEmail(2,this)">⚠️ Urgent — Cyberdyne</span>
+    </div>
+    <div id="email-preview"></div>
+  </div>`,
+  data:`<span class="jc">// Prompt for day7 (friendly)</span>
+<span class="jk">text</span>: <span class="js">"Draft a polite invoice payment reminder.
+Client: Stark Industries
+Invoice: INV-1001
+Amount: £1,250.00
+Due date: 2 May 2026
+Days overdue: 9
+
+Tone: friendly, warm. Assume oversight.
+3-4 sentences max.
+Return JSON only: { subject, body }"</span>
+
+<span class="jc">// Prompt for day30 (urgent)</span>
+<span class="jk">text</span>: <span class="js">"Draft an urgent final notice.
+Client: Cyberdyne Systems
+Invoice: INV-1003
+Amount: £8,900.00
+Days overdue: 36
+
+Tone: urgent and serious. No pleasantries.
+State further action within 7 days.
+Return JSON only: { subject, body }"</span>`
+},
+{
+  id:'gmail', label:'Gmail Drafts', emoji:'📧',
+  col:'#ea4335', glow:'rgba(234,67,53,.2)', bg:'rgba(234,67,53,.08)',
+  ap:{col:'#ea4335', bg:'rgba(234,67,53,.08)', label:'Gmail', ico:'📧', sub:'3 drafts created  →  ready for human review'},
+  dh:'Gmail API  (resource: draft)',
+  dt:'3 ready-to-send email drafts saved in Gmail',
+  ds:'The parsed AI output feeds directly into three Gmail Draft nodes (one per branch). Each draft is saved to the Drafts folder — not sent — so the business owner can review and fire off with one click. Human stays in the loop.',
+  app:`<div class="gmail-wrap">
+    <div class="gmail-hd"><span class="gmail-logo">📧</span><span class="gmail-title">Gmail — Drafts folder</span><span style="margin-left:auto;font-size:11px;color:#999">3 new drafts</span></div>
+    <div class="gmail-drafts">
+      <div class="gmail-draft-row">
+        <span class="gd-pen">✏️</span>
+        <span class="gd-to">tony@stark…</span>
+        <div style="flex:1;min-width:0">
+          <div class="gd-subj">Invoice INV-1001 — Friendly Reminder</div>
+          <div class="gd-preview">Dear Stark Industries, I hope this message finds you well…</div>
+        </div>
+        <span class="gd-badge gd-b7">7-day</span>
+        <span class="gd-date">Just now</span>
+      </div>
+      <div class="gmail-draft-row">
+        <span class="gd-pen">✏️</span>
+        <span class="gd-to">bruce@wayne…</span>
+        <div style="flex:1;min-width:0">
+          <div class="gd-subj">Invoice INV-1002 — Second Notice</div>
+          <div class="gd-preview">This is a follow-up regarding Invoice INV-1002…</div>
+        </div>
+        <span class="gd-badge gd-b14">14-day</span>
+        <span class="gd-date">Just now</span>
+      </div>
+      <div class="gmail-draft-row">
+        <span class="gd-pen">✏️</span>
+        <span class="gd-to">skynet@cybe…</span>
+        <div style="flex:1;min-width:0">
+          <div class="gd-subj">URGENT: Invoice INV-1003 — Immediate Payment Required</div>
+          <div class="gd-preview">Despite previous reminders, Invoice INV-1003 remains unpaid…</div>
+        </div>
+        <span class="gd-badge gd-b30">30-day</span>
+        <span class="gd-date">Just now</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:11px;background:rgba(234,67,53,.06);border:1px solid rgba(234,67,53,.18);border-radius:8px;padding:10px;font-size:11px;color:#f87171;display:flex;align-items:center;gap:7px">
+    <span>💡</span> Drafts only — not auto-sent. Review &amp; send with one click.
+  </div>`,
+  data:`<span class="jc">// Gmail node config (7-day branch)</span>
+<span class="jp">{</span>
+  <span class="jk">"resource"</span>: <span class="js">"draft"</span>,
+  <span class="jk">"subject"</span>: <span class="js">"={{ $json.subject }}"</span>,
+  <span class="jk">"message"</span>: <span class="js">"={{ $json.body }}"</span>,
+  <span class="jk">"options"</span>: <span class="jp">{</span>
+    <span class="jk">"sendTo"</span>: <span class="js">"={{ $json.EmailAddress }}"</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span class="jc">// Gmail API response</span>
+<span class="jp">{</span>
+  <span class="jk">"id"</span>: <span class="js">"r8291730192"</span>,
+  <span class="jk">"threadId"</span>: <span class="js">"18f3ab92c1d"</span>,
+  <span class="jk">"labelIds"</span>: <span class="jp">[</span><span class="js">"UNREAD"</span>, <span class="js">"DRAFT"</span><span class="jp">]</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ Draft saved · tony@stark.mock
+✓ Draft saved · bruce@wayne.mock
+✓ Draft saved · skynet@cyberdyne.mock</span>`
+},
+{
+  id:'log', label:'Log & Done', emoji:'✅',
+  col:'#10a37f', glow:'rgba(16,163,127,.2)', bg:'rgba(16,163,127,.09)',
+  ap:{col:'#10a37f', bg:'rgba(16,163,127,.09)', label:'n8n  ·  Mock Log Nodes', ico:'✅', sub:'Chase logged → pipeline complete'},
+  dh:'Log output  (3× mock entries)',
+  dt:'Chase actions logged — pipeline complete',
+  ds:'Three Mock Log code nodes simulate writing a Reference note back to each invoice record (e.g. "Chased (day7 reminder) 19 May 2026"). In production, this would be a Xero/QuickBooks API call to update the invoice — preventing double-chasing on next run.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:11px">Chase log — 3 records updated</div>
+  <div class="log-row"><span class="log-check">✓</span><span class="log-text">INV-1001 · Reference → "Chased (day7 reminder) 19 May 2026"</span></div>
+  <div class="log-row"><span class="log-check">✓</span><span class="log-text">INV-1002 · Reference → "Chased (day14 reminder) 19 May 2026"</span></div>
+  <div class="log-row"><span class="log-check">✓</span><span class="log-text">INV-1003 · Reference → "Chased (day30 reminder) 19 May 2026"</span></div>
+  <div style="margin-top:14px;background:rgba(16,163,127,.07);border:1px solid rgba(16,163,127,.2);border-radius:9px;padding:13px">
+    <div style="font-size:13px;font-weight:600;color:#10a37f;margin-bottom:7px">✓ Pipeline complete</div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.7">
+      5 invoices evaluated<br>
+      2 safely skipped (already chased / not due)<br>
+      3 AI drafts generated &amp; saved to Gmail<br>
+      3 chase logs written back to invoice records
+    </div>
+  </div>`,
+  data:`<span class="jc">// Mock Log node output (day7)</span>
+<span class="jp">{</span>
+  <span class="jk">"status"</span>: <span class="js">"Success"</span>,
+  <span class="jk">"message"</span>: <span class="js">"Simulated updating Invoice mock-inv-001 with new Reference: Chased (day7 reminder)"</span>
+<span class="jp">}</span>
+
+<span class="jc">// In production → Xero/QuickBooks API:
+// PATCH /invoices/{InvoiceID}
+// { "Reference": "Chased (day7 reminder) 19 May 2026" }
+// This prevents duplicate chases on next run.</span>
+
+<span class="jc">// Final pipeline summary</span>
+<span class="jp">{</span>
+  <span class="jk">"total_evaluated"</span>: <span class="jn">5</span>,
+  <span class="jk">"skipped"</span>: <span class="jn">2</span>,
+  <span class="jk">"drafted"</span>: <span class="jn">3</span>,
+  <span class="jk">"logged"</span>: <span class="jn">3</span>,
+  <span class="jk">"total_at_risk"</span>: <span class="js">"£13,550.50"</span>
+<span class="jp">}</span>`
+}
+];
+
+const EXHIBIT = {
+  headerEyebrow: 'Outcome Exhibit',
+  title: 'Collections opens to the right chases already prepared',
+  badgeEyebrow: 'Visible outcomes',
+  badges: ['Overdue work surfaced', 'Tone matched', 'Drafts prepared', 'Trail recorded'],
+  scenes: [
+    {
+      label: 'Overdue work surfaced',
+      title: 'The team sees only the invoices that truly need a chase',
+      summary: 'Noise is stripped out so attention lands on the debt that actually matters now.',
+      outcome: 'People start from the real problem, not the full ledger.',
+      visitor: 'Attention is focused before anyone writes an email.',
+      metricLabel: 'Invoices reviewed',
+      metricValue: '5 accounts screened automatically',
+      proofs: [
+        'Overdue invoices surfaced',
+        'Already-paid cases ignored',
+        'Fresh invoices left alone'
+      ],
+      color: '#ef4444'
+    },
+    {
+      label: 'Urgency sorted',
+      title: 'Every debtor is treated with the right level of pressure',
+      summary: 'The system separates gentle reminders from firmer notices instead of sending the same message to everyone.',
+      outcome: 'The chase matches the relationship.',
+      visitor: 'Different clients get different tone and urgency.',
+      metricLabel: 'Tone matched',
+      metricValue: '3 chase levels routed',
+      proofs: [
+        '7-day reminder',
+        '14-day notice',
+        '30-day escalation'
+      ],
+      color: '#b8582a'
+    },
+    {
+      label: 'Messages prepared',
+      title: 'Each follow-up is written for the relationship, not the spreadsheet',
+      summary: 'The language stays human while still asking for payment clearly.',
+      outcome: 'Collections work reads like communication, not a robot blast.',
+      visitor: 'The drafts feel considered and ready for a quick approval.',
+      metricLabel: 'Drafts prepared',
+      metricValue: '3 messages written',
+      proofs: [
+        'Friendly first nudge',
+        'Stronger second notice',
+        'Escalation wording prepared'
+      ],
+      color: '#a855f7'
+    },
+    {
+      label: 'Inbox lined up',
+      title: 'The inbox is already organised when the team arrives',
+      summary: 'Drafts wait in the right place with the right recipients, ready for a quick check and send.',
+      outcome: 'The team reviews instead of assembling emails from scratch.',
+      visitor: 'Execution starts from ready-to-send work.',
+      metricLabel: 'Inbox ready',
+      metricValue: 'Minutes instead of half an hour',
+      proofs: [
+        'Recipients filled',
+        'Subjects prepared',
+        'Threads ready for review'
+      ],
+      color: '#ea4335'
+    },
+    {
+      label: 'Trail recorded',
+      title: 'Every chase leaves an audit trail behind it',
+      summary: 'The next person knows what was sent, when it was sent, and why.',
+      outcome: 'No one double-chases or guesses what happened last time.',
+      visitor: 'The history is visible before the next run starts.',
+      metricLabel: 'Audit preserved',
+      metricValue: 'No duplicate chasing',
+      proofs: [
+        'Reference note added',
+        'Chase stage recorded',
+        'Next run skips repeats'
+      ],
+      color: '#10a37f'
+    }
+  ]
+};
+
+function buildEmail(i) {
+  const e = emails[i];
+  return `<div class="email-card">
+    <div class="email-meta">
+      <div class="email-from">Draft · From: you@yourbusiness.com</div>
+      <div class="email-subj">${e.subject}</div>
+      <div class="email-to">To: ${e.to}</div>
+    </div>
+    <div class="email-body">${e.body}</div>
+  </div>`;
+}
+
+function showEmail(i, el) {
+  activeTab = i;
+  document.getElementById('email-preview').innerHTML = buildEmail(i);
+  document.querySelectorAll('.etab').forEach(t => t.className = 'etab');
+  el.className = 'etab ' + emails[i].tabClass;
+}
+
+</script>
+<script src="./automation-exhibit.js"></script>
+<script>
+AutomationExhibit.mount({ steps: STEPS, exhibit: EXHIBIT, autoplayMs: 5600 });
+</script>
+</body>
+</html>

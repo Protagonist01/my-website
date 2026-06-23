@@ -1,0 +1,357 @@
+export const routes = {
+  home: "index.html",
+  about: "about/index.html",
+  contact: "contact/index.html",
+  "my-stack": "my-stack/index.html",
+  testimonial: "testimonial/index.html",
+  experience: "experience/index.html",
+  demos: "demo gallery/index.html",
+  "e-commerce": "ecommerce demo gallery/index.html",
+  works: "works/index.html",
+  "ai-agents": "works/ai-agents/index.html",
+  "ai-workflows": "works/ai-workflows/index.html",
+  fullstack: "works/fullstack/index.html",
+};
+
+export const primaryNav = [
+  { key: "contact", label: "CONTACT" },
+  { key: "about", label: "ABOUT" },
+  { key: "works", label: "WORKS" },
+  { key: "demos", label: "DEMO GALLERY" },
+  { key: "e-commerce", label: "E-COMMERCE" },
+  { key: "my-stack", label: "SKILL STACK" },
+  { key: "testimonial", label: "TESTIMONIAL" },
+];
+
+export const corePages = {
+  about: {
+    navLabel: "ABOUT",
+    eyebrow: "Studio profile / systems practice",
+    title: "I build lucid digital systems with an editorial pulse.",
+    lead: [
+      "This portfolio sits at the intersection of AI-native product thinking, full-stack engineering, and motion-led interface design.",
+      "The work is usually technical under the hood, but it should still feel composed, legible, and alive at the surface.",
+    ],
+    quote: {
+      text: "Calm surfaces. Sharp systems. Bold movement where it actually matters.",
+      author: "Working thesis",
+    },
+    status: {
+      label: "Current mode",
+      value: "Shipping experimental systems",
+      copy: "Prototypes, delivery systems, and production-minded interface builds for products that need to feel distinct.",
+    },
+    marquee: ["EDITORIAL UX", "AI-NATIVE SYSTEMS", "FULL-STACK DELIVERY", "MOTION DIRECTION", "PRODUCT STRATEGY"],
+    stats: [
+      { value: "08", label: "Practice arcs", copy: "From rapid prototypes to production handoff." },
+      { value: "24h", label: "Prototype cadence", copy: "Short loops, fast demos, clearer decisions." },
+      { value: "03", label: "Core lanes", copy: "Agents, workflows, and full-stack product work." },
+      { value: "100%", label: "Hands-on build mode", copy: "Research, design systems, code, and refinement." },
+    ],
+    pillarsIntro: {
+      eyebrow: "Operating logic",
+      heading: "What the work optimizes for.",
+      copy: "The goal is not visual noise or technical spectacle. It is clarity, pace, and a feeling that the system knows exactly what it is doing.",
+    },
+    pillars: [
+      { title: "Narrative before ornament", copy: "Every interface should tell the user where they are, what matters now, and what happens next.", tags: ["Direction", "Hierarchy", "Copy systems"] },
+      { title: "Systems with memory", copy: "The strongest builds are the ones that accumulate context and reduce repeated human effort.", tags: ["Agents", "State", "Operational design"] },
+      { title: "Motion with intent", copy: "Animation is used as choreography for attention, never as decorative filler.", tags: ["Transitions", "Reveal patterns", "Micro-interactions"] },
+    ],
+    processIntro: {
+      eyebrow: "Workflow",
+      heading: "How engagements usually move.",
+      copy: "A strong delivery rhythm makes the animated, visible layer feel effortless because the system beneath it is disciplined.",
+    },
+    process: [
+      { step: "01", title: "Frame the outcome", copy: "Clarify the user shift, the product story, and the proof we need to make visible." },
+      { step: "02", title: "Model the system", copy: "Map data, interactions, states, and automation boundaries before polishing anything." },
+      { step: "03", title: "Build the motion language", copy: "Establish the reveal system, pacing, and the memorable moments that earn attention." },
+      { step: "04", title: "Refine until it reads clean", copy: "Tighten typography, feedback, transitions, and edge-case behavior until the experience feels inevitable." },
+    ],
+    galleryIntro: {
+      eyebrow: "Selected facets",
+      heading: "The output tends to look like this.",
+      copy: "A mix of product thinking, software rigor, and visual restraint with a few deliberate spikes of drama.",
+    },
+    gallery: [
+      { eyebrow: "Systems", title: "Agent control rooms", meta: "Tooling layer", copy: "Dashboards that expose decisions, memory, and operator trust signals.", tags: ["Observability", "Prompt ops", "Governance"], route: "ai-agents" },
+      { eyebrow: "Automation", title: "Workflow choreography", meta: "Ops layer", copy: "Cross-tool automations that reduce manual reporting and handoffs.", tags: ["n8n", "Webhooks", "Reporting"], route: "ai-workflows" },
+      { eyebrow: "Product", title: "Full-stack surfaces", meta: "Delivery layer", copy: "Interfaces and backends designed as one coherent system, not separate departments.", tags: ["Frontend", "APIs", "State"], route: "fullstack" },
+    ],
+    cta: {
+      title: "Follow the system into the work.",
+      copy: "The fastest path is through the category pages, where the methods become concrete.",
+      primary: { label: "Open Works", route: "works" },
+      secondary: { label: "Start Contact", route: "contact" },
+    },
+    related: ["works", "my-stack", "testimonial"],
+    footerNote: "Lagos-based / remote-friendly",
+  },
+  contact: {
+    navLabel: "CONTACT",
+    eyebrow: "Availability / collaboration",
+    title: "Bring a hard product problem and we can shape the route together.",
+    lead: [
+      "The best conversations start with an outcome, a pressure point, or a rough system that needs more coherence.",
+      "Dummy contact details are in place for now, but the structure is ready for real channels, scheduling, and intake copy.",
+    ],
+    quote: {
+      text: "Strong briefs are welcome. Half-formed ideas are also welcome.",
+      author: "Collaboration stance",
+    },
+    status: {
+      label: "Response rhythm",
+      value: "Within 24 hours",
+      copy: "Product partnerships, workflow design, interface builds, and scoped experiments are the best fit.",
+    },
+    marquee: ["PROJECT SCOPING", "TECHNICAL DIRECTION", "PRODUCT SYSTEMS", "MOTION-LED UI", "AI WORKFLOW DESIGN"],
+    stats: [
+      { value: "24h", label: "Reply window", copy: "Fast enough to keep momentum without noisy process." },
+      { value: "04", label: "Engagement modes", copy: "Audit, sprint, build, or ongoing product support." },
+      { value: "GMT+1", label: "Timezone", copy: "Async-friendly with overlap for Europe, UK, and North America." },
+      { value: "03", label: "Current slots", copy: "A few active project windows kept intentionally limited." },
+    ],
+    pillarsIntro: {
+      eyebrow: "Ways to work",
+      heading: "The shape of the engagement depends on the pressure.",
+      copy: "Sometimes the work is a polished front end. Sometimes it is an AI workflow that removes twenty invisible tasks. Sometimes it is both.",
+    },
+    pillars: [
+      { title: "Focused sprint", copy: "Short, high-energy build windows for a page, flow, prototype, or launch-critical interaction.", tags: ["1-2 weeks", "Rapid delivery", "Demo-first"] },
+      { title: "Systems advisory", copy: "A clearer operating model for teams building with AI, automations, and distributed product surfaces.", tags: ["Audit", "Architecture", "Direction"] },
+      { title: "Embedded build partner", copy: "Hands-on design and implementation support when the product needs steady iteration over time.", tags: ["Retention", "Shipping", "Refinement"] },
+    ],
+    processIntro: {
+      eyebrow: "Engagement flow",
+      heading: "A clean path from first message to execution.",
+      copy: "Even with highly animated interfaces, the process around them should stay calm, direct, and legible.",
+    },
+    process: [
+      { step: "01", title: "Share the pressure point", copy: "A brief, voice note, loom, or messy set of links is enough to begin." },
+      { step: "02", title: "Shape the brief", copy: "We reduce the ask into scope, constraints, success markers, and a realistic rhythm." },
+      { step: "03", title: "Build visible proof", copy: "A first pass appears quickly so the direction can be tested in motion." },
+      { step: "04", title: "Lock the working system", copy: "Delivery becomes tighter once the narrative, structure, and operational boundaries are clear." },
+    ],
+    galleryIntro: {
+      eyebrow: "Signals",
+      heading: "What makes a great inquiry.",
+      copy: "If you already know the user, the friction, and the commercial reason it matters, we can move very quickly.",
+    },
+    gallery: [
+      { eyebrow: "Brief quality", title: "Clear goals", meta: "Best starting point", copy: "What should change for the user after the build exists?", tags: ["Outcome", "User shift"], route: "about" },
+      { eyebrow: "Scope quality", title: "Visible constraints", meta: "Useful context", copy: "Timeline, existing stack, internal handoff realities, and approval shape.", tags: ["Scope", "Dependencies"], route: "my-stack" },
+      { eyebrow: "Decision quality", title: "Fast feedback loops", meta: "Momentum", copy: "One decisive reviewer is worth more than ten vague approvals.", tags: ["Review", "Iteration"], route: "works" },
+    ],
+    contact: {
+      title: "Start the thread.",
+      copy: "Choose the channel that fits the shape of the conversation.",
+      channels: [
+        { eyebrow: "Instagram", title: "@henry_fadeni", href: "https://www.instagram.com/henry_fadeni/", copy: "Best for a quick visual introduction or informal note." },
+        { eyebrow: "LinkedIn", title: "Henry Fadeni", href: "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", copy: "Best for professional context and collaboration intros." },
+        { eyebrow: "Email", title: "hfadeni@gmail.com", href: "mailto:hfadeni@gmail.com", copy: "Best for project briefs, links, or a direct problem statement." },
+      ],
+      button: { label: "Draft inquiry", href: "mailto:hfadeni@gmail.com" },
+    },
+    cta: {
+      title: "Prefer to inspect the work first?",
+      copy: "That path usually gives faster context than a long introductory email.",
+      primary: { label: "Open Works", route: "works" },
+      secondary: { label: "Back to Network", route: "home" },
+    },
+    related: ["works", "about", "my-stack"],
+    footerNote: "Open to selected collaborations",
+  },
+  "my-stack": {
+    navLabel: "SKILL STACK",
+    eyebrow: "Technical stack / delivery layer",
+    title: "The stack is chosen for clarity, leverage, and speed to working proof.",
+    lead: [
+      "I tend to favor tools that shorten the path between an idea and a shippable, inspectable system.",
+      "Dummy entries sit here for now, but the page structure is ready for real libraries, platforms, and project notes.",
+    ],
+    quote: {
+      text: "The best stack is the one that makes iteration obvious instead of theatrical.",
+      author: "Build philosophy",
+    },
+    status: {
+      label: "Default bias",
+      value: "Pragmatic + modular",
+      copy: "Lightweight systems, good defaults, and shared abstractions that stay legible under change.",
+    },
+    marquee: ["JAVASCRIPT", "TYPESCRIPT", "PYTHON", "AUTOMATION ORCHESTRATION", "API DESIGN", "MOTION SYSTEMS"],
+    stats: [
+      { value: "06", label: "Primary layers", copy: "Frontend, backend, agents, workflows, data, and motion." },
+      { value: "03", label: "Main languages", copy: "JavaScript, TypeScript, and Python carry most builds." },
+      { value: "12", label: "Core tool families", copy: "Frameworks, infra, design, data, and automation tools." },
+      { value: "01", label: "North star", copy: "A stack the next builder can still understand six months later." },
+    ],
+    pillarsIntro: {
+      eyebrow: "Foundations",
+      heading: "The stack is shaped around product rhythm.",
+      copy: "Tool choice matters, but delivery rhythm matters more. The stack should make proof, feedback, and handoff easier, not heavier.",
+    },
+    pillars: [
+      { title: "Frontend systems", copy: "HTML, CSS, JavaScript, React patterns, animation systems, and component-driven visual architecture.", tags: ["UI", "Accessibility", "Motion"] },
+      { title: "Service layer", copy: "APIs, integrations, auth boundaries, data flow, and the wiring that makes product surfaces trustworthy.", tags: ["Node", "Python", "REST"] },
+      { title: "Automation fabric", copy: "Agents, workflows, and event-driven handoffs that remove repetitive work from the human loop.", tags: ["n8n", "Triggers", "Ops"] },
+    ],
+    processIntro: {
+      eyebrow: "Assembly",
+      heading: "How the stack gets translated into delivery.",
+      copy: "The implementation pattern is intentionally repetitive: fast proof, clear seams, then polish the edges where users actually feel the quality.",
+    },
+    process: [
+      { step: "01", title: "Pick the simplest durable shape", copy: "Start with the smallest code surface that can still grow without becoming brittle." },
+      { step: "02", title: "Create shared primitives", copy: "Tokens, components, data mappers, and conventions keep the rest of the build from drifting." },
+      { step: "03", title: "Wire feedback early", copy: "Instrumentation, error states, and state visibility arrive before the final polish pass." },
+      { step: "04", title: "Refactor into rhythm", copy: "Once the product logic is stable, the codebase gets reorganized around maintainability." },
+    ],
+    galleryIntro: {
+      eyebrow: "Tool clusters",
+      heading: "Representative stack slices.",
+      copy: "A few lanes that usually show up together when the work spans interface, systems, and automation.",
+    },
+    gallery: [
+      { eyebrow: "UI", title: "HTML / CSS / JS", meta: "Surface layer", copy: "Static builds, modular front-end structure, and motion systems without unnecessary tooling.", tags: ["Static sites", "Components", "Progressive enhancement"], route: "fullstack" },
+      { eyebrow: "Logic", title: "Node + Python services", meta: "Core layer", copy: "Light APIs, orchestration utilities, and glue code for product and automation workflows.", tags: ["APIs", "Transformations", "Integrations"], route: "ai-workflows" },
+      { eyebrow: "AI", title: "Agents and workflows", meta: "Leverage layer", copy: "Prompted systems with tools, state, and operational boundaries that are visible to people.", tags: ["Agents", "Memory", "Tool use"], route: "ai-agents" },
+    ],
+    cta: {
+      title: "See how the stack turns into finished work.",
+      copy: "The category pages show where each part of the stack becomes visible to users or operators.",
+      primary: { label: "Open Works", route: "works" },
+      secondary: { label: "Open Contact", route: "contact" },
+    },
+    related: ["works", "contact", "about"],
+    footerNote: "Tooling chosen for clarity and pace",
+  },
+  testimonial: {
+    navLabel: "TESTIMONIAL",
+    eyebrow: "Client voice / trust signals",
+    title: "Testimonials work best when they describe the shift, not just the compliment.",
+    lead: [
+      "This page is a placeholder space for client quotes, launch reflections, and short trust signals tied to real work.",
+      "The structure is designed to hold specific outcomes, calmer process notes, and the language people use when a build actually helped.",
+    ],
+    quote: {
+      text: "The strongest testimonial names what changed and why it mattered.",
+      author: "Trust principle",
+    },
+    status: {
+      label: "Current state",
+      value: "Ready for real endorsements",
+      copy: "Once project stories are populated, this page can carry concise proof from collaborators, clients, and teams.",
+    },
+    marquee: ["CLIENT TRUST", "OUTCOME SIGNALS", "TEAM FEEDBACK", "DELIVERY CONFIDENCE", "WORKING RELATIONSHIPS"],
+    stats: [
+      { value: "03", label: "Quote clusters", copy: "Room for project-specific praise, process notes, and collaboration reflections." },
+      { value: "01", label: "Core rule", copy: "Specificity beats generic praise every time." },
+      { value: "100%", label: "Evidence-first", copy: "Quotes should connect back to a visible build, system change, or delivery result." },
+      { value: "24h", label: "Best timing", copy: "The sharpest testimonials usually come while the project outcome is still fresh." },
+    ],
+    pillarsIntro: {
+      eyebrow: "What makes them useful",
+      heading: "A testimonial should increase trust quickly.",
+      copy: "The best quotes make the collaboration style, system impact, or delivery quality easy to grasp without sounding inflated.",
+    },
+    pillars: [
+      { title: "Specific outcomes", copy: "Strong testimonials mention the actual shift: speed, clarity, conversion, quality, or confidence.", tags: ["Results", "Before/after", "Clarity"] },
+      { title: "Human working style", copy: "The collaboration experience matters almost as much as the shipped system.", tags: ["Process", "Communication", "Trust"] },
+      { title: "Linked proof", copy: "Quotes land harder when they sit near the work, demo, or category page they refer to.", tags: ["Context", "Traceability", "Credibility"] },
+    ],
+    processIntro: {
+      eyebrow: "Page structure",
+      heading: "How testimonial proof should be presented.",
+      copy: "Anchor the quote to the work, keep it short, and make the relevant project or category one click away.",
+    },
+    process: [
+      { step: "01", title: "Name the project or pressure", copy: "Give the quote a clear context so the praise does not float in isolation." },
+      { step: "02", title: "Pull out the real shift", copy: "Focus on what tangibly improved for the user, team, or delivery process." },
+      { step: "03", title: "Keep the language human", copy: "Natural phrasing is more believable than polished corporate copy." },
+      { step: "04", title: "Connect back to the build", copy: "Make it easy to move from the quote to the relevant demo or works page." },
+    ],
+    galleryIntro: {
+      eyebrow: "Placeholder slots",
+      heading: "Where future endorsements can live.",
+      copy: "These slots are ready for real quotes tied to work categories, launch outcomes, or collaboration experiences.",
+    },
+    gallery: [
+      { eyebrow: "Trust signal", title: "Product build praise", meta: "Launch outcome", copy: "A quote about sharper UX, faster iteration, and a system that felt cleaner after shipping.", tags: ["UX", "Launch", "Refinement"], route: "fullstack" },
+      { eyebrow: "Trust signal", title: "Workflow impact note", meta: "Operational outcome", copy: "A quote focused on reduced manual work, clearer reporting, and calmer operations.", tags: ["Automation", "Ops", "Efficiency"], route: "ai-workflows" },
+      { eyebrow: "Trust signal", title: "Collaboration reflection", meta: "Working style", copy: "A quote about clear communication, fast demos, and confidence throughout the build process.", tags: ["Process", "Pace", "Trust"], route: "contact" },
+    ],
+    cta: {
+      title: "Want to see the work behind the praise?",
+      copy: "The works pages show the systems these future testimonials can point back to.",
+      primary: { label: "Open Works", route: "works" },
+      secondary: { label: "Open Contact", route: "contact" },
+    },
+    related: ["works", "my-stack", "contact"],
+    footerNote: "Testimonials ready for real client language",
+  },
+  experience: {
+    navLabel: "EXPERIENCE",
+    eyebrow: "Trajectory / delivery history",
+    title: "Experience here means repeated exposure to messy systems, tight timelines, and real product trade-offs.",
+    lead: [
+      "The through-line is less about titles and more about problem shape: clarify the narrative, make the system legible, then ship.",
+      "Everything below is placeholder content for now, but the structure is set up for real roles, teams, and outcomes.",
+    ],
+    quote: {
+      text: "The build is only finished when it reads clearly under pressure.",
+      author: "Delivery standard",
+    },
+    status: {
+      label: "Working style",
+      value: "Hands-on and systems-aware",
+      copy: "Comfortable moving between product framing, interface polish, technical implementation, and workflow design.",
+    },
+    marquee: ["PRODUCT THINKING", "TECHNICAL EXECUTION", "TEAM ENABLEMENT", "CLIENT DELIVERY", "ITERATION RHYTHM"],
+    stats: [
+      { value: "04", label: "Delivery modes", copy: "Independent build, sprint lead, embedded partner, and systems advisor." },
+      { value: "12+", label: "Prototype cycles", copy: "Enough iteration loops to get fast at separating signal from noise." },
+      { value: "03", label: "Core domains", copy: "AI systems, automation design, and full-stack product surfaces." },
+      { value: "01", label: "Constant", copy: "Make the next decision easier for the team and the user." },
+    ],
+    pillarsIntro: {
+      eyebrow: "What gets carried forward",
+      heading: "Experience becomes useful when it sharpens judgment.",
+      copy: "The point of experience is not volume. It is pattern recognition, calmer trade-offs, and cleaner decisions in ambiguous builds.",
+    },
+    pillars: [
+      { title: "Product framing", copy: "Breaking vague goals into concrete user shifts, interface beats, and technical boundaries.", tags: ["Scope", "Narrative", "Prioritization"] },
+      { title: "Cross-functional delivery", copy: "Moving between design, engineering, and stakeholder language without dropping context.", tags: ["Translation", "Alignment", "Shipping"] },
+      { title: "Refinement discipline", copy: "Knowing which details change the experience and which ones merely decorate it.", tags: ["Polish", "Feedback", "Restraint"] },
+    ],
+    processIntro: {
+      eyebrow: "Sample chapters",
+      heading: "Representative experience beats.",
+      copy: "Placeholder entries now, but designed to expand into real roles, clients, or product chapters later.",
+    },
+    process: [
+      { step: "01", title: "Systems prototyping", copy: "Quickly turning rough concepts into testable interface and workflow proofs." },
+      { step: "02", title: "Product hardening", copy: "Refactoring demos into maintainable structures that teams can extend with confidence." },
+      { step: "03", title: "Operational automation", copy: "Designing flows that reduce handoff fatigue and increase delivery visibility." },
+      { step: "04", title: "Narrative refinement", copy: "Elevating the visible layer so the product feels deliberate, not merely functional." },
+    ],
+    galleryIntro: {
+      eyebrow: "Outcomes",
+      heading: "What that experience translates into.",
+      copy: "More velocity when something is still fuzzy, and more calm when the build becomes complex.",
+    },
+    gallery: [
+      { eyebrow: "Teams", title: "Cleaner alignment", meta: "Working benefit", copy: "Less time lost between design intent, product goals, and implementation reality.", tags: ["Shared language", "Review clarity"], route: "about" },
+      { eyebrow: "Products", title: "Sharper first impressions", meta: "User-facing benefit", copy: "Interfaces that explain themselves quickly and invite trust through motion and type.", tags: ["Landing moments", "Flow clarity"], route: "works" },
+      { eyebrow: "Operations", title: "Fewer repeated tasks", meta: "System benefit", copy: "Automation logic that removes background drag from shipping and reporting.", tags: ["Workflows", "Automation"], route: "ai-workflows" },
+    ],
+    cta: {
+      title: "See the experience translated into deliverables.",
+      copy: "The works pages are where the operating logic becomes visible and specific.",
+      primary: { label: "Open Works", route: "works" },
+      secondary: { label: "Open Contact", route: "contact" },
+    },
+    related: ["works", "contact", "about"],
+    footerNote: "Experience expressed as delivery judgment",
+  },
+};

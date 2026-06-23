@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealSync WF01 — Post-Call CRM Automation</title>
+<style>
+@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
+  --accent:#b8582a;
+  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --r:12px;
+}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.hd-title{font-size:20px;font-weight:700}
+.hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border-strong);font-size:11px;font-weight:500;color:var(--text-sub)}
+.pipeline{width:100%;padding:24px 44px 20px;display:flex;align-items:center;overflow-x:auto}
+.sn{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex-shrink:0}
+.si{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .3s;background:var(--bg2);position:relative;overflow:hidden}
+.si.active{border-color:var(--sc);box-shadow:0 0 0 3px var(--sg);background:var(--sb)}
+.si.done{border-color:rgba(16,163,127,.45);background:rgba(16,163,127,.08)}
+.si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
+.sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:66px;line-height:1.3}
+.sl.active{color:var(--text)}
+.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;overflow:hidden}
+.sc .fill{height:100%;background:rgba(16,163,127,.55);transition:width .5s ease}
+.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.prog-fill{height:100%;background:linear-gradient(90deg,#b8582a,#a855f7);transition:width .5s ease;border-radius:2px}
+.demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:420px}
+.ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
+.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.ap-body{flex:1;padding:18px;overflow-y:auto}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
+.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
+pre{white-space:pre-wrap;word-break:break-word}
+.ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
+.cd{flex:1}
+.cd-title{font-size:15px;font-weight:600}
+.cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.06)}
+.btn:active{transform:scale(.98)}
+.btn-play{background:var(--accent);border-color:var(--accent);color: #f5f5f0;padding:8px 22px;display:flex;align-items:center;gap:6px}
+.btn-play:hover{background:#ea6c0a}
+.btn-restart{padding:8px 14px;font-size:12px;opacity:.6}
+.btn-restart:hover{opacity:1}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadein .35s ease forwards}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes row-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.scr::-webkit-scrollbar{width:3px}
+.scr::-webkit-scrollbar-track{background:transparent}
+.scr::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+.jk{color:#79b8ff}.js{color:#f5c07a}.jn{color:#79dcaa}.jb{color:#f97583}.jp{color:#5a5855}.jc{color:#4a4845;font-size:10px}
+
+/* ── Fathom ── */
+.fathom-card{border:1px solid rgba(99,102,241,.3);border-radius:10px;overflow:hidden}
+.fathom-hd{background:rgba(99,102,241,.12);padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(99,102,241,.2)}
+.fathom-dot{width:7px;height:7px;border-radius:50%;background:#6366f1;animation:pulse 1.2s infinite}
+.fathom-title{font-size:13px;font-weight:700;color:#a5b4fc}
+.fathom-body{padding:14px}
+.fathom-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:13px}
+.fm-cell{background:rgba(99,102,241,.07);border-radius:7px;padding:9px 11px}
+.fm-label{font-size:10px;font-weight:600;color:#6366f1;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.fm-val{font-size:12px;color:var(--text)}
+.tx-box{background:var(--bg3);border-radius:8px;padding:11px;font-size:11px;font-family:var(--font-mono);line-height:1.8;color:#c2bfb8;max-height:140px;overflow-y:auto}
+.tx-sp{color:#a5b4fc;font-weight:500}
+.tx-sp2{color:#f5c07a;font-weight:500}
+
+/* ── AI extraction ── */
+.ai-card{border:1px solid rgba(16,163,127,.25);border-radius:10px;overflow:hidden}
+.ai-hd{background:rgba(16,163,127,.1);padding:11px 15px;display:flex;align-items:center;gap:7px;border-bottom:1px solid rgba(16,163,127,.18)}
+.ai-spin{width:8px;height:8px;border-radius:50%;border:1.5px solid #10a37f;border-top-color:transparent;animation:spin .7s linear infinite}
+.ai-title{font-size:12px;font-weight:700;color:#10a37f}
+.ai-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+.extract-row{display:flex;gap:10px;align-items:flex-start}
+.ex-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;min-width:96px;padding-top:2px}
+.ex-val{font-size:12px;color:var(--text);flex:1;line-height:1.5}
+.sentiment-pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
+.s-pos{background:rgba(16,163,127,.15);color:#10a37f}
+.s-neu{background:rgba(212,144,60,.15);color:#d4903c}
+.s-neg{background:rgba(239,68,68,.15);color:#ef4444}
+.obj-chip{display:inline-block;padding:2px 9px;border-radius:6px;background:rgba(184,88,42,.12);border:1px solid rgba(184,88,42,.25);color:#d4903c;font-size:11px;font-weight:500;margin:2px 3px 2px 0}
+.stage-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.3);color:#7a9fff;font-size:12px;font-weight:600}
+
+/* ── Stage map ── */
+.stage-map{background:var(--bg3);border-radius:9px;padding:13px;font-family:var(--font-mono);font-size:11px;line-height:1.9;margin-bottom:12px}
+.stage-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.stage-row:last-child{border:none}
+.stage-name{color:var(--text-sub);min-width:140px}
+.stage-arrow{color:var(--text-muted)}
+.stage-id{color:#79b8ff;font-family:var(--font-mono)}
+.stage-row.active-stage{background:rgba(79,110,247,.1);border-radius:6px;padding:5px 8px;border-color:transparent}
+.stage-row.active-stage .stage-name{color:#e8e6df;font-weight:600}
+.stage-row.active-stage .stage-id{color:#a5b4fc;font-weight:600}
+
+/* ── HubSpot ── */
+.hs-card{background:#fff;border-radius:10px;overflow:hidden;max-height:340px;overflow-y:auto}
+.hs-sidebar{width:100%;background:#f5f8ff;border-bottom:1px solid #e8edf5;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.hs-logo{font-size:18px}
+.hs-deal-name{font-size:14px;font-weight:700;color:#1a2236}
+.hs-stage-track{display:flex;gap:0;margin-bottom:14px}
+.hs-stage-step{flex:1;height:5px;background:#e8edf5}
+.hs-stage-step.done{background:#2563eb}
+.hs-stage-step.current{background:#b8582a}
+.hs-stage-step:first-child{border-radius:3px 0 0 3px}
+.hs-stage-step:last-child{border-radius:0 3px 3px 0}
+.hs-body{padding:14px}
+.hs-prop{display:flex;margin-bottom:9px;gap:6px;align-items:flex-start}
+.hs-prop-label{font-size:11px;font-weight:600;color:#6b7280;min-width:100px}
+.hs-prop-val{font-size:12px;color:#1a2236;flex:1;line-height:1.55}
+.hs-updated{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:#d1fae5;color:#065f46;font-size:11px;font-weight:600;margin-top:4px}
+
+/* ── Gmail draft ── */
+.gmail-wrap{background:#fff;border-radius:10px;overflow:hidden}
+.gmail-top{background:#f2f2f2;padding:9px 14px;border-bottom:1px solid #e0e0e0;display:flex;align-items:center;gap:7px}
+.gmail-compose{font-size:13px;font-weight:600;color:#202124}
+.gmail-field{display:flex;align-items:baseline;gap:8px;padding:8px 14px;border-bottom:1px solid #f0f0f0;font-size:12px}
+.gmail-fl{color:#888;min-width:40px}
+.gmail-fv{color:#202124;font-weight:500}
+.gmail-body-text{padding:14px;font-size:13px;color:#333;line-height:1.7;white-space:pre-line}
+.gmail-saved{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:#fce7f3;color:#be185d;font-size:11px;font-weight:600}
+
+/* ── HubSpot Task ── */
+.task-card{border:1px solid rgba(184,88,42,.25);border-radius:10px;overflow:hidden}
+.task-hd{background:rgba(184,88,42,.1);padding:11px 16px;border-bottom:1px solid rgba(184,88,42,.2);display:flex;align-items:center;gap:8px}
+.task-title-label{font-size:12px;font-weight:700;color:#b8582a}
+.task-body{padding:15px}
+.task-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:9px}
+.task-label{font-size:10px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;min-width:88px;padding-top:2px}
+.task-val{font-size:13px;color:var(--text);flex:1;line-height:1.5}
+.task-status{display:inline-flex;padding:3px 9px;border-radius:6px;background:rgba(212,144,60,.14);color:#d4903c;font-size:11px;font-weight:700;border:1px solid rgba(212,144,60,.3)}
+
+/* ── Summary ── */
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px}
+.sum-card{border-radius:9px;padding:12px;text-align:center}
+.sum-n{font-size:24px;font-weight:700}
+.sum-l{font-size:10px;color:var(--text-muted);margin-top:2px}
+.timeline{display:flex;flex-direction:column;gap:0}
+.tl-row{display:flex;gap:10px;align-items:flex-start;padding:8px 0;position:relative}
+.tl-row:not(:last-child)::after{content:'';position:absolute;left:11px;top:28px;width:1px;height:calc(100% - 10px);background:var(--border)}
+.tl-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;margin-top:2px}
+.tl-content{flex:1}
+.tl-title{font-size:12px;font-weight:600;color:var(--text)}
+.tl-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+</style>
+<link rel="stylesheet" href="./automation-exhibit.css">
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="hd-eyebrow">Automation Demo</div>
+    <div class="hd-title">DealSync WF01 — Post-Call CRM Automation</div>
+  </div>
+  <div style="text-align:right">
+    <div class="hd-eyebrow" style="margin-bottom:8px">Built with</div>
+    <div class="hd-stack">
+      <span class="chip">🎙 Fathom</span>
+      <span class="chip">🤖 OpenRouter</span>
+      <span class="chip">🟠 HubSpot</span>
+      <span class="chip">📧 Gmail</span>
+    </div>
+  </div>
+</div>
+
+<div class="pipeline" id="pipeline"></div>
+<div class="prog"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<div class="demo">
+  <div class="ap" id="ap">
+    <div class="ap-hd" id="ap-hd"></div>
+    <div class="ap-body scr fadein" id="ap-body"></div>
+  </div>
+  <div class="dp">
+    <div class="dp-hd" id="dp-hd"></div>
+    <div class="dp-body scr" id="dp-body"></div>
+  </div>
+</div>
+
+<div class="ctrl">
+  <div class="cd">
+    <div class="cd-title" id="cd-t"></div>
+    <div class="cd-sub" id="cd-s"></div>
+  </div>
+  <div class="ctr" id="ctr">Step 1 / 7</div>
+  <button class="btn" onclick="prev()">← Prev</button>
+  <button class="btn btn-play" id="pbtn" onclick="togglePlay()">
+    <span id="pico">▶</span><span id="plbl">Auto-play</span>
+  </button>
+  <button class="btn" onclick="next()">Next →</button>
+  <button class="btn btn-restart" onclick="restart()">↺</button>
+</div>
+
+<script>
+const STEPS = [
+{
+  id:'webhook', label:'Fathom', emoji:'🎙',
+  col:'#6366f1', glow:'rgba(99,102,241,.22)', bg:'rgba(99,102,241,.09)',
+  ap:{col:'#a5b4fc', bg:'rgba(99,102,241,.09)', label:'Fathom  ·  POST /dealsync-fathom', ico:'🎙', sub:'Call ended → webhook fires instantly'},
+  dh:'Fathom webhook payload  (raw)',
+  dt:'Sales call ends — Fathom fires the webhook',
+  ds:'The moment a Fathom-recorded call ends, it sends a POST request to the n8n webhook with the full transcript, attendees, deal ID, rep details, and prospect email. The pipeline starts with no manual action from the rep.',
+  app:`<div class="fathom-card">
+    <div class="fathom-hd">
+      <span class="fathom-dot"></span>
+      <span class="fathom-title">Call ended · Webhook fired</span>
+      <span style="margin-left:auto;font-size:11px;color:#818cf8;font-family:var(--font-mono)">POST /dealsync-fathom</span>
+    </div>
+    <div class="fathom-body">
+      <div class="fathom-meta">
+        <div class="fm-cell"><div class="fm-label">Call title</div><div class="fm-val">Leadipedia — Discovery Call</div></div>
+        <div class="fm-cell"><div class="fm-label">Deal ID</div><div class="fm-val" style="font-family:var(--font-mono);color:#a5b4fc">hs-deal-48820</div></div>
+        <div class="fm-cell"><div class="fm-label">Rep</div><div class="fm-val">Fadeni Henry</div></div>
+        <div class="fm-cell"><div class="fm-label">Prospect</div><div class="fm-val">Marcus Obi · Nexalabs</div></div>
+        <div class="fm-cell" style="grid-column:1/-1"><div class="fm-label">Duration</div><div class="fm-val">34 min · May 19, 2026 · 11:00 WAT</div></div>
+      </div>
+      <div style="font-size:10px;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:7px">Transcript preview</div>
+      <div class="tx-box scr">
+        <span class="tx-sp">Fadeni:</span> Marcus, thanks for the time. Quick question — what does your current lead management stack look like?<br><br>
+        <span class="tx-sp2">Marcus:</span> Honestly, it's a mess. We're on HubSpot but nothing talks to each other. We're manually updating everything after calls.<br><br>
+        <span class="tx-sp">Fadeni:</span> That's exactly what Leadipedia solves. The 6-agent pipeline auto-updates your CRM the moment the call ends. Want me to walk through a live demo next week?<br><br>
+        <span class="tx-sp2">Marcus:</span> Yes — but I'll be honest, budget is a concern. We're mid-cycle and the CFO needs to sign off on anything above $5K. Can you send a proposal first?
+      </div>
+    </div>
+  </div>`,
+  data:`<span class="jc">// Fathom webhook body</span>
+<span class="jp">{</span>
+  <span class="jk">"body"</span>: <span class="jp">{</span>
+    <span class="jk">"dealId"</span>: <span class="js">"hs-deal-48820"</span>,
+    <span class="jk">"callTitle"</span>: <span class="js">"Leadipedia — Discovery Call"</span>,
+    <span class="jk">"repName"</span>: <span class="js">"Fadeni Henry"</span>,
+    <span class="jk">"repEmail"</span>: <span class="js">"fadeni@dreamers.bay"</span>,
+    <span class="jk">"prospectName"</span>: <span class="js">"Marcus Obi"</span>,
+    <span class="jk">"prospectEmail"</span>: <span class="js">"marcus@nexalabs.io"</span>,
+    <span class="jk">"attendees"</span>: <span class="js">"Fadeni Henry, Marcus Obi"</span>,
+    <span class="jk">"transcript"</span>: <span class="js">"Fadeni: Marcus, thanks for the time. Quick question — what does your current lead management stack look like?\\n\\nMarcus: Honestly, it's a mess. We're on HubSpot but nothing talks to each other..."</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>`
+},
+{
+  id:'extract', label:'AI Extract', emoji:'🤖',
+  col:'#10a37f', glow:'rgba(16,163,127,.22)', bg:'rgba(16,163,127,.09)',
+  ap:{col:'#10a37f', bg:'rgba(16,163,127,.09)', label:'OpenRouter  ·  Extract Call Data', ico:'🤖', sub:'LLM reads transcript → structured JSON output'},
+  dh:'LLM extraction output  (JSON)',
+  dt:'AI reads the transcript and extracts 6 structured fields',
+  ds:'The transcript is sent to OpenRouter with a strict CRM extraction prompt. The model must return a raw JSON object (no markdown) with dealStage, objections, nextSteps, followUpDate, sentiment, and sentimentReason — all typed to exact CRM field formats.',
+  app:`<div class="ai-card">
+    <div class="ai-hd">
+      <span class="ai-spin"></span>
+      <span class="ai-title">CRM extraction complete</span>
+      <span style="margin-left:auto;font-size:10px;color:var(--text-muted)">openrouter/free</span>
+    </div>
+    <div class="ai-body">
+      <div class="extract-row">
+        <span class="ex-label">Deal Stage</span>
+        <span class="ex-val"><span class="stage-badge">Proposal</span></span>
+      </div>
+      <div class="extract-row">
+        <span class="ex-label">Sentiment</span>
+        <span class="ex-val"><span class="sentiment-pill s-pos">😊 Positive</span></span>
+      </div>
+      <div class="extract-row">
+        <span class="ex-label">Sentiment reason</span>
+        <span class="ex-val" style="color:var(--text-sub)">Prospect engaged deeply and requested a proposal despite budget constraints.</span>
+      </div>
+      <div class="extract-row">
+        <span class="ex-label">Objections</span>
+        <span class="ex-val">
+          <span class="obj-chip">Budget — CFO approval needed</span>
+          <span class="obj-chip">Timing — mid-cycle</span>
+        </span>
+      </div>
+      <div class="extract-row">
+        <span class="ex-label">Next steps</span>
+        <span class="ex-val">Send proposal deck; schedule live demo for next week</span>
+      </div>
+      <div class="extract-row">
+        <span class="ex-label">Follow-up date</span>
+        <span class="ex-val" style="font-family:var(--font-mono);color:#79dcaa">2026-05-26</span>
+      </div>
+    </div>
+  </div>`,
+  data:`<span class="jc">// LLM raw response (text field)</span>
+<span class="jp">{</span>
+  <span class="jk">"dealStage"</span>: <span class="js">"Proposal"</span>,
+  <span class="jk">"objections"</span>: <span class="jp">[</span>
+    <span class="js">"Budget — CFO approval needed"</span>,
+    <span class="js">"Timing — mid-cycle"</span>
+  <span class="jp">],</span>
+  <span class="jk">"nextSteps"</span>: <span class="js">"Send proposal deck; schedule live demo for next week"</span>,
+  <span class="jk">"followUpDate"</span>: <span class="js">"2026-05-26"</span>,
+  <span class="jk">"sentiment"</span>: <span class="js">"Positive"</span>,
+  <span class="jk">"sentimentReason"</span>: <span class="js">"Prospect engaged deeply and requested a proposal despite budget constraints."</span>
+<span class="jp">}</span>
+
+<span class="jc">// System prompt rules (excerpt):
+// dealStage: one of Qualification, Demo, Proposal,
+//            Negotiation, Closed Won, Closed Lost
+// followUpDate: strict YYYY-MM-DD format
+// Return ONLY raw JSON — no markdown blocks</span>`
+},
+{
+  id:'stage', label:'Stage Map', emoji:'🗺️',
+  col:'#4f6ef7', glow:'rgba(79,110,247,.22)', bg:'rgba(79,110,247,.09)',
+  ap:{col:'#818cf8', bg:'rgba(79,110,247,.09)', label:'n8n  ·  Code Node', ico:'🗺️', sub:'Map dealStage text → HubSpot internal stage ID'},
+  dh:'Stage mapping  (JavaScript)',
+  dt:'Deal stage label mapped to HubSpot internal ID',
+  ds:'HubSpot deals use opaque internal pipeline stage IDs — not display names like "Proposal". A Code node parses the LLM\'s JSON string and maps the stage label to the correct numeric/string ID, with a safe fallback if the stage is unrecognised.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Stage label → HubSpot ID map</div>
+  <div class="stage-map">
+    <div class="stage-row"><span class="stage-name">Qualification</span><span class="stage-arrow">→</span><span class="stage-id">5255260409</span><span style="font-size:10px;color:var(--text-muted);margin-left:6px">(default)</span></div>
+    <div class="stage-row"><span class="stage-name">Assessment</span><span class="stage-arrow">→</span><span class="stage-id">5255261370</span></div>
+    <div class="stage-row active-stage"><span class="stage-name">✦ Proposal</span><span class="stage-arrow">→</span><span class="stage-id">5255261371</span><span style="font-size:10px;color:#a5b4fc;margin-left:6px">← matched</span></div>
+    <div class="stage-row"><span class="stage-name">Negotiation</span><span class="stage-arrow">→</span><span class="stage-id">5255261372</span></div>
+    <div class="stage-row"><span class="stage-name">Demo</span><span class="stage-arrow">→</span><span class="stage-id">"presentationscheduled"</span></div>
+    <div class="stage-row"><span class="stage-name">Closed Won</span><span class="stage-arrow">→</span><span class="stage-id">"closedwon"</span></div>
+    <div class="stage-row"><span class="stage-name">Closed Lost</span><span class="stage-arrow">→</span><span class="stage-id">"closedlost"</span></div>
+  </div>
+  <div style="background:rgba(79,110,247,.08);border:1px solid rgba(79,110,247,.2);border-radius:8px;padding:10px;font-size:12px;color:#a5b4fc">
+    <strong>Output:</strong> <code style="font-family:var(--font-mono);font-size:11px">hubspotStageId = 5255261371</code><br>
+    <span style="color:var(--text-muted);font-size:11px;margin-top:3px;display:block">Merged into item.json alongside all extracted fields</span>
+  </div>`,
+  data:`<span class="jc">// Code node: parse + map stage</span>
+<span class="jk">const</span> extractedData = JSON.parse(item.json.text);
+Object.assign(item.json, extractedData);
+
+<span class="jk">const</span> stage = extractedData.dealStage || <span class="js">""</span>;
+<span class="jb">let</span> stageId = <span class="jn">5255260409</span>; <span class="jc">// fallback</span>
+
+<span class="jb">if</span>      (stage.includes(<span class="js">"Assessment"</span>))  stageId = <span class="jn">5255261370</span>;
+<span class="jb">else if</span> (stage.includes(<span class="js">"Demo"</span>))         stageId = <span class="js">"presentationscheduled"</span>;
+<span class="jb">else if</span> (stage.includes(<span class="js">"Proposal"</span>))     stageId = <span class="jn">5255261371</span>; <span class="jc">// ← hit</span>
+<span class="jb">else if</span> (stage.includes(<span class="js">"Negotiation"</span>))  stageId = <span class="jn">5255261372</span>;
+<span class="jb">else if</span> (stage.includes(<span class="js">"Closed Won"</span>))   stageId = <span class="js">"closedwon"</span>;
+<span class="jb">else if</span> (stage.includes(<span class="js">"Closed Lost"</span>))  stageId = <span class="js">"closedlost"</span>;
+
+item.json.hubspotStageId = stageId;
+<span class="jc">// → 5255261371</span>`
+},
+{
+  id:'hubspot', label:'HubSpot', emoji:'🟠',
+  col:'#ff7a00', glow:'rgba(255,122,0,.22)', bg:'rgba(255,122,0,.09)',
+  ap:{col:'#ff7a00', bg:'rgba(255,122,0,.09)', label:'HubSpot CRM', ico:'🟠', sub:'Deal hs-deal-48820 → stage + description updated'},
+  dh:'HubSpot API  (deal update)',
+  dt:'Deal stage moved to Proposal — description written',
+  ds:'The HubSpot node patches the deal record in one API call: it advances the stage to Proposal (internal ID) and writes a structured description block containing the next steps, objections, sentiment, and sentiment reason extracted from the call.',
+  app:`<div class="hs-card">
+    <div class="hs-sidebar">
+      <span class="hs-logo">🟠</span>
+      <div>
+        <div class="hs-deal-name">Leadipedia — Nexalabs</div>
+        <div style="font-size:11px;color:#6b7280;margin-top:1px">hs-deal-48820 · Updated just now</div>
+      </div>
+      <span class="hs-updated" style="margin-left:auto">✓ Updated</span>
+    </div>
+    <div style="padding:12px 16px 6px">
+      <div style="font-size:10px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Pipeline stage</div>
+      <div class="hs-stage-track">
+        <div class="hs-stage-step done"></div>
+        <div class="hs-stage-step done"></div>
+        <div class="hs-stage-step current"></div>
+        <div class="hs-stage-step"></div>
+        <div class="hs-stage-step"></div>
+        <div class="hs-stage-step"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af;margin-bottom:14px">
+        <span>Qualify</span><span>Assessment</span><span style="color:#b8582a;font-weight:700">Proposal ←</span><span>Negotiation</span><span>Won</span><span>Lost</span>
+      </div>
+    </div>
+    <div class="hs-body">
+      <div class="hs-prop"><span class="hs-prop-label">Next steps</span><span class="hs-prop-val">Send proposal deck; schedule live demo for next week</span></div>
+      <div class="hs-prop"><span class="hs-prop-label">Objections</span><span class="hs-prop-val">Budget — CFO approval needed | Timing — mid-cycle</span></div>
+      <div class="hs-prop"><span class="hs-prop-label">Sentiment</span><span class="hs-prop-val"><span style="color:#059669;font-weight:600">Positive</span></span></div>
+      <div class="hs-prop"><span class="hs-prop-label">Reason</span><span class="hs-prop-val" style="color:#4b5563">Prospect engaged deeply and requested a proposal despite budget constraints.</span></div>
+    </div>
+  </div>`,
+  data:`<span class="jc">// HubSpot PATCH /deals/{dealId}</span>
+<span class="jp">{</span>
+  <span class="jk">"dealId"</span>: <span class="js">"hs-deal-48820"</span>,
+  <span class="jk">"updateFields"</span>: <span class="jp">{</span>
+    <span class="jk">"stage"</span>: <span class="jn">5255261371</span>,
+    <span class="jk">"description"</span>: <span class="js">"Next steps: Send proposal deck; schedule live demo for next week\nObjections: Budget — CFO approval needed | Timing — mid-cycle\nSentiment: Positive\nReason: Prospect engaged deeply and requested a proposal despite budget constraints."</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ 200 OK
+✓ Stage: Qualification → Proposal (5255261371)
+✓ Description block written</span>`
+},
+{
+  id:'email', label:'Draft Email', emoji:'✉️',
+  col:'#a855f7', glow:'rgba(168,85,247,.22)', bg:'rgba(168,85,247,.09)',
+  ap:{col:'#c084fc', bg:'rgba(168,85,247,.09)', label:'OpenRouter  ·  Draft Email', ico:'✉️', sub:'AI writes personalised follow-up email body'},
+  dh:'LLM email prompt  (personalised)',
+  dt:'AI writes a personalised follow-up email from call context',
+  ds:'A second LLM chain uses the rep name, prospect name, extracted next steps, and objections to write a warm, context-aware follow-up email body. The prompt explicitly forbids including a subject line — that\'s set by the Gmail node from the call title.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">AI-drafted follow-up email</div>
+  <div class="gmail-wrap">
+    <div class="gmail-top">
+      <span style="font-size:16px">📧</span>
+      <span class="gmail-compose">New Draft</span>
+      <span class="gmail-saved" style="margin-left:auto">✏️ Drafted</span>
+    </div>
+    <div class="gmail-field"><span class="gmail-fl">To</span><span class="gmail-fv">marcus@nexalabs.io</span></div>
+    <div class="gmail-field"><span class="gmail-fl">From</span><span class="gmail-fv">fadeni@dreamers.bay</span></div>
+    <div class="gmail-field"><span class="gmail-fl">Subject</span><span class="gmail-fv">Following up: Leadipedia — Discovery Call</span></div>
+    <div class="gmail-body-text">Hi Marcus,
+
+It was great speaking with you today. I really appreciated your candour about the current HubSpot setup — the manual CRM update pain is something we hear a lot, and it's exactly what Leadipedia is built to fix.
+
+As promised, I'll get the proposal deck over to you before end of week so you have something concrete to share with your CFO. I've kept the framing straightforward — value delivered, timeline, and a clear cost breakdown.
+
+I'd love to lock in that live demo for next week so you can see the 6-agent pipeline working against a real call. Would Tuesday or Wednesday work on your end?
+
+Looking forward to it.
+
+Fadeni Henry
+DreamersBay</div>
+  </div>`,
+  data:`<span class="jc">// Draft Email LLM prompt</span>
+<span class="jk">text</span>: <span class="js">"Write a follow-up email.
+Rep: Fadeni Henry
+Next steps: Send proposal deck; schedule live demo for next week
+Objections: Budget — CFO approval needed, Timing — mid-cycle
+Prospect: Marcus Obi"</span>
+
+<span class="jc">// System message:</span>
+<span class="js">"Return only the body of the mail.
+Note: The subject must NOT be included."</span>
+
+<span class="jc">// Subject set separately by Gmail node:</span>
+<span class="js">"Following up: {{ $('Fathom Webhook').first().json.body.callTitle }}"</span>
+<span class="jc">// → "Following up: Leadipedia — Discovery Call"</span>`
+},
+{
+  id:'gmail', label:'Gmail', emoji:'📬',
+  col:'#ea4335', glow:'rgba(234,67,53,.22)', bg:'rgba(234,67,53,.09)',
+  ap:{col:'#ea4335', bg:'rgba(234,67,53,.09)', label:'Gmail  ·  Draft saved', ico:'📬', sub:'Follow-up email saved to Drafts — not auto-sent'},
+  dh:'Gmail API  (resource: draft)',
+  dt:'Follow-up email saved as Gmail draft — ready to send',
+  ds:'The Gmail node saves the AI-written body and auto-generated subject as a draft addressed to the prospect. The rep receives a ready-to-send email that looks like they wrote it themselves — they just review and hit Send.',
+  app:`<div class="gmail-wrap" style="margin-bottom:12px">
+    <div class="gmail-top">
+      <span style="font-size:16px">📧</span>
+      <span class="gmail-compose">Drafts (1 new)</span>
+    </div>
+    <div style="display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid #f0f0f0;gap:10px">
+      <span style="font-size:13px;color:#999">✏️</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:600;color:#202124">Following up: Leadipedia — Discovery Call</div>
+        <div style="font-size:12px;color:#999">To: marcus@nexalabs.io — Hi Marcus, It was great speaking with you today…</div>
+      </div>
+      <span style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#fce7f3;color:#be185d;white-space:nowrap">Just now</span>
+    </div>
+  </div>
+  <div style="background:rgba(234,67,53,.07);border:1px solid rgba(234,67,53,.2);border-radius:9px;padding:12px">
+    <div style="font-size:12px;font-weight:600;color:#f87171;margin-bottom:5px">💡 Human in the loop</div>
+    <div style="font-size:12px;color:var(--text-muted);line-height:1.6">The email is saved as a <strong style="color:var(--text)">draft</strong>, not auto-sent. Fadeni opens Gmail, reviews, personalises if needed, and hits Send. The AI does the heavy lifting — the rep keeps control.</div>
+  </div>`,
+  data:`<span class="jc">// Gmail node config</span>
+<span class="jp">{</span>
+  <span class="jk">"resource"</span>: <span class="js">"draft"</span>,
+  <span class="jk">"subject"</span>: <span class="js">"Following up: Leadipedia — Discovery Call"</span>,
+  <span class="jk">"message"</span>: <span class="js">"Hi Marcus,\n\nIt was great speaking with you today..."</span>,
+  <span class="jk">"options"</span>: <span class="jp">{</span>
+    <span class="jk">"sendTo"</span>: <span class="js">"marcus@nexalabs.io"</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span class="jc">// Gmail API response</span>
+<span class="jp">{</span>
+  <span class="jk">"id"</span>: <span class="js">"r7f3bc928ae1"</span>,
+  <span class="jk">"threadId"</span>: <span class="js">"19a2cd84f02"</span>,
+  <span class="jk">"labelIds"</span>: <span class="jp">[</span><span class="js">"UNREAD"</span>, <span class="js">"DRAFT"</span><span class="jp">]</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ Draft saved to Fadeni's Gmail Drafts
+✓ Addressed to marcus@nexalabs.io</span>`
+},
+{
+  id:'task', label:'Task + Done', emoji:'✅',
+  col:'#10a37f', glow:'rgba(16,163,127,.22)', bg:'rgba(16,163,127,.09)',
+  ap:{col:'#10a37f', bg:'rgba(16,163,127,.09)', label:'HubSpot  ·  Follow-Up Task created', ico:'✅', sub:'Task tied to deal · due 2026-05-26'},
+  dh:'HubSpot engagements API  (task)',
+  dt:'Follow-up task created in HubSpot — pipeline complete',
+  ds:'The final node creates a HubSpot engagement task directly linked to the deal. The task subject, due date, and body are all populated from the LLM extraction — so the rep wakes up to a CRM that\'s already been updated, a draft ready to send, and a task reminding them what to do next.',
+  app:`<div class="task-card" style="margin-bottom:12px">
+    <div class="task-hd">
+      <span style="font-size:15px">🟠</span>
+      <span class="task-title-label">HubSpot Task — created &amp; linked to deal</span>
+    </div>
+    <div class="task-body">
+      <div class="task-row">
+        <span class="task-label">Subject</span>
+        <span class="task-val" style="font-weight:600">Follow up: Send proposal deck; schedule live demo for next week</span>
+      </div>
+      <div class="task-row">
+        <span class="task-label">Due date</span>
+        <span class="task-val" style="font-family:var(--font-mono);color:#79dcaa">May 26, 2026</span>
+      </div>
+      <div class="task-row">
+        <span class="task-label">Status</span>
+        <span class="task-val"><span class="task-status">NOT STARTED</span></span>
+      </div>
+      <div class="task-row">
+        <span class="task-label">Notes</span>
+        <span class="task-val" style="color:var(--text-sub)">Objections: Budget — CFO approval needed, Timing — mid-cycle</span>
+      </div>
+      <div class="task-row">
+        <span class="task-label">Linked deal</span>
+        <span class="task-val" style="font-family:var(--font-mono);color:#a5b4fc">hs-deal-48820</span>
+      </div>
+    </div>
+  </div>
+  <div style="background:rgba(16,163,127,.07);border:1px solid rgba(16,163,127,.2);border-radius:9px;padding:12px">
+    <div style="font-size:12px;font-weight:700;color:#10a37f;margin-bottom:8px">✓ Full pipeline complete</div>
+    <div style="display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--text-muted)">
+      <span>🎙 Call recorded by Fathom</span>
+      <span>🤖 AI extracted 6 CRM fields from transcript</span>
+      <span>🟠 HubSpot deal advanced to <strong style="color:var(--text)">Proposal</strong></span>
+      <span>📧 Follow-up email drafted in Gmail</span>
+      <span>✅ Task created with due date &amp; objection notes</span>
+    </div>
+    <div style="margin-top:10px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">⏱ Total time: ~8 seconds · Rep effort: 0 minutes</div>
+  </div>`,
+  data:`<span class="jc">// HubSpot engagements · create task</span>
+<span class="jp">{</span>
+  <span class="jk">"resource"</span>: <span class="js">"engagement"</span>,
+  <span class="jk">"type"</span>: <span class="js">"task"</span>,
+  <span class="jk">"dueDate"</span>: <span class="js">"2026-05-26"</span>,
+  <span class="jk">"metadata"</span>: <span class="jp">{</span>
+    <span class="jk">"subject"</span>: <span class="js">"Follow up: Send proposal deck; schedule live demo for next week"</span>,
+    <span class="jk">"body"</span>: <span class="js">"Objections: Budget — CFO approval needed, Timing — mid-cycle"</span>,
+    <span class="jk">"status"</span>: <span class="js">"NOT_STARTED"</span>
+  <span class="jp">},</span>
+  <span class="jk">"additionalFields"</span>: <span class="jp">{</span>
+    <span class="jk">"associations"</span>: <span class="jp">{</span>
+      <span class="jk">"dealIds"</span>: <span class="js">"hs-deal-48820"</span>
+    <span class="jp">}</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ Task created · ID: eng-8827193
+✓ Linked to deal hs-deal-48820
+✓ Assigned to Fadeni Henry</span>`
+}
+];
+
+const EXHIBIT = {
+  headerEyebrow: 'Outcome Exhibit',
+  title: 'The rep returns to a deal that is already worked',
+  badgeEyebrow: 'Visible outcomes',
+  badges: ['Call captured', 'CRM advanced', 'Reply drafted', 'Next task queued'],
+  scenes: [
+    {
+      label: 'Call captured',
+      title: 'The call lands where the deal already lives',
+      summary: 'The rep does not have to reopen the conversation from memory. The deal now carries the actual meeting.',
+      outcome: 'The conversation is present before anyone starts admin.',
+      visitor: 'A living deal record, not a blank CRM card.',
+      metricLabel: 'Admin returned',
+      metricValue: '34 min call, 0 min manual logging',
+      proofs: [
+        'Call attached to the deal',
+        'Prospect and rep identified',
+        'Nothing lost after hang-up'
+      ],
+      color: '#6366f1'
+    },
+    {
+      label: 'Intent surfaced',
+      title: 'The important parts are pulled into plain language',
+      summary: 'Objections, next steps, and buying intent stop hiding inside a transcript.',
+      outcome: 'A rep sees what matters, not a wall of notes.',
+      visitor: 'The next move is obvious the moment the record opens.',
+      metricLabel: 'Useful signals',
+      metricValue: '6 decision clues extracted',
+      proofs: [
+        'Budget concern surfaced',
+        'Next meeting request found',
+        'Buying temperature made clear'
+      ],
+      color: '#10a37f'
+    },
+    {
+      label: 'CRM ready',
+      title: 'The pipeline moves before the rep touches the CRM',
+      summary: 'Stage, notes, and context update themselves while the conversation is still fresh.',
+      outcome: 'The deal already looks worked.',
+      visitor: 'The record feels alive instead of half-finished.',
+      metricLabel: 'CRM updated',
+      metricValue: '1 deal advanced automatically',
+      proofs: [
+        'Stage advanced',
+        'Description filled',
+        'Context written to record'
+      ],
+      color: '#ff7a00'
+    },
+    {
+      label: 'Follow-up ready',
+      title: 'The rep opens a follow-up that already sounds human',
+      summary: 'A draft email is waiting, shaped around the real conversation instead of a template.',
+      outcome: 'The seller edits, sends, and keeps moving.',
+      visitor: 'The response feels personal without costing more time.',
+      metricLabel: 'Draft prepared',
+      metricValue: '1 email ready to send',
+      proofs: [
+        'Personalised draft written',
+        'Objections answered',
+        'Next step proposed clearly'
+      ],
+      color: '#a855f7'
+    },
+    {
+      label: 'Next move queued',
+      title: 'The next action shows up without anyone chasing it',
+      summary: 'The system leaves behind the task, due date, and reason, so momentum does not leak.',
+      outcome: 'The workflow ends with a clear next move, not a memory test.',
+      visitor: 'Momentum survives the meeting.',
+      metricLabel: 'Action queued',
+      metricValue: '1 task created before inbox refresh',
+      proofs: [
+        'Task created',
+        'Due date attached',
+        'Owner already assigned'
+      ],
+      color: '#10a37f'
+    }
+  ]
+};
+
+</script>
+<script src="./automation-exhibit.js"></script>
+<script>
+AutomationExhibit.mount({ steps: STEPS, exhibit: EXHIBIT, autoplayMs: 5600 });
+</script>
+</body>
+</html>

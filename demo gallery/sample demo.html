@@ -1,0 +1,3298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify AI Solutions — Find & Fix Your Store's Revenue Leaks</title>
+    <meta name="description" content="AI-powered solutions that find and fix the operational gaps costing your Shopify store thousands every month. Free revenue leak audit available.">
+    <style>
+        /* ============================================
+           CSS VARIABLES & RESET
+           ============================================ */
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #0f1429;
+            --bg-card: rgba(15, 20, 45, 0.6);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --border-glass-hover: rgba(255, 255, 255, 0.15);
+            --text-primary: #e8eaf0;
+            --text-secondary: #8b92a8;
+            --text-muted: #5a6178;
+            --accent-blue: #3b82f6;
+            --accent-blue-glow: rgba(59, 130, 246, 0.3);
+            --accent-emerald: #10b981;
+            --accent-emerald-glow: rgba(16, 185, 129, 0.3);
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --accent-amber: #d4903c;
+            --accent-green: #22c55e;
+            --whatsapp-green: #25D366;
+            --gradient-hero: linear-gradient(135deg, #0a0e1a 0%, #111833 50%, #0a0e1a 100%);
+            --gradient-blue: linear-gradient(135deg, #3b82f6, #2563eb);
+            --gradient-emerald: linear-gradient(135deg, #10b981, #059669);
+            --gradient-card: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(16, 185, 129, 0.05));
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow-card-hover: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(59, 130, 246, 0.1);
+            --shadow-glow-blue: 0 0 20px rgba(59, 130, 246, 0.4);
+            --shadow-glow-emerald: 0 0 20px rgba(16, 185, 129, 0.4);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            --font-body: 'Neue Montreal', 'NeueMontreal', sans-serif;
+            --font-heading: 'Lores-12', 'LoRes 12', monospace;
+            --transition-fast: 200ms ease;
+            --transition-medium: 400ms ease;
+            --transition-slow: 600ms ease;
+        }
+
+        @font-face {
+            font-family: 'Neue Montreal';
+            src: local('Neue Montreal'), local('NeueMontreal-Regular');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Lores-12';
+            src: local('Lores-12'), local('LoRes 12'), local('LoRes12-Regular');
+            font-display: swap;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ============================================
+           STICKY HEADER
+           ============================================ */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            backdrop-filter: blur(0px);
+            border-bottom: 1px solid transparent;
+            transition: all var(--transition-medium);
+        }
+
+        .header.scrolled {
+            background: rgba(10, 14, 26, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .header-logo {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 1.3rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-identity {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .header-cta {
+            padding: 0.5rem 1.2rem;
+            background: var(--gradient-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+        }
+
+        .header-cta:hover {
+            box-shadow: var(--shadow-glow-blue);
+            transform: translateY(-1px);
+        }
+
+        /* ============================================
+           HERO SECTION
+           ============================================ */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 6rem 2rem 4rem;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-hero);
+            z-index: 0;
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 1;
+            animation: gridPulse 8s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .hero-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 1;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+
+        .hero-orb--blue {
+            width: 400px;
+            height: 400px;
+            background: rgba(59, 130, 246, 0.08);
+            top: 10%;
+            right: 10%;
+        }
+
+        .hero-orb--emerald {
+            width: 350px;
+            height: 350px;
+            background: rgba(16, 185, 129, 0.06);
+            bottom: 15%;
+            left: 5%;
+            animation-delay: -4s;
+        }
+
+        .hero-orb--purple {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.05);
+            top: 40%;
+            left: 50%;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -20px) scale(1.05); }
+            66% { transform: translate(-20px, 15px) scale(0.95); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.4rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--accent-emerald);
+            font-weight: 500;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-emerald);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 2rem;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn--primary {
+            background: var(--gradient-blue);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn--primary:hover {
+            box-shadow: var(--shadow-glow-blue);
+            transform: translateY(-2px);
+        }
+
+        .btn--outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass-hover);
+        }
+
+        .btn--outline:hover {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .trust-bar {
+            position: relative;
+            z-index: 2;
+            margin-top: 4rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0.5;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .trust-bar span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* ============================================
+           SECTION STYLES
+           ============================================ */
+        .section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 20px;
+            height: 2px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            font-weight: 300;
+        }
+
+        /* ============================================
+           SOLUTIONS GRID
+           ============================================ */
+        .solutions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .solution-card {
+            position: relative;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-medium);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .solution-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-card);
+            opacity: 0;
+            transition: opacity var(--transition-medium);
+            border-radius: var(--radius-lg);
+        }
+
+        .solution-card:hover {
+            border-color: var(--border-glass-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .solution-card:hover::before {
+            opacity: 1;
+        }
+
+        .solution-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            transition: transform var(--transition-medium);
+        }
+
+        .solution-card:hover .solution-icon {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .solution-number {
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5rem;
+        }
+
+        .solution-name {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .solution-problem {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .solution-demo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: var(--font-body);
+            transition: all var(--transition-fast);
+        }
+
+        .solution-demo-btn:hover {
+            gap: 0.7rem;
+            color: var(--accent-emerald);
+        }
+
+        .solution-demo-btn .arrow {
+            transition: transform var(--transition-fast);
+        }
+
+        .solution-card:hover .solution-demo-btn .arrow {
+            transform: translateX(3px);
+        }
+
+        /* ============================================
+           SCROLL ANIMATIONS
+           ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           MODAL SYSTEM
+           ============================================ */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 2000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity var(--transition-medium);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            border: 1px solid var(--border-glass);
+            border-bottom: none;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border-glass) transparent;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            background: rgba(15, 20, 41, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .modal-close {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 50%;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--accent-red);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-cta-bar {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-glass);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: rgba(15, 20, 41, 0.8);
+        }
+
+        /* ============================================
+           DEMO 1: REVENUE LEAK AUDIT
+           ============================================ */
+        .audit-form {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .audit-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 0.85rem 1.2rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .audit-input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .audit-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .audit-progress {
+            display: none;
+            margin-bottom: 2rem;
+        }
+
+        .audit-progress.active {
+            display: block;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-glass);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--gradient-blue);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .audit-results {
+            display: none;
+        }
+
+        .audit-results.active {
+            display: block;
+        }
+
+        .audit-score-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .score-indicator {
+            font-size: 1.5rem;
+        }
+
+        .score-info { flex: 1; }
+
+        .score-label {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-bar-bg {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.4rem;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .score-bar-fill.red { background: var(--accent-red); }
+        .score-bar-fill.amber { background: var(--accent-amber); }
+        .score-bar-fill.green { background: var(--accent-green); }
+
+        .score-detail {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .score-value {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.5rem;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .score-value.red { color: var(--accent-red); }
+        .score-value.amber { color: var(--accent-amber); }
+        .score-value.green { color: var(--accent-green); }
+
+        /* ============================================
+           DEMO 2: CLAIRE CHATBOT SHOWCASE
+           ============================================ */
+        .claire-intro {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(59, 130, 246, 0.08));
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .claire-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .claire-intro-text h3 {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .claire-intro-text p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .capability-ribbon {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .capability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 50px;
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .capability-badge .cap-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+        }
+
+        .scenario-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-label::before {
+            content: '';
+            width: 16px;
+            height: 2px;
+            background: var(--accent-blue);
+            border-radius: 2px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .scenario-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scenario-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-blue);
+            transform: scaleX(0);
+            transition: transform var(--transition-medium);
+        }
+
+        .scenario-card:hover {
+            border-color: var(--border-glass-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .scenario-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .scenario-card.active {
+            border-color: rgba(59, 130, 246, 0.3);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .scenario-card.active::after {
+            transform: scaleX(1);
+        }
+
+        .scenario-emoji {
+            font-size: 1.3rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .scenario-title {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .scenario-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .scenario-tag {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .scenario-tag.wow { background: rgba(212, 144, 60, 0.15); color: var(--accent-amber); }
+        .scenario-tag.trust { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+        .scenario-tag.smart { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+        .scenario-tag.safe { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+
+        .scenario-detail-panel {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .scenario-detail-panel.active {
+            display: block;
+            animation: fadeSlideIn 0.4s ease;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scenario-detail-header {
+            padding: 1rem 1.5rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .scenario-detail-header h4 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .scenario-detail-header .try-prompt {
+            font-size: 0.75rem;
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+
+        .convo-thread {
+            padding: 1.5rem;
+        }
+
+        .convo-msg {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .convo-msg.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .convo-msg.customer { justify-content: flex-end; }
+
+        .convo-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .convo-avatar.claire-av {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+        }
+
+        .convo-avatar.customer-av {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .convo-bubble {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .convo-msg.claire .convo-bubble {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.12);
+            color: var(--text-primary);
+        }
+
+        .convo-msg.customer .convo-bubble {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border-glass);
+            color: var(--text-secondary);
+        }
+
+        .convo-meta {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .convo-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+
+        .convo-label.pathway { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); }
+        .convo-label.action { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); }
+        .convo-label.safety { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); }
+        .convo-label.context { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+        .convo-label.rag { background: rgba(212, 144, 60, 0.15); color: var(--accent-amber); }
+
+        .convo-product-card {
+            margin-top: 0.75rem;
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .convo-product-card .prod-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .convo-product-card .prod-info {
+            flex: 1;
+        }
+
+        .convo-product-card .prod-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .convo-product-card .prod-price {
+            font-size: 0.75rem;
+            color: var(--accent-emerald);
+        }
+
+        .convo-product-card .prod-btn {
+            padding: 0.3rem 0.7rem;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: var(--radius-sm);
+            color: var(--accent-blue);
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .convo-confirm-bar {
+            margin-top: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(212, 144, 60, 0.08);
+            border: 1px solid rgba(212, 144, 60, 0.15);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            color: var(--accent-amber);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .chatbot-embed-area {
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 0;
+            text-align: center;
+            margin: 0 0 1.5rem;
+            background: var(--bg-glass);
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-embed-area .embed-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(139, 92, 246, 0.04), transparent 60%);
+            pointer-events: none;
+        }
+
+        .chatbot-embed-area .embed-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chatbot-embed-area .embed-icon {
+            font-size: 3rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .chatbot-embed-area .embed-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .chatbot-embed-area .embed-subtext {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .bts-section {
+            margin-top: 1rem;
+        }
+
+        .bts-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bts-title::before {
+            content: '';
+            width: 16px;
+            height: 2px;
+            background: var(--text-muted);
+            border-radius: 2px;
+        }
+
+        .bts-flow {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            padding: 1.2rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-glass);
+        }
+
+        .bts-node {
+            padding: 0.5rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--border-glass);
+            background: var(--bg-glass);
+        }
+
+        .bts-node.highlight {
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(139, 92, 246, 0.08);
+            color: var(--accent-purple);
+        }
+
+        .bts-arrow {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .scenario-grid { grid-template-columns: 1fr; }
+            .convo-bubble { max-width: 90%; }
+            .bts-flow { flex-direction: column; align-items: stretch; text-align: center; }
+            .bts-arrow { transform: rotate(90deg); align-self: center; }
+        }
+
+        /* ============================================
+           DEMO 3: OPS DASHBOARD
+           ============================================ */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dash-metric {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            text-align: center;
+            transition: all var(--transition-fast);
+        }
+
+        .dash-metric:hover {
+            border-color: var(--border-glass-hover);
+            transform: translateY(-2px);
+        }
+
+        .dash-metric-value {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .dash-metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .dash-metric-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .dash-metric-change.up { color: var(--accent-green); }
+        .dash-metric-change.down { color: var(--accent-red); }
+
+        .dash-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .dash-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all var(--transition-fast);
+            margin-bottom: -1px;
+        }
+
+        .dash-tab.active, .dash-tab:hover {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        .dash-chart {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            height: 200px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dash-chart-title {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .chart-svg {
+            width: 100%;
+            height: 140px;
+        }
+
+        .chart-line {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .chart-area {
+            fill: url(#chartGradient);
+        }
+
+        .chart-line, .chart-area {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 600;
+            animation: drawLine 2s ease forwards;
+        }
+
+        .chart-area {
+            stroke: none;
+            animation: drawArea 2s ease forwards;
+        }
+
+        @keyframes drawLine {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes drawArea {
+            to { stroke-dashoffset: 0; }
+        }
+
+        .ai-summary {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(16, 185, 129, 0.08));
+            border: 1px solid rgba(59, 130, 246, 0.15);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+        }
+
+        .ai-summary-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .ai-summary-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ============================================
+           DEMO 4: RETENTION FLOW
+           ============================================ */
+        .flow-container {
+            padding: 2rem 0;
+            overflow-x: auto;
+        }
+
+        .flow-steps {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            min-width: 700px;
+            justify-content: center;
+        }
+
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .flow-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .flow-node {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 0.75rem;
+            border: 2px solid var(--border-glass);
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-medium);
+        }
+
+        .flow-step.visible .flow-node {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .flow-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            max-width: 100px;
+            margin-bottom: 0.3rem;
+        }
+
+        .flow-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            max-width: 110px;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            padding-top: 30px;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .flow-arrow.visible { opacity: 1; }
+
+        .flow-branch {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .flow-branch-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            text-align: center;
+            min-width: 140px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s ease;
+        }
+
+        .flow-branch-card.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .flow-branch-card .branch-emoji { font-size: 1.5rem; margin-bottom: 0.4rem; }
+        .flow-branch-card .branch-title { font-weight: 600; font-size: 0.85rem; margin-bottom: 0.3rem; }
+        .flow-branch-card .branch-action { font-size: 0.75rem; color: var(--accent-emerald); }
+
+        .retention-metrics {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .retention-metric {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .retention-metric .metric-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+
+        .retention-metric .metric-before-after {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .metric-val {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .metric-val.before { color: var(--text-muted); text-decoration: line-through; }
+        .metric-val.after { color: var(--accent-emerald); }
+        .metric-arrow { color: var(--accent-emerald); font-size: 1.2rem; }
+
+        /* ============================================
+           DEMO 5: INVENTORY ALERTS
+           ============================================ */
+        .alert-feed { margin: 1rem 0; }
+
+        .alert-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.2rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: all 0.5s ease;
+            align-items: flex-start;
+        }
+
+        .alert-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .alert-icon { font-size: 1.3rem; flex-shrink: 0; padding-top: 0.1rem; }
+
+        .alert-content { flex: 1; }
+
+        .alert-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+            font-family: monospace;
+        }
+
+        .alert-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .alert-message strong { color: var(--text-primary); }
+
+        .alert-item.critical {
+            border-color: rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.03);
+        }
+
+        .alert-item.warning {
+            border-color: rgba(212, 144, 60, 0.2);
+            background: rgba(212, 144, 60, 0.03);
+        }
+
+        .alert-item.success {
+            border-color: rgba(34, 197, 94, 0.2);
+            background: rgba(34, 197, 94, 0.03);
+        }
+
+        .alert-item.info {
+            border-color: rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.03);
+        }
+
+        /* ============================================
+           DEMO 6: RETURNS COMPARISON
+           ============================================ */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-col {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            overflow: hidden;
+        }
+
+        .comparison-col.without { border-color: rgba(239, 68, 68, 0.15); }
+        .comparison-col.with { border-color: rgba(34, 197, 94, 0.15); }
+
+        .comparison-header {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .comparison-header.bad { color: var(--accent-red); }
+        .comparison-header.good { color: var(--accent-green); }
+
+        .comp-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.6rem 0;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+        }
+
+        .comp-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .comp-step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .without .comp-step-num {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-red);
+        }
+
+        .with .comp-step-num {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--accent-green);
+        }
+
+        .comp-step-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .comp-step-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+            font-family: monospace;
+        }
+
+        .comp-total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-glass);
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        .comp-total.bad { color: var(--accent-red); }
+        .comp-total.good { color: var(--accent-green); }
+
+        .fraud-alert {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: var(--radius-md);
+            padding: 1.2rem;
+            margin-top: 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .fraud-alert-icon { font-size: 1.3rem; }
+        .fraud-alert-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; }
+        .fraud-alert-text strong { color: var(--accent-red); }
+
+        /* ============================================
+           DEMO 7: CASE STUDIES
+           ============================================ */
+        .case-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-track {
+            display: flex;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .case-card {
+            min-width: 100%;
+            padding: 0 0.5rem;
+        }
+
+        .case-card-inner {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+
+        .case-industry {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            color: var(--accent-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .case-title {
+            font-family: var(--font-heading);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .case-desc {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .case-arch {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-md);
+        }
+
+        .arch-node {
+            padding: 0.5rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .arch-arrow {
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+        }
+
+        .case-result {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.2rem;
+            font-size: 0.9rem;
+            color: var(--accent-emerald);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .case-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .case-nav-btn {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: 50%;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all var(--transition-fast);
+        }
+
+        .case-nav-btn:hover {
+            border-color: var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .case-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .case-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border-glass);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .case-dot.active {
+            background: var(--accent-blue);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.5);
+        }
+
+        /* ============================================
+           HOW IT WORKS
+           ============================================ */
+        .steps-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 2rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            right: 35px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-emerald));
+            opacity: 0.2;
+        }
+
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--bg-glass);
+            border: 2px solid var(--border-glass);
+            position: relative;
+            z-index: 1;
+            transition: all var(--transition-medium);
+        }
+
+        .step-item:hover .step-number {
+            border-color: var(--accent-blue);
+            box-shadow: var(--shadow-glow-blue);
+        }
+
+        .step-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* ============================================
+           CTA SECTION
+           ============================================ */
+        .cta-section {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.06), transparent 70%);
+        }
+
+        .cta-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all var(--transition-medium);
+        }
+
+        .cta-card:hover {
+            border-color: var(--border-glass-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-card-hover);
+        }
+
+        .cta-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-card h3 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .cta-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .cta-card .btn { width: 100%; justify-content: center; }
+
+        .btn--whatsapp {
+            background: var(--whatsapp-green);
+            color: #fff;
+        }
+
+        .btn--whatsapp:hover {
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .email-form input {
+            padding: 0.75rem 1rem;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+
+        .email-form input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .email-form input::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+        }
+
+        .footer p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover { color: var(--accent-blue); }
+
+        /* ============================================
+           RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: repeat(2, 1fr); }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .steps-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .steps-container::before { display: none; }
+            .retention-metrics { grid-template-columns: 1fr; }
+            .flow-steps { flex-direction: column; align-items: center; min-width: auto; }
+            .flow-arrow { transform: rotate(90deg); padding-top: 0; padding: 0.5rem 0; }
+            .modal-body { padding: 1.2rem; }
+            .modal-header { padding: 1rem 1.2rem; }
+            .trust-bar { gap: 1rem; }
+            .cta-cards { grid-template-columns: 1fr; }
+            #founder-card { flex-direction: column; text-align: center; }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid { grid-template-columns: 1fr 1fr; }
+            .hero { padding: 5rem 1.2rem 3rem; }
+            .section { padding: 4rem 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="header-identity">
+            <div class="header-logo">Henry Fadeni</div>
+        </div>
+        <a href="#cta" class="header-cta">Get Free Audit</a>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-orb hero-orb--blue"></div>
+        <div class="hero-orb hero-orb--emerald"></div>
+        <div class="hero-orb hero-orb--purple"></div>
+
+        <div class="hero-content">
+            <div class="hero-badge">Available for Shopify stores</div>
+            <h1>Your Shopify Store Is <span class="highlight">Leaking Revenue.</span> Here's Exactly Where.</h1>
+            <p class="hero-subtitle">AI-powered solutions that find and fix the operational gaps costing you thousands every month. See interactive demos of each solution below.</p>
+            <div class="hero-cta-group">
+                <a href="#solutions" class="btn btn--primary">See the Solutions ↓</a>
+                <a href="#cta" class="btn btn--outline">Book Free Audit</a>
+            </div>
+        </div>
+
+        <div class="trust-bar">
+            <span>🟢 Shopify API</span>
+            <span>💬 Slack</span>
+            <span>📱 WhatsApp</span>
+            <span>📧 Klaviyo</span>
+            <span>🎧 Gorgias</span>
+        </div>
+    </section>
+
+    <!-- SOLUTIONS GRID -->
+    <section class="section" id="solutions">
+        <div class="reveal">
+            <div class="section-label">Our Solutions</div>
+            <h2 class="section-title">Seven Ways We Stop the Leaks</h2>
+            <p class="section-subtitle">Click any solution to see an interactive demo of how it works for your store.</p>
+        </div>
+
+        <div class="solutions-grid">
+            <div class="solution-card reveal" onclick="openModal('audit')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">🔍</span>
+                    <div class="solution-name">Free Revenue Leak Audit</div>
+                    <p class="solution-problem">We'll find where your store is losing money — for free.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('chatbot')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">🤖</span>
+                    <div class="solution-name">AI Support System</div>
+                    <p class="solution-problem">Stop answering the same 5 questions 200 times a month.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('dashboard')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">📊</span>
+                    <div class="solution-name">AI Ops Dashboard</div>
+                    <p class="solution-problem">One screen. Every metric that matters. Daily AI briefings.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('retention')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">🔄</span>
+                    <div class="solution-name">Retention Automation</div>
+                    <p class="solution-problem">You already paid to acquire them. Make them come back.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('inventory')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">📦</span>
+                    <div class="solution-name">Inventory Intelligence</div>
+                    <p class="solution-problem">Know what's going to sell out before it does.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('returns')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">↩️</span>
+                    <div class="solution-name">Returns Automation</div>
+                    <p class="solution-problem">Turn refund requests into exchanges. Catch fraud early.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+
+            <div class="solution-card reveal" onclick="openModal('custom')">
+                <div class="solution-card-content">
+                    <span class="solution-icon">⚙️</span>
+                    <div class="solution-name">Custom Automation</div>
+                    <p class="solution-problem">Your store is unique. Your backend should be too.</p>
+                    <button class="solution-demo-btn">See Demo <span class="arrow">→</span></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================
+         MODAL 1: REVENUE LEAK AUDIT
+         ============================================ -->
+    <div class="modal-overlay" id="modal-audit">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🔍 Revenue Leak Audit</h2>
+                <button class="modal-close" onclick="closeModal('audit')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(212, 144, 60, 0.06); border: 1px solid rgba(212, 144, 60, 0.15); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem; display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <span style="font-size: 1.3rem;">💡</span>
+                    <div>
+                        <p style="color: var(--text-primary); font-weight: 600; font-size: 0.9rem; margin-bottom: 0.3rem;">This is a sample audit report</p>
+                        <p style="color: var(--text-secondary); font-size: 0.8rem; line-height: 1.5;">Below is a real example of what we find when auditing a mid-size Shopify store. Your store's results will be different — and specific to your operations. Request your free personalized audit below.</p>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-md);">
+                    <span style="font-size: 1.1rem;">🏪</span>
+                    <div>
+                        <div style="font-weight: 600; font-size: 0.85rem;">Sample Store: GlowFit Activewear</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted);">~$52k/mo revenue · 1,200 orders/mo · 6 apps connected</div>
+                    </div>
+                    <button class="btn btn--primary" style="margin-left: auto; padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="runAudit()">Reveal Scores</button>
+                </div>
+
+                <div class="audit-progress" id="audit-progress">
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <p class="progress-text" id="progress-text">Analyzing support patterns...</p>
+                </div>
+
+                <div class="audit-results" id="audit-results">
+                    <div class="audit-score-card">
+                        <span class="score-indicator">🔴</span>
+                        <div class="score-info">
+                            <div class="score-label">Support Efficiency</div>
+                            <div class="score-bar-bg"><div class="score-bar-fill red" data-width="34"></div></div>
+                            <div class="score-detail">612 of 847 tickets last month were repeat questions that AI could answer</div>
+                        </div>
+                        <div class="score-value red">34</div>
+                    </div>
+
+                    <div class="audit-score-card">
+                        <span class="score-indicator">🟡</span>
+                        <div class="score-info">
+                            <div class="score-label">Return Rate Health</div>
+                            <div class="score-bar-bg"><div class="score-bar-fill amber" data-width="52"></div></div>
+                            <div class="score-detail">19.3% return rate — no exchange-first workflow detected</div>
+                        </div>
+                        <div class="score-value amber">52</div>
+                    </div>
+
+                    <div class="audit-score-card">
+                        <span class="score-indicator">🔴</span>
+                        <div class="score-info">
+                            <div class="score-label">Retention Score</div>
+                            <div class="score-bar-bg"><div class="score-bar-fill red" data-width="28"></div></div>
+                            <div class="score-detail">No post-purchase flows, no win-back sequences, no VIP segmentation</div>
+                        </div>
+                        <div class="score-value red">28</div>
+                    </div>
+
+                    <div class="audit-score-card">
+                        <span class="score-indicator">🟢</span>
+                        <div class="score-info">
+                            <div class="score-label">Inventory Risk</div>
+                            <div class="score-bar-bg"><div class="score-bar-fill green" data-width="71"></div></div>
+                            <div class="score-detail">3 SKUs at stockout risk within 7 days — no automated reorder detected</div>
+                        </div>
+                        <div class="score-value green">71</div>
+                    </div>
+
+                    <div class="audit-score-card">
+                        <span class="score-indicator">🟡</span>
+                        <div class="score-info">
+                            <div class="score-label">Data Flow Score</div>
+                            <div class="score-bar-bg"><div class="score-bar-fill amber" data-width="45"></div></div>
+                            <div class="score-detail">5 disconnected apps — manual data transfer between Shopify, helpdesk, and email</div>
+                        </div>
+                        <div class="score-value amber">45</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('audit')">Get Your Real Audit →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 2: CHATBOT (Embed placeholder)
+         ============================================ -->
+    <div class="modal-overlay" id="modal-chatbot">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🤖 Meet Claire — AI Concierge</h2>
+                <button class="modal-close" onclick="closeModal('chatbot')">✕</button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Claire Introduction -->
+                <div class="claire-intro">
+                    <div class="claire-avatar">👩‍💼</div>
+                    <div class="claire-intro-text">
+                        <h3>Claire is not a generic chatbot.</h3>
+                        <p>She's a site-aware concierge connected to your products, policies, orders, and booking system. She recommends from expert-approved pathways — not hallucinated routines — and asks for confirmation before touching your customer's cart.</p>
+                    </div>
+                </div>
+
+                <!-- Capability Ribbon -->
+                <div class="capability-ribbon">
+                    <span class="capability-badge"><span class="cap-dot"></span> Product Recommendations</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> Cart Actions</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> Booking Flow</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> Page Navigation</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> Safety Guardrails</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> Context Memory</span>
+                    <span class="capability-badge"><span class="cap-dot"></span> RAG Knowledge Base</span>
+                </div>
+
+                <!-- Live Chatbot Embed -->
+                <div class="chatbot-embed-area" id="claire-embed">
+                    <div class="embed-glow"></div>
+                    <div class="embed-content">
+                        <div class="embed-icon">👩‍💼</div>
+                        <p class="embed-text">Try Claire live — ask her anything</p>
+                        <p class="embed-subtext">Loaded with a real skincare store's products, treatments & policies</p>
+                    </div>
+                    <!-- REPLACE THIS DIV WITH YOUR IFRAME:
+                    <iframe src="YOUR_CHATBOT_URL" width="100%" height="450" style="border:none;"></iframe>
+                    -->
+                </div>
+
+                <!-- Scenario Guide -->
+                <div class="scenario-label">✨ Watch her handle these scenarios</div>
+
+                <div class="scenario-grid">
+                    <div class="scenario-card active" onclick="showScenario(0)">
+                        <div class="scenario-emoji">🎯</div>
+                        <div class="scenario-title">Smart Recommendations</div>
+                        <div class="scenario-desc">Ask about pigmentation — watch her pull the expert-approved pathway</div>
+                        <span class="scenario-tag wow">WOW MOMENT</span>
+                    </div>
+                    <div class="scenario-card" onclick="showScenario(1)">
+                        <div class="scenario-emoji">🔀</div>
+                        <div class="scenario-title">Context Switching</div>
+                        <div class="scenario-desc">Change topics mid-conversation — she detects it and switches pathways</div>
+                        <span class="scenario-tag smart">INTELLIGENT</span>
+                    </div>
+                    <div class="scenario-card" onclick="showScenario(2)">
+                        <div class="scenario-emoji">🛒</div>
+                        <div class="scenario-title">Cart Actions + Confirmation</div>
+                        <div class="scenario-desc">Ask to add a product — she confirms before modifying the cart</div>
+                        <span class="scenario-tag trust">TRUST-BUILDING</span>
+                    </div>
+                    <div class="scenario-card" onclick="showScenario(3)">
+                        <div class="scenario-emoji">🛡️</div>
+                        <div class="scenario-title">Safety Guardrails</div>
+                        <div class="scenario-desc">Mention pregnancy — watch her redirect to practitioner review</div>
+                        <span class="scenario-tag safe">SAFETY-FIRST</span>
+                    </div>
+                </div>
+
+                <!-- Scenario Detail Panels -->
+                <!-- Scenario 0: Smart Recommendations -->
+                <div class="scenario-detail-panel active" id="scenario-panel-0">
+                    <div class="scenario-detail-header">
+                        <h4>🎯 Smart Recommendations</h4>
+                        <span class="try-prompt">Try: "I have dark spots on my cheeks"</span>
+                    </div>
+                    <div class="convo-thread" id="convo-0">
+                        <div class="convo-msg customer" data-delay="0">
+                            <div class="convo-bubble">I have dark spots on my cheeks that won't go away. What can I use?</div>
+                            <div class="convo-avatar customer-av">👤</div>
+                        </div>
+                        <div class="convo-msg claire" data-delay="600">
+                            <div class="convo-avatar claire-av">👩‍💼</div>
+                            <div class="convo-bubble">
+                                I understand how frustrating persistent dark spots can be! Based on your concern, I'd recommend our pigmentation care pathway.
+                                <div class="convo-product-card">
+                                    <div class="prod-icon">✨</div>
+                                    <div class="prod-info">
+                                        <div class="prod-name">Brightening Vitamin C Serum</div>
+                                        <div class="prod-price">£38.00</div>
+                                    </div>
+                                    <div class="prod-btn">View</div>
+                                </div>
+                                <div class="convo-product-card">
+                                    <div class="prod-icon">🌙</div>
+                                    <div class="prod-info">
+                                        <div class="prod-name">Advanced Retinol Night Cream</div>
+                                        <div class="prod-price">£45.00</div>
+                                    </div>
+                                    <div class="prod-btn">View</div>
+                                </div>
+                                <div class="convo-meta">
+                                    <span class="convo-label pathway">🧬 Pigmentation Pathway</span>
+                                    <span class="convo-label rag">📚 RAG: Knowledge Base</span>
+                                    <span class="convo-label action">🎴 Product Cards Shown</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 1: Context Switching -->
+                <div class="scenario-detail-panel" id="scenario-panel-1">
+                    <div class="scenario-detail-header">
+                        <h4>🔀 Context Switching</h4>
+                        <span class="try-prompt">Try: ask about pigmentation, then ask about dullness</span>
+                    </div>
+                    <div class="convo-thread" id="convo-1">
+                        <div class="convo-msg customer" data-delay="0">
+                            <div class="convo-bubble">What about dull skin? My face looks tired all the time.</div>
+                            <div class="convo-avatar customer-av">👤</div>
+                        </div>
+                        <div class="convo-msg claire" data-delay="600">
+                            <div class="convo-avatar claire-av">👩‍💼</div>
+                            <div class="convo-bubble">
+                                Great question — and it's a different concern than the pigmentation we discussed earlier, so let me switch to what works specifically for dullness and radiance.
+                                <div class="convo-product-card">
+                                    <div class="prod-icon">💧</div>
+                                    <div class="prod-info">
+                                        <div class="prod-name">Glow Enzyme Exfoliating Mask</div>
+                                        <div class="prod-price">£32.00</div>
+                                    </div>
+                                    <div class="prod-btn">View</div>
+                                </div>
+                                <div class="convo-meta">
+                                    <span class="convo-label pathway">🔀 Switched: Pigmentation → Dullness</span>
+                                    <span class="convo-label context">🧠 Topic Change Detected</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 2: Cart Actions -->
+                <div class="scenario-detail-panel" id="scenario-panel-2">
+                    <div class="scenario-detail-header">
+                        <h4>🛒 Cart Actions + Confirmation</h4>
+                        <span class="try-prompt">Try: "Add the serum to my cart"</span>
+                    </div>
+                    <div class="convo-thread" id="convo-2">
+                        <div class="convo-msg customer" data-delay="0">
+                            <div class="convo-bubble">Add the vitamin C serum to my cart please</div>
+                            <div class="convo-avatar customer-av">👤</div>
+                        </div>
+                        <div class="convo-msg claire" data-delay="600">
+                            <div class="convo-avatar claire-av">👩‍💼</div>
+                            <div class="convo-bubble">
+                                I'd be happy to add that for you! Just to confirm:
+                                <div class="convo-confirm-bar">🔒 Add <strong>&nbsp;Brightening Vitamin C Serum (£38.00)&nbsp;</strong> to your cart?</div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+                                    <span class="prod-btn" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.25); color: var(--accent-emerald);">✓ Yes, add it</span>
+                                    <span class="prod-btn">✕ No thanks</span>
+                                </div>
+                                <div class="convo-meta">
+                                    <span class="convo-label action">🔐 Confirmation Required</span>
+                                    <span class="convo-label context">🧠 Resolved: "the serum" → Vitamin C Serum</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scenario 3: Safety Guardrails -->
+                <div class="scenario-detail-panel" id="scenario-panel-3">
+                    <div class="scenario-detail-header">
+                        <h4>🛡️ Safety Guardrails</h4>
+                        <span class="try-prompt">Try: "I'm pregnant — is the retinol safe?"</span>
+                    </div>
+                    <div class="convo-thread" id="convo-3">
+                        <div class="convo-msg customer" data-delay="0">
+                            <div class="convo-bubble">Actually, I should mention I'm pregnant. Is the retinol night cream safe for me?</div>
+                            <div class="convo-avatar customer-av">👤</div>
+                        </div>
+                        <div class="convo-msg claire" data-delay="600">
+                            <div class="convo-avatar claire-av">👩‍💼</div>
+                            <div class="convo-bubble">
+                                Thank you so much for mentioning that — it's really important. <strong>Retinol is generally not recommended during pregnancy</strong>, so I'm going to remove that from my recommendation.
+                                <br><br>
+                                For your safety, I'd suggest booking a consultation with one of our practitioners who can recommend pregnancy-safe alternatives tailored to your skin.
+                                <div style="margin-top: 0.75rem; display: flex; gap: 0.5rem;">
+                                    <span class="prod-btn" style="background: rgba(16, 185, 129, 0.15); border-color: rgba(16, 185, 129, 0.25); color: var(--accent-emerald);">📅 Book Consultation</span>
+                                </div>
+                                <div class="convo-meta">
+                                    <span class="convo-label safety">🛡️ Safety: Pregnancy Detected</span>
+                                    <span class="convo-label safety">⛔ Retinol Blocked</span>
+                                    <span class="convo-label action">📅 Booking Flow Offered</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Behind the Scenes -->
+                <div class="bts-section">
+                    <div class="bts-title">Behind the scenes</div>
+                    <div class="bts-flow">
+                        <div class="bts-node">Customer Message</div>
+                        <div class="bts-arrow">→</div>
+                        <div class="bts-node highlight">Deterministic Planner</div>
+                        <div class="bts-arrow">→</div>
+                        <div class="bts-node">Approved Products + Safety Rules</div>
+                        <div class="bts-arrow">→</div>
+                        <div class="bts-node highlight">LLM Response Writer</div>
+                        <div class="bts-arrow">→</div>
+                        <div class="bts-node">Natural, Context-Aware Reply</div>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; line-height: 1.6;">The AI never invents recommendations. A deterministic layer selects the right products and safety rules, then the language model writes a natural response around that approved plan. This is what makes Claire safe for real customers.</p>
+                </div>
+
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('chatbot')">Get Claire for Your Store →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 3: OPS DASHBOARD
+         ============================================ -->
+    <div class="modal-overlay" id="modal-dashboard">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📊 AI Ops Dashboard</h2>
+                <button class="modal-close" onclick="closeModal('dashboard')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.12); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                    <strong style="color: var(--text-primary);">The problem:</strong> Most founders check 4-5 different dashboards every morning — Shopify, Klaviyo, Gorgias, Google Analytics, their spreadsheets. That's 30+ minutes before the day even starts.
+                </div>
+                <div class="dashboard-grid">
+                    <div class="dash-metric">
+                        <div class="dash-metric-value" style="color: var(--accent-emerald);" data-count="47382" data-prefix="$">$0</div>
+                        <div class="dash-metric-label">Revenue (7d)</div>
+                        <div class="dash-metric-change up">▲ 12.4%</div>
+                    </div>
+                    <div class="dash-metric">
+                        <div class="dash-metric-value" style="color: var(--accent-red);" data-count="3241" data-prefix="$">$0</div>
+                        <div class="dash-metric-label">Refunds (7d)</div>
+                        <div class="dash-metric-change down">▲ 3.2%</div>
+                    </div>
+                    <div class="dash-metric">
+                        <div class="dash-metric-value" style="color: var(--accent-amber);" data-count="23" data-prefix="">0</div>
+                        <div class="dash-metric-label">Open Tickets</div>
+                        <div class="dash-metric-change up">▼ 34%</div>
+                    </div>
+                    <div class="dash-metric">
+                        <div class="dash-metric-value" style="color: var(--accent-red);" data-count="7" data-prefix="">0</div>
+                        <div class="dash-metric-label">At-Risk SKUs</div>
+                        <div class="dash-metric-change down">▲ 2 new</div>
+                    </div>
+                </div>
+
+                <div class="dash-tabs">
+                    <button class="dash-tab active" data-tab="revenue">Revenue</button>
+                    <button class="dash-tab" data-tab="support">Support</button>
+                    <button class="dash-tab" data-tab="inventory">Inventory</button>
+                    <button class="dash-tab" data-tab="fulfillment">Fulfillment</button>
+                </div>
+
+                <div class="dash-chart">
+                    <div class="dash-chart-title">7-Day Revenue Trend</div>
+                    <svg class="chart-svg" viewBox="0 0 600 140" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="rgba(59, 130, 246, 0.15)"/>
+                                <stop offset="100%" stop-color="rgba(59, 130, 246, 0)"/>
+                            </linearGradient>
+                        </defs>
+                        <path class="chart-area" d="M0,100 L100,80 L200,90 L300,50 L400,60 L500,30 L600,20 L600,140 L0,140 Z"/>
+                        <path class="chart-line" d="M0,100 L100,80 L200,90 L300,50 L400,60 L500,30 L600,20"/>
+                    </svg>
+                </div>
+
+                <div class="ai-summary">
+                    <div class="ai-summary-header">✨ AI Daily Summary — Today</div>
+                    <p class="ai-summary-text">
+                        Revenue up <strong style="color: var(--accent-emerald);">12%</strong> vs last week. <strong>3 SKUs</strong> approaching stockout within 5 days.
+                        Support backlog reduced by <strong style="color: var(--accent-emerald);">34%</strong> since AI ticket triage went live.
+                        Recommend restocking <strong>SKU-2847 (Blue Running Shoes)</strong> — current velocity suggests sellout by Thursday.
+                        <strong style="color: var(--accent-amber);">1 refund anomaly detected</strong>: customer returned 4 items in 7 days across 2 accounts.
+                    </p>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('dashboard')">Get Your Dashboard →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 4: RETENTION AUTOMATION
+         ============================================ -->
+    <div class="modal-overlay" id="modal-retention">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🔄 Retention Automation</h2>
+                <button class="modal-close" onclick="closeModal('retention')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.12); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                    <strong style="color: var(--text-primary);">The problem:</strong> Only 12% of first-time buyers come back for a second purchase on the average Shopify store. You spent £20-£50 acquiring that customer — and they bought once and disappeared.
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Watch how a single purchase triggers an intelligent retention workflow that brings customers back — automatically.</p>
+
+                <div class="flow-container">
+                    <div class="flow-steps" id="retention-flow">
+                        <div class="flow-step" data-delay="0">
+                            <div class="flow-node">🛍️</div>
+                            <div class="flow-label">First Purchase</div>
+                            <div class="flow-sublabel">Customer buys</div>
+                        </div>
+                        <div class="flow-arrow" data-delay="400">→</div>
+                        <div class="flow-step" data-delay="800">
+                            <div class="flow-node">🧠</div>
+                            <div class="flow-label">AI Segments</div>
+                            <div class="flow-sublabel">Value & behavior analysis</div>
+                        </div>
+                        <div class="flow-arrow" data-delay="1200">→</div>
+                        <div class="flow-step" data-delay="1600">
+                            <div class="flow-node">🎯</div>
+                            <div class="flow-label">Personalized Action</div>
+                            <div class="flow-sublabel">Right message, right time</div>
+                        </div>
+                        <div class="flow-arrow" data-delay="2000">→</div>
+                        <div class="flow-step" data-delay="2400">
+                            <div class="flow-node">💰</div>
+                            <div class="flow-label">Repeat Purchase</div>
+                            <div class="flow-sublabel">Revenue recovered</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flow-branch" id="retention-branches">
+                    <div class="flow-branch-card" data-delay="2800">
+                        <div class="branch-emoji">👑</div>
+                        <div class="branch-title">VIP Customer</div>
+                        <div class="branch-action">→ Exclusive early access</div>
+                    </div>
+                    <div class="flow-branch-card" data-delay="3000">
+                        <div class="branch-emoji">⚠️</div>
+                        <div class="branch-title">At-Risk Customer</div>
+                        <div class="branch-action">→ Win-back offer</div>
+                    </div>
+                    <div class="flow-branch-card" data-delay="3200">
+                        <div class="branch-emoji">🌱</div>
+                        <div class="branch-title">New Customer</div>
+                        <div class="branch-action">→ Education sequence</div>
+                    </div>
+                    <div class="flow-branch-card" data-delay="3400">
+                        <div class="branch-emoji">🔔</div>
+                        <div class="branch-title">Replenishment</div>
+                        <div class="branch-action">→ Auto-reminder</div>
+                    </div>
+                </div>
+
+                <div class="retention-metrics">
+                    <div class="retention-metric">
+                        <div class="metric-label">Repeat Purchase Rate</div>
+                        <div class="metric-before-after">
+                            <span class="metric-val before">12%</span>
+                            <span class="metric-arrow">→</span>
+                            <span class="metric-val after">31%</span>
+                        </div>
+                    </div>
+                    <div class="retention-metric">
+                        <div class="metric-label">Customer Lifetime Value</div>
+                        <div class="metric-before-after">
+                            <span class="metric-val before">$67</span>
+                            <span class="metric-arrow">→</span>
+                            <span class="metric-val after">$184</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('retention')">Build My Retention System →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 5: INVENTORY INTELLIGENCE
+         ============================================ -->
+    <div class="modal-overlay" id="modal-inventory">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>📦 Inventory Intelligence</h2>
+                <button class="modal-close" onclick="closeModal('inventory')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.12); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                    <strong style="color: var(--text-primary);">The problem:</strong> A single bestseller stockout costs the average Shopify store £2,000–£8,000 in lost sales. Meanwhile, slow movers tie up cash for months. Most stores find out about both too late.
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Watch real-time inventory alerts arrive as your system monitors SKU velocity, stock levels, and supplier lead times.</p>
+
+                <div class="alert-feed" id="inventory-feed">
+                    <div class="alert-item critical" data-delay="0">
+                        <div class="alert-icon">🔴</div>
+                        <div class="alert-content">
+                            <div class="alert-time">14:34 PM — CRITICAL</div>
+                            <div class="alert-message"><strong>SKU-1923 (Wireless Earbuds)</strong> — 4 units remaining at 12 orders/day avg velocity. <strong>Stockout in ~8 hours.</strong> Supplier lead time: 5 days. Immediate action required.</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item warning" data-delay="800">
+                        <div class="alert-icon">⚠️</div>
+                        <div class="alert-content">
+                            <div class="alert-time">13:15 PM — WARNING</div>
+                            <div class="alert-message"><strong>SKU-2847 (Blue Running Shoes)</strong> — 23 units remaining. At current velocity (8/day), stockout predicted in <strong>3 days.</strong> Reorder recommended today.</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item info" data-delay="1600">
+                        <div class="alert-icon">🟡</div>
+                        <div class="alert-content">
+                            <div class="alert-time">11:42 AM — SLOW MOVER</div>
+                            <div class="alert-message"><strong>SKU-3801 (Premium Yoga Mat)</strong> — Only 2 sales in 30 days. <strong>847 units in stock.</strong> $12,705 cash tied up. Consider markdown or bundle strategy.</div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item success" data-delay="2400">
+                        <div class="alert-icon">✅</div>
+                        <div class="alert-content">
+                            <div class="alert-time">10:00 AM — AUTO-REORDER</div>
+                            <div class="alert-message"><strong>SKU-4521 (Protein Powder, Vanilla)</strong> — Automatic reorder triggered. PO #8847 sent to supplier. Expected delivery: June 19. <strong>Zero stockout risk.</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="alert-item info" data-delay="3200">
+                        <div class="alert-icon">📊</div>
+                        <div class="alert-content">
+                            <div class="alert-time">09:00 AM — DAILY DIGEST</div>
+                            <div class="alert-message"><strong>Inventory Health Summary:</strong> 142 active SKUs monitored. 3 at stockout risk. 7 slow movers identified. 2 auto-reorders completed overnight. Total inventory value: <strong>$234,891.</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('inventory')">Get Inventory Alerts →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 6: RETURNS AUTOMATION
+         ============================================ -->
+    <div class="modal-overlay" id="modal-returns">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>↩️ Returns Automation</h2>
+                <button class="modal-close" onclick="closeModal('returns')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.12); border-radius: var(--radius-md); padding: 1rem 1.2rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6;">
+                    <strong style="color: var(--text-primary);">The problem:</strong> 19.3% of online sales are returned (NRF 2025). Each return costs £8-15 to process manually — and most stores refund by default when an exchange would have kept the sale.
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">See the difference: a customer wants to return a dress. Compare the manual process vs. AI-assisted exchange-first workflow.</p>
+
+                <div class="comparison-grid">
+                    <div class="comparison-col without">
+                        <div class="comparison-header bad">❌ Without AI</div>
+                        <div class="comp-step" data-delay="0">
+                            <div class="comp-step-num">1</div>
+                            <div>
+                                <div class="comp-step-text">Customer emails support asking for return</div>
+                                <div class="comp-step-time">+0 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="300">
+                            <div class="comp-step-num">2</div>
+                            <div>
+                                <div class="comp-step-text">Agent manually looks up order in Shopify</div>
+                                <div class="comp-step-time">+4 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="600">
+                            <div class="comp-step-num">3</div>
+                            <div>
+                                <div class="comp-step-text">Agent checks return policy eligibility</div>
+                                <div class="comp-step-time">+3 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="900">
+                            <div class="comp-step-num">4</div>
+                            <div>
+                                <div class="comp-step-text">Agent writes reply, generates return label</div>
+                                <div class="comp-step-time">+8 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="1200">
+                            <div class="comp-step-num">5</div>
+                            <div>
+                                <div class="comp-step-text">Full refund issued — revenue lost</div>
+                                <div class="comp-step-time">+5 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-total bad">Total: 20+ minutes / full refund</div>
+                    </div>
+
+                    <div class="comparison-col with">
+                        <div class="comparison-header good">✅ With AI</div>
+                        <div class="comp-step" data-delay="200">
+                            <div class="comp-step-num">1</div>
+                            <div>
+                                <div class="comp-step-text">AI chatbot instantly identifies order & checks eligibility</div>
+                                <div class="comp-step-time">+0.5 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="500">
+                            <div class="comp-step-num">2</div>
+                            <div>
+                                <div class="comp-step-text">Captures structured return reason (sizing / quality / wrong item)</div>
+                                <div class="comp-step-time">+0.3 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="800">
+                            <div class="comp-step-num">3</div>
+                            <div>
+                                <div class="comp-step-text">Suggests exchange with a better size — customer accepts</div>
+                                <div class="comp-step-time">+0.5 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-step" data-delay="1100">
+                            <div class="comp-step-num">4</div>
+                            <div>
+                                <div class="comp-step-text">Exchange processed, label generated, confirmation sent</div>
+                                <div class="comp-step-time">+0.2 min</div>
+                            </div>
+                        </div>
+                        <div class="comp-total good">Total: ~90 seconds / revenue saved ✓</div>
+                    </div>
+                </div>
+
+                <div class="fraud-alert">
+                    <div class="fraud-alert-icon">🚨</div>
+                    <div class="fraud-alert-text">
+                        <strong>Fraud Pattern Detected:</strong> Customer "J. Smith" has returned 8 items across 3 orders in the last 30 days. Pattern matches serial-return behavior. Account flagged for manual review before next return is approved.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('returns')">Automate Your Returns →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         MODAL 7: CUSTOM AUTOMATION
+         ============================================ -->
+    <div class="modal-overlay" id="modal-custom">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>⚙️ Custom Automation</h2>
+                <button class="modal-close" onclick="closeModal('custom')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Every Shopify store has unique backend challenges. Here are real examples of custom systems we build.</p>
+
+                <div class="case-carousel">
+                    <div class="case-track" id="case-track">
+                        <!-- Case 1 -->
+                        <div class="case-card">
+                            <div class="case-card-inner">
+                                <div class="case-industry">👗 Fashion Brand</div>
+                                <div class="case-title">Connected Shopify + Klaviyo + Gorgias into One Workflow</div>
+                                <div class="case-desc">A fast-growing fashion brand was manually copying customer data between three platforms daily. We built an automation layer that syncs order events, support tickets, and email segments in real time.</div>
+                                <div class="case-arch">
+                                    <div class="arch-node">Shopify</div>
+                                    <div class="arch-arrow">→</div>
+                                    <div class="arch-node">Webhooks</div>
+                                    <div class="arch-arrow">→</div>
+                                    <div class="arch-node">Klaviyo</div>
+                                    <div class="arch-arrow">+</div>
+                                    <div class="arch-node">Gorgias</div>
+                                </div>
+                                <div class="case-result">✅ Result: 40% fewer manual tasks, zero data sync errors</div>
+                            </div>
+                        </div>
+
+                        <!-- Case 2 -->
+                        <div class="case-card">
+                            <div class="case-card-inner">
+                                <div class="case-industry">💊 Health & Wellness</div>
+                                <div class="case-title">Custom Inventory Sync with 3PL Warehouse</div>
+                                <div class="case-desc">A supplement brand had constant mismatches between Shopify stock counts and their third-party warehouse. We built a bidirectional sync with conflict resolution and alerting.</div>
+                                <div class="case-arch">
+                                    <div class="arch-node">Shopify</div>
+                                    <div class="arch-arrow">↔</div>
+                                    <div class="arch-node">Custom API</div>
+                                    <div class="arch-arrow">↔</div>
+                                    <div class="arch-node">3PL System</div>
+                                </div>
+                                <div class="case-result">✅ Result: Zero stockouts in 6 months, $18k saved in lost sales</div>
+                            </div>
+                        </div>
+
+                        <!-- Case 3 -->
+                        <div class="case-card">
+                            <div class="case-card-inner">
+                                <div class="case-industry">🔌 Electronics</div>
+                                <div class="case-title">Automated Warranty Claim Processing</div>
+                                <div class="case-desc">An electronics brand was spending 15+ hours per week processing warranty claims manually. We built an AI-powered system that validates claims, checks warranty status, and routes approvals.</div>
+                                <div class="case-arch">
+                                    <div class="arch-node">Customer Form</div>
+                                    <div class="arch-arrow">→</div>
+                                    <div class="arch-node">AI Validator</div>
+                                    <div class="arch-arrow">→</div>
+                                    <div class="arch-node">Auto-Approve / Escalate</div>
+                                </div>
+                                <div class="case-result">✅ Result: 70% faster claim resolution, 15 hours/week saved</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-nav">
+                    <button class="case-nav-btn" onclick="moveCase(-1)">←</button>
+                    <div class="case-dots">
+                        <div class="case-dot active" onclick="goToCase(0)"></div>
+                        <div class="case-dot" onclick="goToCase(1)"></div>
+                        <div class="case-dot" onclick="goToCase(2)"></div>
+                    </div>
+                    <button class="case-nav-btn" onclick="moveCase(1)">→</button>
+                </div>
+            </div>
+            <div class="modal-cta-bar">
+                <a href="#cta" class="btn btn--primary" onclick="closeModal('custom')">Discuss Your Custom Build →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how-it-works">
+        <div class="reveal" style="text-align: center;">
+            <div class="section-label" style="justify-content: center;">Process</div>
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">From discovery to scale — a clear path to operational AI.</p>
+        </div>
+
+        <div class="steps-container reveal">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <div class="step-title">Discovery</div>
+                <p class="step-desc">We audit your store, apps, manual workflows, and founder bottlenecks to map every revenue leak.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <div class="step-title">Build</div>
+                <p class="step-desc">We build one narrow AI workflow first — proving value before expanding scope.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <div class="step-title">Scale</div>
+                <p class="step-desc">Once the first workflow proves ROI, we expand into retention, returns, reporting, and more.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SOCIAL PROOF / RESULTS -->
+    <section class="section" style="padding-top: 2rem;">
+        <div class="reveal" style="text-align: center;">
+            <div class="section-label" style="justify-content: center;">Results</div>
+            <h2 class="section-title">What This Looks Like in Practice</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">Real numbers from stores using these systems.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 3rem;" class="reveal">
+            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2rem; text-align: center;">
+                <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">72%</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">reduction in repetitive support tickets</div>
+            </div>
+            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2rem; text-align: center;">
+                <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">2.6×</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">increase in repeat purchase rate</div>
+            </div>
+            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2rem; text-align: center;">
+                <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">£0</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">lost to stockouts after inventory alerts went live</div>
+            </div>
+            <div style="background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-lg); padding: 2rem; text-align: center;">
+                <div style="font-family: var(--font-heading); font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">41%</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">of return requests converted to exchanges</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOUNDER SECTION -->
+    <section class="section" style="padding-bottom: 2rem;" id="about">
+        <div class="reveal">
+            <div style="max-width: 700px; margin: 0 auto; background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-xl); padding: 2.5rem; display: flex; gap: 2rem; align-items: center;" id="founder-card">
+                <div style="width: 90px; height: 90px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald)); display: flex; align-items: center; justify-content: center; font-size: 2.5rem; flex-shrink: 0; box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);">
+                    <!-- Replace this div with: <img src="your-photo.jpg" style="width:90px;height:90px;border-radius:50%;object-fit:cover;"> -->
+                    👤
+                </div>
+                <div>
+                    <div style="font-family: var(--font-heading); font-weight: 700; font-size: 1.2rem; margin-bottom: 0.3rem;">Built by [Your Name]</div>
+                    <div style="font-size: 0.8rem; color: var(--accent-blue); font-weight: 600; margin-bottom: 0.75rem;">AI Solutions Engineer · Shopify Specialist</div>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">I build AI systems that remove the operational bottlenecks keeping Shopify founders stuck in their own businesses. Every solution on this page is something I've built, tested, and refined with real stores. No templates, no off-the-shelf plugins — just custom systems that work.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section" id="cta">
+        <div class="reveal" style="max-width: 800px; margin: 0 auto;">
+            <div class="section-label" style="justify-content: center;">Ready?</div>
+            <h2 class="section-title">Let's Find Your Revenue Leaks</h2>
+            <p class="section-subtitle" style="margin: 0 auto;">Choose how you'd like to get started. No pressure, no pitch decks — just solutions.</p>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1rem; padding: 0.4rem 1rem; background: rgba(212, 144, 60, 0.08); border: 1px solid rgba(212, 144, 60, 0.15); border-radius: 50px; font-size: 0.8rem; color: var(--accent-amber); font-weight: 500;">
+                <span style="width: 6px; height: 6px; background: var(--accent-amber); border-radius: 50%; animation: pulse 2s ease-in-out infinite;"></span>
+                We take on 3 new store projects per month — limited availability
+            </div>
+        </div>
+
+        <div class="cta-cards reveal">
+            <div class="cta-card">
+                <div class="cta-card-icon">📞</div>
+                <h3>Book a Free Audit Call</h3>
+                <p>15 minutes. We'll identify at least 3 revenue leaks in your store — live on the call.</p>
+                <a href="#" class="btn btn--primary" id="calendly-btn">Book Now →</a>
+            </div>
+
+            <div class="cta-card">
+                <div class="cta-card-icon">📧</div>
+                <h3>Get Your Revenue Leak Report</h3>
+                <p>Drop your details and we'll send you a personalized audit within 24 hours.</p>
+                <form class="email-form" onsubmit="handleEmailSubmit(event)">
+                    <input type="text" placeholder="Your name" required>
+                    <input type="email" placeholder="Email address" required>
+                    <input type="url" placeholder="Store URL (mystore.myshopify.com)">
+                    <button type="submit" class="btn btn--primary">Send My Report →</button>
+                </form>
+            </div>
+
+            <div class="cta-card">
+                <div class="cta-card-icon">💬</div>
+                <h3>Chat on WhatsApp</h3>
+                <p>Prefer a quick chat? Message us directly and we'll respond within the hour.</p>
+                <a href="https://wa.me/YOUR_NUMBER?text=Hi%2C%20I%27d%20like%20to%20learn%20about%20your%20Shopify%20AI%20solutions" target="_blank" class="btn btn--whatsapp">Open WhatsApp →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+        </div>
+        <p>© 2026 ShopifyAI Solutions. Built for Shopify store owners who want to scale smarter.</p>
+    </footer>
+
+    <!-- ============================================
+         JAVASCRIPT
+         ============================================ -->
+    <script>
+        // ==========================================
+        // HEADER SCROLL EFFECT
+        // ==========================================
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // ==========================================
+        // SCROLL REVEAL
+        // ==========================================
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ==========================================
+        // MODAL SYSTEM
+        // ==========================================
+        function openModal(id) {
+            const modal = document.getElementById('modal-' + id);
+            if (!modal) return;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Trigger demo animations
+            setTimeout(() => {
+                if (id === 'audit') resetAudit();
+                if (id === 'dashboard') animateCounters();
+                if (id === 'retention') animateRetentionFlow();
+                if (id === 'inventory') animateAlertFeed();
+                if (id === 'returns') animateComparison();
+                if (id === 'chatbot') showScenario(0);
+            }, 500);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById('modal-' + id);
+            if (!modal) return;
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Close on backdrop click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => {
+                    m.classList.remove('active');
+                });
+                document.body.style.overflow = '';
+            }
+        });
+
+        // ==========================================
+        // DEMO 1: AUDIT SIMULATION
+        // ==========================================
+        function resetAudit() {
+            document.getElementById('audit-progress').classList.remove('active');
+            document.getElementById('audit-results').classList.remove('active');
+            document.getElementById('progress-bar').style.width = '0%';
+            document.querySelectorAll('.score-bar-fill').forEach(b => b.style.width = '0%');
+        }
+
+        function runAudit() {
+            const progress = document.getElementById('audit-progress');
+            const bar = document.getElementById('progress-bar');
+            const text = document.getElementById('progress-text');
+            const results = document.getElementById('audit-results');
+
+            progress.classList.add('active');
+            results.classList.remove('active');
+
+            const steps = [
+                { pct: 15, msg: 'Loading GlowFit Activewear data...' },
+                { pct: 30, msg: 'Scoring support efficiency...' },
+                { pct: 50, msg: 'Analyzing return & refund patterns...' },
+                { pct: 65, msg: 'Evaluating retention workflows...' },
+                { pct: 80, msg: 'Checking inventory velocity...' },
+                { pct: 92, msg: 'Mapping data flows between apps...' },
+                { pct: 100, msg: 'Audit complete — see results below' },
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i >= steps.length) {
+                    clearInterval(interval);
+                    progress.classList.remove('active');
+                    results.classList.add('active');
+                    // Animate score bars
+                    setTimeout(() => {
+                        document.querySelectorAll('.score-bar-fill').forEach(b => {
+                            b.style.width = b.dataset.width + '%';
+                        });
+                    }, 200);
+                    return;
+                }
+                bar.style.width = steps[i].pct + '%';
+                text.textContent = steps[i].msg;
+                i++;
+            }, 500);
+        }
+
+        // ==========================================
+        // DEMO 3: DASHBOARD COUNTERS
+        // ==========================================
+        function animateCounters() {
+            document.querySelectorAll('.dash-metric-value[data-count]').forEach(el => {
+                const target = parseInt(el.dataset.count);
+                const prefix = el.dataset.prefix || '';
+                const duration = 1500;
+                const start = performance.now();
+
+                function update(now) {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const eased = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.floor(eased * target);
+                    el.textContent = prefix + current.toLocaleString();
+                    if (progress < 1) requestAnimationFrame(update);
+                }
+                requestAnimationFrame(update);
+            });
+        }
+
+        // Dashboard tabs
+        document.querySelectorAll('.dash-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+
+        // ==========================================
+        // DEMO 4: RETENTION FLOW ANIMATION
+        // ==========================================
+        function animateRetentionFlow() {
+            const flowItems = document.querySelectorAll('#retention-flow .flow-step, #retention-flow .flow-arrow');
+            const branchCards = document.querySelectorAll('#retention-branches .flow-branch-card');
+
+            // Reset
+            flowItems.forEach(el => el.classList.remove('visible'));
+            branchCards.forEach(el => el.classList.remove('visible'));
+
+            flowItems.forEach(el => {
+                const delay = parseInt(el.dataset.delay) || 0;
+                setTimeout(() => el.classList.add('visible'), delay);
+            });
+
+            branchCards.forEach(el => {
+                const delay = parseInt(el.dataset.delay) || 0;
+                setTimeout(() => el.classList.add('visible'), delay);
+            });
+        }
+
+        // ==========================================
+        // DEMO 5: INVENTORY ALERT FEED
+        // ==========================================
+        function animateAlertFeed() {
+            const alerts = document.querySelectorAll('#inventory-feed .alert-item');
+            alerts.forEach(el => el.classList.remove('visible'));
+
+            alerts.forEach(el => {
+                const delay = parseInt(el.dataset.delay) || 0;
+                setTimeout(() => el.classList.add('visible'), delay);
+            });
+        }
+
+        // ==========================================
+        // DEMO 6: RETURNS COMPARISON
+        // ==========================================
+        function animateComparison() {
+            const steps = document.querySelectorAll('.comparison-col .comp-step');
+            steps.forEach(el => el.classList.remove('visible'));
+
+            steps.forEach(el => {
+                const delay = parseInt(el.dataset.delay) || 0;
+                setTimeout(() => el.classList.add('visible'), delay);
+            });
+        }
+
+        // ==========================================
+        // DEMO 7: CASE CAROUSEL
+        // ==========================================
+        let currentCase = 0;
+        const totalCases = 3;
+
+        function moveCase(dir) {
+            currentCase = (currentCase + dir + totalCases) % totalCases;
+            updateCarousel();
+        }
+
+        function goToCase(index) {
+            currentCase = index;
+            updateCarousel();
+        }
+
+        function updateCarousel() {
+            const track = document.getElementById('case-track');
+            track.style.transform = `translateX(-${currentCase * 100}%)`;
+
+            document.querySelectorAll('.case-dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentCase);
+            });
+        }
+
+        // ==========================================
+        // EMAIL FORM
+        // ==========================================
+        function handleEmailSubmit(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = '✓ Request Sent!';
+            btn.style.background = 'var(--accent-emerald)';
+            setTimeout(() => {
+                btn.textContent = 'Send My Report →';
+                btn.style.background = '';
+            }, 3000);
+        }
+
+        // ==========================================
+        // DEMO 2: CLAIRE SCENARIOS
+        // ==========================================
+        function showScenario(index) {
+            // Update active scenario card
+            document.querySelectorAll('.scenario-card').forEach((card, i) => {
+                card.classList.toggle('active', i === index);
+            });
+
+            // Show correct panel
+            document.querySelectorAll('.scenario-detail-panel').forEach((panel, i) => {
+                panel.classList.toggle('active', i === index);
+            });
+
+            // Animate conversation messages in the active panel
+            const panel = document.getElementById('scenario-panel-' + index);
+            if (!panel) return;
+            const msgs = panel.querySelectorAll('.convo-msg');
+            msgs.forEach(msg => msg.classList.remove('visible'));
+
+            msgs.forEach(msg => {
+                const delay = parseInt(msg.dataset.delay) || 0;
+                setTimeout(() => msg.classList.add('visible'), delay);
+            });
+        }
+
+        // ==========================================
+        // SMOOTH SCROLL
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

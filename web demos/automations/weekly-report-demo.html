@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekly Leadership Report — Live Demo</title>
+<style>
+@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
+  --accent:#d4903c;
+  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --r:12px;--r-sm:8px;
+}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.hd-title{font-size:20px;font-weight:700;color:var(--text)}
+.hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border-strong);font-size:11px;font-weight:500;color:var(--text-sub)}
+
+.pipeline{width:100%;padding:24px 44px 20px;display:flex;align-items:center}
+.sn{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex-shrink:0}
+.si{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .3s;background:var(--bg2);position:relative;overflow:hidden}
+.si.active{border-color:var(--sc,var(--accent));box-shadow:0 0 0 3px var(--sg,rgba(212,144,60,.18));background:var(--sb,rgba(212,144,60,.1))}
+.si.done{border-color:rgba(16,163,127,.45);background:rgba(16,163,127,.08)}
+.si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
+.sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:62px;line-height:1.3}
+.sl.active{color:var(--text)}
+.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;position:relative;overflow:hidden}
+.sc .fill{height:100%;background:rgba(16,163,127,.55);width:0%;transition:width .5s ease}
+
+.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#b8582a);transition:width .5s ease;border-radius:2px}
+
+.demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:400px}
+.ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
+.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;transition:background .4s}
+.ap-body{flex:1;padding:18px;overflow-y:auto}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
+.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
+pre{white-space:pre-wrap;word-break:break-word}
+
+.ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
+.cd{flex:1}
+.cd-title{font-size:15px;font-weight:600;color:var(--text)}
+.cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.06)}
+.btn:active{transform:scale(.98)}
+.btn-play{background:var(--accent);border-color:var(--accent);color:#000;padding:8px 22px;display:flex;align-items:center;gap:6px;font-weight:600}
+.btn-play:hover{background:#d97706;border-color:#d97706}
+.btn-restart{padding:8px 14px;font-size:12px;opacity:.6}
+.btn-restart:hover{opacity:1}
+
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadein .35s ease forwards}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes row-in{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+@keyframes bar-grow{from{width:0}to{width:var(--w)}}
+
+.scr::-webkit-scrollbar{width:3px}
+.scr::-webkit-scrollbar-track{background:transparent}
+.scr::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+
+.jk{color:#79b8ff}.js{color:#f5c07a}.jn{color:#79dcaa}.jb{color:#f97583}.jp{color:#5a5855}.jc{color:#5a5855;font-size:10px}
+
+/* Schedule */
+.clock-face{width:72px;height:72px;border-radius:50%;border:2px solid rgba(212,144,60,.4);display:flex;align-items:center;justify-content:center;position:relative;background:rgba(212,144,60,.06);margin:0 auto 14px}
+.clock-num{font-size:22px;font-weight:700;color:#d4903c;font-family:var(--font-mono)}
+.sched-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.sched-row:last-child{border:none}
+.sched-label{color:var(--text-muted)}
+.sched-val{color:var(--text);font-weight:500}
+.next-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:rgba(212,144,60,.12);color:#d4903c;font-size:11px;font-weight:600;margin-top:12px}
+.nd{width:5px;height:5px;border-radius:50%;background:#d4903c;animation:pulse 1.4s infinite}
+
+/* HubSpot / Airtable parallel */
+.parallel-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.source-card{border-radius:9px;padding:13px;border:1px solid}
+.hs-card{border-color:rgba(255,122,0,.25);background:rgba(255,122,0,.06)}
+.at-card{border-color:rgba(24,160,251,.25);background:rgba(24,160,251,.06)}
+.source-hd{font-size:11px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.deal-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
+.deal-row:last-child{border:none}
+.deal-name{color:var(--text);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.deal-amt{color:#d4903c;font-family:var(--font-mono);font-weight:500}
+.deal-stage{font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--text-muted)}
+.proj-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
+.proj-row:last-child{border:none}
+.proj-name{color:var(--text)}
+.proj-status{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:600}
+.st-done{background:rgba(16,163,127,.15);color:#10a37f}
+.st-ip{background:rgba(79,110,247,.15);color:#7a9fff}
+.st-plan{background:rgba(255,255,255,.06);color:var(--text-muted)}
+.parallel-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);margin-bottom:9px}
+.fetch-dot{width:6px;height:6px;border-radius:50%;animation:pulse .9s infinite}
+
+/* Build Report */
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.metric{border-radius:8px;padding:10px;text-align:center}
+.hs-metric{background:rgba(255,122,0,.08);border:1px solid rgba(255,122,0,.2)}
+.at-metric{background:rgba(24,160,251,.08);border:1px solid rgba(24,160,251,.2)}
+.metric-n{font-size:22px;font-weight:700}
+.metric-l{font-size:10px;color:var(--text-muted);margin-top:2px}
+.hs-metric .metric-n{color:#ff7a00}
+.at-metric .metric-n{color:#18a0fb}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-label{font-size:11px;color:var(--text-sub);min-width:110px}
+.bar-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;animation:bar-grow .7s ease forwards}
+.bar-val{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);min-width:52px;text-align:right}
+
+/* AI Draft */
+.ai-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:rgba(168,85,247,.12);color:#c084fc;font-size:11px;font-weight:600;margin-bottom:12px}
+.ai-spin{width:8px;height:8px;border-radius:50%;border:1.5px solid #c084fc;border-top-color:transparent;animation:spin .7s linear infinite}
+.prompt-box{background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-mono);color:#c2bfb8;line-height:1.75;margin-bottom:12px}
+.section-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);color:#c084fc;font-size:11px;font-weight:600;margin:3px}
+
+/* Clean Output */
+.clean-diff{background:var(--bg3);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:11px;margin-bottom:12px}
+.diff-hd{padding:7px 12px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);font-size:10px;color:var(--text-muted);display:flex;gap:16px}
+.diff-body{padding:12px;line-height:1.8;color:#c2bfb8}
+.rm{color:#f97583;background:rgba(249,117,131,.07)}
+.ok{color:#79dcaa;background:rgba(121,220,170,.07)}
+
+/* Notion */
+.nw{background:#fff;border-radius:10px;padding:18px 22px;color:#1a1a1a;max-height:330px;overflow-y:auto}
+.nw-title{font-size:18px;font-weight:700;color:#1a1a1a;margin-bottom:13px;padding-bottom:10px;border-bottom:1px solid #eee}
+.nw-section{margin-bottom:13px}
+.nw-h{font-size:12px;font-weight:700;color:#1a1a1a;margin-bottom:7px;text-transform:uppercase;letter-spacing:.04em}
+.nw-body{font-size:12px;color:#4a4a4a;line-height:1.65}
+.nw-bul{font-size:12px;color:#4a4a4a;padding-left:14px;position:relative;line-height:1.7;margin-bottom:2px}
+.nw-bul::before{content:'–';position:absolute;left:1px;color:#aaa}
+.nw-kv-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:12px}
+.nw-kv{background:#f7f7f5;border-radius:6px;padding:8px 10px}
+.nw-kv-l{font-size:10px;color:#9b9b9b;font-weight:600;margin-bottom:3px}
+.nw-kv-v{font-size:12px;font-weight:600;color:#1a1a1a}
+
+/* Slack */
+.sw{background:#1a1d21;border-radius:10px;overflow:hidden;max-height:330px;overflow-y:auto}
+.s-hd{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;font-weight:600;color:#e8e6df;display:flex;align-items:center;gap:5px}
+.s-ch{color:#36c5f0}
+.s-msg{padding:13px;display:flex;gap:10px}
+.s-av{width:34px;height:34px;border-radius:7px;background:linear-gradient(135deg,#d4903c,#b8582a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#000;flex-shrink:0}
+.s-body{flex:1}
+.s-sender{font-size:14px;font-weight:700;color:#e8e6df;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.s-bot{font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;background:rgba(212,144,60,.15);color:#d4903c;border:1px solid rgba(212,144,60,.3)}
+.s-text{font-size:12px;color:#c2bfb8;line-height:1.7}
+.s-text strong{color:#e8e6df;font-weight:600}
+.s-text .s-link{color:#36c5f0;text-decoration:none;font-weight:500}
+.s-div{height:1px;background:rgba(255,255,255,.06);margin:6px 0}
+.s-section{font-size:11px;font-weight:700;color:#e8e6df;text-transform:uppercase;letter-spacing:.04em;margin:8px 0 3px}
+</style>
+<link rel="stylesheet" href="./automation-exhibit.css">
+</head>
+<body>
+
+<div class="hd">
+  <div>
+    <div class="hd-eyebrow">Automation Demo</div>
+    <div class="hd-title">Weekly Leadership Report System</div>
+  </div>
+  <div style="text-align:right">
+    <div class="hd-eyebrow" style="margin-bottom:8px">Built with</div>
+    <div class="hd-stack">
+      <span class="chip">🕐 n8n Schedule</span>
+      <span class="chip">🟠 HubSpot</span>
+      <span class="chip">📊 Airtable</span>
+      <span class="chip">🤖 OpenRouter</span>
+      <span class="chip">📋 Notion</span>
+      <span class="chip">💬 Slack</span>
+    </div>
+  </div>
+</div>
+
+<div class="pipeline" id="pipeline"></div>
+<div class="prog"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<div class="demo">
+  <div class="ap" id="ap">
+    <div class="ap-hd" id="ap-hd"></div>
+    <div class="ap-body scr fadein" id="ap-body"></div>
+  </div>
+  <div class="dp">
+    <div class="dp-hd" id="dp-hd"></div>
+    <div class="dp-body scr" id="dp-body"></div>
+  </div>
+</div>
+
+<div class="ctrl">
+  <div class="cd">
+    <div class="cd-title" id="cd-t"></div>
+    <div class="cd-sub" id="cd-s"></div>
+  </div>
+  <div class="ctr" id="ctr">Step 1 / 7</div>
+  <button class="btn" onclick="prev()">← Prev</button>
+  <button class="btn btn-play" id="pbtn" onclick="togglePlay()">
+    <span id="pico">▶</span><span id="plbl">Auto-play</span>
+  </button>
+  <button class="btn" onclick="next()">Next →</button>
+  <button class="btn btn-restart" onclick="restart()">↺</button>
+</div>
+
+<script>
+const STEPS = [
+{
+  id:'sched', label:'Schedule', emoji:'🕐',
+  col:'#d4903c', glow:'rgba(212,144,60,.2)', bg:'rgba(212,144,60,.09)',
+  ap:{col:'#d4903c', bg:'rgba(212,144,60,.1)', label:'n8n Schedule Trigger', ico:'🕐', sub:'Every Monday · 07:00 AM'},
+  dh:'Trigger event  (schedule fired)',
+  dt:'Monday 7am — pipeline kicks off automatically',
+  ds:'The Schedule Trigger node fires every Monday at 07:00 AM, simultaneously dispatching two parallel branches — one to HubSpot and one to Airtable — to pull the week\'s data with zero manual input.',
+  app:`<div style="text-align:center;margin-bottom:18px">
+    <div class="clock-face"><span class="clock-num">07:00</span></div>
+    <div style="font-size:13px;font-weight:600;color:var(--text)">Monday, May 19, 2026</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-top:3px">Next execution in 7 days</div>
+  </div>
+  <div style="background:var(--bg3);border-radius:9px;padding:14px">
+    <div class="sched-row"><span class="sched-label">Frequency</span><span class="sched-val">Every week</span></div>
+    <div class="sched-row"><span class="sched-label">Day</span><span class="sched-val">Monday</span></div>
+    <div class="sched-row"><span class="sched-label">Time</span><span class="sched-val">07:00 AM</span></div>
+    <div class="sched-row"><span class="sched-label">Branches triggered</span><span class="sched-val">2 parallel</span></div>
+    <div class="sched-row"><span class="sched-label">Last run</span><span class="sched-val">May 12 · 07:00 AM ✓</span></div>
+  </div>
+  <div class="next-badge" style="margin-top:14px"><div class="nd"></div>Pipeline armed · awaiting next trigger</div>`,
+  data:`<span class="jc">// n8n Schedule Trigger event</span>
+<span class="jp">{</span>
+  <span class="jk">"triggerTime"</span>: <span class="js">"2026-05-19T07:00:00.000Z"</span>,
+  <span class="jk">"timezone"</span>: <span class="js">"Africa/Lagos"</span>,
+  <span class="jk">"weekday"</span>: <span class="js">"Monday"</span>,
+  <span class="jk">"triggerAtHour"</span>: <span class="jn">7</span>,
+  <span class="jk">"interval"</span>: <span class="jp">{</span>
+    <span class="jk">"field"</span>: <span class="js">"weeks"</span>,
+    <span class="jk">"triggerAtDay"</span>: <span class="jp">[</span><span class="jn">1</span><span class="jp">]</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span class="jc">// Two branches fire simultaneously:</span>
+<span class="jc">// → Fetch HubSpot Deals</span>
+<span class="jc">// → Fetch Airtable Projects</span>`
+},
+{
+  id:'fetch', label:'Data Fetch', emoji:'⬇️',
+  col:'#818cf8', glow:'rgba(129,140,248,.2)', bg:'rgba(129,140,248,.08)',
+  ap:{col:'#818cf8', bg:'rgba(129,140,248,.09)', label:'HubSpot  +  Airtable  (parallel)', ico:'⬇️', sub:'2 sources fetched simultaneously'},
+  dh:'API responses  (HubSpot + Airtable)',
+  dt:'HubSpot deals & Airtable projects pulled in parallel',
+  ds:'Both branches execute at the same time. The HubSpot node fetches all deal records with stage, amount, and probability fields. The Airtable node pulls every row in the Projects table. Both streams converge at the Merge node.',
+  app:`<div class="parallel-lbl">Parallel execution</div>
+  <div class="parallel-grid">
+    <div class="source-card hs-card">
+      <div class="source-hd" style="color:#ff7a00"><span class="fetch-dot" style="background:#ff7a00"></span>🟠 HubSpot · 5 deals</div>
+      <div class="deal-row"><span class="deal-name">NexaFlow Ltd</span><span><span class="deal-amt">$62,000</span></span></div>
+      <div class="deal-row"><span class="deal-name">DreamersBay Suite</span><span><span class="deal-amt">$45,000</span></span></div>
+      <div class="deal-row"><span class="deal-name">Orbis Health</span><span><span class="deal-amt">$34,000</span></span></div>
+      <div class="deal-row"><span class="deal-name">Velocity Commerce</span><span><span class="deal-amt">$28,500</span></span></div>
+      <div class="deal-row"><span class="deal-name">Parkside Media</span><span><span class="deal-amt">$15,000</span></span></div>
+    </div>
+    <div class="source-card at-card">
+      <div class="source-hd" style="color:#18a0fb"><span class="fetch-dot" style="background:#18a0fb"></span>📊 Airtable · 5 projects</div>
+      <div class="proj-row"><span class="proj-name">Leadipedia V3</span><span class="proj-status st-ip">In Progress</span></div>
+      <div class="proj-row"><span class="proj-name">Onboarding Portal</span><span class="proj-status st-done">Complete</span></div>
+      <div class="proj-row"><span class="proj-name">AI Content Pipeline</span><span class="proj-status st-done">Complete</span></div>
+      <div class="proj-row"><span class="proj-name">Brand Refresh</span><span class="proj-status st-ip">In Progress</span></div>
+      <div class="proj-row"><span class="proj-name">Agency Dashboard</span><span class="proj-status st-plan">Planning</span></div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-align:center">↓ both streams feed into Merge node</div>`,
+  data:`<span class="jc">// HubSpot: one deal object (of 5)</span>
+<span class="jp">{</span>
+  <span class="jk">"id"</span>: <span class="js">"94820183"</span>,
+  <span class="jk">"properties"</span>: <span class="jp">{</span>
+    <span class="jk">"dealname"</span>: <span class="js">"NexaFlow Ltd"</span>,
+    <span class="jk">"dealstage"</span>: <span class="js">"negotiation"</span>,
+    <span class="jk">"amount"</span>: <span class="js">"62000"</span>,
+    <span class="jk">"closedate"</span>: <span class="js">"2026-06-15"</span>,
+    <span class="jk">"hs_deal_stage_probability"</span>: <span class="js">"70"</span>,
+    <span class="jk">"createdate"</span>: <span class="js">"2026-05-02T09:12:00Z"</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>
+
+<span class="jc">// Airtable: one record (of 5)</span>
+<span class="jp">{</span>
+  <span class="jk">"id"</span>: <span class="js">"recABC123"</span>,
+  <span class="jk">"fields"</span>: <span class="jp">{</span>
+    <span class="jk">"Name"</span>: <span class="js">"Leadipedia V3"</span>,
+    <span class="jk">"Status"</span>: <span class="js">"In Progress"</span>,
+    <span class="jk">"Owner"</span>: <span class="js">"Fadeni Henry"</span>,
+    <span class="jk">"Due"</span>: <span class="js">"2026-06-01"</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>`
+},
+{
+  id:'build', label:'Build Data', emoji:'🔢',
+  col:'#b8582a', glow:'rgba(184,88,42,.2)', bg:'rgba(184,88,42,.09)',
+  ap:{col:'#b8582a', bg:'rgba(184,88,42,.09)', label:'n8n  ·  Code Node', ico:'🔢', sub:'Build Report Data  →  aggregation & calculation'},
+  dh:'Computed report object  (output)',
+  dt:'Raw data aggregated into KPIs',
+  ds:'A JavaScript Code node merges both API responses, filters out closed deals, calculates total pipeline value, applies stage probability weights for the forecast, and computes the project completion rate — all as a single clean object.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px">Calculated KPIs</div>
+  <div class="metric-grid">
+    <div class="metric hs-metric"><div class="metric-n">$184.5K</div><div class="metric-l">Pipeline value</div></div>
+    <div class="metric hs-metric"><div class="metric-n">$67.2K</div><div class="metric-l">Weighted forecast</div></div>
+    <div class="metric hs-metric"><div class="metric-n">5</div><div class="metric-l">Open deals</div></div>
+    <div class="metric at-metric"><div class="metric-n">5</div><div class="metric-l">Total projects</div></div>
+    <div class="metric at-metric"><div class="metric-n">2</div><div class="metric-l">Completed</div></div>
+    <div class="metric at-metric"><div class="metric-n">40%</div><div class="metric-l">Completion rate</div></div>
+  </div>
+  <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9px">Deal pipeline by value</div>
+  <div class="bar-row"><span class="bar-label">NexaFlow Ltd</span><div class="bar-track"><div class="bar-fill" style="--w:100%;width:100%;background:#ff7a00"></div></div><span class="bar-val">$62,000</span></div>
+  <div class="bar-row"><span class="bar-label">DreamersBay Suite</span><div class="bar-track"><div class="bar-fill" style="--w:72%;width:72%;background:#d4903c"></div></div><span class="bar-val">$45,000</span></div>
+  <div class="bar-row"><span class="bar-label">Orbis Health</span><div class="bar-track"><div class="bar-fill" style="--w:54%;width:54%;background:#b8582a"></div></div><span class="bar-val">$34,000</span></div>
+  <div class="bar-row"><span class="bar-label">Velocity Commerce</span><div class="bar-track"><div class="bar-fill" style="--w:46%;width:46%;background:#d4903c"></div></div><span class="bar-val">$28,500</span></div>
+  <div class="bar-row"><span class="bar-label">Parkside Media</span><div class="bar-track"><div class="bar-fill" style="--w:24%;width:24%;background:#fdba74"></div></div><span class="bar-val">$15,000</span></div>`,
+  data:`<span class="jc">// Build Report Data output</span>
+<span class="jp">{</span>
+  <span class="jk">"weekOf"</span>: <span class="js">"Monday, 19 May 2026"</span>,
+  <span class="jk">"hubspot"</span>: <span class="jp">{</span>
+    <span class="jk">"totalDeals"</span>: <span class="jn">5</span>,
+    <span class="jk">"openDeals"</span>: <span class="jn">5</span>,
+    <span class="jk">"dealsCreatedThisWeek"</span>: <span class="jn">1</span>,
+    <span class="jk">"totalPipelineValue"</span>: <span class="jn">184500</span>,
+    <span class="jk">"weightedForecast"</span>: <span class="jn">67200</span>,
+    <span class="jk">"topOpenDeals"</span>: <span class="jp">[</span>
+      <span class="jp">{</span> <span class="jk">"dealname"</span>: <span class="js">"NexaFlow Ltd"</span>, <span class="jk">"amount"</span>: <span class="js">"62000"</span>, <span class="jk">"stage"</span>: <span class="js">"negotiation"</span> <span class="jp">},</span>
+      <span class="jp">{</span> <span class="jk">"dealname"</span>: <span class="js">"DreamersBay Suite"</span>, <span class="jk">"amount"</span>: <span class="js">"45000"</span>, <span class="jk">"stage"</span>: <span class="js">"proposalsent"</span> <span class="jp">},</span>
+      <span class="jp">{</span> <span class="jk">"dealname"</span>: <span class="js">"Orbis Health"</span>, <span class="jk">"amount"</span>: <span class="js">"34000"</span>, <span class="jk">"stage"</span>: <span class="js">"proposalsent"</span> <span class="jp">}</span>
+    <span class="jp">]</span>
+  <span class="jp">},</span>
+  <span class="jk">"airtable"</span>: <span class="jp">{</span>
+    <span class="jk">"totalProjects"</span>: <span class="jn">5</span>,
+    <span class="jk">"completed"</span>: <span class="jn">2</span>,
+    <span class="jk">"completionRate"</span>: <span class="jn">40</span>
+  <span class="jp">}</span>
+<span class="jp">}</span>`
+},
+{
+  id:'ai', label:'AI Draft', emoji:'🤖',
+  col:'#a855f7', glow:'rgba(168,85,247,.2)', bg:'rgba(168,85,247,.09)',
+  ap:{col:'#a855f7', bg:'rgba(168,85,247,.09)', label:'OpenRouter  ·  LLM Chain', ico:'🤖', sub:'Draft Report  →  leadership narrative generated'},
+  dh:'LLM prompt  (sent to OpenRouter)',
+  dt:'AI writes the leadership report from KPI data',
+  ds:'The computed KPIs are injected into a structured prompt that instructs the LLM to write a 5-section leadership report: Headline, Key Numbers, What Is Working, Watch List, and This Week Priority — in direct, no-filler business English.',
+  app:`<div class="ai-chip"><div class="ai-spin"></div>OpenRouter generating report…</div>
+  <div class="prompt-box">
+    <span style="color:#a855f7;font-weight:600">System:</span> Write a weekly leadership report from the data.<br>
+    Use these 5 sections exactly:<br>
+    <span style="color:#f5c07a">HEADLINE · KEY NUMBERS · WHAT IS WORKING</span><br>
+    <span style="color:#f5c07a">WATCH LIST · THIS WEEK PRIORITY</span><br><br>
+    Short sentences. No filler. No markdown headers.<br>
+    Format section headers in ALL CAPS BOLD.
+  </div>
+  <div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px">5 structured sections</div>
+  <div>
+    <span class="section-pill">HEADLINE</span>
+    <span class="section-pill">KEY NUMBERS</span>
+    <span class="section-pill">WHAT IS WORKING</span>
+    <span class="section-pill">WATCH LIST</span>
+    <span class="section-pill">THIS WEEK PRIORITY</span>
+  </div>
+  <div style="margin-top:14px;font-size:11px;font-family:var(--font-mono);color:#10a37f;text-align:center;background:rgba(16,163,127,.07);padding:8px;border-radius:7px;border:1px solid rgba(16,163,127,.18)">✓ Draft complete · 5 sections · 0 markdown headers</div>`,
+  data:`<span class="jc">// LLM Chain prompt (excerpt)</span>
+<span class="jk">text</span>: <span class="js">"Write a weekly leadership report from this data.
+Use these 5 sections exactly:
+1. HEADLINE: one sentence on the state of the business.
+2. KEY NUMBERS: plain English. No tables.
+3. WHAT IS WORKING: 2-3 observations backed by data.
+4. WATCH LIST: 2-3 direct statements of risk.
+5. THIS WEEK PRIORITY: one recommendation.
+
+Write in confident, direct business English.
+Short sentences. No filler.
+
+CRITICAL FORMATTING RULES:
+- DO NOT use markdown headers (no #, ##, ###).
+- Format headers in *ALL CAPS BOLD*.
+- Use standard bullet points (-) for lists.
+
+Data: { weekOf: 'Monday, 19 May 2026',
+hubspot: { totalPipelineValue: 184500,
+weightedForecast: 67200, openDeals: 5 ... },
+airtable: { completionRate: 40, completed: 2 ... } }"</span>
+
+<span class="jc">// Model: openrouter/free</span>`
+},
+{
+  id:'clean', label:'Clean Output', emoji:'🧹',
+  col:'#34d399', glow:'rgba(52,211,153,.2)', bg:'rgba(52,211,153,.08)',
+  ap:{col:'#34d399', bg:'rgba(52,211,153,.08)', label:'n8n  ·  Code Node', ico:'🧹', sub:'Clean AI Output  →  sanitize for Notion'},
+  dh:'Cleaned text  (Notion-safe)',
+  dt:'AI response extracted, trimmed & sanitized',
+  ds:'A Code node handles the varying shapes of OpenRouter response objects — checking multiple paths (output[0].content[0].text, response.text, text) — strips any stray markdown, and trims the string to 1900 characters for Notion\'s block size limit.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Extraction path logic</div>
+  <div style="background:var(--bg3);border-radius:8px;padding:12px;font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#c2bfb8;margin-bottom:12px">
+    <span style="color:#34d399">if</span> (output[0].content[0].text) → <span style="color:#79dcaa">✓ used</span><br>
+    <span style="color:#5a5855">else if</span> (response.text) → fallback<br>
+    <span style="color:#5a5855">else if</span> (text) → fallback<br>
+    <span style="color:#5a5855">else</span> → <span style="color:#f97583">'No report generated'</span>
+  </div>
+  <div class="clean-diff">
+    <div class="diff-hd">
+      <span style="color:#f97583">✕  removed</span>
+      <span style="color:#79dcaa">✓  kept</span>
+    </div>
+    <div class="diff-body">
+      <div class="rm">### Weekly Leadership Report</div>
+      <div class="ok">*HEADLINE*</div>
+      <div class="ok">Pipeline is healthy at $184.5K but delivery capacity is stretched at 40% project completion.</div>
+      <div style="height:5px"></div>
+      <div class="rm">## KEY NUMBERS</div>
+      <div class="ok">*KEY NUMBERS*</div>
+      <div class="ok">Five open deals totalling $184.5K. Weighted forecast of $67.2K…</div>
+    </div>
+  </div>
+  <div style="font-size:11px;font-family:var(--font-mono);color:#34d399;text-align:center;background:rgba(52,211,153,.06);padding:7px;border-radius:7px;border:1px solid rgba(52,211,153,.18)">✓ 1,184 chars · Notion block limit safe</div>`,
+  data:`<span class="jc">// Input: raw LLM response object</span>
+<span class="jp">{</span>
+  <span class="jk">"output"</span>: <span class="jp">[{</span>
+    <span class="jk">"content"</span>: <span class="jp">[{</span>
+      <span class="jk">"type"</span>: <span class="js">"text"</span>,
+      <span class="jk">"text"</span>: <span class="js">"*HEADLINE*\nPipeline is healthy at $184.5K..."</span>
+    <span class="jp">}]</span>
+  <span class="jp">}]</span>
+<span class="jp">}</span>
+
+<span class="jc">// Output: clean string ready for Notion</span>
+<span class="jp">{</span>
+  <span class="jk">"cleanedReport"</span>: <span class="js">"*HEADLINE*\nPipeline is healthy at $184.5K but delivery capacity is stretched at 40% project completion.\n\n*KEY NUMBERS*\nFive open deals totalling $184.5K. Weighted forecast sits at $67.2K. One new deal created this week. Two of five projects complete.\n\n*WHAT IS WORKING*\n- NexaFlow Ltd ($62K) is in negotiation — strongest deal in the pipeline.\n- DreamersBay Suite and Orbis Health proposals are out. Both above $30K.\n- AI Content Pipeline and Onboarding Portal both delivered.\n\n*WATCH LIST*\n- 60% of projects are not yet complete. Leadipedia V3 is the most critical.\n- Agency Dashboard is still in Planning — no active work recorded.\n- Pipeline is front-loaded; three deals closing before June 15.\n\n*THIS WEEK PRIORITY*\nMove Leadipedia V3 from In Progress to review-ready. It unlocks the Agency Dashboard and de-risks the June pipeline."</span>
+<span class="jp">}</span>`
+},
+{
+  id:'notion', label:'Notion', emoji:'📋',
+  col:'#e8e6df', glow:'rgba(232,230,223,.1)', bg:'rgba(232,230,223,.06)',
+  ap:{col:'#c2bfb8', bg:'rgba(232,230,223,.07)', label:'Notion', ico:'📋', sub:'Reports database  →  weekly page created'},
+  dh:'Notion API  (pages.create)',
+  dt:'Report published as a new Notion page',
+  ds:'The cleaned report text and week date are used to create a new page inside the leadership reports database. The title includes the week date automatically. The full AI-written report becomes the page body as a rich-text paragraph block.',
+  app:`<div class="nw scr">
+    <div class="nw-title">📊 Weekly Leadership Report — Monday, 19 May 2026</div>
+    <div class="nw-kv-grid">
+      <div class="nw-kv"><div class="nw-kv-l">Pipeline Value</div><div class="nw-kv-v">$184,500</div></div>
+      <div class="nw-kv"><div class="nw-kv-l">Weighted Forecast</div><div class="nw-kv-v">$67,200</div></div>
+      <div class="nw-kv"><div class="nw-kv-l">Open Deals</div><div class="nw-kv-v">5</div></div>
+      <div class="nw-kv"><div class="nw-kv-l">Project Completion</div><div class="nw-kv-v">40% (2 / 5)</div></div>
+    </div>
+    <div class="nw-section">
+      <div class="nw-h">Headline</div>
+      <div class="nw-body">Pipeline is healthy at $184.5K but delivery capacity is stretched at 40% project completion.</div>
+    </div>
+    <div class="nw-section">
+      <div class="nw-h">What is working</div>
+      <div class="nw-bul">NexaFlow Ltd ($62K) is in negotiation — strongest deal in pipeline.</div>
+      <div class="nw-bul">DreamersBay Suite and Orbis Health proposals out. Both above $30K.</div>
+      <div class="nw-bul">AI Content Pipeline and Onboarding Portal both delivered this cycle.</div>
+    </div>
+    <div class="nw-section">
+      <div class="nw-h">Watch list</div>
+      <div class="nw-bul">60% of projects not yet complete. Leadipedia V3 is most critical.</div>
+      <div class="nw-bul">Agency Dashboard still in Planning — no active work recorded.</div>
+      <div class="nw-bul">Pipeline front-loaded; three deals closing before June 15.</div>
+    </div>
+    <div class="nw-section">
+      <div class="nw-h">This week priority</div>
+      <div class="nw-body">Move Leadipedia V3 from In Progress to review-ready. It unlocks the Agency Dashboard and de-risks the June pipeline.</div>
+    </div>
+  </div>`,
+  data:`<span class="jc">// Notion API · pages.create</span>
+<span class="jp">{</span>
+  <span class="jk">"parent"</span>: <span class="jp">{</span>
+    <span class="jk">"page_id"</span>: <span class="js">"3617071b-9477-8063-b33d-c86313aa95c6"</span>
+  <span class="jp">},</span>
+  <span class="jk">"properties"</span>: <span class="jp">{</span>
+    <span class="jk">"title"</span>: <span class="jp">[{</span>
+      <span class="jk">"text"</span>: <span class="jp">{</span> <span class="jk">"content"</span>: <span class="js">"Weekly Leadership Report - Monday, 19 May 2026"</span> <span class="jp">}</span>
+    <span class="jp">}]</span>
+  <span class="jp">},</span>
+  <span class="jk">"children"</span>: <span class="jp">[{</span>
+    <span class="jk">"object"</span>: <span class="js">"block"</span>,
+    <span class="jk">"type"</span>: <span class="js">"paragraph"</span>,
+    <span class="jk">"paragraph"</span>: <span class="jp">{</span>
+      <span class="jk">"rich_text"</span>: <span class="jp">[{</span>
+        <span class="jk">"type"</span>: <span class="js">"text"</span>,
+        <span class="jk">"text"</span>: <span class="jp">{</span>
+          <span class="jk">"content"</span>: <span class="js">"*HEADLINE*\nPipeline is healthy at $184.5K..."</span>
+        <span class="jp">}</span>
+      <span class="jp">}]</span>
+    <span class="jp">}</span>
+  <span class="jp">}]</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ 200 OK · Page created · ID: 3617071b...</span>`
+},
+{
+  id:'slack', label:'Slack', emoji:'💬',
+  col:'#36c5f0', glow:'rgba(54,197,240,.15)', bg:'rgba(54,197,240,.08)',
+  ap:{col:'#36c5f0', bg:'rgba(54,197,240,.08)', label:'Slack', ico:'💬', sub:'#weekly-reports  →  message posted'},
+  dh:'Slack API  (chat.postMessage)',
+  dt:'Report delivered to #weekly-reports — pipeline complete',
+  ds:'The final Slack node posts the AI-written report plus a direct link to the Notion page into the #weekly-reports channel. Leadership wakes Monday morning to a formatted digest waiting for them — no manual effort required.',
+  app:`<div class="sw scr">
+    <div class="s-hd"><span class="s-ch">#weekly-reports</span><span style="color:var(--text-muted);font-size:11px;font-weight:400;margin-left:4px">· DreamersBay</span></div>
+    <div class="s-msg">
+      <div class="s-av">WR</div>
+      <div class="s-body">
+        <div class="s-sender">WeeklyReport <span class="s-bot">APP</span><span style="font-size:11px;color:var(--text-muted);font-weight:400">Mon at 7:02 AM</span></div>
+        <div class="s-text">
+          <strong>📊 Weekly Report — Monday, 19 May 2026</strong>
+          <div class="s-div"></div>
+          <div class="s-section">Headline</div>
+          Pipeline is healthy at $184.5K but delivery capacity is stretched at 40% project completion.
+          <div class="s-div"></div>
+          <div class="s-section">Key Numbers</div>
+          Five open deals totalling $184.5K. Weighted forecast at $67.2K. Two of five projects complete.
+          <div class="s-div"></div>
+          <div class="s-section">What is working</div>
+          – NexaFlow Ltd ($62K) in negotiation — strongest in pipeline<br>
+          – DreamersBay Suite &amp; Orbis Health proposals sent (both $30K+)<br>
+          – AI Content Pipeline and Onboarding Portal both delivered
+          <div class="s-div"></div>
+          <div class="s-section">Watch list</div>
+          – 60% of projects not yet complete. Leadipedia V3 critical.<br>
+          – Agency Dashboard in Planning — no active progress.<br>
+          – Three deals closing pre–June 15. Pipeline front-loaded.
+          <div class="s-div"></div>
+          <div class="s-section">This week priority</div>
+          Move Leadipedia V3 to review-ready.
+          <div class="s-div"></div>
+          <a href="#" class="s-link">📋 Full report in Notion →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:#10a37f;font-family:var(--font-mono);text-align:center;padding:8px;background:rgba(16,163,127,.07);border-radius:8px;border:1px solid rgba(16,163,127,.2)">
+    ✓ Pipeline complete · 8 nodes · Schedule → HubSpot + Airtable → Merge → AI → Notion → Slack
+  </div>`,
+  data:`<span class="jc">// Slack chat.postMessage</span>
+<span class="jp">{</span>
+  <span class="jk">"channel"</span>: <span class="js">"C0B431AKYP2"</span>,
+  <span class="jk">"mrkdwn"</span>: <span class="jb">true</span>,
+  <span class="jk">"text"</span>: <span class="js">"📊 Weekly Report — Monday, 19 May 2026\n\n*HEADLINE*\nPipeline is healthy at $184.5K...\n\n*KEY NUMBERS*\nFive open deals totalling $184.5K...\n\n*WHAT IS WORKING*\n- NexaFlow Ltd ($62K) in negotiation...\n\n*WATCH LIST*\n- 60% of projects not complete...\n\n*THIS WEEK PRIORITY*\nMove Leadipedia V3 to review-ready.\n\nNotion: https://notion.so/3617071b..."</span>
+<span class="jp">}</span>
+
+<span class="jc">// Delivery confirmation</span>
+<span style="color:#10a37f;font-size:11px">✓ 200 OK
+✓ channel: #weekly-reports
+✓ ts: 1747638120.000100
+✓ Delivered: Mon 07:02 AM WAT</span>`
+}
+];
+
+const EXHIBIT = {
+  headerEyebrow: 'Outcome Exhibit',
+  title: 'Leadership wakes up to a finished weekly brief',
+  badgeEyebrow: 'Visible outcomes',
+  badges: ['Picture assembled', 'Momentum measured', 'Narrative drafted', 'Brief delivered'],
+  scenes: [
+    {
+      label: 'Picture assembled',
+      title: 'Leadership sees the week as one picture, not scattered dashboards',
+      summary: 'Commercial movement, delivery load, and risk arrive together.',
+      outcome: 'The week starts with one joined-up view.',
+      visitor: 'The report feels like a single story, not a dashboard scavenger hunt.',
+      metricLabel: 'Sources combined',
+      metricValue: 'Multiple systems, one view',
+      proofs: [
+        'Revenue picture gathered',
+        'Project status gathered',
+        'Signals pulled into one view'
+      ],
+      color: '#d4903c'
+    },
+    {
+      label: 'Momentum measured',
+      title: 'The report shows where momentum is real and where it is slipping',
+      summary: 'It surfaces what is healthy, what is blocked, and what needs attention next.',
+      outcome: 'Leadership sees motion and friction at the same time.',
+      visitor: 'The report tells them where to lean in.',
+      metricLabel: 'Momentum read',
+      metricValue: 'Wins and risks surfaced',
+      proofs: [
+        'Wins surfaced',
+        'Risks highlighted',
+        'Pressure points named'
+      ],
+      color: '#ff7a00'
+    },
+    {
+      label: 'Narrative drafted',
+      title: 'The numbers are turned into an executive-ready narrative',
+      summary: 'Leaders get a readable story instead of raw tables.',
+      outcome: 'The report becomes readable in minutes.',
+      visitor: 'It reads like a brief, not a spreadsheet export.',
+      metricLabel: 'Narrative ready',
+      metricValue: 'Headline and priorities drafted',
+      proofs: [
+        'Headline written',
+        'Key numbers framed',
+        'Priority made explicit'
+      ],
+      color: '#4f6ef7'
+    },
+    {
+      label: 'Review-ready',
+      title: 'The final pass is about judgment, not formatting',
+      summary: 'Human review happens on a strong first draft, not a blank page.',
+      outcome: 'People spend time deciding, not rewriting.',
+      visitor: 'The editor is refining a report, not building one.',
+      metricLabel: 'Review lightened',
+      metricValue: 'Review instead of rewriting',
+      proofs: [
+        'Structure complete',
+        'Tone consistent',
+        'Edits kept light'
+      ],
+      color: '#8b5cf6'
+    },
+    {
+      label: 'Delivered',
+      title: 'The right people receive the same clear weekly brief',
+      summary: 'The update lands where leadership already works, ready for action.',
+      outcome: 'The story is shipped, preserved, and easy to revisit.',
+      visitor: 'The brief arrives finished.',
+      metricLabel: 'Brief shipped',
+      metricValue: '1 weekly report fully delivered',
+      proofs: [
+        'Report distributed',
+        'Summary preserved',
+        'Reference link included'
+      ],
+      color: '#36c5f0'
+    }
+  ]
+};
+</script>
+<script src="./automation-exhibit.js"></script>
+<script>
+AutomationExhibit.mount({ steps: STEPS, exhibit: EXHIBIT, autoplayMs: 5600 });
+</script>
+</body>
+</html>

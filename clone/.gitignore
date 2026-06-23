@@ -1,0 +1,8 @@
+node_modules/
+dist/
+
+.codex-screenshots/
+.codex-chrome-profile*/
+edge-cdp-profile/
+
+*.log

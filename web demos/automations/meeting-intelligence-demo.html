@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Meeting Intelligence — Live Demo</title>
+<style>
+@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
+  --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
+  --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
+  --accent:#4f6ef7;
+  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --r:12px;--r-sm:8px;
+}
+body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
+
+/* ── Header ── */
+.hd{width:100%;padding:28px 44px 0;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border);padding-bottom:24px}
+.hd-left{}
+.hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
+.hd-title{font-size:20px;font-weight:700;color:var(--text)}
+.hd-right{text-align:right}
+.hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;border:1px solid var(--border-strong);font-size:11px;font-weight:500;color:var(--text-sub)}
+
+/* ── Pipeline ── */
+.pipeline{width:100%;padding:24px 44px 20px;display:flex;align-items:center}
+.sn{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer;flex-shrink:0}
+.si{width:42px;height:42px;border-radius:11px;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .3s;background:var(--bg2);position:relative;overflow:hidden}
+.si.active{border-color:var(--sc,var(--accent));box-shadow:0 0 0 3px var(--sg,rgba(79,110,247,.18));background:var(--sb,rgba(79,110,247,.1))}
+.si.done{border-color:rgba(16,163,127,.45);background:rgba(16,163,127,.08)}
+.si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
+.sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:62px;line-height:1.3}
+.sl.active{color:var(--text)}
+.sc{flex:1;height:1px;background:var(--border);min-width:16px;margin-bottom:26px;position:relative;overflow:hidden}
+.sc .fill{height:100%;background:rgba(16,163,127,.55);width:0%;transition:width .5s ease}
+
+/* ── Progress ── */
+.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#a855f7);transition:width .5s ease;border-radius:2px}
+
+/* ── Demo panels ── */
+.demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:400px}
+.ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
+.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;transition:background .4s}
+.ap-body{flex:1;padding:18px;overflow-y:auto}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
+.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
+pre{white-space:pre-wrap;word-break:break-word}
+
+/* ── Controls ── */
+.ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
+.cd{flex:1}
+.cd-title{font-size:15px;font-weight:600;color:var(--text)}
+.cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.06)}
+.btn:active{transform:scale(.98)}
+.btn-play{background:var(--accent);border-color:var(--accent);color: #f5f5f0;padding:8px 22px;display:flex;align-items:center;gap:6px}
+.btn-play:hover{background:#3d5ce0;border-color:#3d5ce0}
+.btn-restart{padding:8px 14px;font-size:12px;opacity:.6}
+.btn-restart:hover{opacity:1}
+
+/* ── Animations ── */
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fadein{animation:fadein .35s ease forwards}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.8)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes task-in{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── Scrollbar ── */
+.scr::-webkit-scrollbar{width:3px}
+.scr::-webkit-scrollbar-track{background:transparent}
+.scr::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:2px}
+
+/* ── JSON colors ── */
+.jk{color:#79b8ff}.js{color:#f5c07a}.jn{color:#79dcaa}.jb{color:#f97583}.jp{color:#5a5855}.jc{color:#5a5855;font-size:10px}
+
+/* ── Fireflies ── */
+.ff-card{border:1px solid rgba(255,90,54,.2);border-radius:10px;padding:15px;background:rgba(255,90,54,.06)}
+.ff-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:rgba(255,90,54,.15);color:#ff7a5c;font-size:11px;font-weight:600;margin-bottom:11px}
+.ff-dot{width:6px;height:6px;border-radius:50%;background:#ff5a36;animation:pulse 1.4s infinite}
+.ff-title{font-size:15px;font-weight:600;color:var(--text);margin-bottom:7px}
+.ff-meta{display:flex;gap:14px;margin-bottom:14px;font-size:12px;color:var(--text-muted);flex-wrap:wrap}
+.ff-tx{background:var(--bg3);border-radius:8px;padding:11px;font-size:11px;line-height:1.75;color:var(--text-sub);max-height:145px;overflow-y:auto;font-family:var(--font-mono)}
+.ff-tx .sp{color:#ff7a5c;font-weight:500}
+
+/* ── n8n ── */
+.n8n-node{border:1px solid rgba(234,75,113,.3);border-radius:8px;padding:11px 14px;background:rgba(234,75,113,.07);margin-bottom:9px;font-size:12px}
+.n8n-nt{font-weight:600;font-size:13px;color:#ea4b71;margin-bottom:5px}
+.n8n-kv{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+.n8n-cell{background:rgba(234,75,113,.07);border:1px solid rgba(234,75,113,.18);border-radius:7px;padding:9px}
+.n8n-cell-k{font-size:10px;color:#ea4b71;font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
+.n8n-cell-v{font-size:12px;color:var(--text)}
+
+/* ── AI ── */
+.ai-dots{display:flex;gap:5px;align-items:center;margin-bottom:14px}
+.ai-d{width:6px;height:6px;border-radius:50%;background:#10a37f;animation:pulse .8s infinite}
+.ai-d:nth-child(2){animation-delay:.2s}
+.ai-d:nth-child(3){animation-delay:.4s}
+.ai-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.ai-stat{background:rgba(16,163,127,.1);border:1px solid rgba(16,163,127,.2);border-radius:8px;padding:9px;text-align:center}
+.ai-stat-n{font-size:22px;font-weight:700;color:#10a37f}
+.ai-stat-l{font-size:10px;color:var(--text-muted);margin-top:1px}
+
+/* ── Notion ── */
+.nw{background:#fff;border-radius:10px;padding:18px 22px;color:#1a1a1a;max-height:310px;overflow-y:auto}
+.nt{font-size:19px;font-weight:700;color:#1a1a1a;margin-bottom:11px}
+.np{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid #eee}
+.npl{color:#9b9b9b;font-size:12px;font-weight:500;min-width:68px}
+.npv{color:#1a1a1a;font-size:12px}
+.ntag{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px}
+.nh2{font-size:13px;font-weight:700;color:#1a1a1a;margin:13px 0 7px}
+.nbody{font-size:12px;color:#4a4a4a;line-height:1.65}
+.nbul{font-size:12px;color:#4a4a4a;padding-left:14px;position:relative;line-height:1.7}
+.nbul::before{content:'•';position:absolute;left:3px;color:#aaa}
+
+/* ── Asana ── */
+.at{border:1px solid rgba(240,106,106,.22);border-radius:8px;padding:11px 13px;background:rgba(240,106,106,.06);margin-bottom:7px;display:flex;align-items:flex-start;gap:9px;opacity:0;transform:translateX(-8px)}
+.at.show{animation:task-in .4s ease forwards}
+.ach{width:17px;height:17px;border-radius:50%;border:2px solid rgba(240,106,106,.45);flex-shrink:0;margin-top:1px}
+.at-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.at-meta{display:flex;gap:9px;font-size:11px;color:var(--text-muted)}
+.av{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color: #f5f5f0;vertical-align:middle;margin-right:3px}
+
+/* ── Slack ── */
+.sw{background:#1a1d21;border-radius:10px;overflow:hidden;max-height:310px;overflow-y:auto}
+.s-hd{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;font-weight:600;color:#e8e6df;display:flex;align-items:center;gap:5px}
+.s-ch{color:#36c5f0}
+.s-msg{padding:13px;display:flex;gap:10px}
+.s-av{width:34px;height:34px;border-radius:7px;background:linear-gradient(135deg,#4f6ef7,#a855f7);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color: #f5f5f0;flex-shrink:0}
+.s-body{flex:1}
+.s-sender{font-size:14px;font-weight:700;color:#e8e6df;display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.s-bot{font-size:10px;font-weight:500;padding:1px 6px;border-radius:3px;background:rgba(54,197,240,.12);color:#36c5f0;border:1px solid rgba(54,197,240,.28)}
+.s-text{font-size:12.5px;color:#c2bfb8;line-height:1.65}
+.s-text strong{color:#e8e6df;font-weight:600}
+.s-div{height:1px;background:rgba(255,255,255,.06);margin:7px 0}
+.s-link{color:#36c5f0;text-decoration:none;font-weight:500}
+</style>
+<link rel="stylesheet" href="./automation-exhibit.css">
+</head>
+<body>
+
+<!-- Header -->
+<div class="hd">
+  <div class="hd-left">
+    <div class="hd-eyebrow">Automation Demo</div>
+    <div class="hd-title">AI Meeting Intelligence System</div>
+  </div>
+  <div class="hd-right">
+    <div class="hd-eyebrow" style="margin-bottom:8px">Built with</div>
+    <div class="hd-stack">
+      <span class="chip">🔥 Fireflies</span>
+      <span class="chip">⚙️ n8n</span>
+      <span class="chip">🤖 OpenRouter</span>
+      <span class="chip">📋 Notion</span>
+      <span class="chip">✅ Asana</span>
+      <span class="chip">💬 Slack</span>
+    </div>
+  </div>
+</div>
+
+<!-- Pipeline -->
+<div class="pipeline" id="pipeline"></div>
+
+<!-- Progress -->
+<div class="prog"><div class="prog-fill" id="prog" style="width:0%"></div></div>
+
+<!-- Demo panels -->
+<div class="demo">
+  <div class="ap" id="ap">
+    <div class="ap-hd" id="ap-hd"></div>
+    <div class="ap-body scr fadein" id="ap-body"></div>
+  </div>
+  <div class="dp">
+    <div class="dp-hd" id="dp-hd"></div>
+    <div class="dp-body scr" id="dp-body"></div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="ctrl">
+  <div class="cd">
+    <div class="cd-title" id="cd-t"></div>
+    <div class="cd-sub" id="cd-s"></div>
+  </div>
+  <div class="ctr" id="ctr">Step 1 / 6</div>
+  <button class="btn" onclick="prev()">← Prev</button>
+  <button class="btn btn-play" id="pbtn" onclick="togglePlay()">
+    <span id="pico">▶</span><span id="plbl">Auto-play</span>
+  </button>
+  <button class="btn" onclick="next()">Next →</button>
+  <button class="btn btn-restart" onclick="restart()" title="Restart">↺</button>
+</div>
+
+<script>
+const STEPS = [
+{
+  id:'ff', label:'Fireflies', emoji:'🔥',
+  col:'#ff5a36', glow:'rgba(255,90,54,.2)', bg:'rgba(255,90,54,.09)',
+  ap:{col:'#ff5a36', bg:'rgba(255,90,54,.1)', label:'Fireflies.ai', ico:'🔥', sub:'POST /meetingmind → webhook received'},
+  dh:'Webhook payload  (raw JSON)',
+  dt:'Meeting ends → Webhook fires',
+  ds:'Fireflies.ai detects the meeting has ended and sends a POST request to the n8n webhook endpoint with the full transcript, attendees, and recording URL.',
+  app:`<div class="ff-card">
+    <div class="ff-badge"><span class="ff-dot"></span> Meeting Ended · Webhook Fired</div>
+    <div class="ff-title">Leadipedia Architecture &amp; Agency Partnership Sync</div>
+    <div class="ff-meta"><span>📅 May 13, 2026 · 14:00 UTC</span><span>👥 2 attendees</span><span>🎥 Recording saved</span></div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <div style="background:rgba(255,90,54,.14);border-radius:7px;padding:7px 11px;font-size:12px;color:#ff7a5c">
+        <div style="font-weight:600">Fadeni Henry</div><div style="color:var(--text-muted);font-size:10px;margin-top:1px">Host · fadeni@example.com</div>
+      </div>
+      <div style="background:rgba(255,90,54,.08);border-radius:7px;padding:7px 11px;font-size:12px;color:#ff9f8a">
+        <div>Sarah Jenkins</div><div style="color:var(--text-muted);font-size:10px;margin-top:1px">Attendee · sarah.design@example.com</div>
+      </div>
+    </div>
+    <div style="font-size:10px;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em">Transcript Preview</div>
+    <div class="ff-tx scr">
+      <span class="sp">Fadeni Henry:</span> Alright, let's kick off. The main goal today is finalizing the Leadipedia architecture and our agency partnership structure. Sarah, did you get a chance to review the V3.1 PRD?<br><br>
+      <span class="sp">Sarah Jenkins:</span> I did. I think the 6-agent assembly line looks solid. I'll take ownership of the UI mockups for the main sales cockpit dashboard — should have those done by Friday.<br><br>
+      <span class="sp">Fadeni Henry:</span> Perfect. And just to formalize — we decided on a 60/40 equity split for the agency venture, right?<br><br>
+      <span class="sp">Sarah Jenkins:</span> Yes, 60/40 is confirmed and we will move forward with that.
+    </div>
+  </div>`,
+  data:`<span class="jc">// Raw Fireflies.ai webhook payload</span>
+<span class="jp">{</span>
+  <span class="jk">"meetingId"</span>: <span class="js">"ff-meet-9a8b7c6d5e"</span>,
+  <span class="jk">"title"</span>: <span class="js">"Leadipedia Architecture &amp; Agency Partnership Sync"</span>,
+  <span class="jk">"date"</span>: <span class="js">"2026-05-13T14:00:00Z"</span>,
+  <span class="jk">"video_url"</span>: <span class="js">"https://fireflies.ai/view/leadipedia-sync-9a8b7"</span>,
+  <span class="jk">"next_meeting"</span>: <span class="js">"2026-05-20T14:00:00Z"</span>,
+  <span class="jk">"attendees"</span>: <span class="jp">[</span>
+    <span class="jp">{</span>
+      <span class="jk">"displayName"</span>: <span class="js">"Fadeni Henry"</span>,
+      <span class="jk">"email"</span>: <span class="js">"fadeni@example.com"</span>,
+      <span class="jk">"host"</span>: <span class="jb">true</span>
+    <span class="jp">},</span>
+    <span class="jp">{</span>
+      <span class="jk">"displayName"</span>: <span class="js">"Sarah Jenkins"</span>,
+      <span class="jk">"email"</span>: <span class="js">"sarah.design@example.com"</span>,
+      <span class="jk">"host"</span>: <span class="jb">false</span>
+    <span class="jp">}</span>
+  <span class="jp">],</span>
+  <span class="jk">"transcript"</span>: <span class="js">"Fadeni Henry: Alright, let's kick off..."</span>
+<span class="jp">}</span>`
+},
+{
+  id:'norm', label:'Normalize', emoji:'⚙️',
+  col:'#ea4b71', glow:'rgba(234,75,113,.2)', bg:'rgba(234,75,113,.09)',
+  ap:{col:'#ea4b71', bg:'rgba(234,75,113,.1)', label:'n8n  ·  Code Node', ico:'⚙️', sub:'Normalize Payload  →  cleaning raw data'},
+  dh:'Normalized output  (clean schema)',
+  dt:'Raw payload structured &amp; cleaned',
+  ds:'A JavaScript Code node extracts and reshapes the Fireflies payload into a flat, consistent format — flattening the attendees array, extracting the recording URL, and ensuring field names are predictable downstream.',
+  app:`<div style="font-size:11px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px">Code transformation</div>
+  <div style="background:var(--bg3);border-radius:8px;padding:13px;font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#c2bfb8;margin-bottom:14px">
+    <span style="color:#ea4b71">const</span> data = $input.first().json;<br><br>
+    <span style="color:#ea4b71">return</span> [{ <span style="color:#79b8ff">json</span>: {<br>
+    &nbsp;&nbsp;<span style="color:#79b8ff">title</span>: data.title,<br>
+    &nbsp;&nbsp;<span style="color:#79b8ff">date</span>: data.date,<br>
+    &nbsp;&nbsp;<span style="color:#79b8ff">transcript</span>: data.transcript,<br>
+    &nbsp;&nbsp;<span style="color:#79b8ff">recordingUrl</span>: data.video_url,<br>
+    &nbsp;&nbsp;<span style="color:#79b8ff">attendees</span>: data.attendees<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;.map(a => a.displayName).join(<span style="color:#f5c07a">', '</span>)<br>
+    }}];
+  </div>
+  <div class="n8n-kv">
+    <div class="n8n-cell"><div class="n8n-cell-k">Attendees</div><div class="n8n-cell-v">Fadeni Henry, Sarah Jenkins</div></div>
+    <div class="n8n-cell"><div class="n8n-cell-k">Date</div><div class="n8n-cell-v">2026-05-13T14:00:00Z</div></div>
+    <div class="n8n-cell" style="grid-column:1/-1"><div class="n8n-cell-k">Recording URL</div><div class="n8n-cell-v" style="font-size:11px;color:#74c5f5">https://fireflies.ai/view/leadipedia-sync-9a8b7</div></div>
+    <div class="n8n-cell" style="grid-column:1/-1"><div class="n8n-cell-k">Next Meeting</div><div class="n8n-cell-v">2026-05-20T14:00:00Z</div></div>
+  </div>`,
+  data:`<span class="jc">// Output: clean, flat schema ready for LLM</span>
+<span class="jp">{</span>
+  <span class="jk">"meetingId"</span>: <span class="js">"ff-meet-9a8b7c6d5e"</span>,
+  <span class="jk">"title"</span>: <span class="js">"Leadipedia Architecture &amp; Agency Partnership Sync"</span>,
+  <span class="jk">"date"</span>: <span class="js">"2026-05-13T14:00:00Z"</span>,
+  <span class="jk">"attendees"</span>: <span class="js">"Fadeni Henry, Sarah Jenkins"</span>,
+  <span class="jk">"recordingUrl"</span>: <span class="js">"https://fireflies.ai/view/leadipedia-sync-9a8b7"</span>,
+  <span class="jk">"nextMeetingDate"</span>: <span class="js">"2026-05-20T14:00:00Z"</span>,
+  <span class="jk">"transcript"</span>: <span class="js">"Fadeni Henry: Alright, let's kick off. The main goal today is finalizing the Leadipedia architecture..."</span>
+<span class="jp">}</span>`
+},
+{
+  id:'ai', label:'AI Analysis', emoji:'🤖',
+  col:'#10a37f', glow:'rgba(16,163,127,.2)', bg:'rgba(16,163,127,.09)',
+  ap:{col:'#10a37f', bg:'rgba(16,163,127,.1)', label:'OpenRouter  ·  LLM Chain', ico:'🤖', sub:'Basic LLM Chain  →  transcript extraction'},
+  dh:'Structured extraction  (AI output)',
+  dt:'LLM extracts meeting intelligence',
+  ds:'The transcript is sent to OpenRouter with a strict system prompt. The model returns a typed JSON object containing the meeting summary, confirmed decisions, action items with owners and deadlines, and open questions.',
+  app:`<div class="ai-dots"><div class="ai-d"></div><div class="ai-d"></div><div class="ai-d"></div><span style="font-size:12px;color:#10a37f;font-weight:500;margin-left:4px">Model analyzing transcript…</span></div>
+  <div style="background:var(--bg3);border-radius:8px;padding:13px;margin-bottom:12px">
+    <div style="font-size:10px;color:var(--text-muted);font-weight:600;margin-bottom:7px;text-transform:uppercase;letter-spacing:.07em">System Prompt (excerpt)</div>
+    <div style="font-size:11px;font-family:var(--font-mono);color:#c2bfb8;line-height:1.75">
+      You are an enterprise meeting intelligence assistant.<br>
+      Extract decisions, action items, owners, blockers,<br>
+      and unresolved questions. Return <span style="color:#f5c07a">ONLY valid JSON</span>.<br>
+      <span style="color:#f97583">Never hallucinate</span> deadlines, owners, or decisions.
+    </div>
+  </div>
+  <div class="ai-stats">
+    <div class="ai-stat"><div class="ai-stat-n">2</div><div class="ai-stat-l">Decisions</div></div>
+    <div class="ai-stat"><div class="ai-stat-n">3</div><div class="ai-stat-l">Action Items</div></div>
+    <div class="ai-stat"><div class="ai-stat-n">2</div><div class="ai-stat-l">Open Questions</div></div>
+  </div>
+  <div style="font-size:11px;color:var(--text-muted);text-align:center;font-family:var(--font-mono)">✓ Extraction complete · 0 hallucinations · valid JSON</div>`,
+  data:`<span class="jp">{</span>
+  <span class="jk">"title"</span>: <span class="js">"Leadipedia Architecture &amp; Agency Partnership Sync"</span>,
+  <span class="jk">"summary"</span>: <span class="js">"Fadeni and Sarah confirmed a 60/40 equity split and aligned on key deliverables. Sarah owns UI mockups by Friday. Fadeni sets up Docker/GCP tomorrow and drafts a Substack post by Wednesday. Smart Waterfall email logic deferred."</span>,
+  <span class="jk">"decisions"</span>: <span class="jp">[</span>
+    <span class="js">"60/40 equity split confirmed for agency venture"</span>,
+    <span class="js">"Sarah Jenkins owns UI mockups for sales cockpit"</span>
+  <span class="jp">],</span>
+  <span class="jk">"actions"</span>: <span class="jp">[</span>
+    <span class="jp">{</span> <span class="jk">"task"</span>: <span class="js">"UI mockups – sales cockpit dashboard"</span>, <span class="jk">"owner"</span>: <span class="js">"Sarah Jenkins"</span>, <span class="jk">"ownerEmail"</span>: <span class="js">"sarah.design@example.com"</span>, <span class="jk">"deadline"</span>: <span class="js">"2026-05-17"</span> <span class="jp">},</span>
+    <span class="jp">{</span> <span class="jk">"task"</span>: <span class="js">"Docker environment on GCP for n8n"</span>, <span class="jk">"owner"</span>: <span class="js">"Fadeni Henry"</span>, <span class="jk">"ownerEmail"</span>: <span class="js">"fadeni@example.com"</span>, <span class="jk">"deadline"</span>: <span class="js">"2026-05-14"</span> <span class="jp">},</span>
+    <span class="jp">{</span> <span class="jk">"task"</span>: <span class="js">"Substack draft – infrastructure build"</span>, <span class="jk">"owner"</span>: <span class="js">"Fadeni Henry"</span>, <span class="jk">"ownerEmail"</span>: <span class="js">"fadeni@example.com"</span>, <span class="jk">"deadline"</span>: <span class="js">"2026-05-20"</span> <span class="jp">}</span>
+  <span class="jp">],</span>
+  <span class="jk">"blockers"</span>: <span class="jp">[]</span>,
+  <span class="jk">"openQuestions"</span>: <span class="jp">[</span>
+    <span class="js">"GCP vs Oracle Cloud for long-term hosting"</span>,
+    <span class="js">"Smart Waterfall email validation provider"</span>
+  <span class="jp">],</span>
+  <span class="jk">"nextMeeting"</span>: <span class="js">"2026-05-20T14:00:00Z"</span>
+<span class="jp">}</span>`
+},
+{
+  id:'notion', label:'Notion', emoji:'📋',
+  col:'#e8e6df', glow:'rgba(232,230,223,.1)', bg:'rgba(232,230,223,.06)',
+  ap:{col:'#c2bfb8', bg:'rgba(232,230,223,.07)', label:'Notion', ico:'📋', sub:'Meeting Notes database  →  page created'},
+  dh:'Notion API  (createPage)',
+  dt:'Meeting notes page created in Notion',
+  ds:'n8n calls the Notion API to create a structured database page containing all extracted metadata as typed properties, and the full meeting breakdown (summary, decisions, action items, open questions) as rich-text blocks.',
+  app:`<div class="nw scr">
+    <div class="nt">📋 Leadipedia Architecture &amp; Agency Partnership Sync</div>
+    <div class="np">
+      <div style="display:flex;gap:7px;align-items:center"><span class="npl">Status</span><span class="ntag" style="background:#e8f5e9;color:#2e7d32;font-weight:600">✓ Done</span></div>
+      <div style="display:flex;gap:7px;align-items:center"><span class="npl">AI Processed</span><span class="ntag" style="background:#e3f2fd;color:#1565c0">✓ Yes</span></div>
+      <div style="display:flex;gap:7px;align-items:baseline"><span class="npl">Date</span><span class="npv">May 13, 2026</span></div>
+      <div style="display:flex;gap:7px;align-items:baseline"><span class="npl">Next Sync</span><span class="npv">May 20, 2026</span></div>
+      <div style="display:flex;gap:7px;align-items:baseline;grid-column:1/-1"><span class="npl">Attendees</span><span class="npv">Fadeni Henry, Sarah Jenkins</span></div>
+    </div>
+    <div class="nh2">Summary</div>
+    <div class="nbody" style="margin-bottom:13px">Fadeni and Sarah confirmed a 60/40 equity split for the agency venture. Sarah takes ownership of UI mockups for the sales cockpit by Friday. Fadeni will set up Docker on GCP by tomorrow and draft a Substack post by Wednesday. Smart Waterfall email validation logic deferred to next sync.</div>
+    <div class="nh2">✅ Decisions</div>
+    <div class="nbul">60/40 equity split confirmed for agency venture</div>
+    <div class="nbul" style="margin-bottom:12px">Sarah Jenkins owns UI mockups for sales cockpit dashboard</div>
+    <div class="nh2">📌 Action Items</div>
+    <div class="nbul">UI mockups – sales cockpit — <strong>Sarah Jenkins</strong> (by May 17)</div>
+    <div class="nbul">Docker environment on GCP for n8n — <strong>Fadeni Henry</strong> (by May 14)</div>
+    <div class="nbul" style="margin-bottom:12px">Substack draft – infrastructure build — <strong>Fadeni Henry</strong> (by May 20)</div>
+    <div class="nh2">❓ Open Questions</div>
+    <div class="nbul">GCP vs Oracle Cloud for long-term hosting</div>
+    <div class="nbul">Smart Waterfall email validation provider selection</div>
+  </div>`,
+  data:`<span class="jc">// Notion API · pages.create</span>
+<span class="jp">{</span>
+  <span class="jk">"parent"</span>: <span class="jp">{</span> <span class="jk">"database_id"</span>: <span class="js">"35e7071b-9477-80e0-93d3-c204fb07fdd9"</span> <span class="jp">},</span>
+  <span class="jk">"properties"</span>: <span class="jp">{</span>
+    <span class="jk">"title"</span>: <span class="js">"Leadipedia Architecture &amp; Agency Partnership Sync"</span>,
+    <span class="jk">"Status"</span>: <span class="js">"Done"</span>,
+    <span class="jk">"Attendees"</span>: <span class="js">"Fadeni Henry, Sarah Jenkins"</span>,
+    <span class="jk">"Meeting Date"</span>: <span class="js">"2026-05-13"</span>,
+    <span class="jk">"Next Meeting"</span>: <span class="js">"2026-05-20"</span>,
+    <span class="jk">"Recording URL"</span>: <span class="js">"https://fireflies.ai/view/leadipedia-sync-9a8b7"</span>,
+    <span class="jk">"AI Processed"</span>: <span class="jb">true</span>
+  <span class="jp">},</span>
+  <span class="jk">"children"</span>: <span class="jp">[</span>
+    heading_2: <span class="js">"Summary"</span>,
+    paragraph: <span class="js">"Fadeni and Sarah confirmed..."</span>,
+    heading_2: <span class="js">"Decisions"</span>,
+    paragraph: <span class="js">"• 60/40 equity split..."</span>,
+    heading_2: <span class="js">"Action Items"</span>,
+    paragraph: <span class="js">"• UI mockups — Sarah Jenkins (by 2026-05-17)..."</span>,
+    heading_2: <span class="js">"Open Questions"</span>,
+    paragraph: <span class="js">"• GCP vs Oracle Cloud..."</span>
+  <span class="jp">]</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ 200 OK · Page URL: https://notion.so/35e7071b...</span>`
+},
+{
+  id:'asana', label:'Asana', emoji:'✅',
+  col:'#f06a6a', glow:'rgba(240,106,106,.2)', bg:'rgba(240,106,106,.09)',
+  ap:{col:'#f06a6a', bg:'rgba(240,106,106,.1)', label:'Asana', ico:'✅', sub:'Split action items  →  3 tasks created'},
+  dh:'Asana API calls  (3× createTask)',
+  dt:'3 action items → 3 Asana tasks',
+  ds:'n8n\'s SplitOut node iterates over the actions array. Each item goes through a Normalize Code node that maps owner names to emails, then creates one Asana task per action with the correct assignee, deadline, and project.',
+  app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px">Tasks created in Leadipedia project</div>
+  <div class="at show" style="animation-delay:0s">
+    <div class="ach"></div>
+    <div>
+      <div class="at-title">UI mockups – sales cockpit dashboard</div>
+      <div class="at-meta">
+        <span><span class="av" style="background:linear-gradient(135deg,#ea4b71,#a855f7)">SJ</span>Sarah Jenkins</span>
+        <span>📅 May 17, 2026</span>
+      </div>
+    </div>
+  </div>
+  <div class="at show" style="animation-delay:.2s">
+    <div class="ach"></div>
+    <div>
+      <div class="at-title">Docker environment on GCP for n8n</div>
+      <div class="at-meta">
+        <span><span class="av" style="background:linear-gradient(135deg,#4f6ef7,#10a37f)">FH</span>Fadeni Henry</span>
+        <span>📅 May 14, 2026</span>
+      </div>
+    </div>
+  </div>
+  <div class="at show" style="animation-delay:.4s">
+    <div class="ach"></div>
+    <div>
+      <div class="at-title">Substack draft – infrastructure build</div>
+      <div class="at-meta">
+        <span><span class="av" style="background:linear-gradient(135deg,#4f6ef7,#10a37f)">FH</span>Fadeni Henry</span>
+        <span>📅 May 20, 2026</span>
+      </div>
+    </div>
+  </div>`,
+  data:`<span class="jc">// Task 1 / 3</span>
+<span class="jp">{</span> <span class="jk">"name"</span>: <span class="js">"UI mockups – sales cockpit dashboard"</span>, <span class="jk">"assignee"</span>: <span class="js">"sarah.design@example.com"</span>, <span class="jk">"due_on"</span>: <span class="js">"2026-05-17"</span>, <span class="jk">"projects"</span>: <span class="jp">[</span><span class="js">"1214787602333876"</span><span class="jp">]</span> <span class="jp">}</span>
+
+<span class="jc">// Task 2 / 3</span>
+<span class="jp">{</span> <span class="jk">"name"</span>: <span class="js">"Docker environment on GCP for n8n"</span>, <span class="jk">"assignee"</span>: <span class="js">"fadeni@example.com"</span>, <span class="jk">"due_on"</span>: <span class="js">"2026-05-14"</span>, <span class="jk">"projects"</span>: <span class="jp">[</span><span class="js">"1214787602333876"</span><span class="jp">]</span> <span class="jp">}</span>
+
+<span class="jc">// Task 3 / 3</span>
+<span class="jp">{</span> <span class="jk">"name"</span>: <span class="js">"Substack draft – infrastructure build"</span>, <span class="jk">"assignee"</span>: <span class="js">"fadeni@example.com"</span>, <span class="jk">"due_on"</span>: <span class="js">"2026-05-20"</span>, <span class="jk">"projects"</span>: <span class="jp">[</span><span class="js">"1214787602333876"</span><span class="jp">]</span> <span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ 3 tasks created · Workspace 1200985119691920</span>`
+},
+{
+  id:'slack', label:'Slack', emoji:'💬',
+  col:'#36c5f0', glow:'rgba(54,197,240,.15)', bg:'rgba(54,197,240,.08)',
+  ap:{col:'#36c5f0', bg:'rgba(54,197,240,.08)', label:'Slack', ico:'💬', sub:'#meeting-summary  →  message posted'},
+  dh:'Slack API  (chat.postMessage)',
+  dt:'Summary posted to #meeting-summary',
+  ds:'The Slack node (executeOnce) sends a formatted mrkdwn message to the #meeting-summary channel with the full meeting breakdown, all action items, and a direct link to the Notion page. Pipeline complete.',
+  app:`<div class="sw scr">
+    <div class="s-hd"><span class="s-ch">#meeting-summary</span><span style="color:var(--text-muted);font-weight:400;font-size:11px;margin-left:4px">· DreamersBay</span></div>
+    <div class="s-msg">
+      <div class="s-av">AI</div>
+      <div class="s-body">
+        <div class="s-sender">MeetingMind <span class="s-bot">APP</span> <span style="font-size:11px;color:var(--text-muted);font-weight:400">Today at 14:03</span></div>
+        <div class="s-text">
+          <strong>Leadipedia Architecture &amp; Agency Partnership Sync</strong><br>
+          Date: May 13, 2026 · Attendees: Fadeni Henry, Sarah Jenkins
+          <div class="s-div"></div>
+          <strong>Summary</strong><br>
+          Fadeni and Sarah confirmed a 60/40 equity split. Key tasks assigned with deadlines. Smart Waterfall logic deferred to next sync.
+          <div class="s-div"></div>
+          <strong>Decisions</strong><br>
+          – 60/40 equity split confirmed for agency venture<br>
+          – Sarah owns UI mockups for sales cockpit dashboard
+          <div class="s-div"></div>
+          <strong>Action Items</strong><br>
+          – <strong>Sarah Jenkins</strong> — UI mockups – sales cockpit (by May 17)<br>
+          – <strong>Fadeni Henry</strong> — Docker on GCP for n8n (by May 14)<br>
+          – <strong>Fadeni Henry</strong> — Substack draft – infra build (by May 20)
+          <div class="s-div"></div>
+          <strong>Open Questions</strong><br>
+          – GCP vs Oracle Cloud for long-term hosting<br>
+          – Smart Waterfall email validation provider
+          <div class="s-div"></div>
+          <a href="#" class="s-link">📋 Full notes in Notion →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:11px;color:#10a37f;font-family:var(--font-mono);text-align:center;padding:8px;background:rgba(16,163,127,.07);border-radius:8px;border:1px solid rgba(16,163,127,.2)">
+    ✓ Pipeline complete · 6 nodes · Fireflies → n8n → OpenRouter → Notion → Asana → Slack
+  </div>`,
+  data:`<span class="jc">// Slack chat.postMessage</span>
+<span class="jp">{</span>
+  <span class="jk">"channel"</span>: <span class="js">"C0B3LHVT2LD"</span>,
+  <span class="jk">"mrkdwn"</span>: <span class="jb">true</span>,
+  <span class="jk">"text"</span>: <span class="js">"*Leadipedia Architecture...*\\nDate: 2026-05-13\\nAttendees: Fadeni Henry, Sarah Jenkins\\n\\n*Summary*\\nFadeni and Sarah confirmed 60/40 equity split...\\n\\n*Decisions*\\n- 60/40 equity split...\\n\\n*Action Items*\\n- *Sarah Jenkins* — UI mockups...\\n- *Fadeni Henry* — Docker on GCP...\\n- *Fadeni Henry* — Substack draft...\\n\\n*Open Questions*\\n- GCP vs Oracle Cloud...\\n\\n&lt;https://notion.so/35e7071b...|Full notes in Notion&gt;"</span>
+<span class="jp">}</span>
+
+<span style="color:#10a37f;font-size:11px">✓ 200 OK · ts: 1747144980.000200
+✓ Message delivered to #meeting-summary</span>`
+}
+];
+
+const EXHIBIT = {
+  headerEyebrow: 'Outcome Exhibit',
+  title: 'The meeting ends and the team already has the same memory',
+  badgeEyebrow: 'Visible outcomes',
+  badges: ['Conversation captured', 'Decisions surfaced', 'Work assigned', 'Team aligned'],
+  scenes: [
+    {
+      label: 'Conversation captured',
+      title: 'Nothing important dies when the meeting ends',
+      summary: 'The team no longer relies on whoever happened to take notes.',
+      outcome: 'The source of truth survives the room.',
+      visitor: 'The meeting is preserved without manual cleanup.',
+      metricLabel: 'Meeting preserved',
+      metricValue: '1 call captured cleanly',
+      proofs: [
+        'Meeting recorded',
+        'Participants identified',
+        'Shared source captured'
+      ],
+      color: '#4f6ef7'
+    },
+    {
+      label: 'Decisions surfaced',
+      title: 'The meeting\'s real decisions stop hiding in the transcript',
+      summary: 'The important agreements rise above the chatter.',
+      outcome: 'Clarity replaces recap.',
+      visitor: 'People see the decision, not 45 minutes of conversation.',
+      metricLabel: 'Decisions found',
+      metricValue: 'Key agreements surfaced',
+      proofs: [
+        'Decisions pulled out',
+        'Risks spotted',
+        'Next meeting noticed'
+      ],
+      color: '#10a37f'
+    },
+    {
+      label: 'Work assigned',
+      title: 'The follow-through is already attached to people and dates',
+      summary: 'Tasks leave the room with owners, not with good intentions.',
+      outcome: 'Accountability is visible immediately.',
+      visitor: 'Action items leave with names and deadlines.',
+      metricLabel: 'Actions assigned',
+      metricValue: 'Owners and deadlines attached',
+      proofs: [
+        'Owners assigned',
+        'Deadlines attached',
+        'Action list cleaned up'
+      ],
+      color: '#d4903c'
+    },
+    {
+      label: 'Knowledge published',
+      title: 'The team gets a clean record instead of another messy doc',
+      summary: 'A structured page is published where everyone expects to find it.',
+      outcome: 'Searchable memory replaces scattered notes.',
+      visitor: 'The meeting becomes a reusable asset.',
+      metricLabel: 'Record published',
+      metricValue: '1 structured page created',
+      proofs: [
+        'Summary formatted',
+        'Context archived',
+        'Searchable record created'
+      ],
+      color: '#7c3aed'
+    },
+    {
+      label: 'Team aligned',
+      title: 'Everyone gets the same version of what happened',
+      summary: 'The meeting ends with shared understanding, not side chats and memory gaps.',
+      outcome: 'Alignment is broadcast immediately.',
+      visitor: 'One message closes the loop for the whole team.',
+      metricLabel: 'Team updated',
+      metricValue: '1 shared summary delivered',
+      proofs: [
+        'Slack update sent',
+        'Actions visible to the team',
+        'Link back to the source page'
+      ],
+      color: '#36c5f0'
+    }
+  ]
+};
+
+</script>
+<script src="./automation-exhibit.js"></script>
+<script>
+AutomationExhibit.mount({ steps: STEPS, exhibit: EXHIBIT, autoplayMs: 5600 });
+</script>
+</body>
+</html>

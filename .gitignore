@@ -1,0 +1,19 @@
+node_modules/
+dist/
+.env
+
+# local environment
+.env.*
+!.env.example
+
+# generated and local-only output
+*.log
+*.err.log
+qa-artifacts/
+test-results/
+archive/
+context/
+demos/context/
+.codex-screenshots/
+.codex-chrome-profile*/
+edge-cdp-profile/
