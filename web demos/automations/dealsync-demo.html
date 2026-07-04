@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DealSync WF01 — Post-Call CRM Automation</title>
 <style>
-@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Regular.otf') format('opentype'),local('Neue Montreal');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Medium.otf') format('opentype'),local('Neue Montreal');font-weight:500 600;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Bold.otf') format('opentype'),local('Neue Montreal');font-weight:700 900;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Italic.otf') format('opentype'),local('Neue Montreal');font-weight:400 700;font-style:italic;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Regular.woff2') format('woff2'),local('Lores-12');font-weight:400 600;font-style:normal;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Bold.woff2') format('woff2'),local('Lores-12');font-weight:700 900;font-style:normal;font-display:swap}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
   --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
   --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
   --accent:#b8582a;
-  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --font-ui:'Neue Montreal';--font-other:'Lores-12';
   --r:12px;
 }
 body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent)}
 .hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
 .hd-title{font-size:20px;font-weight:700}
 .hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
@@ -29,23 +29,23 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-heigh
 .si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
 .sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:66px;line-height:1.3}
 .sl.active{color:var(--text)}
-.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;overflow:hidden}
-.sc .fill{height:100%;background:rgba(16,163,127,.55);transition:width .5s ease}
-.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.sc{flex:1;height:6px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);border-radius:999px;filter:blur(2px);min-width:12px;margin-bottom:26px;overflow:hidden}
+.sc .fill{height:100%;background:linear-gradient(90deg,rgba(16,163,127,.18),rgba(16,163,127,.55),transparent);transition:width .5s ease}
+.prog{width:calc(100% - 88px);height:6px;background:linear-gradient(90deg,rgba(255,255,255,.035),transparent);border-radius:999px;margin:0 44px;filter:blur(1.5px);overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,#b8582a,#a855f7);transition:width .5s ease;border-radius:2px}
 .demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:420px}
 .ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
-.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.ap-hd{padding:11px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
 .ap-body{flex:1;padding:18px;overflow-y:auto}
-.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
-.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-other)}
+.dp-hd{padding:10px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
 .dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
 pre{white-space:pre-wrap;word-break:break-word}
 .ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
 .cd{flex:1}
 .cd-title{font-size:15px;font-weight:600}
 .cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
-.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-other);white-space:nowrap}
 .btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.06)}
 .btn:active{transform:scale(.98)}
@@ -73,7 +73,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 .fm-cell{background:rgba(99,102,241,.07);border-radius:7px;padding:9px 11px}
 .fm-label{font-size:10px;font-weight:600;color:#6366f1;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em}
 .fm-val{font-size:12px;color:var(--text)}
-.tx-box{background:var(--bg3);border-radius:8px;padding:11px;font-size:11px;font-family:var(--font-mono);line-height:1.8;color:#c2bfb8;max-height:140px;overflow-y:auto}
+.tx-box{background:var(--bg3);border-radius:8px;padding:11px;font-size:11px;font-family:var(--font-other);line-height:1.8;color:#c2bfb8;max-height:140px;overflow-y:auto}
 .tx-sp{color:#a5b4fc;font-weight:500}
 .tx-sp2{color:#f5c07a;font-weight:500}
 
@@ -94,12 +94,12 @@ pre{white-space:pre-wrap;word-break:break-word}
 .stage-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;background:rgba(79,110,247,.15);border:1px solid rgba(79,110,247,.3);color:#7a9fff;font-size:12px;font-weight:600}
 
 /* ── Stage map ── */
-.stage-map{background:var(--bg3);border-radius:9px;padding:13px;font-family:var(--font-mono);font-size:11px;line-height:1.9;margin-bottom:12px}
+.stage-map{background:var(--bg3);border-radius:9px;padding:13px;font-family:var(--font-other);font-size:11px;line-height:1.9;margin-bottom:12px}
 .stage-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04)}
 .stage-row:last-child{border:none}
 .stage-name{color:var(--text-sub);min-width:140px}
 .stage-arrow{color:var(--text-muted)}
-.stage-id{color:#79b8ff;font-family:var(--font-mono)}
+.stage-id{color:#79b8ff;font-family:var(--font-other)}
 .stage-row.active-stage{background:rgba(79,110,247,.1);border-radius:6px;padding:5px 8px;border-color:transparent}
 .stage-row.active-stage .stage-name{color:#e8e6df;font-weight:600}
 .stage-row.active-stage .stage-id{color:#a5b4fc;font-weight:600}
@@ -215,12 +215,12 @@ const STEPS = [
     <div class="fathom-hd">
       <span class="fathom-dot"></span>
       <span class="fathom-title">Call ended · Webhook fired</span>
-      <span style="margin-left:auto;font-size:11px;color:#818cf8;font-family:var(--font-mono)">POST /dealsync-fathom</span>
+      <span style="margin-left:auto;font-size:11px;color:#818cf8;font-family:var(--font-other)">POST /dealsync-fathom</span>
     </div>
     <div class="fathom-body">
       <div class="fathom-meta">
         <div class="fm-cell"><div class="fm-label">Call title</div><div class="fm-val">Leadipedia — Discovery Call</div></div>
-        <div class="fm-cell"><div class="fm-label">Deal ID</div><div class="fm-val" style="font-family:var(--font-mono);color:#a5b4fc">hs-deal-48820</div></div>
+        <div class="fm-cell"><div class="fm-label">Deal ID</div><div class="fm-val" style="font-family:var(--font-other);color:#a5b4fc">hs-deal-48820</div></div>
         <div class="fm-cell"><div class="fm-label">Rep</div><div class="fm-val">Fadeni Henry</div></div>
         <div class="fm-cell"><div class="fm-label">Prospect</div><div class="fm-val">Marcus Obi · Nexalabs</div></div>
         <div class="fm-cell" style="grid-column:1/-1"><div class="fm-label">Duration</div><div class="fm-val">34 min · May 19, 2026 · 11:00 WAT</div></div>
@@ -287,7 +287,7 @@ const STEPS = [
       </div>
       <div class="extract-row">
         <span class="ex-label">Follow-up date</span>
-        <span class="ex-val" style="font-family:var(--font-mono);color:#79dcaa">2026-05-26</span>
+        <span class="ex-val" style="font-family:var(--font-other);color:#79dcaa">2026-05-26</span>
       </div>
     </div>
   </div>`,
@@ -328,7 +328,7 @@ const STEPS = [
     <div class="stage-row"><span class="stage-name">Closed Lost</span><span class="stage-arrow">→</span><span class="stage-id">"closedlost"</span></div>
   </div>
   <div style="background:rgba(79,110,247,.08);border:1px solid rgba(79,110,247,.2);border-radius:8px;padding:10px;font-size:12px;color:#a5b4fc">
-    <strong>Output:</strong> <code style="font-family:var(--font-mono);font-size:11px">hubspotStageId = 5255261371</code><br>
+    <strong>Output:</strong> <code style="font-family:var(--font-other);font-size:11px">hubspotStageId = 5255261371</code><br>
     <span style="color:var(--text-muted);font-size:11px;margin-top:3px;display:block">Merged into item.json alongside all extracted fields</span>
   </div>`,
   data:`<span class="jc">// Code node: parse + map stage</span>
@@ -507,7 +507,7 @@ Note: The subject must NOT be included."</span>
       </div>
       <div class="task-row">
         <span class="task-label">Due date</span>
-        <span class="task-val" style="font-family:var(--font-mono);color:#79dcaa">May 26, 2026</span>
+        <span class="task-val" style="font-family:var(--font-other);color:#79dcaa">May 26, 2026</span>
       </div>
       <div class="task-row">
         <span class="task-label">Status</span>
@@ -519,7 +519,7 @@ Note: The subject must NOT be included."</span>
       </div>
       <div class="task-row">
         <span class="task-label">Linked deal</span>
-        <span class="task-val" style="font-family:var(--font-mono);color:#a5b4fc">hs-deal-48820</span>
+        <span class="task-val" style="font-family:var(--font-other);color:#a5b4fc">hs-deal-48820</span>
       </div>
     </div>
   </div>
@@ -532,7 +532,7 @@ Note: The subject must NOT be included."</span>
       <span>📧 Follow-up email drafted in Gmail</span>
       <span>✅ Task created with due date &amp; objection notes</span>
     </div>
-    <div style="margin-top:10px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted)">⏱ Total time: ~8 seconds · Rep effort: 0 minutes</div>
+    <div style="margin-top:10px;font-size:11px;font-family:var(--font-other);color:var(--text-muted)">⏱ Total time: ~8 seconds · Rep effort: 0 minutes</div>
   </div>`,
   data:`<span class="jc">// HubSpot engagements · create task</span>
 <span class="jp">{</span>

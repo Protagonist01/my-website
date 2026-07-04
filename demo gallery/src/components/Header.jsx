@@ -1,25 +1,18 @@
-export function Header({ onMenu, onChat }) {
+export function Header({ onChat }) {
   return (
     <header className="site-header">
-      <button className="chrome-button menu-button" type="button" onClick={onMenu}>
-        <span className="menu-lines" aria-hidden="true">
-          <span />
-          <span />
-        </span>
-        <span>Menu</span>
-      </button>
+      <a className="brand-mark" href="../index.html" aria-label="Back to Henry Fadeni home">
+        <span className="brand-mark__badge" aria-hidden="true">HF</span>
+        <span className="brand-mark__name">Henry Fadeni</span>
+      </a>
 
-      <div className="brand-cluster">
-        <a className="brand-mark" href="../index.html" aria-label="Back to Henry Fadeni home">
-          Henry Fadeni
-        </a>
-        <span className="gallery-page-label">demo gallery</span>
+      <span className="gallery-page-label">Projects</span>
+
+      <div className="chrome-actions" aria-label="Projects actions">
+        <button className="chrome-button chat-button" type="button" onClick={onChat}>
+          <span>Contact Me</span>
+        </button>
       </div>
-
-      <button className="chrome-button chat-button" type="button" onClick={onChat}>
-        <span>Request build</span>
-        <span aria-hidden="true">-&gt;</span>
-      </button>
     </header>
   )
 }

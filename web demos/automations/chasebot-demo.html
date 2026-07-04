@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ChaseBot — Invoice Chasing Demo</title>
 <style>
-@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Regular.otf') format('opentype'),local('Neue Montreal');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Medium.otf') format('opentype'),local('Neue Montreal');font-weight:500 600;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Bold.otf') format('opentype'),local('Neue Montreal');font-weight:700 900;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Italic.otf') format('opentype'),local('Neue Montreal');font-weight:400 700;font-style:italic;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Regular.woff2') format('woff2'),local('Lores-12');font-weight:400 600;font-style:normal;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Bold.woff2') format('woff2'),local('Lores-12');font-weight:700 900;font-style:normal;font-display:swap}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
   --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
   --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
   --accent:#ef4444;
-  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --font-ui:'Neue Montreal';--font-other:'Lores-12';
   --r:12px;
 }
 body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
-.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent)}
 .hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
 .hd-title{font-size:20px;font-weight:700}
 .hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
@@ -29,23 +29,23 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-heigh
 .si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
 .sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:66px;line-height:1.3}
 .sl.active{color:var(--text)}
-.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;overflow:hidden}
-.sc .fill{height:100%;background:rgba(16,163,127,.55);transition:width .5s ease}
-.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.sc{flex:1;height:6px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);border-radius:999px;filter:blur(2px);min-width:12px;margin-bottom:26px;overflow:hidden}
+.sc .fill{height:100%;background:linear-gradient(90deg,rgba(16,163,127,.18),rgba(16,163,127,.55),transparent);transition:width .5s ease}
+.prog{width:calc(100% - 88px);height:6px;background:linear-gradient(90deg,rgba(255,255,255,.035),transparent);border-radius:999px;margin:0 44px;filter:blur(1.5px);overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,#ef4444,#d4903c);transition:width .5s ease;border-radius:2px}
 .demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:420px}
 .ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
-.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
+.ap-hd{padding:11px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500}
 .ap-body{flex:1;padding:18px;overflow-y:auto}
-.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
-.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-other)}
+.dp-hd{padding:10px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
 .dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
 pre{white-space:pre-wrap;word-break:break-word}
 .ctrl{width:100%;padding:16px 44px 32px;display:flex;align-items:center;gap:14px}
 .cd{flex:1}
 .cd-title{font-size:15px;font-weight:600}
 .cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
-.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-other);white-space:nowrap}
 .btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.06)}
 .btn:active{transform:scale(.98)}
@@ -73,7 +73,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 .t30{background:rgba(168,85,247,.15);color:#c084fc}
 .tskip{background:rgba(255,255,255,.07);color:var(--text-muted)}
 .company{font-weight:500;color:var(--text)}
-.amt{font-family:var(--font-mono);color:#10a37f;font-weight:500}
+.amt{font-family:var(--font-other);color:#10a37f;font-weight:500}
 
 /* Filter result */
 .pass-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;margin-bottom:6px;font-size:12px;animation:row-in .4s ease forwards;opacity:0}
@@ -139,7 +139,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 .gd-date{font-size:11px;color:#999}
 
 /* log */
-.log-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(16,163,127,.06);border:1px solid rgba(16,163,127,.15);margin-bottom:6px;font-size:11px;font-family:var(--font-mono);animation:row-in .4s ease forwards;opacity:0}
+.log-row{display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:6px;background:rgba(16,163,127,.06);border:1px solid rgba(16,163,127,.15);margin-bottom:6px;font-size:11px;font-family:var(--font-other);animation:row-in .4s ease forwards;opacity:0}
 .log-row:nth-child(1){animation-delay:.05s}
 .log-row:nth-child(2){animation-delay:.2s}
 .log-row:nth-child(3){animation-delay:.35s}
@@ -285,14 +285,14 @@ const STEPS = [
   <table class="inv-table">
     <thead><tr><th>#</th><th>Client</th><th>Amount</th><th>Due</th><th>Status</th></tr></thead>
     <tbody>
-      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1001</td><td class="company">Stark Industries</td><td class="amt">£1,250</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag t7">9d overdue</span></td></tr>
-      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1002</td><td class="company">Wayne Enterprises</td><td class="amt">£3,400</td><td style="font-size:11px;color:var(--text-muted)">25 Apr</td><td><span class="inv-tag t14">16d overdue</span></td></tr>
-      <tr><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1003</td><td class="company">Cyberdyne Systems</td><td class="amt">£8,900</td><td style="font-size:11px;color:var(--text-muted)">5 Apr</td><td><span class="inv-tag t30">36d overdue</span></td></tr>
-      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1004</td><td class="company">Oscorp</td><td class="amt">£500</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag tskip">Already chased</span></td></tr>
-      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-mono)">INV-1005</td><td class="company">Daily Bugle</td><td class="amt">£150</td><td style="font-size:11px;color:var(--text-muted)">9 May</td><td><span class="inv-tag tskip">Only 2d late</span></td></tr>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-other)">INV-1001</td><td class="company">Stark Industries</td><td class="amt">£1,250</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag t7">9d overdue</span></td></tr>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-other)">INV-1002</td><td class="company">Wayne Enterprises</td><td class="amt">£3,400</td><td style="font-size:11px;color:var(--text-muted)">25 Apr</td><td><span class="inv-tag t14">16d overdue</span></td></tr>
+      <tr><td style="color:var(--text-muted);font-family:var(--font-other)">INV-1003</td><td class="company">Cyberdyne Systems</td><td class="amt">£8,900</td><td style="font-size:11px;color:var(--text-muted)">5 Apr</td><td><span class="inv-tag t30">36d overdue</span></td></tr>
+      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-other)">INV-1004</td><td class="company">Oscorp</td><td class="amt">£500</td><td style="font-size:11px;color:var(--text-muted)">2 May</td><td><span class="inv-tag tskip">Already chased</span></td></tr>
+      <tr style="opacity:.45"><td style="color:var(--text-muted);font-family:var(--font-other)">INV-1005</td><td class="company">Daily Bugle</td><td class="amt">£150</td><td style="font-size:11px;color:var(--text-muted)">9 May</td><td><span class="inv-tag tskip">Only 2d late</span></td></tr>
     </tbody>
   </table>
-  <div style="margin-top:11px;font-size:11px;color:var(--text-muted);font-family:var(--font-mono);text-align:center">↓ all 5 pass to Calculate Overdue Tiers</div>`,
+  <div style="margin-top:11px;font-size:11px;color:var(--text-muted);font-family:var(--font-other);text-align:center">↓ all 5 pass to Calculate Overdue Tiers</div>`,
   data:`<span class="jc">// Invoice #3 of 5 (highest risk)</span>
 <span class="jp">{</span>
   <span class="jk">"InvoiceID"</span>: <span class="js">"mock-inv-003"</span>,
@@ -328,7 +328,7 @@ const STEPS = [
   <div class="pass-row pr-pass"><span class="pr-ico">✅</span><span class="pr-name">Cyberdyne Systems</span><span class="inv-tag t30" style="font-size:10px">36d → tier: day30</span></div>
   <div class="pass-row pr-skip"><span class="pr-ico">⏭</span><span class="pr-name">Oscorp</span><span class="pr-reason">Reference contains "day7 reminder" — already chased</span></div>
   <div class="pass-row pr-skip"><span class="pr-ico">⏭</span><span class="pr-name">Daily Bugle</span><span class="pr-reason">Only 2 days overdue — minimum threshold is 7</span></div>
-  <div style="margin-top:12px;display:flex;gap:8px;font-size:11px;font-family:var(--font-mono)">
+  <div style="margin-top:12px;display:flex;gap:8px;font-size:11px;font-family:var(--font-other)">
     <span style="color:#10a37f">✓ 3 proceed</span>
     <span style="color:var(--text-muted)">·</span>
     <span style="color:var(--text-muted)">2 skipped</span>
@@ -389,7 +389,7 @@ const STEPS = [
       <span class="route-dest">Urgent final notice</span>
     </div>
   </div>
-  <div style="margin-top:14px;background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-mono);color:#c2bfb8;line-height:1.8">
+  <div style="margin-top:14px;background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-other);color:#c2bfb8;line-height:1.8">
     <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day7"</span>  → Branch 0 (polite)<br>
     <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day14"</span> → Branch 1 (firm)<br>
     <span style="color:#8b5cf6">if</span> tier == <span style="color:#f5c07a">"day30"</span> → Branch 2 (urgent)

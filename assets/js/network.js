@@ -6,7 +6,7 @@ const body = document.body;
 body.classList.add("is-ready");
 
 const PALETTE = {
-  offwhite: [245, 245, 240],
+  offwhite: [255, 255, 255],
   gold: [201, 168, 76],
   goldLight: [232, 201, 122],
 };
@@ -15,7 +15,7 @@ const LABELS = [
   { label: "CONTACT", href: "contact/index.html", kind: "primary" },
   { label: "ABOUT", href: "about/index.html", kind: "primary" },
   { label: "WORKS", href: "works/index.html", kind: "primary" },
-  { label: "DEMO GALLERY", href: "demo gallery/index.html", kind: "primary" },
+  { label: "PROJECTS", href: "demo gallery/index.html", kind: "primary" },
   { label: "E-COMMERCE", href: "ecommerce demo gallery/index.html", kind: "primary" },
   { label: "SKILL STACK", href: "my-stack/index.html", kind: "primary" },
   { label: "TESTIMONIAL", href: "testimonial/index.html", kind: "primary" },
@@ -27,6 +27,7 @@ const BRIGHTNESS_MULTIPLIER = 1.72;
 const BRIGHTNESS_SPEED_MULTIPLIER = 1.45;
 const ACTIVE_EDGE_GLOW_MULTIPLIER = 1.45;
 const ACTIVE_LABEL_SCALE = 1.1;
+const MOBILE_LABEL_SCALE = 0.84;
 const EDGE_COUNT = (NODE_COUNT * (NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
 const FIRING_MIN_GAP_FRAMES = 130;
@@ -526,7 +527,8 @@ function draw() {
     const t = (point.sc - MIN_SC) / SC_RANGE;
     const t3 = t * t * t;
     const wave = waveAt(point.ox, point.oy, point.oz, tick);
-    const fontSize = Math.max(4, Math.round(4 + t3 * 27));
+    const labelScale = window.innerWidth <= 768 ? MOBILE_LABEL_SCALE : 1;
+    const fontSize = Math.max(4, Math.round((4 + t3 * 27) * labelScale));
     const alpha = (0.13 + t * 0.87) * BRIGHTNESS_MULTIPLIER;
     const tracking = 0.14 + t * 0.08;
     const color = point.isActive ? activeLabelColor(t) : defaultLabelColor(t, wave);

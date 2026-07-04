@@ -2,7 +2,7 @@ export function NavigationOverlay({ scenes, open, onClose, onSelect }) {
   return (
     <div className={`nav-overlay ${open ? 'open' : ''}`} aria-hidden={!open}>
       <div className="nav-overlay-top">
-        <span>Gallery index map</span>
+        <span>Projects index map</span>
         <button type="button" onClick={onClose}>
           Close index
         </button>
@@ -18,8 +18,8 @@ export function NavigationOverlay({ scenes, open, onClose, onSelect }) {
       </div>
 
       <div className="nav-overlay-bottom">
-        <span>Henry Fadeni - Demo gallery active</span>
-        <span>Automations / Agents / Websites</span>
+        <span>Henry Fadeni - Projects active</span>
+        <span>AI / OPS / WEB</span>
       </div>
     </div>
   )

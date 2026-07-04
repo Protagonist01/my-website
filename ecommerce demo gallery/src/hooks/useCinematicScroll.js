@@ -20,13 +20,16 @@ const smoothstep = (edge0, edge1, value) => {
   return t * t * (3 - 2 * t)
 }
 const mixColor = (from, to, t) => from.map((channel, index) => Math.round(lerp(channel, to[index], t)))
+const auditUnderlayStart = 0.82
+const auditRevealStart = 0.875
+const auditDirectoryStart = 0.94
 
 const stops = [
-  { at: 0, color: [0, 0, 0], text: [245, 245, 240], active: 'hero-section' },
-  { at: 0.26, color: [14, 9, 2], text: [245, 245, 240], active: 'video-section' },
-  { at: 0.58, color: [27, 18, 5], text: [245, 245, 240], active: 'automations-section' },
-  { at: 0.82, color: [9, 6, 1], text: [245, 245, 240], active: 'request-audit-section' },
-  { at: 1, color: [0, 0, 0], text: [245, 245, 240], active: 'request-audit-section' }
+  { at: 0, color: [0, 0, 0], text: [255, 255, 255], active: 'hero-section' },
+  { at: 0.26, color: [0, 0, 0], text: [255, 255, 255], active: 'video-section' },
+  { at: 0.58, color: [0, 0, 0], text: [255, 255, 255], active: 'automations-section' },
+  { at: 0.82, color: [0, 0, 0], text: [255, 255, 255], active: 'request-audit-section' },
+  { at: 1, color: [0, 0, 0], text: [255, 255, 255], active: 'request-audit-section' }
 ]
 
 const agentVisualControls = [
@@ -60,11 +63,18 @@ function interpolate(progress, key) {
 function activeScene(progress) {
   if (progress < 0.22) return 'hero-section'
   if (progress < 0.63) return 'video-section'
-  if (progress < 0.86) return 'automations-section'
+  if (progress < auditDirectoryStart) return 'automations-section'
   return 'request-audit-section'
 }
 
 function getViewportActiveSection() {
+  const automationsSection = document.getElementById('automations-section')
+  const auditProgress = getSectionProgress(automationsSection)
+
+  if (automationsSection && auditProgress >= auditUnderlayStart && auditProgress < auditDirectoryStart) {
+    return 'automations-section'
+  }
+
   const sections = ['hero-section', 'video-section', 'automations-section', 'request-audit-section', 'agents-section', 'workflows-section']
     .map((id) => document.getElementById(id))
     .filter(Boolean)
@@ -125,7 +135,7 @@ function getVideoWeights(count, exact) {
   }
 
   const localProgress = exact - baseIndex
-  const nextBlend = smoothstep(0.24, 0.96, localProgress)
+  const nextBlend = smoothstep(0.58, 0.92, localProgress)
   weights[baseIndex] = 1 - nextBlend
   weights[baseIndex + 1] = nextBlend
   return weights
@@ -470,6 +480,7 @@ export function useCinematicScroll(containerRef) {
 
     const root = document.documentElement
     const videoSection = document.getElementById('video-section')
+    const requestAuditSection = document.getElementById('request-audit-section')
     const videoFrame = videoSection?.querySelector('.video-frame')
     const videoPanels = [...(videoSection?.querySelectorAll('[data-video-panel]') || [])]
     const videoCopies = [...(videoSection?.querySelectorAll('[data-video-copy]') || [])]
@@ -772,13 +783,14 @@ export function useCinematicScroll(containerRef) {
       document.body.classList.toggle('workflows-active', inWorkflows)
 
       const videoEnter = smoothstep(isMobileViewport ? 0.02 : 0.04, isMobileViewport ? 0.16 : 0.22, videoProgress)
-      const videoExit = smoothstep(isMobileViewport ? 0.92 : 0.9, isMobileViewport ? 0.99 : 0.98, videoProgress)
+      const videoExit = smoothstep(isMobileViewport ? 0.94 : 0.935, 1, videoProgress)
       const videoScaleX = lerp(0.28, 1, videoEnter)
       const videoScaleY = lerp(0.18, 1, videoEnter)
-      const videoLift = lerp(isMobileViewport ? 10 : 22, 0, videoEnter) - videoExit * (isMobileViewport ? 18 : 38)
+      const videoLift = lerp(isMobileViewport ? 10 : 22, 0, videoEnter) - videoExit * (isMobileViewport ? 12 : 24)
       const videoOpacity = videoEnter * (1 - videoExit)
-      const exactVideo = clamp01((videoProgress - (isMobileViewport ? 0.06 : 0.08)) / (isMobileViewport ? 0.86 : 0.84)) * Math.max(0, videoPanels.length - 1)
+      const exactVideo = clamp01((videoProgress - (isMobileViewport ? 0.06 : 0.08)) / (isMobileViewport ? 0.72 : 0.7)) * Math.max(0, videoPanels.length - 1)
       const videoWeights = getVideoWeights(videoPanels.length, exactVideo)
+      const displayedExactVideo = videoWeights.reduce((sum, weight, index) => sum + weight * index, 0)
 
       if (videoFrame) {
         videoFrame.style.opacity = videoOpacity.toFixed(4)
@@ -789,15 +801,17 @@ export function useCinematicScroll(containerRef) {
 
       videoPanels.forEach((panel, index) => {
         const weight = videoWeights[index] || 0
+        const relative = index - displayedExactVideo
+        const slideY = clampRange(relative * 100, -112, 112)
         panel.style.opacity = weight.toFixed(4)
-        panel.style.transform = 'scale(1)'
+        panel.style.transform = `translate3d(0, ${slideY.toFixed(2)}%, 0)`
       })
 
       videoCopies.forEach((copy, index) => {
         const weight = videoWeights[index] || 0
         const side = index % 2 === 0 ? 1 : -1
         copy.style.opacity = (weight * videoOpacity).toFixed(4)
-        copy.style.transform = `translate3d(${((1 - weight) * side * (isMobileViewport ? 18 : 54)).toFixed(2)}px, ${((1 - videoEnter) * (isMobileViewport ? 14 : 30) - videoExit * (isMobileViewport ? 12 : 24)).toFixed(2)}px, 0)`
+        copy.style.transform = `translate3d(${((1 - weight) * side * (isMobileViewport ? 18 : 54)).toFixed(2)}px, ${((1 - videoEnter) * (isMobileViewport ? 14 : 30) - videoExit * (isMobileViewport ? 8 : 16)).toFixed(2)}px, 0)`
         copy.style.filter = `blur(${((1 - weight) * (isMobileViewport ? 3 : 8)).toFixed(2)}px)`
       })
 
@@ -810,10 +824,16 @@ export function useCinematicScroll(containerRef) {
       const chapterStart = entryEnd
       const chapterEnd = 0.94
       const exit = smoothstep(chapterEnd, 1, autoProgress)
+      const coverReveal = smoothstep(auditRevealStart, 1, autoProgress)
+      const coverLiftVh = coverReveal * 112
+      document.body.classList.toggle('audit-reveal-active', autoProgress >= auditUnderlayStart)
+      if (requestAuditSection) {
+        requestAuditSection.style.pointerEvents = coverReveal > 0.82 ? 'auto' : 'none'
+      }
       if (autoPin) {
-        const revealFade = 1 - smoothstep(0.975, 1, autoProgress)
-        autoPin.style.opacity = revealFade.toFixed(4)
-        autoPin.style.pointerEvents = revealFade > 0.08 ? 'auto' : 'none'
+        autoPin.style.setProperty('--auto-cover-y', `-${coverLiftVh.toFixed(2)}vh`)
+        autoPin.style.opacity = '1'
+        autoPin.style.pointerEvents = coverReveal < 0.82 ? 'auto' : 'none'
       }
       if (autoHeadline) {
         const headlineIn = smoothstep(headlineInStart, headlineInEnd, autoProgress)
@@ -953,10 +973,10 @@ export function useCinematicScroll(containerRef) {
         item.style.opacity = opacity.toFixed(4)
         item.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
-          ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(245, 245, 240, ${(glow * 0.42).toFixed(3)})`
+          ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(255, 255, 255, ${(glow * 0.42).toFixed(3)})`
           : 'none'
         item.style.zIndex = `${20 + Math.round(midpointFocus * 88) + Math.round(postMidAmount * 70)}`
-        item.style.color = '#f5f5f0'
+        item.style.color = 'rgb(255, 255, 255)'
       })
       const contentOpacity = railReveal * smoothstep(-0.78, 0.08, exactAgent)
       if (agentsInfo) {
@@ -1062,6 +1082,7 @@ export function useCinematicScroll(containerRef) {
       clearFeaturedTimers()
       if (scrollIdleTimer !== null) window.clearTimeout(scrollIdleTimer)
       document.body.classList.remove('scroll-active')
+      document.body.classList.remove('audit-reveal-active')
       if (foldFrame !== null) window.cancelAnimationFrame(foldFrame)
       if (trailFrame !== null) window.cancelAnimationFrame(trailFrame)
       if (featuredCanvas) {

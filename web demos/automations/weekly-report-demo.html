@@ -5,19 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Weekly Leadership Report — Live Demo</title>
 <style>
-@font-face{font-family:'Neue Montreal';src:local('Neue Montreal'),local('NeueMontreal-Regular');font-display:swap}@font-face{font-family:'Lores-12';src:local('Lores-12'),local('LoRes 12'),local('LoRes12-Regular');font-display:swap}
+@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Regular.otf') format('opentype'),local('Neue Montreal');font-weight:400;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Medium.otf') format('opentype'),local('Neue Montreal');font-weight:500 600;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Bold.otf') format('opentype'),local('Neue Montreal');font-weight:700 900;font-style:normal;font-display:swap}@font-face{font-family:'Neue Montreal';src:url('../../assets/fonts/NeueMontreal-Italic.otf') format('opentype'),local('Neue Montreal');font-weight:400 700;font-style:italic;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Regular.woff2') format('woff2'),local('Lores-12');font-weight:400 600;font-style:normal;font-display:swap}@font-face{font-family:'Lores-12';src:url('../../assets/fonts/LoRes12OT-Bold.woff2') format('woff2'),local('Lores-12');font-weight:700 900;font-style:normal;font-display:swap}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#08090d;--bg2:#0f1117;--bg3:#14161e;
   --border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);
   --text:#f5f5f0;--text-muted:#6b6966;--text-sub:#9c9890;
   --accent:#d4903c;
-  --font-ui:'Neue Montreal','NeueMontreal',sans-serif;--font-mono:'Lores-12','LoRes 12',monospace;
+  --font-ui:'Neue Montreal';--font-other:'Lores-12';
   --r:12px;--r-sm:8px;
 }
 body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 
-.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--border)}
+.hd{width:100%;padding:28px 44px 24px;display:flex;justify-content:space-between;align-items:flex-start;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent)}
 .hd-eyebrow{font-size:11px;font-weight:600;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px}
 .hd-title{font-size:20px;font-weight:700;color:var(--text)}
 .hd-stack{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
@@ -31,18 +31,18 @@ body{font-family:var(--font-ui);background:var(--bg);color:var(--text);min-heigh
 .si.done::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:14px;color:#10a37f;font-weight:700}
 .sl{font-size:11px;font-weight:500;color:var(--text-muted);text-align:center;max-width:62px;line-height:1.3}
 .sl.active{color:var(--text)}
-.sc{flex:1;height:1px;background:var(--border);min-width:12px;margin-bottom:26px;position:relative;overflow:hidden}
-.sc .fill{height:100%;background:rgba(16,163,127,.55);width:0%;transition:width .5s ease}
+.sc{flex:1;height:6px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.045),transparent);border-radius:999px;filter:blur(2px);min-width:12px;margin-bottom:26px;position:relative;overflow:hidden}
+.sc .fill{height:100%;background:linear-gradient(90deg,rgba(16,163,127,.18),rgba(16,163,127,.55),transparent);width:0%;transition:width .5s ease}
 
-.prog{width:calc(100% - 88px);height:1.5px;background:var(--border);border-radius:2px;margin:0 44px}
+.prog{width:calc(100% - 88px);height:6px;background:linear-gradient(90deg,rgba(255,255,255,.035),transparent);border-radius:999px;margin:0 44px;filter:blur(1.5px);overflow:hidden}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--accent),#b8582a);transition:width .5s ease;border-radius:2px}
 
 .demo{width:100%;padding:16px 44px;display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:400px}
 .ap{border-radius:var(--r);border:1px solid var(--border);background:var(--bg2);overflow:hidden;display:flex;flex-direction:column}
-.ap-hd{padding:11px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;transition:background .4s}
+.ap-hd{padding:11px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.028),transparent);display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;transition:background .4s}
 .ap-body{flex:1;padding:18px;overflow-y:auto}
-.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-mono)}
-.dp-hd{padding:10px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
+.dp{border-radius:var(--r);border:1px solid var(--border);background:var(--bg3);overflow:hidden;display:flex;flex-direction:column;font-family:var(--font-other)}
+.dp-hd{padding:10px 15px;border-bottom:0;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent);display:flex;align-items:center;gap:7px;font-size:11px;color:var(--text-muted)}
 .dp-body{flex:1;padding:15px;font-size:11px;line-height:1.85;overflow-y:auto;color:#c2bfb8}
 pre{white-space:pre-wrap;word-break:break-word}
 
@@ -50,7 +50,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 .cd{flex:1}
 .cd-title{font-size:15px;font-weight:600;color:var(--text)}
 .cd-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.5}
-.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-mono);white-space:nowrap}
+.ctr{font-size:11px;color:var(--text-muted);font-family:var(--font-other);white-space:nowrap}
 .btn{padding:8px 16px;border-radius:8px;border:1px solid var(--border-strong);background:transparent;color:var(--text);font-family:var(--font-ui);font-size:13px;font-weight:500;cursor:pointer;transition:all .2s;white-space:nowrap}
 .btn:hover{background:rgba(255,255,255,.06)}
 .btn:active{transform:scale(.98)}
@@ -74,7 +74,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 
 /* Schedule */
 .clock-face{width:72px;height:72px;border-radius:50%;border:2px solid rgba(212,144,60,.4);display:flex;align-items:center;justify-content:center;position:relative;background:rgba(212,144,60,.06);margin:0 auto 14px}
-.clock-num{font-size:22px;font-weight:700;color:#d4903c;font-family:var(--font-mono)}
+.clock-num{font-size:22px;font-weight:700;color:#d4903c;font-family:var(--font-other)}
 .sched-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
 .sched-row:last-child{border:none}
 .sched-label{color:var(--text-muted)}
@@ -91,7 +91,7 @@ pre{white-space:pre-wrap;word-break:break-word}
 .deal-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
 .deal-row:last-child{border:none}
 .deal-name{color:var(--text);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.deal-amt{color:#d4903c;font-family:var(--font-mono);font-weight:500}
+.deal-amt{color:#d4903c;font-family:var(--font-other);font-weight:500}
 .deal-stage{font-size:10px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,.06);color:var(--text-muted)}
 .proj-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:11px}
 .proj-row:last-child{border:none}
@@ -116,16 +116,16 @@ pre{white-space:pre-wrap;word-break:break-word}
 .bar-label{font-size:11px;color:var(--text-sub);min-width:110px}
 .bar-track{flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden}
 .bar-fill{height:100%;border-radius:3px;animation:bar-grow .7s ease forwards}
-.bar-val{font-size:11px;font-family:var(--font-mono);color:var(--text-muted);min-width:52px;text-align:right}
+.bar-val{font-size:11px;font-family:var(--font-other);color:var(--text-muted);min-width:52px;text-align:right}
 
 /* AI Draft */
 .ai-chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:rgba(168,85,247,.12);color:#c084fc;font-size:11px;font-weight:600;margin-bottom:12px}
 .ai-spin{width:8px;height:8px;border-radius:50%;border:1.5px solid #c084fc;border-top-color:transparent;animation:spin .7s linear infinite}
-.prompt-box{background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-mono);color:#c2bfb8;line-height:1.75;margin-bottom:12px}
+.prompt-box{background:var(--bg3);border-radius:8px;padding:12px;font-size:11px;font-family:var(--font-other);color:#c2bfb8;line-height:1.75;margin-bottom:12px}
 .section-pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2);color:#c084fc;font-size:11px;font-weight:600;margin:3px}
 
 /* Clean Output */
-.clean-diff{background:var(--bg3);border-radius:8px;overflow:hidden;font-family:var(--font-mono);font-size:11px;margin-bottom:12px}
+.clean-diff{background:var(--bg3);border-radius:8px;overflow:hidden;font-family:var(--font-other);font-size:11px;margin-bottom:12px}
 .diff-hd{padding:7px 12px;background:rgba(255,255,255,.04);border-bottom:1px solid var(--border);font-size:10px;color:var(--text-muted);display:flex;gap:16px}
 .diff-body{padding:12px;line-height:1.8;color:#c2bfb8}
 .rm{color:#f97583;background:rgba(249,117,131,.07)}
@@ -273,7 +273,7 @@ const STEPS = [
       <div class="proj-row"><span class="proj-name">Agency Dashboard</span><span class="proj-status st-plan">Planning</span></div>
     </div>
   </div>
-  <div style="margin-top:12px;font-size:11px;font-family:var(--font-mono);color:var(--text-muted);text-align:center">↓ both streams feed into Merge node</div>`,
+  <div style="margin-top:12px;font-size:11px;font-family:var(--font-other);color:var(--text-muted);text-align:center">↓ both streams feed into Merge node</div>`,
   data:`<span class="jc">// HubSpot: one deal object (of 5)</span>
 <span class="jp">{</span>
   <span class="jk">"id"</span>: <span class="js">"94820183"</span>,
@@ -366,7 +366,7 @@ const STEPS = [
     <span class="section-pill">WATCH LIST</span>
     <span class="section-pill">THIS WEEK PRIORITY</span>
   </div>
-  <div style="margin-top:14px;font-size:11px;font-family:var(--font-mono);color:#10a37f;text-align:center;background:rgba(16,163,127,.07);padding:8px;border-radius:7px;border:1px solid rgba(16,163,127,.18)">✓ Draft complete · 5 sections · 0 markdown headers</div>`,
+  <div style="margin-top:14px;font-size:11px;font-family:var(--font-other);color:#10a37f;text-align:center;background:rgba(16,163,127,.07);padding:8px;border-radius:7px;border:1px solid rgba(16,163,127,.18)">✓ Draft complete · 5 sections · 0 markdown headers</div>`,
   data:`<span class="jc">// LLM Chain prompt (excerpt)</span>
 <span class="jk">text</span>: <span class="js">"Write a weekly leadership report from this data.
 Use these 5 sections exactly:
@@ -399,7 +399,7 @@ airtable: { completionRate: 40, completed: 2 ... } }"</span>
   dt:'AI response extracted, trimmed & sanitized',
   ds:'A Code node handles the varying shapes of OpenRouter response objects — checking multiple paths (output[0].content[0].text, response.text, text) — strips any stray markdown, and trims the string to 1900 characters for Notion\'s block size limit.',
   app:`<div style="font-size:10px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.07em;margin-bottom:10px">Extraction path logic</div>
-  <div style="background:var(--bg3);border-radius:8px;padding:12px;font-family:var(--font-mono);font-size:11px;line-height:1.8;color:#c2bfb8;margin-bottom:12px">
+  <div style="background:var(--bg3);border-radius:8px;padding:12px;font-family:var(--font-other);font-size:11px;line-height:1.8;color:#c2bfb8;margin-bottom:12px">
     <span style="color:#34d399">if</span> (output[0].content[0].text) → <span style="color:#79dcaa">✓ used</span><br>
     <span style="color:#5a5855">else if</span> (response.text) → fallback<br>
     <span style="color:#5a5855">else if</span> (text) → fallback<br>
@@ -420,7 +420,7 @@ airtable: { completionRate: 40, completed: 2 ... } }"</span>
       <div class="ok">Five open deals totalling $184.5K. Weighted forecast of $67.2K…</div>
     </div>
   </div>
-  <div style="font-size:11px;font-family:var(--font-mono);color:#34d399;text-align:center;background:rgba(52,211,153,.06);padding:7px;border-radius:7px;border:1px solid rgba(52,211,153,.18)">✓ 1,184 chars · Notion block limit safe</div>`,
+  <div style="font-size:11px;font-family:var(--font-other);color:#34d399;text-align:center;background:rgba(52,211,153,.06);padding:7px;border-radius:7px;border:1px solid rgba(52,211,153,.18)">✓ 1,184 chars · Notion block limit safe</div>`,
   data:`<span class="jc">// Input: raw LLM response object</span>
 <span class="jp">{</span>
   <span class="jk">"output"</span>: <span class="jp">[{</span>
@@ -538,7 +538,7 @@ airtable: { completionRate: 40, completed: 2 ... } }"</span>
       </div>
     </div>
   </div>
-  <div style="margin-top:12px;font-size:11px;color:#10a37f;font-family:var(--font-mono);text-align:center;padding:8px;background:rgba(16,163,127,.07);border-radius:8px;border:1px solid rgba(16,163,127,.2)">
+  <div style="margin-top:12px;font-size:11px;color:#10a37f;font-family:var(--font-other);text-align:center;padding:8px;background:rgba(16,163,127,.07);border-radius:8px;border:1px solid rgba(16,163,127,.2)">
     ✓ Pipeline complete · 8 nodes · Schedule → HubSpot + Airtable → Merge → AI → Notion → Slack
   </div>`,
   data:`<span class="jc">// Slack chat.postMessage</span>

@@ -40,24 +40,62 @@
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 24px;
-            --font-body: 'Neue Montreal', 'NeueMontreal', sans-serif;
-            --font-heading: 'Lores-12', 'LoRes 12', monospace;
+            --font-body: 'Neue Montreal';
+            --font-display: 'Neue Montreal';
+            --font-heading: 'Neue Montreal';
+            --font-other: 'Lores-12';
             --transition-fast: 200ms ease;
             --transition-medium: 400ms ease;
             --transition-slow: 600ms ease;
         }
 
         @font-face {
-            font-family: 'Neue Montreal';
-            src: local('Neue Montreal'), local('NeueMontreal-Regular');
-            font-display: swap;
-        }
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Regular.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
 
-        @font-face {
-            font-family: 'Lores-12';
-            src: local('Lores-12'), local('LoRes 12'), local('LoRes12-Regular');
-            font-display: swap;
-        }
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Medium.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Bold.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Italic.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 400 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lores-12";
+  src: url("../assets/fonts/LoRes12OT-Regular.woff2") format("woff2"), local("Lores-12");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lores-12";
+  src: url("../assets/fonts/LoRes12OT-Bold.woff2") format("woff2"), local("Lores-12");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
 
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -90,24 +128,41 @@
             justify-content: space-between;
             background: transparent;
             backdrop-filter: blur(0px);
-            border-bottom: 1px solid transparent;
+            border-bottom: 0;
             transition: all var(--transition-medium);
         }
 
         .header.scrolled {
             background: rgba(10, 14, 26, 0.9);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glass);
+            box-shadow: 0 1.5rem 2.4rem -2.4rem rgba(255, 255, 255, 0.22);
         }
 
         .header-logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            color: #f5f5f0;
             font-family: var(--font-heading);
+            font-size: 0.88rem;
             font-weight: 800;
-            font-size: 1.3rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: 0.28em;
+            line-height: 1;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .header-logo__badge {
+            display: inline-grid;
+            width: 2.15rem;
+            height: 2.15rem;
+            flex: 0 0 auto;
+            place-items: center;
+            border: 1px solid rgba(201, 168, 76, 0.62);
+            color: #e8c97a;
+            font-size: 0.72rem;
+            letter-spacing: 0;
+            transform: skewX(-10deg);
         }
 
         .header-identity {
@@ -559,7 +614,8 @@
             padding: 1.5rem 2rem;
             background: rgba(15, 20, 41, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-glass);
+            border-bottom: 0;
+            box-shadow: 0 1.4rem 2.2rem -2.3rem rgba(255, 255, 255, 0.22);
         }
 
         .modal-header h2 {
@@ -598,13 +654,15 @@
 
         .modal-cta-bar {
             padding: 1.5rem 2rem;
-            border-top: 1px solid var(--border-glass);
+            border-top: 0;
             display: flex;
             gap: 1rem;
             align-items: center;
             justify-content: center;
             flex-wrap: wrap;
-            background: rgba(15, 20, 41, 0.8);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 1rem),
+                rgba(15, 20, 41, 0.8);
         }
 
         /* ============================================
@@ -926,8 +984,10 @@
 
         .scenario-detail-header {
             padding: 1rem 1.5rem;
-            background: rgba(59, 130, 246, 0.05);
-            border-bottom: 1px solid var(--border-glass);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent),
+                rgba(59, 130, 246, 0.05);
+            border-bottom: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -1260,7 +1320,7 @@
             display: flex;
             gap: 0;
             margin-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border-glass);
+            box-shadow: 0 1.3rem 2rem -2.2rem rgba(255, 255, 255, 0.25);
         }
 
         .dash-tab {
@@ -1537,7 +1597,7 @@
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-bottom: 0.25rem;
-            font-family: monospace;
+            font-family: var(--font-display);
         }
 
         .alert-message {
@@ -1650,13 +1710,14 @@
             font-size: 0.7rem;
             color: var(--text-muted);
             margin-top: 0.2rem;
-            font-family: monospace;
+            font-family: var(--font-display);
         }
 
         .comp-total {
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--border-glass);
+            border-top: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 1rem);
             font-family: var(--font-heading);
             font-weight: 700;
         }
@@ -1990,7 +2051,8 @@
         .footer {
             padding: 3rem 2rem;
             text-align: center;
-            border-top: 1px solid var(--border-glass);
+            border-top: 0;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.035), transparent 2rem);
         }
 
         .footer p {
@@ -2047,7 +2109,10 @@
     <!-- HEADER -->
     <header class="header" id="header">
         <div class="header-identity">
-            <div class="header-logo">Henry Fadeni</div>
+            <div class="header-logo">
+                <span class="header-logo__badge" aria-hidden="true">HF</span>
+                <span>Henry Fadeni</span>
+            </div>
         </div>
         <a href="#cta" class="header-cta">Get Free Audit</a>
     </header>

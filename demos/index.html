@@ -23,21 +23,56 @@
   --portfolio-green: #183a35;
   --portfolio-black: #030303;
   --smoke: #d9d8ca;
-  --display: "Neue Montreal", "NeueMontreal", sans-serif;
-  --serif: "Lores-12", "LoRes 12", monospace;
-  --mono: "Lores-12", "LoRes 12", monospace;
+  --display: "Neue Montreal";
+  --other: "Lores-12";
   --ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @font-face {
   font-family: "Neue Montreal";
-  src: local("Neue Montreal"), local("NeueMontreal-Regular");
+  src: url("../assets/fonts/NeueMontreal-Regular.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Medium.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Bold.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../assets/fonts/NeueMontreal-Italic.otf") format("opentype"), local("Neue Montreal");
+  font-weight: 400 700;
+  font-style: italic;
   font-display: swap;
 }
 
 @font-face {
   font-family: "Lores-12";
-  src: local("Lores-12"), local("LoRes 12"), local("LoRes12-Regular");
+  src: url("../assets/fonts/LoRes12OT-Regular.woff2") format("woff2"), local("Lores-12");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lores-12";
+  src: url("../assets/fonts/LoRes12OT-Bold.woff2") format("woff2"), local("Lores-12");
+  font-weight: 700 900;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -191,7 +226,7 @@ body.is-ready .loader {
 .loader__percent {
   display: block;
   margin-bottom: 16px;
-  font-family: var(--mono);
+  font-family: var(--other);
   font-size: 14px;
 }
 
@@ -335,22 +370,37 @@ body.is-light-chrome .section-rail button.is-active {
 }
 
 .wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
   justify-self: center;
-  font-size: clamp(21px, 2.05vw, 30px);
-  font-weight: 500;
-  letter-spacing: 0;
+  font-family: var(--other);
+  font-size: clamp(12px, 0.92vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.28em;
   text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
-.wordmark em {
-  font-family: var(--serif);
-  font-style: italic;
+.wordmark__badge {
+  display: inline-grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(201, 168, 76, 0.62);
+  color: var(--gold-bright);
+  font-family: var(--display);
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 0;
+  line-height: 1;
+  transform: skewX(-10deg);
 }
 
-.wordmark em {
-  font-family: inherit;
-  font-style: normal;
+.wordmark__name {
+  display: inline-block;
 }
 
 .chrome-identity {
@@ -373,7 +423,7 @@ body.is-light-chrome .section-rail button.is-active {
   gap: 12px;
   transform: translateY(-50%);
   color: var(--cream);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: 12px;
   font-style: italic;
   font-weight: 600;
@@ -402,8 +452,11 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 .section-rail button::after {
   content: "";
   width: 0;
-  height: 1px;
-  background: currentColor;
+  height: 0.34rem;
+  background: linear-gradient(90deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.5;
+  filter: blur(2px);
   transition: width 500ms var(--ease);
 }
 
@@ -447,9 +500,12 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 }
 
 .scroll-mark__line {
-  width: 1px;
+  width: 0.45rem;
   height: 62px;
-  background: currentColor;
+  background: linear-gradient(180deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.45;
+  filter: blur(3px);
   transform-origin: top center;
   animation: scroll-line 2.8s ease-in-out infinite;
 }
@@ -532,7 +588,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   grid-template-columns: 80px minmax(0, 1fr);
   gap: 34px 110px;
   color: rgba(245, 245, 240, 0.66);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-style: italic;
   font-weight: 700;
 }
@@ -546,8 +602,11 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 .capability-index span::after {
   content: "";
   width: 24px;
-  height: 1px;
-  background: currentColor;
+  height: 0.34rem;
+  background: linear-gradient(90deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.5;
+  filter: blur(2px);
 }
 
 .capability-list {
@@ -678,8 +737,8 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 
 .media-item {
   border: 0;
-  border-bottom: 1px solid rgba(255, 253, 226, 0.24);
   background: transparent;
+  box-shadow: 0 1.4rem 2.4rem -2.4rem rgba(255, 253, 226, 0.34);
   color: rgba(245, 245, 240, 0.66);
   padding: 18px 0;
   text-align: left;
@@ -839,7 +898,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   position: absolute;
   z-index: 3;
   color: var(--cream);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: clamp(14px, 1.1vw, 17px);
   font-style: italic;
   font-weight: 600;
@@ -858,7 +917,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   display: flex;
   gap: 13px;
   color: var(--cream);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: 14px;
   font-style: italic;
   font-weight: 700;
@@ -866,7 +925,8 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 
 .language-set span + span {
   padding-left: 13px;
-  border-left: 1px solid currentColor;
+  border-left: 0;
+  background: linear-gradient(90deg, rgba(255, 253, 226, 0.08), transparent 1rem);
 }
 
 .float-thumb {
@@ -952,7 +1012,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   align-items: center;
   gap: 18px;
   color: var(--cream);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-style: italic;
   font-weight: 600;
 }
@@ -964,8 +1024,11 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 .scene-label::after {
   content: "";
   width: 22px;
-  height: 1px;
-  background: currentColor;
+  height: 0.34rem;
+  background: linear-gradient(90deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.52;
+  filter: blur(2px);
 }
 
 .room-list {
@@ -1010,7 +1073,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 
 .room-button__num,
 .room-button__meta {
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: clamp(16px, 1.2vw, 20px);
   font-style: italic;
   font-weight: 700;
@@ -1163,8 +1226,11 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   right: 47px;
   top: 9px;
   width: 20px;
-  height: 1px;
-  background: currentColor;
+  height: 0.34rem;
+  background: linear-gradient(90deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.38;
+  filter: blur(2px);
 }
 
 .thumb {
@@ -1198,7 +1264,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 
 .text-link {
   border: 0;
-  border-bottom: 1px solid currentColor;
+  box-shadow: 0 0.55rem 0.8rem -0.92rem currentColor;
   background: transparent;
   color: currentColor;
   font-size: 13px;
@@ -1222,7 +1288,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
   display: grid;
   gap: 10px;
   color: rgba(5, 5, 5, 0.24);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-style: italic;
   font-weight: 700;
 }
@@ -1476,7 +1542,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 
 .contact-stage h2 em {
   display: block;
-  font-family: var(--serif);
+  font-family: var(--other);
   font-style: italic;
   font-weight: 500;
 }
@@ -1492,7 +1558,7 @@ body:not(.is-light-chrome) .section-rail button:focus-visible {
 }
 
 .contact-card span {
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: 15px;
   font-style: italic;
   font-weight: 700;
@@ -1554,7 +1620,7 @@ body.is-menu-open .menu-panel {
 
 .menu-close::before {
   content: "x";
-  font-family: var(--mono);
+  font-family: var(--other);
   font-size: 14px;
 }
 
@@ -1600,7 +1666,7 @@ body.is-menu-open .menu-panel {
 }
 
 .menu-panel__contact span {
-  font-family: var(--serif);
+  font-family: var(--other);
   font-style: italic;
 }
 
@@ -1639,7 +1705,7 @@ body.is-preview-open .preview-panel {
 
 .preview-title span {
   color: var(--gold);
-  font-family: var(--serif);
+  font-family: var(--other);
   font-size: 14px;
   font-style: italic;
 }
@@ -1739,6 +1805,10 @@ body.is-preview-open .preview-panel {
     justify-self: start;
     grid-column: 1;
     grid-row: 1;
+  }
+
+  .wordmark__name {
+    display: none;
   }
 
   .chrome-identity {
@@ -2085,7 +2155,10 @@ body.is-preview-open .preview-panel {
     <span>Menu</span>
   </button>
   <div class="chrome-identity">
-    <a class="wordmark" href="../index.html">Henry Fadeni</a>
+    <a class="wordmark" href="../index.html" aria-label="Henry Fadeni home">
+      <span class="wordmark__badge" aria-hidden="true">HF</span>
+      <span class="wordmark__name">Henry Fadeni</span>
+    </a>
   </div>
   <a class="chat-link" href="../contact/index.html">Let's chat -></a>
 </header>
@@ -2296,7 +2369,10 @@ body.is-preview-open .preview-panel {
 <aside class="menu-panel" aria-hidden="true" data-menu>
   <div class="menu-panel__top">
     <button class="menu-close" type="button" data-menu-close>Close</button>
-    <a class="wordmark" href="../index.html">Henry Fadeni</a>
+    <a class="wordmark" href="../index.html" aria-label="Henry Fadeni home">
+      <span class="wordmark__badge" aria-hidden="true">HF</span>
+      <span class="wordmark__name">Henry Fadeni</span>
+    </a>
     <a class="chat-link" href="../contact/index.html">Let's chat -></a>
   </div>
   <nav class="menu-links" aria-label="Overlay navigation">

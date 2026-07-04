@@ -22,11 +22,10 @@ const smoothstep = (edge0, edge1, value) => {
 const mixColor = (from, to, t) => from.map((channel, index) => Math.round(lerp(channel, to[index], t)))
 
 const stops = [
-  { at: 0, color: [13, 19, 31], text: [245, 245, 240], active: 'hero-section' },
-  { at: 0.2, color: [6, 23, 54], text: [245, 245, 240], active: 'automations-section' },
-  { at: 0.55, color: [32, 55, 52], text: [245, 245, 240], active: 'agents-section' },
-  { at: 0.84, color: [17, 17, 19], text: [245, 245, 240], active: 'workflows-section' },
-  { at: 1, color: [7, 9, 13], text: [245, 245, 240], active: 'workflows-section' }
+  { at: 0, color: [0, 0, 0], text: [255, 255, 255], active: 'hero-section' },
+  { at: 0.18, color: [0, 0, 0], text: [255, 255, 255], active: 'hero-section' },
+  { at: 0.2, color: [0, 0, 0], text: [255, 255, 255], active: 'agents-section' },
+  { at: 1, color: [0, 0, 0], text: [255, 255, 255], active: 'agents-section' }
 ]
 
 const agentVisualControls = [
@@ -58,14 +57,12 @@ function interpolate(progress, key) {
 }
 
 function activeScene(progress) {
-  if (progress < 0.17) return 'hero-section'
-  if (progress < 0.5) return 'automations-section'
-  if (progress < 0.8) return 'agents-section'
-  return 'workflows-section'
+  if (progress < 0.2) return 'hero-section'
+  return 'agents-section'
 }
 
 function getViewportActiveSection() {
-  const sections = ['hero-section', 'automations-section', 'agents-section', 'workflows-section']
+  const sections = ['hero-section', 'agents-section']
     .map((id) => document.getElementById(id))
     .filter(Boolean)
   if (sections.length === 0) return null
@@ -120,9 +117,9 @@ function getAgentRailConfig(agentItems) {
   const viewportH = Math.max(1, window.innerHeight)
   const midX = viewportW * (window.innerWidth < 1360 ? 0.205 : 0.195)
   const midY = viewportH * 0.5
-  const radius = Math.max(viewportH * 1.08, viewportW * 0.46)
+  const radius = Math.max(viewportH * 0.94, viewportW * 0.4)
   const sampleItemHeight = agentItems[0]?.offsetHeight || viewportH * 0.07
-  const itemArcStep = clampRange(sampleItemHeight * 2.7, 96, 132)
+  const itemArcStep = clampRange(sampleItemHeight * 2.45, 112, 168)
 
   return {
     viewportW,
@@ -207,7 +204,7 @@ function drawFeaturedArtwork(ctx, width, height, index) {
   const project = featuredProjects[index] || featuredProjects[0]
   const hue = project.hue || 0
   const accent = project.accent || '#e8c97a'
-  const ember = project.ember || '#26c9b9'
+  const ember = project.ember || '#d4903c'
 
   ctx.setTransform(1, 0, 0, 1, 0, 0)
   ctx.filter = 'none'
@@ -357,10 +354,10 @@ function applyFeaturedLiquidWarp(ctx, width, height, trails, source) {
   if (trails.length === 0) return
 
   const aspect = width / Math.max(1, height)
-  const activeTrails = trails.slice(0, 18)
-  const cell = clampRange(Math.round(Math.min(width, height) / 38), 12, 22)
-  const maxPullX = width * 0.058
-  const maxPullY = height * 0.047
+  const activeTrails = trails.slice(0, 12)
+  const cell = clampRange(Math.round(Math.min(width, height) / 48), 8, 16)
+  const maxPullX = width * 0.034
+  const maxPullY = height * 0.028
 
   ctx.save()
   ctx.imageSmoothingEnabled = true
@@ -381,22 +378,22 @@ function applyFeaturedLiquidWarp(ctx, width, height, trails, source) {
         const dx = nx - trail.x
         const dy = ny - trail.y
         const dist = Math.hypot(dx * aspect, dy)
-        const radius = lerp(0.055, 0.22, trail.age)
+        const radius = lerp(0.036, 0.13, trail.age)
         const falloff = Math.exp(-(dist * dist) / Math.max(0.0001, radius * radius))
-        const ring = Math.sin((dist - radius * 0.52) * 46 - trail.age * 8.5) * Math.exp(-dist * 5.6)
+        const ring = Math.sin((dist - radius * 0.5) * 58 - trail.age * 12) * Math.exp(-dist * 7.2)
         const pull = falloff * life * trail.strength
         const radialX = dx / Math.max(0.001, dist)
         const radialY = dy / Math.max(0.001, dist)
 
-        offsetX += (trail.vx * maxPullX * 1.18 + radialX * maxPullX * 0.32 * ring) * pull
-        offsetY += (trail.vy * maxPullY * 1.12 + radialY * maxPullY * 0.34 * ring) * pull
+        offsetX += (trail.vx * maxPullX * 0.78 + radialX * maxPullX * 0.2 * ring) * pull
+        offsetY += (trail.vy * maxPullY * 0.74 + radialY * maxPullY * 0.22 * ring) * pull
         energy += pull
       })
 
-      if (energy > 0.012 || Math.abs(offsetX) > 0.3 || Math.abs(offsetY) > 0.3) {
+      if (energy > 0.008 || Math.abs(offsetX) > 0.18 || Math.abs(offsetY) > 0.18) {
         const sx = clampRange(x - offsetX, 0, width - sampleW)
         const sy = clampRange(y - offsetY, 0, height - sampleH)
-        ctx.globalAlpha = clampRange(0.72 + energy * 0.7, 0.72, 1)
+        ctx.globalAlpha = clampRange(0.8 + energy * 0.34, 0.8, 1)
         ctx.drawImage(source, sx, sy, sampleW, sampleH, x, y, sampleW, sampleH)
       }
     }
@@ -404,18 +401,18 @@ function applyFeaturedLiquidWarp(ctx, width, height, trails, source) {
   ctx.restore()
 
   ctx.save()
-  activeTrails.slice(0, 10).forEach((trail) => {
+  activeTrails.slice(0, 7).forEach((trail) => {
     const life = 1 - trail.age
     const x = trail.x * width
     const y = trail.y * height
-    const radius = height * lerp(0.052, 0.19, trail.age)
-    const stretch = 1 + clampRange(Math.hypot(trail.vx, trail.vy) * 8, 0, 1.45)
+    const radius = height * lerp(0.034, 0.12, trail.age)
+    const stretch = 1 + clampRange(Math.hypot(trail.vx, trail.vy) * 5, 0, 0.95)
 
     ctx.save()
     ctx.beginPath()
     ctx.ellipse(x, y, radius * 1.35 * stretch, radius * 0.78, trail.angle, 0, Math.PI * 2)
     ctx.clip()
-    ctx.globalAlpha = 0.16 * life * trail.strength
+    ctx.globalAlpha = 0.1 * life * trail.strength
     ctx.drawImage(
       source,
       clampRange(x - radius * 0.52 - trail.vx * width * 0.035, 0, width - radius),
@@ -671,11 +668,11 @@ export function useCinematicScroll(containerRef) {
         vx: speed > 0.0001 ? velocityX / speed : 0,
         vy: speed > 0.0001 ? velocityY / speed : 0,
         age: 0,
-        decay: 0.58 + clampRange(speed * 8, 0, 0.36),
-        strength: clampRange(strength, 0.18, 1.08),
+        decay: 0.92 + clampRange(speed * 10, 0, 0.58),
+        strength: clampRange(strength, 0.12, 0.74),
         angle: Math.atan2(velocityY, velocityX)
       })
-      if (trails.length > 28) trails.length = 28
+      if (trails.length > 18) trails.length = 18
       requestFeaturedTrailFrame()
     }
 
@@ -685,7 +682,7 @@ export function useCinematicScroll(containerRef) {
       lastPointer = getFeaturedPointer(event)
       featuredMedia?.classList.add('is-liquid-active')
       if (lastPointer) {
-        addFeaturedTrail(lastPointer, 0.001, 0, 0.2)
+        addFeaturedTrail(lastPointer, 0.001, 0, 0.14)
       }
     }
 
@@ -697,8 +694,8 @@ export function useCinematicScroll(containerRef) {
       const dx = point.rawX - previous.rawX
       const dy = point.rawY - previous.rawY
       const distance = Math.hypot(dx, dy)
-      if (distance > 3) {
-        const steps = clampRange(Math.ceil(distance / 24), 1, 3)
+      if (distance > 2) {
+        const steps = clampRange(Math.ceil(distance / 16), 1, 4)
         const velocityX = dx / point.width
         const velocityY = dy / point.height
         for (let step = 1; step <= steps; step += 1) {
@@ -706,7 +703,7 @@ export function useCinematicScroll(containerRef) {
           addFeaturedTrail({
             x: lerp(previous.x, point.x, amount),
             y: lerp(previous.y, point.y, amount)
-          }, velocityX, velocityY, clampRange(distance / 38, 0.26, 1.05))
+          }, velocityX, velocityY, clampRange(distance / 48, 0.16, 0.78))
         }
       }
       lastPointer = point
@@ -723,6 +720,7 @@ export function useCinematicScroll(containerRef) {
       const autoProgress = getSectionProgress(automationsSection)
       const agentsProgress = getSectionProgress(agentsSection)
       const featuredProgress = getSectionProgress(workflowsSection)
+      const isCompactViewport = window.innerWidth <= 1023
 
       const inAutomations = automationsSection
         ? automationsSection.getBoundingClientRect().top <= window.innerHeight * 0.16
@@ -840,13 +838,13 @@ export function useCinematicScroll(containerRef) {
       })
 
       const lastAgentIndex = Math.max(0, agentItems.length - 1)
-      const railEntryProgress = smoothstep(0.025, 0.24, agentsProgress)
-      const railEntryOffsetVh = lerp(72, 0, railEntryProgress)
-      const railReveal = smoothstep(0.03, 0.17, agentsProgress)
-      const trainProgress = clamp01((agentsProgress - 0.24) / (0.9 - 0.24))
-      const exactAgent = agentsProgress >= 0.9 ? lastAgentIndex : lerp(0, lastAgentIndex, trainProgress)
+      const railEntryProgress = smoothstep(0, 0.18, agentsProgress)
+      const railEntryOffsetVh = lerp(34, 0, railEntryProgress)
+      const railReveal = smoothstep(0, 0.16, agentsProgress)
+      const trainProgress = clamp01((agentsProgress - 0.18) / (0.97 - 0.18))
+      const exactAgent = agentsProgress >= 0.97 ? lastAgentIndex : lerp(0, lastAgentIndex, trainProgress)
       const activeAgent = Math.round(exactAgent)
-      const liftProgress = smoothstep(0.955, 1, agentsProgress)
+      const liftProgress = 0
       const agentRail = getAgentRailConfig(agentItems)
       const dialRotation = -exactAgent * agentRail.itemAngle
       const exitAgentLiftVh = liftProgress * 112
@@ -889,33 +887,31 @@ export function useCinematicScroll(containerRef) {
         item.style.opacity = opacity.toFixed(4)
         item.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
-          ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(245, 245, 240, ${(glow * 0.42).toFixed(3)})`
+          ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(255, 255, 255, ${(glow * 0.42).toFixed(3)})`
           : 'none'
         item.style.zIndex = `${20 + Math.round(midpointFocus * 88) + Math.round(postMidAmount * 70)}`
-        item.style.color = '#f5f5f0'
+        item.style.color = 'rgb(255, 255, 255)'
       })
       const contentOpacity = railReveal * smoothstep(-0.78, 0.08, exactAgent)
       if (agentsInfo) {
         agentsInfo.style.opacity = contentOpacity.toFixed(4)
-        agentsInfo.style.transform = `translate3d(0, ${(-exitAgentLiftPx).toFixed(2)}px, 0)`
+        agentsInfo.style.transform = `${isCompactViewport ? 'translateY(-50%) ' : ''}translate3d(0, ${(-exitAgentLiftPx).toFixed(2)}px, 0)`
       }
       agentLogos.forEach((logo, index) => {
         const isActive = index === activeAgent
         const layerOpacity = isActive ? contentOpacity : 0
-        const unveil = clamp01(layerOpacity * 1.16)
-        logo.style.opacity = contentOpacity.toFixed(4)
+        logo.style.opacity = layerOpacity.toFixed(4)
         logo.style.transform = `translate3d(${(isActive ? 0 : -22).toFixed(2)}px, ${((1 - contentOpacity) * 18).toFixed(2)}px, 0)`
         logo.style.filter = 'none'
-        logo.style.clipPath = `inset(0 ${(100 - unveil * 100).toFixed(2)}% 0 0)`
+        logo.style.clipPath = isActive ? 'none' : 'inset(0 100% 0 0)'
       })
       agentCopies.forEach((copy, index) => {
         const isActive = index === activeAgent
         const layerOpacity = isActive ? contentOpacity : 0
-        const unveil = clamp01(layerOpacity * 1.12)
-        copy.style.opacity = contentOpacity.toFixed(4)
+        copy.style.opacity = layerOpacity.toFixed(4)
         copy.style.transform = `translate3d(${(isActive ? 0 : 26).toFixed(2)}px, ${((1 - contentOpacity) * 18).toFixed(2)}px, 0)`
         copy.style.filter = 'none'
-        copy.style.clipPath = `inset(0 ${(100 - unveil * 100).toFixed(2)}% 0 0)`
+        copy.style.clipPath = isActive ? 'none' : 'inset(0 100% 0 0)'
       })
 
       const nextFeaturedIndex = Math.min(

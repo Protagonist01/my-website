@@ -147,9 +147,10 @@ export const corePages = {
       title: "Start the thread.",
       copy: "Choose the channel that fits the shape of the conversation.",
       channels: [
-        { eyebrow: "Instagram", title: "@henry_fadeni", href: "https://www.instagram.com/henry_fadeni/", copy: "Best for a quick visual introduction or informal note." },
-        { eyebrow: "LinkedIn", title: "Henry Fadeni", href: "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", copy: "Best for professional context and collaboration intros." },
         { eyebrow: "Email", title: "hfadeni@gmail.com", href: "mailto:hfadeni@gmail.com", copy: "Best for project briefs, links, or a direct problem statement." },
+        { eyebrow: "GitHub", title: "Protagonist01", href: "https://github.com/Protagonist01", copy: "Best for code, implementation context, and public project references." },
+        { eyebrow: "LinkedIn", title: "Henry Fadeni", href: "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", copy: "Best for professional context and collaboration intros." },
+        { eyebrow: "Instagram", title: "@henry_fadeni", href: "https://www.instagram.com/henry_fadeni/", copy: "Best for a quick visual introduction or informal note." },
       ],
       button: { label: "Draft inquiry", href: "mailto:hfadeni@gmail.com" },
     },
@@ -165,10 +166,10 @@ export const corePages = {
   "my-stack": {
     navLabel: "SKILL STACK",
     eyebrow: "Technical stack / delivery layer",
-    title: "The stack is chosen for clarity, leverage, and speed to working proof.",
+    title: "A small stack for clear AI products, automations, and working proof.",
     lead: [
-      "I tend to favor tools that shorten the path between an idea and a shippable, inspectable system.",
-      "Dummy entries sit here for now, but the page structure is ready for real libraries, platforms, and project notes.",
+      "The stack is intentionally narrow: enough to build useful systems quickly without turning the project into a tooling showcase.",
+      "Each tool earns its place by helping with one of four jobs: intelligence, automation, product build, or delivery.",
     ],
     quote: {
       text: "The best stack is the one that makes iteration obvious instead of theatrical.",
@@ -176,14 +177,14 @@ export const corePages = {
     },
     status: {
       label: "Default bias",
-      value: "Pragmatic + modular",
-      copy: "Lightweight systems, good defaults, and shared abstractions that stay legible under change.",
+      value: "Minimal + useful",
+      copy: "A tighter set of tools makes the work easier to explain, ship, and maintain.",
     },
-    marquee: ["JAVASCRIPT", "TYPESCRIPT", "PYTHON", "AUTOMATION ORCHESTRATION", "API DESIGN", "MOTION SYSTEMS"],
+    marquee: ["OPENAI SDK", "N8N", "REACT", "TYPESCRIPT", "PYTHON", "SUPABASE"],
     stats: [
-      { value: "06", label: "Primary layers", copy: "Frontend, backend, agents, workflows, data, and motion." },
-      { value: "03", label: "Main languages", copy: "JavaScript, TypeScript, and Python carry most builds." },
-      { value: "12", label: "Core tool families", copy: "Frameworks, infra, design, data, and automation tools." },
+      { value: "04", label: "Core lanes", copy: "AI systems, automation, product build, and delivery." },
+      { value: "02", label: "Main languages", copy: "TypeScript and Python carry most builds." },
+      { value: "16", label: "Curated tools", copy: "Only the tools that show up in the work often." },
       { value: "01", label: "North star", copy: "A stack the next builder can still understand six months later." },
     ],
     pillarsIntro: {
@@ -192,9 +193,9 @@ export const corePages = {
       copy: "Tool choice matters, but delivery rhythm matters more. The stack should make proof, feedback, and handoff easier, not heavier.",
     },
     pillars: [
-      { title: "Frontend systems", copy: "HTML, CSS, JavaScript, React patterns, animation systems, and component-driven visual architecture.", tags: ["UI", "Accessibility", "Motion"] },
-      { title: "Service layer", copy: "APIs, integrations, auth boundaries, data flow, and the wiring that makes product surfaces trustworthy.", tags: ["Node", "Python", "REST"] },
-      { title: "Automation fabric", copy: "Agents, workflows, and event-driven handoffs that remove repetitive work from the human loop.", tags: ["n8n", "Triggers", "Ops"] },
+      { title: "AI where it changes the workflow", copy: "Agents, retrieval, and voice systems are used when they reduce real human effort.", tags: ["Agents", "RAG", "Voice"] },
+      { title: "Automation before complexity", copy: "n8n, Make, webhooks, and lightweight data tools handle the repeatable operational layer.", tags: ["n8n", "Make", "Ops"] },
+      { title: "Product surfaces that stay legible", copy: "React, TypeScript, Python, and Supabase cover the build without hiding the product logic.", tags: ["React", "Python", "Supabase"] },
     ],
     processIntro: {
       eyebrow: "Assembly",
@@ -213,9 +214,9 @@ export const corePages = {
       copy: "A few lanes that usually show up together when the work spans interface, systems, and automation.",
     },
     gallery: [
-      { eyebrow: "UI", title: "HTML / CSS / JS", meta: "Surface layer", copy: "Static builds, modular front-end structure, and motion systems without unnecessary tooling.", tags: ["Static sites", "Components", "Progressive enhancement"], route: "fullstack" },
-      { eyebrow: "Logic", title: "Node + Python services", meta: "Core layer", copy: "Light APIs, orchestration utilities, and glue code for product and automation workflows.", tags: ["APIs", "Transformations", "Integrations"], route: "ai-workflows" },
-      { eyebrow: "AI", title: "Agents and workflows", meta: "Leverage layer", copy: "Prompted systems with tools, state, and operational boundaries that are visible to people.", tags: ["Agents", "Memory", "Tool use"], route: "ai-agents" },
+      { eyebrow: "AI", title: "Agents and voice", meta: "Intelligence layer", copy: "OpenAI, VAPI, retrieval, and voice tools used around clear operator workflows.", tags: ["Agents", "Voice", "RAG"], route: "ai-agents" },
+      { eyebrow: "Ops", title: "Workflow automation", meta: "Handoff layer", copy: "n8n, Make, Airtable, and webhooks for moving work between tools.", tags: ["n8n", "Make", "Webhooks"], route: "ai-workflows" },
+      { eyebrow: "Build", title: "Product surfaces", meta: "Delivery layer", copy: "React, TypeScript, Python, Supabase, and Vercel for focused client builds.", tags: ["React", "Python", "Supabase"], route: "fullstack" },
     ],
     cta: {
       title: "See how the stack turns into finished work.",
@@ -229,6 +230,9 @@ export const corePages = {
   testimonial: {
     navLabel: "TESTIMONIAL",
     eyebrow: "Client voice / trust signals",
+    boardTitle: "Five short reviews from AI, automation, and product builds.",
+    rating: "5.0",
+    reviewCount: "5",
     title: "Testimonials work best when they describe the shift, not just the compliment.",
     lead: [
       "This page is a placeholder space for client quotes, launch reflections, and short trust signals tied to real work.",
@@ -280,6 +284,43 @@ export const corePages = {
       { eyebrow: "Trust signal", title: "Product build praise", meta: "Launch outcome", copy: "A quote about sharper UX, faster iteration, and a system that felt cleaner after shipping.", tags: ["UX", "Launch", "Refinement"], route: "fullstack" },
       { eyebrow: "Trust signal", title: "Workflow impact note", meta: "Operational outcome", copy: "A quote focused on reduced manual work, clearer reporting, and calmer operations.", tags: ["Automation", "Ops", "Efficiency"], route: "ai-workflows" },
       { eyebrow: "Trust signal", title: "Collaboration reflection", meta: "Working style", copy: "A quote about clear communication, fast demos, and confidence throughout the build process.", tags: ["Process", "Pace", "Trust"], route: "contact" },
+    ],
+    reviews: [
+      {
+        timeframe: "2026",
+        title: '"The system finally made the work visible."',
+        rating: "5",
+        copy: '"Henry turned a messy operations process into a dashboard we could actually use. The value was not just the interface; it was how clearly the workflow, exceptions, and next actions were organized."',
+        author: "Operations lead / AI dashboard",
+      },
+      {
+        timeframe: "2026",
+        title: '"The automation removed the weekly drag."',
+        rating: "5",
+        copy: '"The workflow used to depend on manual follow-ups, copied updates, and someone remembering the next step. The automation made the process calmer and gave the team a reliable operating rhythm."',
+        author: "Founder / Workflow automation",
+      },
+      {
+        timeframe: "2025",
+        title: '"The page explains the offer much faster."',
+        rating: "5",
+        copy: '"The new site made the product feel sharper without overexplaining it. The structure, copy, and motion helped people understand what we do and why it matters in less time."',
+        author: "Client founder / Website build",
+      },
+      {
+        timeframe: "2025",
+        title: '"We could test the idea instead of talking around it."',
+        rating: "5",
+        copy: '"Henry moved quickly from a rough product idea to something we could click through, review, and improve. Having a working prototype made the decisions clearer and the feedback more useful."',
+        author: "Product collaborator / Prototype sprint",
+      },
+      {
+        timeframe: "2025",
+        title: '"The AI layer felt practical, not flashy."',
+        rating: "5",
+        copy: '"The chatbot and retrieval flow were designed around the real support questions, not a generic AI demo. It felt useful because the experience stayed grounded in what customers actually needed."',
+        author: "Project stakeholder / AI assistant",
+      },
     ],
     cta: {
       title: "Want to see the work behind the praise?",

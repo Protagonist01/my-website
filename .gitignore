@@ -17,3 +17,9 @@ demos/context/
 .codex-screenshots/
 .codex-chrome-profile*/
 edge-cdp-profile/
+
+# debug/utility scripts
+*.py
+
+# agent workspace
+.agents/

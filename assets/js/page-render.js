@@ -1,5 +1,10 @@
 import { pageData, primaryNav, routes } from "./page-data.js";
 
+const FORMSPREE_ENDPOINTS = {
+  contact: "https://formspree.io/f/mqevwkpl",
+  audit: "https://formspree.io/f/mrewrgpn",
+};
+
 const REPLICA_PAGES = new Set(["contact", "works"]);
 const REPLICA_TONES = ["violet", "cyan", "amber", "emerald", "crimson", "graphite"];
 
@@ -30,6 +35,115 @@ function renderAction(rootPath, link, className = "button") {
   const resolved = resolveLink(rootPath, link);
   const attrs = resolved.external ? ' target="_blank" rel="noreferrer"' : "";
   return `<a class="${className}" href="${resolved.href}"${attrs}>${link.label}</a>`;
+}
+
+function renderHeaderActions() {
+  return `
+    <div class="page-header-actions">
+      <button class="header-action header-action--primary" type="button" data-contact-open>Contact Me</button>
+    </div>
+  `;
+}
+
+function renderContactFormModal() {
+  return `
+    <div class="contact-form-modal" data-contact-modal aria-hidden="true">
+      <form class="contact-form-card" data-contact-form>
+        <div class="contact-form-card__header">
+          <div>
+            <h2>Tell me what you want to build.</h2>
+            <p>Share the outcome, workflow, or product idea. A rough version is enough.</p>
+          </div>
+          <button class="contact-form-card__close" type="button" data-contact-close aria-label="Close contact form">x</button>
+        </div>
+        <label>
+          Your name
+          <input name="name" type="text" autocomplete="name" />
+        </label>
+        <label>
+          Your email
+          <input name="email" type="email" autocomplete="email" />
+        </label>
+        <label>
+          What do you want to do?
+          <textarea name="description" rows="5"></textarea>
+        </label>
+        <button class="contact-form-card__submit header-action header-action--primary" type="submit">Send Brief</button>
+      </form>
+    </div>
+  `;
+}
+
+function initContactModal(scope = document) {
+  const modal = scope.querySelector("[data-contact-modal]");
+  const openers = [...scope.querySelectorAll("[data-contact-open]")];
+
+  if (!modal || openers.length === 0 || modal.dataset.bound === "true") {
+    return;
+  }
+
+  const form = modal.querySelector("[data-contact-form]");
+  const closeButtons = [...modal.querySelectorAll("[data-contact-close]")];
+  modal.dataset.bound = "true";
+
+  const open = () => {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    modal.querySelector("input, textarea")?.focus();
+  };
+
+  const close = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  openers.forEach((button) => button.addEventListener("click", open));
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitButton = form.querySelector('[type="submit"]');
+    const data = new FormData(form);
+    data.append("_subject", `Portfolio inquiry from ${data.get("name") || "new contact"}`);
+    data.append("source", document.title || window.location.pathname);
+
+    submitButton?.setAttribute("disabled", "true");
+    if (submitButton) submitButton.textContent = "Sending...";
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINTS.contact, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data,
+      });
+
+      if (!response.ok) {
+        throw new Error("Form submission failed");
+      }
+
+      form.reset();
+      close();
+      window.alert("Thanks. Your brief has been sent.");
+    } catch (error) {
+      window.alert("Sorry, the form could not be sent. Please try again.");
+    } finally {
+      submitButton?.removeAttribute("disabled");
+      if (submitButton) submitButton.textContent = "Send Brief";
+    }
+  });
+}
+
+function renderWordmark(href, className = "") {
+  const classes = ["portfolio-wordmark", className].filter(Boolean).join(" ");
+
+  return `
+    <a class="${classes}" href="${href}" aria-label="Henry Fadeni home">
+      <span class="portfolio-wordmark__mark" aria-hidden="true">HF</span>
+      <span class="portfolio-wordmark__name">Henry Fadeni</span>
+    </a>
+  `;
 }
 
 function renderMetric(metric) {
@@ -127,10 +241,9 @@ function toneAt(index, offset = 0) {
   return REPLICA_TONES[(index + offset) % REPLICA_TONES.length];
 }
 
-function renderReplicaChrome(rootPath, pageKey, page) {
+function renderReplicaChrome(rootPath, pageKey, page, showRail = true) {
   const notes = {
     about: "Archive",
-    contact: "Connect",
     works: "Honors",
   };
   const marks = {
@@ -139,16 +252,24 @@ function renderReplicaChrome(rootPath, pageKey, page) {
     works: "W.",
   };
 
-  return `
-    <header class="replica-chrome">
-      <a class="replica-brand" href="${withRoot(rootPath, routes.home)}">Henry Fadeni</a>
-      <span class="page-title-label replica-page-label">${page.navLabel}</span>
-      <span class="page-header-spacer" aria-hidden="true"></span>
-    </header>
+  const rail = showRail ? `
     <aside class="replica-rail" aria-hidden="true">
       <strong>${marks[pageKey]}</strong>
       <span>${notes[pageKey]}</span>
     </aside>
+  ` : "";
+
+  const actions = pageKey === "contact"
+    ? `<span class="page-header-spacer" aria-hidden="true"></span>`
+    : renderHeaderActions();
+
+  return `
+    <header class="replica-chrome">
+      ${renderWordmark(withRoot(rootPath, routes.home), "replica-brand")}
+      <span class="page-title-label replica-page-label">${page.navLabel}</span>
+      ${actions}
+    </header>
+    ${rail}
   `;
 }
 
@@ -162,23 +283,28 @@ function renderReplicaArt(note, tone, shape = "portrait") {
 }
 
 function renderWorksArt(rootPath, item, tone) {
+  const statusLabel = item.statusLabel ? `<span class="replica-art__tape">${item.statusLabel}</span>` : "";
+  const statusClass = item.statusLabel ? " replica-art--dimmed" : "";
+
   if (item.image?.src) {
     const style = [
-      `--art-image:url('${withRoot(rootPath, item.image.src)}')`,
       item.image.size ? `--art-size:${item.image.size}` : "",
       item.image.position ? `--art-position:${item.image.position}` : "",
     ].filter(Boolean).join(";");
 
     return `
-      <div class="replica-art replica-art--landscape replica-art--${tone} replica-art--image" style="${style}">
+      <div class="replica-art replica-art--landscape replica-art--${tone} replica-art--image${statusClass}" style="${style}">
+        <img class="replica-art__image" src="${withRoot(rootPath, item.image.src)}" alt="${item.title}" loading="lazy">
         <span class="replica-art__grain"></span>
+        ${statusLabel}
       </div>
     `;
   }
 
   return `
-    <div class="replica-art replica-art--landscape replica-art--${tone}">
+    <div class="replica-art replica-art--landscape replica-art--${tone}${statusClass}">
       <span class="replica-art__grain"></span>
+      ${statusLabel}
     </div>
   `;
 }
@@ -319,8 +445,8 @@ function renderContactReplica(rootPath, page) {
   const channels = page.contact?.channels ?? [];
 
   return `
+    ${renderReplicaChrome(rootPath, "contact", page, false)}
     <div class="replica-shell replica-shell--works replica-shell--contact">
-      ${renderReplicaChrome(rootPath, "contact", page)}
       <main class="replica-main works-stage">
         <section class="works-stage__scroll" data-works-scroll>
           <div class="works-stage__pin">
@@ -363,8 +489,8 @@ function renderContactReplica(rootPath, page) {
 
 function renderWorksReplica(rootPath, page) {
   return `
+    ${renderReplicaChrome(rootPath, "works", page, false)}
     <div class="replica-shell replica-shell--works">
-      ${renderReplicaChrome(rootPath, "works", page)}
       <main class="replica-main works-stage">
         <section class="works-stage__scroll" data-works-scroll>
           <div class="works-stage__pin">
@@ -380,11 +506,12 @@ function renderWorksReplica(rootPath, page) {
                   </article>
                   ${page.gallery.map((item, index) => {
                     const tone = toneAt(index + 1, 1);
-                    const link = item.route ? resolveLink(rootPath, { route: item.route }) : null;
+                    const link = item.route || item.href ? resolveLink(rootPath, item) : null;
+                    const attrs = link?.external ? ' target="_blank" rel="noreferrer"' : "";
                     const inner = `
                       ${renderWorksArt(rootPath, item, tone)}
                       <h2 class="works-card__title">${item.title}</h2>
-                      <p class="works-card__copy">${item.copy}</p>
+                      ${item.copy ? `<p class="works-card__copy">${item.copy}</p>` : ""}
                     `;
                     return `
                       <article class="works-card js-tilt" data-reveal="up">
@@ -393,7 +520,7 @@ function renderWorksReplica(rootPath, page) {
                           <span>${item.year ?? `202${6 - index}`}</span>
                         </div>
                         ${link
-                          ? `<a class="works-card__link" href="${link.href}">${inner}</a>`
+                          ? `<a class="works-card__link" href="${link.href}"${attrs}>${inner}</a>`
                           : `<div class="works-card__link works-card__link--static">${inner}</div>`}
                       </article>
                     `;
@@ -405,6 +532,122 @@ function renderWorksReplica(rootPath, page) {
         </section>
         <p class="replica-hint">scroll or drag to explore</p>
       </main>
+    </div>
+  `;
+}
+
+function renderTestimonialStars(count = 5) {
+  return `
+    <span class="testimonial-stars" aria-label="${count} out of 5 stars">
+      ${Array.from({ length: count }, () => `<span aria-hidden="true">&#9733;</span>`).join("")}
+    </span>
+  `;
+}
+
+function renderTestimonialCard(review, index, revealClass = "") {
+  const isFeature = index === 0 || index === 3;
+  const hasVisual = review.visual;
+  const classes = ["testimonial-card", isFeature ? "testimonial-card--feature" : "", revealClass].filter(Boolean).join(" ");
+
+  return `
+    <article class="${classes}" data-reveal="up">
+      <div class="testimonial-card__meta">
+        <span>${review.timeframe}</span>
+        <span>Verified <i aria-hidden="true"></i></span>
+      </div>
+      <h2>${review.title}</h2>
+      <div class="testimonial-card__rating">
+        <span>${review.rating}<sup>/5</sup></span>
+        ${renderTestimonialStars(5)}
+      </div>
+      ${hasVisual ? `
+        <figure class="testimonial-card__visual" aria-label="${review.visual.label}">
+          <span>${review.visual.kicker}</span>
+          <strong>${review.visual.title}</strong>
+        </figure>
+      ` : ""}
+      <p>${review.copy}</p>
+      <footer>${review.author}</footer>
+    </article>
+  `;
+}
+
+function initTestimonialControls(shell, reviews) {
+  const grid = shell.querySelector("[data-testimonial-grid]");
+  const sortButton = shell.querySelector("[data-testimonial-sort]");
+
+  if (!grid || !sortButton) {
+    return;
+  }
+
+  const state = {
+    newestFirst: true,
+  };
+
+  function visibleReviews() {
+    const filtered = reviews.slice();
+    return state.newestFirst ? filtered : filtered.reverse();
+  }
+
+  function render() {
+    const filtered = visibleReviews();
+    grid.innerHTML = filtered.length
+      ? filtered.map((review, index) => renderTestimonialCard(review, index, "is-visible")).join("")
+      : `<p class="testimonial-empty">No reviews match this filter yet.</p>`;
+
+    sortButton.textContent = state.newestFirst ? "Sort by: Most recent" : "Sort by: Oldest first";
+  }
+
+  sortButton.addEventListener("click", () => {
+    state.newestFirst = !state.newestFirst;
+    render();
+  });
+
+  render();
+}
+
+function renderTestimonialPage(rootPath, page) {
+  const contactHref = withRoot(rootPath, routes.contact);
+  const homeHref = withRoot(rootPath, routes.home);
+  const reviews = page.reviews ?? [];
+  const score = page.rating ?? "4.9";
+  const reviewCount = reviews.length;
+
+  return `
+    <div class="testimonial-shell">
+      <header class="testimonial-chrome">
+        ${renderWordmark(homeHref, "testimonial-brand")}
+        <span class="page-title-label testimonial-page-label">${page.navLabel ?? "TESTIMONIAL"}</span>
+        <nav class="testimonial-actions" aria-label="Testimonial page actions">
+          <button class="header-action header-action--primary" type="button" data-contact-open>Contact Me</button>
+        </nav>
+      </header>
+
+      <main class="testimonial-main">
+        <section class="testimonial-score" aria-labelledby="testimonial-score-title">
+          <div class="testimonial-score__mark" aria-hidden="true">HF</div>
+          <div class="testimonial-score__content">
+            <p class="testimonial-kicker">${page.eyebrow}</p>
+            <h1 id="testimonial-score-title"><span>${score}</span><sup>/5</sup></h1>
+            <p>Based on ${reviewCount} reviews</p>
+            ${renderTestimonialStars(5)}
+          </div>
+        </section>
+
+        <section class="testimonial-board" aria-labelledby="testimonial-board-title">
+          <div class="testimonial-board__bar" data-reveal="up">
+            <h2 id="testimonial-board-title">${page.boardTitle}</h2>
+            <div class="testimonial-controls" aria-label="Review controls">
+              <button type="button" data-testimonial-sort>Sort by: Most recent</button>
+              <a href="${contactHref}">Write a review</a>
+            </div>
+          </div>
+          <div class="testimonial-grid" data-testimonial-grid>
+            ${reviews.map((review, index) => renderTestimonialCard(review, index)).join("")}
+          </div>
+        </section>
+      </main>
+      ${renderContactFormModal()}
     </div>
   `;
 }
@@ -432,8 +675,16 @@ export function renderPage({ body, shell }) {
 
   document.title = `${page.navLabel} | Henry Fadeni`;
 
+  if (pageKey === "testimonial") {
+    shell.innerHTML = renderTestimonialPage(rootPath, page);
+    initTestimonialControls(shell, page.reviews ?? []);
+    initContactModal(shell);
+    return;
+  }
+
   if (REPLICA_PAGES.has(pageKey)) {
-    shell.innerHTML = renderReplicaPage(rootPath, pageKey, page);
+    shell.innerHTML = `${renderReplicaPage(rootPath, pageKey, page)}${renderContactFormModal()}`;
+    initContactModal(shell);
     return;
   }
 
@@ -448,9 +699,9 @@ export function renderPage({ body, shell }) {
     <div class="ambient-orb ambient-orb--hero-a" data-parallax="0.08"></div>
     <div class="ambient-orb ambient-orb--hero-b" data-parallax="-0.05"></div>
     <header class="site-chrome">
-      <a class="brand-link" href="${withRoot(rootPath, routes.home)}">Henry Fadeni</a>
+      ${renderWordmark(withRoot(rootPath, routes.home), "brand-link")}
       <span class="page-title-label">${page.navLabel}</span>
-      <div class="progress-bar"><div class="progress-bar__fill"></div></div>
+      <div class="page-header-actions"><div class="progress-bar"><div class="progress-bar__fill"></div></div>${renderHeaderActions()}</div>
     </header>
     <main class="page-main">
       <section class="page-section hero">
@@ -503,5 +754,8 @@ export function renderPage({ body, shell }) {
         <div class="page-footer__meta"><span>${page.footerNote}</span><span>Dummy content ready for real project data</span></div>
       </div>
     </footer>
+    ${renderContactFormModal()}
   `;
+
+  initContactModal(shell);
 }

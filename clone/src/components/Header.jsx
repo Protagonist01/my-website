@@ -11,7 +11,8 @@ export function Header({ onMenu, onChat }) {
 
       <div className="brand-cluster">
         <a className="brand-mark" href="../index.html" aria-label="Back to Henry Fadeni home">
-          Henry Fadeni
+          <span className="brand-mark__badge" aria-hidden="true">HF</span>
+          <span className="brand-mark__name">Henry Fadeni</span>
         </a>
         <span className="gallery-page-label">demo gallery</span>
       </div>

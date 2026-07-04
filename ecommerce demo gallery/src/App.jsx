@@ -293,21 +293,21 @@ function AuditDemo() {
         </div>
       </div>
 
-      <div style={{ background: 'rgba(212, 144, 60, 0.06)', border: '1px solid rgba(212, 144, 60, 0.15)', borderRadius: '12px', padding: '1rem 1.2rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-        <div style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#d4903c', marginTop: '0.55rem', flexShrink: 0 }} />
+      <div className="demo-callout demo-callout--info">
+        <span className="demo-callout__dot" aria-hidden="true" />
         <div>
-          <p style={{ color: 'var(--gallery-white)', fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.3rem', marginTop: 0 }}>This is a sample audit report</p>
-          <p style={{ color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', fontSize: '0.8rem', lineHeight: 1.5, margin: 0 }}>Below is a real example of what we find when auditing a mid-size Shopify store. Your store's results will be different — and specific to your operations. Request your free personalized audit below.</p>
+          <p className="demo-callout__title">This is a sample audit report</p>
+          <p className="demo-callout__body">Below is a real example of what we find when auditing a mid-size Shopify store. Your store's results will be different — and specific to your operations. Request your free personalized audit below.</p>
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.5rem', padding: '0.75rem 1rem', background: 'rgba(255, 255, 255, 0.035)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px' }}>
-        <div style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: 'var(--gallery-teal)', flexShrink: 0 }} />
+      <div className="demo-store-bar">
+        <span className="demo-store-bar__dot" aria-hidden="true" />
         <div>
-          <div style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--gallery-white)' }}>Sample Store: GlowFit Activewear</div>
-          <div style={{ fontSize: '0.75rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.54)' }}>~$52k/mo revenue · 1,200 orders/mo · 6 apps connected</div>
+          <div className="demo-store-bar__name">Sample Store: GlowFit Activewear</div>
+          <div className="demo-store-bar__meta">~$52k/mo revenue · 1,200 orders/mo · 6 apps connected</div>
         </div>
-        <button className="demo-primary" style={{ marginLeft: 'auto', padding: '0.5rem 1rem', fontSize: '0.8rem', minHeight: 'auto' }} type="button" onClick={runAudit}>Reveal Scores</button>
+        <button className="demo-primary" type="button" onClick={runAudit}>Reveal Scores</button>
       </div>
 
       <div className={`audit-progress ${progress > 0 && !ran ? 'active' : ''}`}>
@@ -320,15 +320,15 @@ function AuditDemo() {
       <div className={`audit-results ${ran ? 'active' : ''}`}>
         {auditRows.map(([tone, label, detail, width]) => (
           <div className="audit-score-card" key={label}>
-            <span className={`score-indicator ${tone}`} style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '50%', background: tone === 'red' ? '#ef4444' : tone === 'amber' ? 'var(--gallery-ember)' : 'var(--gallery-teal)', flexShrink: 0 }} />
+            <span className={`score-indicator ${tone}`} aria-hidden="true" />
             <div className="score-info">
-              <div className="score-label" style={{ color: 'var(--gallery-white)' }}>{label}</div>
+              <div className="score-label">{label}</div>
               <div className="score-bar-bg">
-                <div className={`score-bar-fill ${tone}`} style={{ width: ran ? `${width}%` : '0%', transition: 'width 1.5s cubic-bezier(0.16, 1, 0.3, 1)' }} />
+                <div className={`score-bar-fill ${tone}`} style={{ width: ran ? `${width}%` : '0%' }} />
               </div>
-              <div className="score-detail" style={{ fontSize: '0.85rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)' }}>{detail}</div>
+              <div className="score-detail">{detail}</div>
             </div>
-            <div className={`score-value ${tone}`} style={{ color: tone === 'red' ? '#ef4444' : tone === 'amber' ? 'var(--gallery-ember)' : 'var(--gallery-teal)' }}>{width}</div>
+            <div className={`score-value ${tone}`}>{width}</div>
           </div>
         ))}
       </div>
@@ -420,14 +420,14 @@ function ConciergeDemo() {
   return (
     <>
       <div className="claire-intro">
-        <div className="claire-avatar" style={{ color: '#06110f', fontWeight: 'bold' }}>C</div>
+        <div className="claire-avatar">C</div>
         <div className="claire-intro-text">
           <h3>Claire is not a generic chatbot.</h3>
           <p>She's a site-aware concierge connected to your products, policies, orders, and booking system. She recommends from expert-approved pathways — not hallucinated routines — and asks for confirmation before touching your customer's cart.</p>
         </div>
       </div>
 
-      <div className="capability-ribbon" style={{ marginTop: '1.2rem', marginBottom: '1.2rem' }}>
+      <div className="capability-ribbon">
         {['Product Recommendations', 'Cart Actions', 'Booking Flow', 'Page Navigation', 'Safety Guardrails', 'Context Memory', 'RAG Knowledge Base'].map((item) => (
           <span className="capability-badge" key={item}>
             <span className="cap-dot" /> {item}
@@ -438,13 +438,13 @@ function ConciergeDemo() {
       <div className="chatbot-embed-area" id="claire-embed">
         <div className="embed-glow" />
         <div className="embed-content">
-          <div className="embed-icon" style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--gallery-teal)', animation: 'float 3s ease-in-out infinite' }}>C</div>
+          <div className="embed-icon">C</div>
           <p className="embed-text">Try Claire live — ask her anything</p>
           <p className="embed-subtext">Loaded with a real skincare store's products, treatments & policies</p>
         </div>
       </div>
 
-      <div className="scenario-label" style={{ fontSize: '0.85rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.55)', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: '900', marginBottom: '0.85rem' }}>Watch her handle these scenarios</div>
+      <div className="demo-section-label">Watch her handle these scenarios</div>
 
       <div className="scenario-grid">
         {scenarios.map((item, index) => (
@@ -453,10 +453,10 @@ function ConciergeDemo() {
             key={item.title}
             onClick={() => setActive(index)}
           >
-            <div className="scenario-emoji" style={{ display: 'flex', alignItems: 'center', marginBottom: '0.4rem' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: dotColors[item.tag] }} />
+            <div className="scenario-emoji">
+              <span className="indicator-dot" style={{ background: dotColors[item.tag] }} aria-hidden="true" />
             </div>
-            <div className="scenario-title" style={{ color: 'var(--gallery-white)' }}>{item.title}</div>
+            <div className="scenario-title">{item.title}</div>
             <div className="scenario-desc">{item.desc}</div>
             <span className={`scenario-tag ${tagClasses[item.tag]}`}>{item.tag}</span>
           </div>
@@ -472,11 +472,11 @@ function ConciergeDemo() {
         <div className="convo-thread">
           <div className={`convo-msg customer ${visibleCount >= 1 ? 'visible' : ''}`}>
             <div className="convo-bubble">{scenario.customer}</div>
-            <div className="convo-avatar customer-av" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.6)', border: '1px solid rgba(255, 255, 255, 0.12)' }}>You</div>
+            <div className="convo-avatar customer-av">You</div>
           </div>
 
           <div className={`convo-msg claire ${visibleCount >= 2 ? 'visible' : ''}`}>
-            <div className="convo-avatar claire-av" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'var(--gallery-teal)', color: '#06110f', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 'bold' }}>C</div>
+            <div className="convo-avatar claire-av">C</div>
             <div className="convo-bubble">
               {scenario.claire}
 
@@ -485,11 +485,11 @@ function ConciergeDemo() {
                   <div className="convo-confirm-bar">
                     Add <strong>Brightening Vitamin C Serum (£38.00)</strong> to your cart?
                   </div>
-                  <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                    <span className="prod-btn" style={{ padding: '0.4rem 0.8rem', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-emerald)' }}>
+                  <div className="convo-action-bar">
+                    <span className="convo-action-btn convo-action-btn--confirm">
                       ✓ Yes, add it
                     </span>
-                    <span className="prod-btn" style={{ padding: '0.4rem 0.8rem', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer', background: 'rgba(255, 255, 255, 0.08)' }}>
+                    <span className="convo-action-btn convo-action-btn--dismiss">
                       ✕ No thanks
                     </span>
                   </div>
@@ -500,8 +500,8 @@ function ConciergeDemo() {
                 <>
                   <br /><br />
                   {scenario.claireExtra}
-                  <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem' }}>
-                    <span className="prod-btn" style={{ padding: '0.4rem 0.8rem', border: '1px solid rgba(16, 185, 129, 0.25)', borderRadius: '4px', fontSize: '0.75rem', cursor: 'pointer', background: 'rgba(16, 185, 129, 0.15)', color: 'var(--accent-emerald)' }}>
+                  <div className="convo-action-bar">
+                    <span className="convo-action-btn convo-action-btn--confirm">
                       Book Consultation
                     </span>
                   </div>
@@ -511,10 +511,10 @@ function ConciergeDemo() {
               {active !== 2 && scenario.cards && scenario.cards.map((card) => (
                 <div className="convo-product-card" key={card.name}>
                   <div className="prod-icon">
-                    <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: card.color }} />
+                    <span className="indicator-dot" style={{ background: card.color }} aria-hidden="true" />
                   </div>
                   <div className="prod-info">
-                    <div className="prod-name" style={{ fontWeight: 'bold', fontSize: '0.85rem', color: 'var(--gallery-white)' }}>{card.name}</div>
+                    <div className="prod-name">{card.name}</div>
                     <div className="prod-price">{card.price}</div>
                   </div>
                   <div className="prod-btn">View</div>
@@ -537,7 +537,7 @@ function ConciergeDemo() {
         <div className="bts-title">Behind the scenes</div>
         <div className="bts-flow">
           {['Customer Message', 'Deterministic Planner', 'Approved Products + Safety Rules', 'LLM Response Writer', 'Natural Reply'].map((node, idx, arr) => (
-            <div key={node} style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <div className="bts-flow-row" key={node}>
               <div className={`bts-node ${node.includes('Planner') || node.includes('Writer') ? 'highlight' : ''}`}>
                 {node}
               </div>
@@ -545,7 +545,7 @@ function ConciergeDemo() {
             </div>
           ))}
         </div>
-        <p style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.5)', lineHeight: '1.6', marginTop: '0.8rem' }}>The AI never invents recommendations. A deterministic layer selects the right products and safety rules, then the language model writes a natural response around that approved plan. This is what makes Claire safe for real customers.</p>
+        <p className="bts-desc">The AI never invents recommendations. A deterministic layer selects the right products and safety rules, then the language model writes a natural response around that approved plan. This is what makes Claire safe for real customers.</p>
       </div>
     </>
   )
@@ -615,11 +615,14 @@ function DashboardDemo() {
 
   return (
     <>
-      <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.12)', borderRadius: '12px', padding: '1rem 1.2rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', lineHeight: '1.6' }}>
-        <strong style={{ color: 'var(--gallery-white)' }}>The problem:</strong> Most founders check 4-5 different dashboards every morning — Shopify, Klaviyo, Gorgias, Google Analytics, their spreadsheets. That's 30+ minutes before the day even starts.
+      <div className="demo-callout demo-callout--problem">
+        <span className="demo-callout__dot" aria-hidden="true" />
+        <div>
+          <p><strong>The problem:</strong> Most founders check 4-5 different dashboards every morning — Shopify, Klaviyo, Gorgias, Google Analytics, their spreadsheets. That's 30+ minutes before the day even starts.</p>
+        </div>
       </div>
 
-      <div className="dashboard-grid" style={{ marginBottom: '1.5rem' }}>
+      <div className="dashboard-grid">
         {metrics.map((item) => (
             <div className="dash-metric" key={item.label}>
               <div className="dash-metric-value" style={{ color: item.color }}>
@@ -631,7 +634,7 @@ function DashboardDemo() {
         ))}
       </div>
 
-      <div className="dash-tabs" style={{ marginBottom: '1.5rem' }}>
+      <div className="dash-tabs">
         {Object.entries(tabs).map(([key, item]) => (
           <button className={`dash-tab ${tab === key ? 'active' : ''}`} type="button" key={key} onClick={() => setTab(key)}>
             {item.label}
@@ -639,9 +642,9 @@ function DashboardDemo() {
         ))}
       </div>
 
-      <div className="dash-chart" style={{ border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '8px', padding: '1rem', background: 'rgba(0, 0, 0, 0.12)', marginBottom: '1.5rem' }}>
-        <div className="dash-chart-title" style={{ marginBottom: '0.75rem', fontSize: '0.9rem', color: 'var(--gallery-white)', fontWeight: 600 }}>{current.title}</div>
-        <svg className="chart-svg" viewBox="0 0 600 140" preserveAspectRatio="none" role="img" aria-label={current.title} style={{ width: '100%', height: '140px' }}>
+      <div className="dash-chart">
+        <div className="dash-chart-title">{current.title}</div>
+        <svg className="chart-svg" viewBox="0 0 600 140" preserveAspectRatio="none" role="img" aria-label={current.title}>
           <defs>
             <linearGradient id={`chartGradient-${tab}`} x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor="rgba(38, 201, 185, 0.25)" />
@@ -699,24 +702,27 @@ function RetentionDemo() {
     { title: 'VIP Customer', action: '→ Exclusive early access', stage: 7, color: 'var(--gallery-gold-bright)' },
     { title: 'At-Risk Customer', action: '→ Win-back offer', stage: 8, color: 'var(--gallery-ember)' },
     { title: 'New Customer', action: '→ Education sequence', stage: 9, color: 'var(--gallery-teal)' },
-    { title: 'Replenishment', action: '→ Auto-reminder', stage: 10, color: 'var(--gallery-blue)' }
+    { title: 'Replenishment', action: '→ Auto-reminder', stage: 10, color: 'var(--gallery-gold)' }
   ]
 
   return (
     <>
-      <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.12)', borderRadius: '12px', padding: '1rem 1.2rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', lineHeight: '1.6' }}>
-        <strong style={{ color: 'var(--gallery-white)' }}>The problem:</strong> Only 12% of first-time buyers come back for a second purchase on the average Shopify store. You spent £20-£50 acquiring that customer — and they bought once and disappeared.
+      <div className="demo-callout demo-callout--problem">
+        <span className="demo-callout__dot" aria-hidden="true" />
+        <div>
+          <p><strong>The problem:</strong> Only 12% of first-time buyers come back for a second purchase on the average Shopify store. You spent £20-£50 acquiring that customer — and they bought once and disappeared.</p>
+        </div>
       </div>
 
-      <p style={{ color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', marginBottom: '1.5rem' }}>Watch how a single purchase triggers an intelligent retention workflow that brings customers back — automatically.</p>
+      <p className="demo-prose">Watch how a single purchase triggers an intelligent retention workflow that brings customers back — automatically.</p>
 
       <div className="flow-container">
         <div className="flow-steps" id="retention-flow">
           {flow.map((step, idx) => (
-            <div key={step.title} style={{ display: 'flex', alignItems: 'center' }}>
+            <div className="flow-step-row" key={step.title}>
               <div className={`flow-step ${animStage >= idx * 2 ? 'visible active' : ''}`}>
-                <div className="flow-node" style={{ background: 'var(--gallery-gold-bright)', color: '#07100d', fontWeight: 'bold' }}>{step.char}</div>
-                <div className="flow-label" style={{ color: 'var(--gallery-white)' }}>{step.title}</div>
+                <div className="flow-node flow-node--gold">{step.char}</div>
+                <div className="flow-label">{step.title}</div>
                 <div className="flow-sublabel">{step.sub}</div>
               </div>
               {idx < flow.length - 1 && (
@@ -727,33 +733,33 @@ function RetentionDemo() {
         </div>
       </div>
 
-      <div className="flow-branch" id="retention-branches" style={{ marginTop: '1.5rem' }}>
+      <div className="flow-branch" id="retention-branches">
         {branches.map((br) => (
           <div className={`flow-branch-card ${animStage >= br.stage ? 'visible' : ''}`} key={br.title}>
-            <div className="branch-emoji" style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.4rem' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: br.color }} />
+            <div className="branch-emoji">
+              <span className="indicator-dot" style={{ background: br.color }} aria-hidden="true" />
             </div>
-            <div className="branch-title" style={{ color: 'var(--gallery-white)' }}>{br.title}</div>
-            <div className="branch-action" style={{ color: 'var(--gallery-teal)' }}>{br.action}</div>
+            <div className="branch-title">{br.title}</div>
+            <div className="branch-action">{br.action}</div>
           </div>
         ))}
       </div>
 
-      <div className="retention-metrics" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.8rem', marginTop: '1.5rem' }}>
+      <div className="retention-metrics">
         <div className="retention-metric">
           <div className="metric-label">Repeat Purchase Rate</div>
           <div className="metric-before-after">
             <span className="metric-val before">12%</span>
-            <span className="metric-arrow" style={{ color: 'var(--gallery-gold-bright)' }}>→</span>
-            <span className="metric-val after" style={{ color: 'var(--gallery-teal)' }}>31%</span>
+            <span className="metric-arrow">→</span>
+            <span className="metric-val after">31%</span>
           </div>
         </div>
         <div className="retention-metric">
           <div className="metric-label">Customer Lifetime Value</div>
           <div className="metric-before-after">
             <span className="metric-val before">$67</span>
-            <span className="metric-arrow" style={{ color: 'var(--gallery-gold-bright)' }}>→</span>
-            <span className="metric-val after" style={{ color: 'var(--gallery-teal)' }}>$184</span>
+            <span className="metric-arrow">→</span>
+            <span className="metric-val after">$184</span>
           </div>
         </div>
       </div>
@@ -818,19 +824,22 @@ function InventoryDemo() {
 
   return (
     <>
-      <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.12)', borderRadius: '12px', padding: '1rem 1.2rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', lineHeight: '1.6' }}>
-        <strong style={{ color: 'var(--gallery-white)' }}>The problem:</strong> A single bestseller stockout costs the average Shopify store £2,000–£8,000 in lost sales. Meanwhile, slow movers tie up cash for months. Most stores find out about both too late.
+      <div className="demo-callout demo-callout--problem">
+        <span className="demo-callout__dot" aria-hidden="true" />
+        <div>
+          <p><strong>The problem:</strong> A single bestseller stockout costs the average Shopify store £2,000–£8,000 in lost sales. Meanwhile, slow movers tie up cash for months. Most stores find out about both too late.</p>
+        </div>
       </div>
 
-      <p style={{ color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', marginBottom: '1.5rem' }}>Watch real-time inventory alerts arrive as your system monitors SKU velocity, stock levels, and supplier lead times.</p>
+      <p className="demo-prose">Watch real-time inventory alerts arrive as your system monitors SKU velocity, stock levels, and supplier lead times.</p>
 
       <div className="alert-feed" id="inventory-feed">
         {alerts.map((item, idx) => {
           const isVisible = animStage >= idx + 1
           return (
             <div className={`alert-item ${item.tone} ${isVisible ? 'visible' : ''}`} key={item.time}>
-              <div className="alert-icon" style={{ display: 'flex', alignItems: 'center', paddingTop: '0.35rem' }}>
-                <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.color }} />
+              <div className="alert-icon">
+                <span className="indicator-dot" style={{ background: item.color }} aria-hidden="true" />
               </div>
               <div className="alert-content">
                 <div className="alert-time">{item.time}</div>
@@ -883,23 +892,26 @@ function ReturnsDemo() {
 
   return (
     <>
-      <div style={{ background: 'rgba(239, 68, 68, 0.05)', border: '1px solid rgba(239, 68, 68, 0.12)', borderRadius: '12px', padding: '1rem 1.2rem', marginBottom: '1.5rem', fontSize: '0.9rem', color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', lineHeight: '1.6' }}>
-        <strong style={{ color: 'var(--gallery-white)' }}>The problem:</strong> 19.3% of online sales are returned (NRF 2025). Each return costs £8-15 to process manually — and most stores refund by default when an exchange would have kept the sale.
+      <div className="demo-callout demo-callout--problem">
+        <span className="demo-callout__dot" aria-hidden="true" />
+        <div>
+          <p><strong>The problem:</strong> 19.3% of online sales are returned (NRF 2025). Each return costs £8-15 to process manually — and most stores refund by default when an exchange would have kept the sale.</p>
+        </div>
       </div>
 
-      <p style={{ color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', marginBottom: '1.5rem' }}>See the difference: a customer wants to return a dress. Compare the manual process vs. AI-assisted exchange-first workflow.</p>
+      <p className="demo-prose">See the difference: a customer wants to return a dress. Compare the manual process vs. AI-assisted exchange-first workflow.</p>
 
       <div className="comparison-grid">
         <div className="comparison-col without">
           <div className="comparison-header bad">
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', display: 'inline-block', marginRight: '0.4rem' }} />
+            <span className="indicator-dot indicator-dot--red" aria-hidden="true" />
             Without AI
           </div>
           {manual.map((step, idx) => (
             <div className={`comp-step ${animStage >= step.stage ? 'visible' : ''}`} key={step.text}>
               <div className="comp-step-num">{idx + 1}</div>
               <div>
-                <div className="comp-step-text" style={{ color: 'var(--gallery-white)' }}>{step.text}</div>
+                <div className="comp-step-text">{step.text}</div>
                 <div className="comp-step-time">{step.time}</div>
               </div>
             </div>
@@ -909,14 +921,14 @@ function ReturnsDemo() {
 
         <div className="comparison-col with">
           <div className="comparison-header good">
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--gallery-teal)', display: 'inline-block', marginRight: '0.4rem' }} />
+            <span className="indicator-dot indicator-dot--teal" aria-hidden="true" />
             With AI
           </div>
           {ai.map((step, idx) => (
             <div className={`comp-step ${animStage >= step.stage ? 'visible' : ''}`} key={step.text}>
               <div className="comp-step-num">{idx + 1}</div>
               <div>
-                <div className="comp-step-text" style={{ color: 'var(--gallery-white)' }}>{step.text}</div>
+                <div className="comp-step-text">{step.text}</div>
                 <div className="comp-step-time">{step.time}</div>
               </div>
             </div>
@@ -926,11 +938,11 @@ function ReturnsDemo() {
       </div>
 
       <div className="fraud-alert">
-        <div className="fraud-alert-icon" style={{ display: 'flex', alignItems: 'center', paddingTop: '0.35rem' }}>
-          <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#ef4444' }} />
+        <div className="fraud-alert-icon">
+          <span className="indicator-dot indicator-dot--red" aria-hidden="true" />
         </div>
         <div className="fraud-alert-text">
-          <strong style={{ color: '#ef4444' }}>Fraud Pattern Detected:</strong> Customer "J. Smith" has returned 8 items across 3 orders in the last 30 days. Pattern matches serial-return behavior. Account flagged for manual review before next return is approved.
+          <strong>Fraud Pattern Detected:</strong> Customer "J. Smith" has returned 8 items across 3 orders in the last 30 days. Pattern matches serial-return behavior. Account flagged for manual review before next return is approved.
         </div>
       </div>
     </>
@@ -977,9 +989,9 @@ function CustomDemo() {
     },
     {
       industry: 'Claims',
-      themeColor: 'var(--gallery-blue)',
-      borderColor: 'rgba(59, 130, 246, 0.2)',
-      bgColor: 'rgba(59, 130, 246, 0.08)',
+      themeColor: 'var(--gallery-gold)',
+      borderColor: 'rgba(232, 201, 122, 0.2)',
+      bgColor: 'rgba(232, 201, 122, 0.08)',
       title: 'Warranty and damaged-item claim desk',
       desc: 'Claim intake collects proof, checks order history, applies policy rules, and routes only edge cases to a human.',
       arch: [
@@ -1025,9 +1037,9 @@ function CustomDemo() {
     },
     {
       industry: 'Reporting',
-      themeColor: 'var(--gallery-blue)',
-      borderColor: 'rgba(59, 130, 246, 0.2)',
-      bgColor: 'rgba(59, 130, 246, 0.08)',
+      themeColor: 'var(--gallery-gold)',
+      borderColor: 'rgba(232, 201, 122, 0.2)',
+      bgColor: 'rgba(232, 201, 122, 0.08)',
       title: 'Founder exception brief',
       desc: 'A daily operating note summarizes only what changed: revenue leaks, refund spikes, stuck tickets, stock risk, and decisions due today.',
       arch: [
@@ -1046,16 +1058,16 @@ function CustomDemo() {
 
   return (
     <>
-      <p style={{ color: 'rgba(var(--text-r), var(--text-g), var(--text-b), 0.72)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>Every Shopify store has unique backend challenges. Here are real examples of custom systems we build.</p>
+      <p className="demo-prose">Every Shopify store has unique backend challenges. Here are real examples of custom systems we build.</p>
 
       <div className="case-carousel">
         <div className="case-track" style={{ transform: `translateX(-${active * 100}%)` }}>
           {cases.map((item, idx) => (
             <div className="case-card" key={idx}>
               <div className="case-card-inner">
-                <div 
-                  className="case-industry" 
-                  style={{ 
+                <div
+                  className="case-industry"
+                  style={{
                     color: item.themeColor,
                     borderColor: item.borderColor,
                     background: item.bgColor
@@ -1063,18 +1075,18 @@ function CustomDemo() {
                 >
                   {item.industry}
                 </div>
-                <div className="case-title" style={{ color: 'var(--gallery-white)' }}>{item.title}</div>
+                <div className="case-title">{item.title}</div>
                 <div className="case-desc">{item.desc}</div>
                 <div className="case-arch">
                   {item.arch.map((node, nIdx) => {
                     if (node.type === 'node') {
                       return <span className="arch-node" key={nIdx}>{node.text}</span>
                     }
-                    return <span className="arch-arrow" key={nIdx} style={{ color: 'var(--gallery-blue)' }}>{node.text}</span>
+                    return <span className="arch-arrow" key={nIdx}>{node.text}</span>
                   })}
                 </div>
-                <div className="case-result" style={{ color: 'var(--gallery-teal)', border: '1px solid rgba(38, 201, 185, 0.24)', background: 'rgba(38, 201, 185, 0.05)', display: 'flex', alignItems: 'center' }}>
-                  <span style={{ marginRight: '0.45rem', fontSize: '1.1rem' }}>✓</span> {item.result}
+                <div className="case-result">
+                  <span className="case-result__icon" aria-hidden="true">✓</span> {item.result}
                 </div>
               </div>
             </div>
@@ -1240,6 +1252,11 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
       <div className="modal">
         <div className="modal-header">
           <div>
+            <div className="modal-header__badge">
+              <span className="modal-header__step">{step.number} / 07</span>
+              <span className="modal-header__divider" aria-hidden="true" />
+              <span className="modal-header__step">{step.eyebrow}</span>
+            </div>
             <h2 id="demo-modal-title">{title}</h2>
             <p>{step.promise}</p>
           </div>
@@ -1250,6 +1267,7 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
           <DemoBody id={step.id} onAudit={onAudit} />
         </div>
         <div className="modal-cta-bar">
+          <span className="modal-cta-label">Ready to see this for your store?</span>
           <button className="demo-primary" type="button" onClick={onAudit}>
             {ctaText}
           </button>
@@ -1280,7 +1298,7 @@ export default function App() {
       <CinematicBackground />
       <Header onChat={openAudit} />
       <SideIndex scenes={scenes} active={activeScene} onSelect={scrollToScene} />
-      <ContactModal open={auditOpen} onClose={() => setAuditOpen(false)} />
+      <ContactModal open={auditOpen} onClose={() => setAuditOpen(false)} mode="audit" />
       <main ref={mainRef} className="shopify-demo-page">
         <Hero onAudit={openAudit} />
         <VideoShowcase />

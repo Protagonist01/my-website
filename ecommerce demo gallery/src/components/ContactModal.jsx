@@ -1,109 +1,100 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { createPortal } from 'react-dom'
 
-const auditFindings = {
-  support: ['612 repeat tickets can be routed before an agent touches them.', 'First build: support concierge + escalation rules.'],
-  returns: ['Return reasons are not becoming product, policy, or exchange decisions.', 'First build: exchange-first returns flow with risk flags.'],
-  retention: ['First-time buyers are not being moved into repeat-purchase paths.', 'First build: replenishment, VIP, and winback triggers.'],
-  inventory: ['Stockout risk is being discovered after the team should have acted.', 'First build: SKU velocity alerts and reorder reminders.'],
-  reporting: ['Founder attention is spread across too many dashboards.', 'First build: daily ops briefing with exception alerts.']
+const formspreeEndpoints = {
+  contact: 'https://formspree.io/f/mqevwkpl',
+  audit: 'https://formspree.io/f/mrewrgpn'
 }
 
-export function ContactModal({ open, onClose }) {
-  const [priority, setPriority] = useState('support')
-  const [previewOpen, setPreviewOpen] = useState(false)
-  const preview = useMemo(() => auditFindings[priority] || auditFindings.support, [priority])
+const modalContent = {
+  contact: {
+    className: '',
+    title: 'Contact Me',
+    intro: 'Tell me the system, store workflow, or product surface you want to build.',
+    descriptionLabel: 'What do you want to do?',
+    descriptionPlaceholder: 'Tell me what you want to build, automate, or improve...',
+    submit: 'Send brief',
+    subjectPrefix: 'Portfolio inquiry from',
+    bodyHeading: 'What they want to do:'
+  },
+  audit: {
+    className: 'audit-form-card',
+    title: 'Request Audit',
+    intro: 'Share your store, workflow, or operations bottleneck and I will review where automation can recover time, revenue, or support capacity.',
+    descriptionLabel: 'What should I audit?',
+    descriptionPlaceholder: 'Tell me the store URL, workflow, tools, and the issue you want investigated...',
+    submit: 'Request audit',
+    subjectPrefix: 'Audit request from',
+    bodyHeading: 'What they want audited:'
+  }
+}
 
-  const handleSubmit = (event) => {
+export function ContactModal({ open, onClose, mode = 'contact' }) {
+  const content = modalContent[mode] || modalContent.contact
+  const endpoint = formspreeEndpoints[mode] || formspreeEndpoints.contact
+  const [status, setStatus] = useState('idle')
+
+  const handleSubmit = async (event) => {
     event.preventDefault()
-    const form = new FormData(event.currentTarget)
-    const subject = encodeURIComponent(`Shopify revenue leak audit: ${form.get('store') || 'new store'}`)
-    const body = encodeURIComponent([
-      `Name: ${form.get('name') || ''}`,
-      `Email: ${form.get('email') || ''}`,
-      `Store URL: ${form.get('store') || ''}`,
-      `Monthly orders: ${form.get('orders') || ''}`,
-      `Priority: ${priority}`,
-      '',
-      `Biggest bottleneck:`,
-      form.get('message') || ''
-    ].join('\n'))
+    const formElement = event.currentTarget
+    const form = new FormData(formElement)
+    form.append('_subject', `${content.subjectPrefix} ${form.get('name') || 'new contact'}`)
+    form.append('form_type', mode === 'audit' ? 'Request Audit' : 'Contact Me')
+    form.append('source', document.title || window.location.pathname)
+    setStatus('sending')
 
-    window.location.href = `mailto:hfadeni@gmail.com?subject=${subject}&body=${body}`
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: form
+      })
+
+      if (!response.ok) {
+        throw new Error('Form submission failed')
+      }
+
+      formElement.reset()
+      setStatus('sent')
+      onClose()
+      window.alert(mode === 'audit' ? 'Thanks. Your audit request has been sent.' : 'Thanks. Your brief has been sent.')
+    } catch (error) {
+      setStatus('error')
+      window.alert('Sorry, the form could not be sent. Please try again.')
+    }
   }
 
   return createPortal(
     <div className={`contact-modal ${open ? 'open' : ''}`} aria-hidden={!open}>
-      <form className="contact-card" onSubmit={handleSubmit}>
+      <form className={`contact-card ${content.className}`} onSubmit={handleSubmit}>
         <div className="modal-header">
           <div>
-            <h2>Request a Revenue Leak Audit</h2>
-            <p>Send the store and the operational bottleneck. I will map the first automation worth building.</p>
+            <h2>{content.title}</h2>
+            <p>{content.intro}</p>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close briefing form">
+          <button type="button" onClick={onClose} aria-label="Close contact form">
             <span aria-hidden="true">x</span>
           </button>
         </div>
 
         <div className="form-grid">
           <label>
-            Full Name
-            <input name="name" type="text" placeholder="Your name" />
+            Your Name
+            <input name="name" type="text" autoComplete="name" placeholder="Your name" />
           </label>
           <label>
-            Email
-            <input name="email" type="email" placeholder="you@example.com" />
+            Your Email
+            <input name="email" type="email" autoComplete="email" placeholder="you@example.com" />
           </label>
         </div>
-
-        <div className="form-grid">
-          <label>
-            Store URL
-            <input name="store" type="url" placeholder="https://yourstore.com" />
-          </label>
-          <label>
-            Monthly Orders
-            <input name="orders" type="text" placeholder="500, 2,000, 10,000..." />
-          </label>
-        </div>
-
-        <div className="audit-priority" aria-label="Primary audit priority">
-          {Object.keys(auditFindings).map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={item === priority ? 'active' : ''}
-              onClick={() => {
-                setPriority(item)
-                setPreviewOpen(true)
-              }}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-
-        <button className="audit-preview-trigger" type="button" onClick={() => setPreviewOpen(true)}>
-          Preview audit map
-        </button>
-
-        {previewOpen && (
-          <div className="audit-preview" aria-live="polite">
-            <span>Sample audit direction</span>
-            <strong>{priority === 'support' ? '68/100' : priority === 'returns' ? '61/100' : '72/100'}</strong>
-            {preview.map((finding) => (
-              <p key={finding}>{finding}</p>
-            ))}
-          </div>
-        )}
 
         <label>
-          Store Bottleneck
-          <textarea name="message" rows="5" placeholder="Support overload, returns, low retention, inventory misses, checkout rules, reporting..." />
+          {content.descriptionLabel}
+          <textarea name="description" rows="5" placeholder={content.descriptionPlaceholder} />
         </label>
 
-        <button className="submit-button" type="submit">
-          Send audit brief <span aria-hidden="true">-&gt;</span>
+        <button className="submit-button" type="submit" disabled={status === 'sending'}>
+          {status === 'sending' ? 'Sending...' : content.submit} <span aria-hidden="true">-&gt;</span>
         </button>
       </form>
     </div>,

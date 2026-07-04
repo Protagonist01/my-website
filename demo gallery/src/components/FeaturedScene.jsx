@@ -47,9 +47,6 @@ export function FeaturedScene() {
             </div>
           </aside>
 
-          <a href="#" className="featured-view-all view-projects">
-            VIEW DEMO INDEX
-          </a>
         </div>
       </div>
     </section>

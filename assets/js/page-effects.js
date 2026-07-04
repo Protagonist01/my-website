@@ -170,9 +170,9 @@ function initWorksScrollStages() {
     let travel = 0;
     let activePointerId = null;
     let startX = 0;
+    let startY = 0;
     let startProgress = 0;
     let animationFrame = 0;
-    const desktopQuery = window.matchMedia("(min-width: 1101px)");
 
     function clamp(value) {
       return Math.min(1, Math.max(0, value));
@@ -219,7 +219,7 @@ function initWorksScrollStages() {
     }
 
     function shiftBy(delta) {
-      if (!desktopQuery.matches || travel <= 0) {
+      if (travel <= 0) {
         return;
       }
 
@@ -228,7 +228,7 @@ function initWorksScrollStages() {
     }
 
     function handleWheel(event) {
-      if (!desktopQuery.matches || travel <= 0) {
+      if (travel <= 0) {
         return;
       }
 
@@ -249,8 +249,13 @@ function initWorksScrollStages() {
         return;
       }
 
+      if (event.target.closest("a, button")) {
+        return;
+      }
+
       activePointerId = event.pointerId;
       startX = event.clientX;
+      startY = event.clientY;
       startProgress = targetProgress;
       viewport.classList.add("is-dragging");
       viewport.setPointerCapture(event.pointerId);
@@ -261,7 +266,7 @@ function initWorksScrollStages() {
         return;
       }
 
-      const delta = event.clientX - startX;
+      const delta = event.pointerType === "touch" ? event.clientY - startY : event.clientX - startX;
       targetProgress = clamp(startProgress - (delta / travel));
       progress = targetProgress;
       sync();

@@ -1,6 +1,7 @@
 :root {
-  --font-display: 'Lores-12', 'LoRes 12', monospace;
-  --font-body: 'Neue Montreal', 'NeueMontreal', sans-serif;
+  --font-display: 'Neue Montreal';
+  --font-body: 'Neue Montreal';
+  --font-other: 'Lores-12';
   --bg-r: 5;
   --bg-g: 7;
   --bg-b: 12;
@@ -22,6 +23,7 @@
   --grid: 0.05;
   --ink: 0;
   --scroll-progress: 0;
+  --header-inset: clamp(1.5rem, 4vw, 3rem);
   color: rgb(var(--text-r), var(--text-g), var(--text-b));
   background: rgb(var(--bg-r), var(--bg-g), var(--bg-b));
   font-family: var(--font-body);
@@ -30,13 +32,49 @@
 
 @font-face {
   font-family: 'Neue Montreal';
-  src: local('Neue Montreal'), local('NeueMontreal-Regular');
+  src: url('../../assets/fonts/NeueMontreal-Regular.otf') format('opentype'), local('Neue Montreal');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('../../assets/fonts/NeueMontreal-Medium.otf') format('opentype'), local('Neue Montreal');
+  font-weight: 500 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('../../assets/fonts/NeueMontreal-Bold.otf') format('opentype'), local('Neue Montreal');
+  font-weight: 700 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('../../assets/fonts/NeueMontreal-Italic.otf') format('opentype'), local('Neue Montreal');
+  font-weight: 400 700;
+  font-style: italic;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Lores-12';
-  src: local('Lores-12'), local('LoRes 12'), local('LoRes12-Regular');
+  src: url('../../assets/fonts/LoRes12OT-Regular.woff2') format('woff2'), local('Lores-12');
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Lores-12';
+  src: url('../../assets/fonts/LoRes12OT-Bold.woff2') format('woff2'), local('Lores-12');
+  font-weight: 700 900;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -133,7 +171,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: clamp(1.5rem, 4vw, 3rem);
+  padding: clamp(1.5rem, 4vw, 3rem) var(--header-inset);
   pointer-events: none;
 }
 
@@ -149,16 +187,43 @@ button {
 }
 
 .brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
   color: rgb(var(--text-r), var(--text-g), var(--text-b));
-  font-family: var(--font-display);
-  font-size: clamp(1.85rem, 2.8vw, 2.35rem);
+  font-family: var(--font-other);
+  font-size: clamp(0.76rem, 0.92vw, 0.98rem);
+  font-weight: 700;
+  letter-spacing: 0.28em;
   line-height: 1;
   text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.brand-mark__badge {
+  display: inline-grid;
+  width: 2.15rem;
+  height: 2.15rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(201, 168, 76, 0.62);
+  color: var(--gallery-gold-bright);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  transform: skewX(-10deg);
+}
+
+.brand-mark__name {
+  display: inline-block;
 }
 
 .gallery-page-label {
   color: rgba(var(--text-r), var(--text-g), var(--text-b), 0.64);
-  font-size: 0.62rem;
+  font-family: var(--font-other);
+  font-size: clamp(1rem, 1.04vw, 1.14rem);
   font-weight: 900;
   letter-spacing: 0.2em;
   text-transform: uppercase;
@@ -172,7 +237,8 @@ button {
   border: 0;
   color: rgb(var(--text-r), var(--text-g), var(--text-b));
   background: transparent;
-  font-size: 0.88rem;
+  font-family: var(--font-other);
+  font-size: clamp(1.02rem, 1.05vw, 1.16rem);
   font-weight: 900;
   cursor: pointer;
 }
@@ -213,8 +279,8 @@ button {
 .index-number {
   width: 1.1rem;
   color: currentColor;
-  font-family: var(--font-display);
-  font-size: 0.86rem;
+  font-family: var(--font-other);
+  font-size: 0.98rem;
   font-style: italic;
   font-weight: 700;
   line-height: 1;
@@ -235,14 +301,17 @@ button {
 
 .index-rule {
   width: 1.35rem;
-  height: 1px;
+  height: 0.32rem;
   flex: 0 0 auto;
-  background: currentColor;
+  background: linear-gradient(90deg, currentColor, transparent);
+  border-radius: 999px;
+  opacity: 0.5;
+  filter: blur(2px);
 }
 
 .index-label em {
-  font-family: var(--font-display);
-  font-size: 0.94rem;
+  font-family: var(--font-other);
+  font-size: 1.04rem;
   font-style: italic;
   font-weight: 700;
   line-height: 1;
@@ -261,7 +330,7 @@ button {
 
 .index-node.active .index-number {
   color: rgb(var(--text-r), var(--text-g), var(--text-b));
-  font-family: var(--font-body);
+  font-family: var(--font-other);
   font-style: normal;
   font-weight: 900;
   transform: translateX(0.08rem);
@@ -321,8 +390,8 @@ button {
   position: absolute;
   left: 23%;
   top: 69%;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
+  font-family: var(--font-other);
+  font-size: 1.12rem;
   font-style: italic;
   font-weight: 700;
 }
@@ -373,7 +442,7 @@ button {
   display: flex;
   align-items: center;
   gap: 1rem;
-  font-family: var(--font-display);
+  font-family: var(--font-other);
   font-style: italic;
   font-weight: 700;
 }
@@ -388,17 +457,20 @@ button {
   position: absolute;
   bottom: 11%;
   left: 50%;
-  width: 1px;
+  width: 0.45rem;
   height: 4rem;
   overflow: hidden;
-  background: rgba(var(--text-r), var(--text-g), var(--text-b), 0.42);
+  background: linear-gradient(180deg, transparent, rgba(var(--text-r), var(--text-g), var(--text-b), 0.18), transparent);
+  border-radius: 999px;
+  filter: blur(3px);
 }
 
 .scroll-cue span {
   display: block;
   width: 100%;
   height: 1.2rem;
-  background: currentColor;
+  background: rgba(var(--text-r), var(--text-g), var(--text-b), 0.42);
+  border-radius: inherit;
   animation: scrollCue 2.2s cubic-bezier(0.15, 0.85, 0.32, 1) infinite;
 }
 
@@ -773,7 +845,8 @@ button {
   grid-template-columns: minmax(7rem, 0.55fr) 1fr;
   gap: 2rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(var(--text-r), var(--text-g), var(--text-b), 0.18);
+  border-top: 0;
+  background: linear-gradient(180deg, rgba(var(--text-r), var(--text-g), var(--text-b), 0.045), transparent 1.4rem);
 }
 
 .agent-copy-stack h3,
@@ -1119,7 +1192,8 @@ button {
   justify-content: space-between;
   gap: 2rem;
   color: rgba(245, 245, 240, 0.58);
-  font-size: 0.72rem;
+  font-family: var(--font-other);
+  font-size: 0.86rem;
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -1151,7 +1225,7 @@ button {
 }
 
 .nav-stack em {
-  font-family: var(--font-display);
+  font-family: var(--font-other);
   font-size: clamp(2rem, 5vw, 4.8rem);
 }
 
@@ -1189,7 +1263,8 @@ button {
   justify-content: space-between;
   gap: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 0;
+  background: linear-gradient(180deg, transparent calc(100% - 1.2rem), rgba(255, 255, 255, 0.04), transparent);
 }
 
 .modal-header h2,
@@ -1207,7 +1282,8 @@ button {
 .modal-header p {
   margin-top: 0.4rem;
   color: rgba(245, 241, 223, 0.62);
-  font-size: 0.82rem;
+  font-family: var(--font-other);
+  font-size: 0.92rem;
 }
 
 .modal-header button {
@@ -1226,7 +1302,8 @@ button {
   display: grid;
   gap: 0.45rem;
   color: rgba(245, 241, 223, 0.72);
-  font-size: 0.84rem;
+  font-family: var(--font-other);
+  font-size: 0.92rem;
   font-weight: 800;
 }
 
@@ -1251,6 +1328,7 @@ button {
   padding: 1rem;
   color: #06110f;
   background: #26c9b9;
+  font-family: var(--font-other);
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -1259,7 +1337,7 @@ button {
 
 @media (max-width: 1023px) {
   .site-header {
-    padding: 1.5rem;
+    padding: 1.5rem var(--header-inset);
   }
 
   .side-index {
@@ -1327,8 +1405,8 @@ button {
     display: none;
   }
 
-  .brand-mark {
-    font-size: 1.75rem;
+  .brand-mark__name {
+    display: none;
   }
 
   .brand-cluster {
@@ -1336,7 +1414,7 @@ button {
   }
 
   .gallery-page-label {
-    font-size: 0.54rem;
+    font-size: clamp(0.82rem, 3.3vw, 0.96rem);
     letter-spacing: 0.16em;
   }
 

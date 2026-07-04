@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { featuredProjects } from '../data.js'
 
-export function FeaturedScene() {
+export function FeaturedScene({ onAudit }) {
   const project = featuredProjects[0]
   const [selectedProject, setSelectedProject] = useState(0)
   const [selectedStep, setSelectedStep] = useState(0)
@@ -79,12 +79,13 @@ export function FeaturedScene() {
             <p className="featured-proof-line">{selected.pitch}</p>
           </aside>
 
-          <a
-            href="mailto:hfadeni@gmail.com?subject=Shopify%20Revenue%20Leak%20Audit"
+          <button
+            type="button"
+            onClick={onAudit}
             className="featured-view-all view-projects"
           >
             GET REVENUE LEAK AUDIT
-          </a>
+          </button>
 
         </div>
       </div>
