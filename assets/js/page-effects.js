@@ -154,7 +154,6 @@ function initContactPreview() {
 
 function initWorksScrollStages() {
   const stages = Array.from(document.querySelectorAll("[data-works-scroll]"));
-  const canUseWheelStage = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 769px)").matches;
 
   if (!stages.length) {
     return;
@@ -173,6 +172,7 @@ function initWorksScrollStages() {
     let startX = 0;
     let startY = 0;
     let startProgress = 0;
+    let didDrag = false;
     let animationFrame = 0;
 
     function clamp(value) {
@@ -247,16 +247,10 @@ function initWorksScrollStages() {
       shiftBy(dominantDelta * unit * 0.084);
     }
 
-    if (canUseWheelStage) {
-      window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
-    }
+    window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
 
-    viewport.addEventListener("pointerdown", (event) => {
+    stage.addEventListener("pointerdown", (event) => {
       if (travel <= 0) {
-        return;
-      }
-
-      if (event.target.closest("a, button")) {
         return;
       }
 
@@ -264,16 +258,32 @@ function initWorksScrollStages() {
       startX = event.clientX;
       startY = event.clientY;
       startProgress = targetProgress;
+      didDrag = false;
       viewport.classList.add("is-dragging");
-      viewport.setPointerCapture(event.pointerId);
+      stage.setPointerCapture(event.pointerId);
     });
 
-    viewport.addEventListener("pointermove", (event) => {
+    stage.addEventListener("pointermove", (event) => {
       if (activePointerId !== event.pointerId || travel <= 0) {
         return;
       }
 
-      const delta = event.clientX - startX;
+      const deltaX = event.clientX - startX;
+      const deltaY = event.clientY - startY;
+      const shouldUseVerticalDrag = event.pointerType === "touch" || event.pointerType === "pen" || window.innerWidth <= 768;
+      const dominantDelta = shouldUseVerticalDrag
+        ? deltaY
+        : deltaX;
+
+      if (Math.hypot(deltaX, deltaY) > 7) {
+        didDrag = true;
+      }
+
+      if (shouldUseVerticalDrag) {
+        event.preventDefault();
+      }
+
+      const delta = dominantDelta;
       targetProgress = clamp(startProgress - (delta / travel));
       progress = targetProgress;
       sync();
@@ -284,17 +294,26 @@ function initWorksScrollStages() {
         return;
       }
 
-      if (viewport.hasPointerCapture(event.pointerId)) {
-        viewport.releasePointerCapture(event.pointerId);
+      if (stage.hasPointerCapture(event.pointerId)) {
+        stage.releasePointerCapture(event.pointerId);
       }
 
       activePointerId = null;
       viewport.classList.remove("is-dragging");
     }
 
-    viewport.addEventListener("pointerup", releasePointer);
-    viewport.addEventListener("pointercancel", releasePointer);
-    viewport.addEventListener("pointerleave", releasePointer);
+    stage.addEventListener("pointerup", releasePointer);
+    stage.addEventListener("pointercancel", releasePointer);
+    stage.addEventListener("pointerleave", releasePointer);
+    stage.addEventListener("click", (event) => {
+      if (!didDrag) {
+        return;
+      }
+
+      event.preventDefault();
+      event.stopPropagation();
+      didDrag = false;
+    }, true);
 
     measure();
     window.addEventListener("load", measure, { once: true });

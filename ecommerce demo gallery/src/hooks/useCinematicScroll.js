@@ -795,7 +795,7 @@ export function useCinematicScroll(containerRef) {
       if (videoFrame) {
         videoFrame.style.opacity = videoOpacity.toFixed(4)
         videoFrame.style.transform = `translate3d(-50%, calc(-50% + ${videoLift.toFixed(2)}vh), 0) scale(${videoScaleX.toFixed(4)}, ${videoScaleY.toFixed(4)})`
-        videoFrame.style.filter = `blur(${((1 - videoEnter) * 10 + videoExit * 6).toFixed(2)}px)`
+        videoFrame.style.filter = isMobileViewport ? 'none' : `blur(${((1 - videoEnter) * 10 + videoExit * 6).toFixed(2)}px)`
         videoFrame.style.borderRadius = `${lerp(4, 18, videoEnter).toFixed(2)}px`
       }
 
@@ -812,7 +812,7 @@ export function useCinematicScroll(containerRef) {
         const side = index % 2 === 0 ? 1 : -1
         copy.style.opacity = (weight * videoOpacity).toFixed(4)
         copy.style.transform = `translate3d(${((1 - weight) * side * (isMobileViewport ? 18 : 54)).toFixed(2)}px, ${((1 - videoEnter) * (isMobileViewport ? 14 : 30) - videoExit * (isMobileViewport ? 8 : 16)).toFixed(2)}px, 0)`
-        copy.style.filter = `blur(${((1 - weight) * (isMobileViewport ? 3 : 8)).toFixed(2)}px)`
+        copy.style.filter = isMobileViewport ? 'none' : `blur(${((1 - weight) * 8).toFixed(2)}px)`
       })
 
       const headlineInStart = 0.045
@@ -842,7 +842,7 @@ export function useCinematicScroll(containerRef) {
         const headlineOpacity = headlineIn * (1 - headlineOut)
         autoHeadline.style.opacity = headlineOpacity.toFixed(4)
         autoHeadline.style.transform = `translate3d(-50%, calc(-50% + ${headlineY.toFixed(2)}vh), 0)`
-        autoHeadline.style.filter = `blur(${((1 - headlineIn) * 9 + headlineOut * 4).toFixed(2)}px)`
+        autoHeadline.style.filter = isMobileViewport ? 'none' : `blur(${((1 - headlineIn) * 9 + headlineOut * 4).toFixed(2)}px)`
       }
 
       const entryRevealRaw = clamp01((autoProgress - entryStart) / (entryEnd - entryStart))
@@ -894,7 +894,9 @@ export function useCinematicScroll(containerRef) {
         card.style.top = `${y.toFixed(2)}vh`
         card.style.opacity = opacity.toFixed(4)
         card.style.transform = 'translate3d(-50%, -50%, 0)'
-        card.style.filter = `blur(${((1 - near) * 8).toFixed(2)}px) grayscale(${(0.84 * (1 - colorStrength)).toFixed(3)}) saturate(${(0.42 + colorStrength * 0.88).toFixed(3)}) brightness(${(0.62 + colorStrength * 0.42).toFixed(3)})`
+        card.style.filter = isMobileViewport
+          ? `brightness(${(0.72 + colorStrength * 0.36).toFixed(3)})`
+          : `blur(${((1 - near) * 8).toFixed(2)}px) grayscale(${(0.84 * (1 - colorStrength)).toFixed(3)}) saturate(${(0.42 + colorStrength * 0.88).toFixed(3)}) brightness(${(0.62 + colorStrength * 0.42).toFixed(3)})`
         card.style.zIndex = `${10 + Math.round(activeStrength * 30)}`
         card.style.setProperty('--auto-card-veil', (0.64 * (1 - colorStrength)).toFixed(3))
       })
@@ -971,7 +973,7 @@ export function useCinematicScroll(containerRef) {
         const glow = visibilityBand * (midpointFocus * 1.02 + postMidAmount * 0.82)
 
         item.style.opacity = opacity.toFixed(4)
-        item.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
+        item.style.filter = isMobileViewport ? 'none' : `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
           ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(255, 255, 255, ${(glow * 0.42).toFixed(3)})`
           : 'none'
@@ -1056,7 +1058,7 @@ export function useCinematicScroll(containerRef) {
       trigger: container,
       start: 'top top',
       end: () => `+=${Math.max(1, container.scrollHeight - window.innerHeight)}`,
-      scrub: 1.25,
+      scrub: window.innerWidth <= 760 ? 0.18 : 1.25,
       invalidateOnRefresh: true,
       onUpdate: (self) => applyProgress(self.progress)
     })

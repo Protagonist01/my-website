@@ -1666,17 +1666,17 @@ a.agent-item:focus-visible {
 
   .agent-item {
     max-width: 92vw;
-    font-size: clamp(1.08rem, 5.8vw, 1.9rem);
+    font-size: clamp(1.75rem, 8.4vw, 3.15rem);
     white-space: nowrap;
   }
 
   .agents-info {
     left: auto;
-    right: clamp(0.95rem, 4vw, 1.25rem);
+    right: clamp(0.35rem, 1.9vw, 0.7rem);
     top: 54%;
     transform: translateY(-50%);
     bottom: auto;
-    width: min(34vw, 8.4rem);
+    width: min(32vw, 8.1rem);
     grid-template-columns: 1fr;
     row-gap: 0.45rem;
   }

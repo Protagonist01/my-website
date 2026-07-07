@@ -342,6 +342,9 @@ let tick = 0;
 let signalCounter = 0;
 let activeSignal = null;
 let nextSignalAt = 90;
+let activeTouchId = null;
+let touchStartX = 0;
+let touchStartY = 0;
 
 function handleWheelRotation(event) {
   event.preventDefault();
@@ -367,8 +370,65 @@ function handleWheelRotation(event) {
   targetSpinVelocityY = nextVelocity.y;
 }
 
+function pushRotation(deltaX, deltaY, strengthMultiplier = 1) {
+  const gestureLength = Math.hypot(deltaX, deltaY);
+
+  if (!gestureLength) {
+    return;
+  }
+
+  const inputStrength = clamp(gestureLength * 0.00018 * strengthMultiplier, 0, 0.046);
+  const pitchInput = (-deltaY / gestureLength) * inputStrength;
+  const yawInput = (deltaX / gestureLength) * inputStrength;
+  const nextVelocity = clampVectorLength(
+    targetSpinVelocityX + pitchInput,
+    targetSpinVelocityY + yawInput,
+    0.06
+  );
+
+  targetSpinVelocityX = nextVelocity.x;
+  targetSpinVelocityY = nextVelocity.y;
+}
+
+function handleTouchStart(event) {
+  if (event.pointerType !== "touch" && event.pointerType !== "pen" && !IS_MOBILE_VIEWPORT) {
+    return;
+  }
+
+  activeTouchId = event.pointerId;
+  touchStartX = event.clientX;
+  touchStartY = event.clientY;
+  event.currentTarget.setPointerCapture?.(event.pointerId);
+}
+
+function handleTouchMove(event) {
+  if (activeTouchId !== event.pointerId) {
+    return;
+  }
+
+  const deltaX = event.clientX - touchStartX;
+  const deltaY = event.clientY - touchStartY;
+  touchStartX = event.clientX;
+  touchStartY = event.clientY;
+  event.preventDefault();
+  pushRotation(deltaX, deltaY, 1.35);
+}
+
+function handleTouchEnd(event) {
+  if (activeTouchId !== event.pointerId) {
+    return;
+  }
+
+  event.currentTarget.releasePointerCapture?.(event.pointerId);
+  activeTouchId = null;
+}
+
 canvas.addEventListener("wheel", handleWheelRotation, { passive: false });
 linkLayer.addEventListener("wheel", handleWheelRotation, { passive: false });
+canvas.addEventListener("pointerdown", handleTouchStart);
+canvas.addEventListener("pointermove", handleTouchMove);
+canvas.addEventListener("pointerup", handleTouchEnd);
+canvas.addEventListener("pointercancel", handleTouchEnd);
 linkLayer.addEventListener("pointerleave", () => {
   activeNode = null;
 });

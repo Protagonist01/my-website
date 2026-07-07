@@ -2847,7 +2847,7 @@ body[data-page] a[href]:focus-visible,
 
   .works-stage__viewport {
     padding: 3.4rem 1.35rem 1rem;
-    touch-action: pan-x;
+    touch-action: none;
     overscroll-behavior: none;
   }
 

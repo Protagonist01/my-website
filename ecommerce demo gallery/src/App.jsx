@@ -10,13 +10,13 @@ import { ContactModal } from './components/ContactModal.jsx'
 const mediaUrl = (name) => new URL(`../e-commerce demo media assets/${name}`, import.meta.url).href
 
 const modalMedia = {
-  audit: [mediaUrl('Revenue_Leak_Audit.png'), mediaUrl('Revenue_Leak_Audit (1).png')],
-  concierge: [mediaUrl('AI Support Concierge.png'), mediaUrl('AI Support Concierge(1).png')],
-  dashboard: [mediaUrl('AI Ops Dashboard.png'), mediaUrl('AI Ops Dashboard (1).png')],
-  retention: [mediaUrl('Retention Automation.png'), mediaUrl('Retention Automation(1).png')],
-  inventory: [mediaUrl('Inventory Intelligience System.png'), mediaUrl('Inventory Intelligience System(1).png')],
-  returns: [mediaUrl('Returns Automation.png'), mediaUrl('Returns Automation(1).png')],
-  custom: [mediaUrl('Custom Automations.png'), mediaUrl('Custom Automations(1).png')]
+  audit: [mediaUrl('Revenue_Leak_Audit.webp'), mediaUrl('Revenue_Leak_Audit (1).webp')],
+  concierge: [mediaUrl('AI Support Concierge.webp'), mediaUrl('AI Support Concierge(1).webp')],
+  dashboard: [mediaUrl('AI Ops Dashboard.webp'), mediaUrl('AI Ops Dashboard (1).webp')],
+  retention: [mediaUrl('Retention Automation.webp'), mediaUrl('Retention Automation(1).webp')],
+  inventory: [mediaUrl('Inventory Intelligience System.webp'), mediaUrl('Inventory Intelligience System(1).webp')],
+  returns: [mediaUrl('Returns Automation.webp'), mediaUrl('Returns Automation(1).webp')],
+  custom: [mediaUrl('Custom Automations.webp'), mediaUrl('Custom Automations(1).webp')]
 }
 
 const demoVideos = {

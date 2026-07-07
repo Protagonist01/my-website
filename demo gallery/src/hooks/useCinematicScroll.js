@@ -115,11 +115,14 @@ function getChapterWeights(count, exact) {
 function getAgentRailConfig(agentItems) {
   const viewportW = Math.max(1, window.innerWidth)
   const viewportH = Math.max(1, window.innerHeight)
-  const midX = viewportW * (window.innerWidth < 1360 ? 0.205 : 0.195)
+  const isMobileViewport = viewportW <= 760
+  const midX = viewportW * (isMobileViewport ? 0.17 : window.innerWidth < 1360 ? 0.205 : 0.195)
   const midY = viewportH * 0.5
-  const radius = Math.max(viewportH * 0.94, viewportW * 0.4)
+  const radius = Math.max(viewportH * (isMobileViewport ? 0.88 : 0.94), viewportW * 0.4)
   const sampleItemHeight = agentItems[0]?.offsetHeight || viewportH * 0.07
-  const itemArcStep = clampRange(sampleItemHeight * 2.45, 112, 168)
+  const itemArcStep = isMobileViewport
+    ? clampRange(sampleItemHeight * 1.35, 68, 96)
+    : clampRange(sampleItemHeight * 2.45, 112, 168)
 
   return {
     viewportW,
@@ -721,6 +724,7 @@ export function useCinematicScroll(containerRef) {
       const agentsProgress = getSectionProgress(agentsSection)
       const featuredProgress = getSectionProgress(workflowsSection)
       const isCompactViewport = window.innerWidth <= 1023
+      const isMobileViewport = window.innerWidth <= 760
 
       const inAutomations = automationsSection
         ? automationsSection.getBoundingClientRect().top <= window.innerHeight * 0.16
@@ -756,7 +760,7 @@ export function useCinematicScroll(containerRef) {
         const headlineOpacity = headlineIn * (1 - headlineOut)
         autoHeadline.style.opacity = headlineOpacity.toFixed(4)
         autoHeadline.style.transform = `translate3d(-50%, calc(-50% + ${headlineY.toFixed(2)}vh), 0)`
-        autoHeadline.style.filter = `blur(${((1 - headlineIn) * 9 + headlineOut * 4).toFixed(2)}px)`
+        autoHeadline.style.filter = isMobileViewport ? 'none' : `blur(${((1 - headlineIn) * 9 + headlineOut * 4).toFixed(2)}px)`
       }
 
       const entryRevealRaw = clamp01((autoProgress - entryStart) / (entryEnd - entryStart))
@@ -808,7 +812,9 @@ export function useCinematicScroll(containerRef) {
         card.style.top = `${y.toFixed(2)}vh`
         card.style.opacity = opacity.toFixed(4)
         card.style.transform = 'translate3d(-50%, -50%, 0)'
-        card.style.filter = `blur(${((1 - near) * 8).toFixed(2)}px) grayscale(${(0.84 * (1 - colorStrength)).toFixed(3)}) saturate(${(0.42 + colorStrength * 0.88).toFixed(3)}) brightness(${(0.62 + colorStrength * 0.42).toFixed(3)})`
+        card.style.filter = isMobileViewport
+          ? `brightness(${(0.72 + colorStrength * 0.36).toFixed(3)})`
+          : `blur(${((1 - near) * 8).toFixed(2)}px) grayscale(${(0.84 * (1 - colorStrength)).toFixed(3)}) saturate(${(0.42 + colorStrength * 0.88).toFixed(3)}) brightness(${(0.62 + colorStrength * 0.42).toFixed(3)})`
         card.style.zIndex = `${10 + Math.round(activeStrength * 30)}`
         card.style.setProperty('--auto-card-veil', (0.64 * (1 - colorStrength)).toFixed(3))
       })
@@ -885,7 +891,7 @@ export function useCinematicScroll(containerRef) {
         const glow = visibilityBand * (midpointFocus * 1.02 + postMidAmount * 0.82)
 
         item.style.opacity = opacity.toFixed(4)
-        item.style.filter = `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
+        item.style.filter = isMobileViewport ? 'none' : `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
           ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(255, 255, 255, ${(glow * 0.42).toFixed(3)})`
           : 'none'
@@ -968,7 +974,7 @@ export function useCinematicScroll(containerRef) {
       trigger: container,
       start: 'top top',
       end: () => `+=${Math.max(1, container.scrollHeight - window.innerHeight)}`,
-      scrub: 0.8,
+      scrub: window.innerWidth <= 760 ? 0.18 : 0.8,
       invalidateOnRefresh: true,
       onUpdate: (self) => applyProgress(self.progress)
     })
