@@ -24,11 +24,13 @@ const LABELS = [
 const NODE_COUNT = 23;
 const NETWORK_SCALE = 1.105;
 const BRIGHTNESS_MULTIPLIER = 1.72;
+const MOBILE_BRIGHTNESS_MULTIPLIER = 1.46;
 const BRIGHTNESS_SPEED_MULTIPLIER = 1.45;
 const ACTIVE_EDGE_GLOW_MULTIPLIER = 1.45;
 const ACTIVE_LABEL_SCALE = 1.1;
 const MOBILE_LABEL_SCALE = 0.84;
 const IS_MOBILE_VIEWPORT = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+const NETWORK_BRIGHTNESS = IS_MOBILE_VIEWPORT ? MOBILE_BRIGHTNESS_MULTIPLIER : BRIGHTNESS_MULTIPLIER;
 const ACTIVE_NODE_COUNT = IS_MOBILE_VIEWPORT ? 15 : NODE_COUNT;
 const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
@@ -436,7 +438,7 @@ function handleTouchMove(event) {
     event.preventDefault();
   }
 
-  pushRotation(deltaX, deltaY, 1.35);
+  pushRotation(-deltaX, -deltaY, 1.35);
 }
 
 function handleTouchEnd(event) {
@@ -582,7 +584,7 @@ function draw(now = 0) {
     };
   });
 
-  const baseLineWidth = IS_MOBILE_VIEWPORT ? 0.42 : 0.35;
+  const baseLineWidth = IS_MOBILE_VIEWPORT ? 0.38 : 0.35;
   let edgeIndex = 0;
 
   for (let i = 0; i < projected.length; i++) {
@@ -597,7 +599,7 @@ function draw(now = 0) {
       const wave = waveAt(mx, my, mz, tick);
       const isConnectedToActive = activeNode && (a.source === activeNode || b.source === activeNode);
       const glowBoost = isConnectedToActive ? ACTIVE_EDGE_GLOW_MULTIPLIER : 1;
-      const alpha = (base + wave * base * 3.9) * BRIGHTNESS_MULTIPLIER * glowBoost;
+      const alpha = (base + wave * base * 3.9) * NETWORK_BRIGHTNESS * glowBoost;
       const edgeColor = isConnectedToActive
         ? mixRgb(PALETTE.gold, PALETTE.goldLight, Math.min(1, 0.34 + wave * 0.42))
         : mixRgb(PALETTE.offwhite, PALETTE.goldLight, Math.min(1, 0.16 + wave * 0.7));
@@ -649,7 +651,7 @@ function draw(now = 0) {
     const wave = waveAt(point.ox, point.oy, point.oz, tick);
     const labelScale = window.innerWidth <= 768 ? MOBILE_LABEL_SCALE : 1;
     const fontSize = Math.max(4, Math.round((4 + t3 * 27) * labelScale));
-    const alpha = (0.13 + t * 0.87) * BRIGHTNESS_MULTIPLIER;
+    const alpha = (0.13 + t * 0.87) * NETWORK_BRIGHTNESS;
     const tracking = 0.14 + t * 0.08;
     const color = point.isActive ? activeLabelColor(t) : defaultLabelColor(t, wave);
     const weight = point.isActive ? 600 : (t > 0.7 ? 600 : (t > 0.38 ? 500 : 300));

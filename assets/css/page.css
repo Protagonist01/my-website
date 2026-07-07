@@ -3263,6 +3263,14 @@ body[data-page="testimonial"],
     font-size: 0.66rem;
   }
 
+  body[data-page="works"] .replica-chrome,
+  body[data-page="contact"] .replica-chrome {
+    top: 0.85rem;
+    left: clamp(0.72rem, 3.2vw, 1rem);
+    right: clamp(0.72rem, 3.2vw, 1rem);
+    gap: clamp(0.4rem, 2vw, 0.7rem);
+  }
+
   .page-title-label,
   .replica-page-label,
   .testimonial-page-label,
