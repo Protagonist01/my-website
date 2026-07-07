@@ -2728,6 +2728,7 @@ body[data-page] a[href]:focus-visible,
     min-height: 100svh;
     overflow: hidden;
     overscroll-behavior: none;
+    touch-action: none;
   }
 
   body[data-page="contact"] .page-shell,
@@ -2745,6 +2746,8 @@ body[data-page] a[href]:focus-visible,
     height: 100dvh;
     min-height: 100svh;
     overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: none;
   }
 
   body[data-page="about"] {

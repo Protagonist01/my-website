@@ -174,6 +174,17 @@ function initWorksScrollStages() {
     let startProgress = 0;
     let didDrag = false;
     let animationFrame = 0;
+    let clearDragTimer = 0;
+
+    function shouldIgnoreGestureTarget(target) {
+      const element = target instanceof Element ? target : null;
+
+      if (!element) {
+        return false;
+      }
+
+      return Boolean(element.closest("input, textarea, select, [contenteditable='true'], [data-contact-modal].is-open"));
+    }
 
     function clamp(value) {
       return Math.min(1, Math.max(0, value));
@@ -229,7 +240,7 @@ function initWorksScrollStages() {
     }
 
     function handleWheel(event) {
-      if (!stage.contains(event.target)) {
+      if (shouldIgnoreGestureTarget(event.target)) {
         return;
       }
 
@@ -249,8 +260,16 @@ function initWorksScrollStages() {
 
     window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
 
-    stage.addEventListener("pointerdown", (event) => {
+    function startPointer(event) {
       if (travel <= 0) {
+        return;
+      }
+
+      if (event.button !== undefined && event.button > 0) {
+        return;
+      }
+
+      if (shouldIgnoreGestureTarget(event.target)) {
         return;
       }
 
@@ -259,11 +278,11 @@ function initWorksScrollStages() {
       startY = event.clientY;
       startProgress = targetProgress;
       didDrag = false;
+      window.clearTimeout(clearDragTimer);
       viewport.classList.add("is-dragging");
-      stage.setPointerCapture(event.pointerId);
-    });
+    }
 
-    stage.addEventListener("pointermove", (event) => {
+    function movePointer(event) {
       if (activePointerId !== event.pointerId || travel <= 0) {
         return;
       }
@@ -279,7 +298,7 @@ function initWorksScrollStages() {
         didDrag = true;
       }
 
-      if (shouldUseVerticalDrag) {
+      if (shouldUseVerticalDrag && didDrag) {
         event.preventDefault();
       }
 
@@ -287,31 +306,36 @@ function initWorksScrollStages() {
       targetProgress = clamp(startProgress - (delta / travel));
       progress = targetProgress;
       sync();
-    });
+    }
 
     function releasePointer(event) {
       if (activePointerId !== event.pointerId) {
         return;
       }
 
-      if (stage.hasPointerCapture(event.pointerId)) {
-        stage.releasePointerCapture(event.pointerId);
-      }
-
       activePointerId = null;
       viewport.classList.remove("is-dragging");
+
+      if (didDrag) {
+        window.clearTimeout(clearDragTimer);
+        clearDragTimer = window.setTimeout(() => {
+          didDrag = false;
+        }, 160);
+      }
     }
 
-    stage.addEventListener("pointerup", releasePointer);
-    stage.addEventListener("pointercancel", releasePointer);
-    stage.addEventListener("pointerleave", releasePointer);
-    stage.addEventListener("click", (event) => {
+    document.addEventListener("pointerdown", startPointer, { capture: true });
+    window.addEventListener("pointermove", movePointer, { passive: false, capture: true });
+    window.addEventListener("pointerup", releasePointer, { capture: true });
+    window.addEventListener("pointercancel", releasePointer, { capture: true });
+    document.addEventListener("click", (event) => {
       if (!didDrag) {
         return;
       }
 
       event.preventDefault();
       event.stopPropagation();
+      window.clearTimeout(clearDragTimer);
       didDrag = false;
     }, true);
 

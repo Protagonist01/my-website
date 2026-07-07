@@ -343,8 +343,12 @@ let signalCounter = 0;
 let activeSignal = null;
 let nextSignalAt = 90;
 let activeTouchId = null;
+let touchOriginX = 0;
+let touchOriginY = 0;
 let touchStartX = 0;
 let touchStartY = 0;
+let didTouchDrag = false;
+let clearTouchDragTimer = 0;
 
 function handleWheelRotation(event) {
   event.preventDefault();
@@ -395,10 +399,17 @@ function handleTouchStart(event) {
     return;
   }
 
+  if (event.button !== undefined && event.button > 0) {
+    return;
+  }
+
   activeTouchId = event.pointerId;
+  touchOriginX = event.clientX;
+  touchOriginY = event.clientY;
   touchStartX = event.clientX;
   touchStartY = event.clientY;
-  event.currentTarget.setPointerCapture?.(event.pointerId);
+  didTouchDrag = false;
+  window.clearTimeout(clearTouchDragTimer);
 }
 
 function handleTouchMove(event) {
@@ -408,9 +419,15 @@ function handleTouchMove(event) {
 
   const deltaX = event.clientX - touchStartX;
   const deltaY = event.clientY - touchStartY;
+  const totalDelta = Math.hypot(event.clientX - touchOriginX, event.clientY - touchOriginY);
   touchStartX = event.clientX;
   touchStartY = event.clientY;
-  event.preventDefault();
+
+  if (totalDelta > 7) {
+    didTouchDrag = true;
+    event.preventDefault();
+  }
+
   pushRotation(deltaX, deltaY, 1.35);
 }
 
@@ -419,16 +436,31 @@ function handleTouchEnd(event) {
     return;
   }
 
-  event.currentTarget.releasePointerCapture?.(event.pointerId);
   activeTouchId = null;
+
+  if (didTouchDrag) {
+    window.clearTimeout(clearTouchDragTimer);
+    clearTouchDragTimer = window.setTimeout(() => {
+      didTouchDrag = false;
+    }, 160);
+  }
 }
 
-canvas.addEventListener("wheel", handleWheelRotation, { passive: false });
-linkLayer.addEventListener("wheel", handleWheelRotation, { passive: false });
-canvas.addEventListener("pointerdown", handleTouchStart);
-canvas.addEventListener("pointermove", handleTouchMove);
-canvas.addEventListener("pointerup", handleTouchEnd);
-canvas.addEventListener("pointercancel", handleTouchEnd);
+window.addEventListener("wheel", handleWheelRotation, { passive: false });
+document.addEventListener("pointerdown", handleTouchStart, { capture: true });
+window.addEventListener("pointermove", handleTouchMove, { passive: false, capture: true });
+window.addEventListener("pointerup", handleTouchEnd, { capture: true });
+window.addEventListener("pointercancel", handleTouchEnd, { capture: true });
+document.addEventListener("click", (event) => {
+  if (!didTouchDrag) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopPropagation();
+  window.clearTimeout(clearTouchDragTimer);
+  didTouchDrag = false;
+}, true);
 linkLayer.addEventListener("pointerleave", () => {
   activeNode = null;
 });

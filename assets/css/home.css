@@ -12,6 +12,7 @@ body.home {
   inset: 0;
   height: 100dvh;
   background: var(--color-black);
+  touch-action: none;
 }
 
 body.home::after {
@@ -29,6 +30,7 @@ body.home::after {
   color: var(--color-white);
   text-decoration: none;
   pointer-events: auto;
+  touch-action: none;
 }
 
 .home-signature__mark {
@@ -94,7 +96,7 @@ body.home::after {
   pointer-events: auto;
   user-select: none;
   -webkit-user-select: none;
-  touch-action: manipulation;
+  touch-action: none;
   will-change: transform, color, opacity;
   transition:
     color 300ms ease-out,
