@@ -3244,3 +3244,46 @@ body[data-page="testimonial"],
     max-width: 100%;
   }
 }
+
+@media (max-width: 768px) {
+  .portfolio-wordmark,
+  .portfolio-wordmark.source-about__name,
+  .portfolio-wordmark.source-stack__logo,
+  .portfolio-wordmark.brand-link,
+  .portfolio-wordmark.replica-brand,
+  .portfolio-wordmark.testimonial-brand {
+    gap: 0.62rem;
+    font-size: clamp(0.68rem, 2.65vw, 0.82rem);
+    letter-spacing: 0.14em;
+  }
+
+  .portfolio-wordmark__mark {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.66rem;
+  }
+
+  .page-title-label,
+  .replica-page-label,
+  .testimonial-page-label,
+  .source-stack__tag {
+    font-size: clamp(0.62rem, 2.45vw, 0.76rem);
+    letter-spacing: 0.12em;
+  }
+
+  .source-page__actions .header-action,
+  .page-header-actions .header-action,
+  .testimonial-actions .header-action,
+  .testimonial-actions .testimonial-button {
+    max-width: 5.25rem;
+    min-height: 2rem;
+    padding: 0 0.48rem;
+    font-size: clamp(0.5rem, 1.95vw, 0.6rem);
+    letter-spacing: 0.07em;
+  }
+
+  .replica-art__image {
+    z-index: 0;
+    display: block;
+  }
+}

@@ -5,6 +5,11 @@ const FORMSPREE_ENDPOINTS = {
   audit: "https://formspree.io/f/mrewrgpn",
 };
 
+const WORK_IMAGE_URLS = {
+  "works/works images/testimony.png": new URL("../../works/works images/testimony.png", import.meta.url).href,
+  "works/works images/fq4.png": new URL("../../works/works images/fq4.png", import.meta.url).href,
+};
+
 const REPLICA_PAGES = new Set(["contact", "works"]);
 const REPLICA_TONES = ["violet", "cyan", "amber", "emerald", "crimson", "graphite"];
 
@@ -14,6 +19,10 @@ function withRoot(rootPath, path) {
   }
 
   return `${rootPath}/${path}`.replace(/\\/g, "/").replace(/\/{2,}/g, "/");
+}
+
+function resolveAsset(rootPath, path) {
+  return WORK_IMAGE_URLS[path] || withRoot(rootPath, path);
 }
 
 function resolveLink(rootPath, link) {
@@ -294,7 +303,7 @@ function renderWorksArt(rootPath, item, tone) {
 
     return `
       <div class="replica-art replica-art--landscape replica-art--${tone} replica-art--image${statusClass}" style="${style}">
-        <img class="replica-art__image" src="${withRoot(rootPath, item.image.src)}" alt="${item.title}" loading="lazy">
+        <img class="replica-art__image" src="${resolveAsset(rootPath, item.image.src)}" alt="${item.title}" loading="eager" decoding="async">
         <span class="replica-art__grain"></span>
         ${statusLabel}
       </div>

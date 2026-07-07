@@ -1772,3 +1772,37 @@ body,
 .vignette-field {
   background: #000 !important;
 }
+
+@media (max-width: 560px) {
+  .site-header {
+    align-items: center;
+    gap: clamp(0.4rem, 2vw, 0.7rem);
+    min-height: 3rem;
+    padding: 0.85rem clamp(0.72rem, 3.2vw, 1rem) 0;
+  }
+
+  .brand-mark {
+    gap: 0.62rem;
+    font-size: clamp(0.68rem, 2.65vw, 0.82rem);
+    letter-spacing: 0.14em;
+  }
+
+  .brand-mark__badge {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.66rem;
+  }
+
+  .gallery-page-label {
+    font-size: clamp(0.62rem, 2.45vw, 0.76rem);
+    letter-spacing: 0.12em;
+  }
+
+  .chat-button {
+    max-width: 5.25rem;
+    min-height: 2rem;
+    padding: 0 0.48rem;
+    font-size: clamp(0.5rem, 1.95vw, 0.6rem);
+    letter-spacing: 0.07em;
+  }
+}

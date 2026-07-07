@@ -34,7 +34,10 @@ const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
 const FIRING_MIN_GAP_FRAMES = 130;
 const FIRING_RANDOM_GAP_FRAMES = 130;
-const TARGET_FRAME_MS = IS_MOBILE_VIEWPORT ? 1000 / 30 : 0;
+const TARGET_FRAME_MS = 0;
+const PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, IS_MOBILE_VIEWPORT ? 2 : 2.5);
+let viewportWidth = window.innerWidth;
+let viewportHeight = window.innerHeight;
 const WAVES = [
   { nx: 1, ny: 0.3, nz: 0.2, phase: 0, speed: 0.011 },
   { nx: 0.2, ny: 1, nz: 0.4, phase: 2.1, speed: 0.009 },
@@ -43,8 +46,13 @@ const WAVES = [
 ];
 
 function resize() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  viewportWidth = window.innerWidth;
+  viewportHeight = window.innerHeight;
+  canvas.width = Math.round(viewportWidth * PIXEL_RATIO);
+  canvas.height = Math.round(viewportHeight * PIXEL_RATIO);
+  canvas.style.width = `${viewportWidth}px`;
+  canvas.style.height = `${viewportHeight}px`;
+  ctx.setTransform(PIXEL_RATIO, 0, 0, PIXEL_RATIO, 0, 0);
 }
 
 function fibSphere(n) {
@@ -256,11 +264,11 @@ const SC_RANGE = MAX_SC - MIN_SC;
 
 function project(x, y, z) {
   const sc = FOV / (FOV + z);
-  const radius = Math.min(canvas.width, canvas.height) * 0.528 * NETWORK_SCALE;
+  const radius = Math.min(viewportWidth, viewportHeight) * 0.528 * NETWORK_SCALE;
 
   return {
-    sx: canvas.width / 2 + x * radius * sc,
-    sy: canvas.height / 2 + y * radius * sc * 0.86,
+    sx: viewportWidth / 2 + x * radius * sc,
+    sy: viewportHeight / 2 + y * radius * sc * 0.86,
     sc,
     z,
   };
@@ -504,7 +512,7 @@ function draw(now = 0) {
   }
 
   lastDrawAt = now;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, viewportWidth, viewportHeight);
   tick++;
 
   if (!activeSignal && tick >= nextSignalAt) {
@@ -574,7 +582,7 @@ function draw(now = 0) {
     };
   });
 
-  const baseLineWidth = 0.35;
+  const baseLineWidth = IS_MOBILE_VIEWPORT ? 0.42 : 0.35;
   let edgeIndex = 0;
 
   for (let i = 0; i < projected.length; i++) {

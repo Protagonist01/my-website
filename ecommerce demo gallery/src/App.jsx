@@ -1142,7 +1142,7 @@ function DemoBody({ id, onAudit }) {
 
 function DemoVideo({ id, title }) {
   const videoRef = useRef(null)
-  const [muted, setMuted] = useState(false)
+  const [muted, setMuted] = useState(true)
   const [ended, setEnded] = useState(false)
   const src = demoVideos[id]
 
@@ -1152,9 +1152,9 @@ function DemoVideo({ id, title }) {
     if (!video || !src) return undefined
 
     setEnded(false)
-    setMuted(false)
+    setMuted(true)
     video.currentTime = 0
-    video.muted = false
+    video.muted = true
     video.play().catch(() => {})
 
     return () => {
@@ -1203,7 +1203,7 @@ function DemoVideo({ id, title }) {
         src={src}
         playsInline
         muted={muted}
-        preload="none"
+        preload="metadata"
         onClick={togglePlayback}
         onEnded={() => setEnded(true)}
         aria-label={`${title} demo video`}
@@ -1211,7 +1211,11 @@ function DemoVideo({ id, title }) {
       <figcaption>
         <span>{ended ? 'Click video to replay' : 'Click video to pause or play'}</span>
         <button type="button" onClick={toggleMute} aria-label={muted ? 'Unmute demo video' : 'Mute demo video'}>
-          <span className={`sound-icon ${muted ? 'is-muted' : ''}`} aria-hidden="true" />
+          <svg className={`sound-icon ${muted ? 'is-muted' : ''}`} viewBox="0 0 24 24" aria-hidden="true">
+            <path className="sound-icon__speaker" d="M4 9.5h4.2L14 5v14l-5.8-4.5H4z" />
+            {!muted && <path className="sound-icon__wave" d="M17 8.2c1.2 1 1.9 2.3 1.9 3.8S18.2 14.8 17 15.8M19.5 5.8c2 1.7 3.1 3.8 3.1 6.2s-1.1 4.5-3.1 6.2" />}
+            {muted && <path className="sound-icon__slash" d="M18.8 7.2 7.2 18.8" />}
+          </svg>
         </button>
       </figcaption>
     </figure>
@@ -1223,7 +1227,7 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
 
   const modalTitles = {
     audit: 'Revenue Leak Audit',
-    concierge: 'Meet Claire — AI Concierge',
+    concierge: 'Meet Claire - AI Concierge',
     dashboard: 'AI Ops Dashboard',
     retention: 'Retention Automation',
     inventory: 'Inventory Intelligence',
@@ -1233,15 +1237,15 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
   const title = step ? (modalTitles[step.id] || step.title) : ''
 
   const modalCtas = {
-    audit: 'Get Your Real Audit →',
-    concierge: 'Get Claire for Your Store →',
-    dashboard: 'Get Your Dashboard →',
-    retention: 'Build My Retention System →',
-    inventory: 'Get Inventory Alerts →',
-    returns: 'Automate Your Returns →',
-    custom: 'Discuss Your Custom Build →'
+    audit: 'Get Your Real Audit ->',
+    concierge: 'Get Claire for Your Store ->',
+    dashboard: 'Get Your Dashboard ->',
+    retention: 'Build My Retention System ->',
+    inventory: 'Get Inventory Alerts ->',
+    returns: 'Automate Your Returns ->',
+    custom: 'Discuss Your Custom Build ->'
   }
-  const ctaText = modalCtas[step.id] || 'Get Started →'
+  const ctaText = modalCtas[step.id] || 'Get Started ->'
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -1280,7 +1284,7 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
             <h2 id="demo-modal-title">{title}</h2>
             <p>{step.promise}</p>
           </div>
-          <button type="button" className="modal-close" onClick={onClose} aria-label="Close demo">✕</button>
+          <button type="button" className="modal-close" onClick={onClose} aria-label="Close demo">x</button>
         </div>
         <div className="modal-body">
           <DemoVideo id={step.id} title={title} />
