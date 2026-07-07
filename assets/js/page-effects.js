@@ -154,6 +154,7 @@ function initContactPreview() {
 
 function initWorksScrollStages() {
   const stages = Array.from(document.querySelectorAll("[data-works-scroll]"));
+  const canUseWheelStage = window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 769px)").matches;
 
   if (!stages.length) {
     return;
@@ -228,6 +229,10 @@ function initWorksScrollStages() {
     }
 
     function handleWheel(event) {
+      if (!stage.contains(event.target)) {
+        return;
+      }
+
       if (travel <= 0) {
         return;
       }
@@ -242,7 +247,9 @@ function initWorksScrollStages() {
       shiftBy(dominantDelta * unit * 0.084);
     }
 
-    window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    if (canUseWheelStage) {
+      window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    }
 
     viewport.addEventListener("pointerdown", (event) => {
       if (travel <= 0) {
@@ -266,7 +273,7 @@ function initWorksScrollStages() {
         return;
       }
 
-      const delta = event.pointerType === "touch" ? event.clientY - startY : event.clientX - startX;
+      const delta = event.clientX - startX;
       targetProgress = clamp(startProgress - (delta / travel));
       progress = targetProgress;
       sync();

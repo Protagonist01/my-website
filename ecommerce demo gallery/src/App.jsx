@@ -67,21 +67,39 @@ function Hero({ onAudit }) {
 }
 
 function VideoShowcase() {
+  const sectionRef = useRef(null)
   const frameRef = useRef(null)
   const videoRefs = useRef([])
   const clickTimerRef = useRef(null)
   const [paused, setPaused] = useState(false)
+  const [isActive, setIsActive] = useState(false)
 
   useEffect(() => {
     videoRefs.current.forEach((video) => {
       if (!video) return
-      if (paused) {
+      if (paused || !isActive) {
         video.pause()
         return
       }
       video.play().catch(() => {})
     })
-  }, [paused])
+  }, [paused, isActive])
+
+  useEffect(() => {
+    const section = sectionRef.current
+
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsActive(entry.isIntersecting)
+      },
+      { rootMargin: '260px 0px' }
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     return () => {
@@ -91,6 +109,7 @@ function VideoShowcase() {
 
   return (
     <section
+      ref={sectionRef}
       id="video-section"
       data-scene="video-section"
       className="scene video-section"
@@ -125,12 +144,12 @@ function VideoShowcase() {
                 videoRefs.current[index] = node
               }}
               data-video-panel={index}
-              src={story.src}
+              src={isActive ? story.src : undefined}
               muted
               loop
               playsInline
-              autoPlay
-              preload="metadata"
+              autoPlay={isActive && !paused}
+              preload={isActive ? 'metadata' : 'none'}
               onLoadedMetadata={(event) => {
                 event.currentTarget.currentTime = 0.2
               }}
@@ -181,8 +200,8 @@ function Steps({ onOpenDemo }) {
               style={{ cursor: 'pointer' }}
             >
               <div className="auto-card-media" aria-hidden="true">
-                <img src={modalMedia[step.id][0]} alt="" />
-                <img src={modalMedia[step.id][1]} alt="" />
+                <img src={modalMedia[step.id][0]} alt="" loading="lazy" decoding="async" />
+                <img src={modalMedia[step.id][1]} alt="" loading="lazy" decoding="async" />
               </div>
               <figcaption>
                 <strong>{step.title}</strong>
@@ -1184,6 +1203,7 @@ function DemoVideo({ id, title }) {
         src={src}
         playsInline
         muted={muted}
+        preload="none"
         onClick={togglePlayback}
         onEnded={() => setEnded(true)}
         aria-label={`${title} demo video`}

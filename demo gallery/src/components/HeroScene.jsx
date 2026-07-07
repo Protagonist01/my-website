@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 const projectVideos = [
   new URL('../../../works/project assets/product_recommendation.mp4', import.meta.url).href,
@@ -7,17 +7,50 @@ const projectVideos = [
 ]
 
 export function HeroScene() {
+  const sectionRef = useRef(null)
   const videoRefs = useRef([])
+  const [isActive, setIsActive] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
+  const visibleVideos = useMemo(() => (isMobile ? projectVideos.slice(0, 1) : projectVideos), [isMobile])
+
+  useEffect(() => {
+    const media = window.matchMedia('(max-width: 768px)')
+    const update = () => setIsMobile(media.matches)
+
+    update()
+    media.addEventListener?.('change', update)
+    return () => media.removeEventListener?.('change', update)
+  }, [])
+
+  useEffect(() => {
+    const section = sectionRef.current
+
+    if (!section) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsActive(entry.isIntersecting)
+      },
+      { rootMargin: '220px 0px' }
+    )
+
+    observer.observe(section)
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     videoRefs.current.forEach((video) => {
       if (!video) return
+      if (!isActive) {
+        video.pause()
+        return
+      }
       video.play().catch(() => {})
     })
-  }, [])
+  }, [isActive, visibleVideos.length])
 
   return (
-    <section id="hero-section" data-scene="hero-section" className="scene hero-scene" aria-label="Projects">
+    <section ref={sectionRef} id="hero-section" data-scene="hero-section" className="scene hero-scene" aria-label="Projects">
       <div className="scene-pin hero-pin">
         <span className="since-marker">Portfolio projects</span>
 
@@ -26,18 +59,18 @@ export function HeroScene() {
             <span className="hero-inline">
               SYSTEMS
               <span className="video-pill" aria-hidden="true">
-                {projectVideos.map((src, index) => (
+                {visibleVideos.map((src, index) => (
                   <video
                     key={src}
                     ref={(node) => {
                       videoRefs.current[index] = node
                     }}
-                    src={src}
+                    src={isActive ? src : undefined}
                     autoPlay
                     muted
                     loop
                     playsInline
-                    preload="metadata"
+                    preload={isActive ? 'metadata' : 'none'}
                   />
                 ))}
               </span>

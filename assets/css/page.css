@@ -2719,6 +2719,34 @@ body[data-page] a[href]:focus-visible,
 }
 
 @media (max-width: 768px) {
+  body[data-page="contact"],
+  body[data-page="works"] {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    min-height: 100svh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body[data-page="contact"] .page-shell,
+  body[data-page="works"] .page-shell,
+  body[data-page="contact"] .replica-shell,
+  body[data-page="works"] .replica-shell,
+  body[data-page="contact"] .replica-main,
+  body[data-page="works"] .replica-main,
+  body[data-page="contact"] .works-stage,
+  body[data-page="works"] .works-stage,
+  body[data-page="contact"] .works-stage__scroll,
+  body[data-page="works"] .works-stage__scroll,
+  body[data-page="contact"] .works-stage__pin,
+  body[data-page="works"] .works-stage__pin {
+    height: 100dvh;
+    min-height: 100svh;
+    overflow: hidden;
+  }
+
   body[data-page="about"] {
     overflow: hidden;
   }
@@ -2819,6 +2847,8 @@ body[data-page] a[href]:focus-visible,
 
   .works-stage__viewport {
     padding: 3.4rem 1.35rem 1rem;
+    touch-action: pan-x;
+    overscroll-behavior: none;
   }
 
   .works-stage__gallery {

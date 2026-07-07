@@ -28,10 +28,13 @@ const BRIGHTNESS_SPEED_MULTIPLIER = 1.45;
 const ACTIVE_EDGE_GLOW_MULTIPLIER = 1.45;
 const ACTIVE_LABEL_SCALE = 1.1;
 const MOBILE_LABEL_SCALE = 0.84;
-const EDGE_COUNT = (NODE_COUNT * (NODE_COUNT - 1)) / 2;
+const IS_MOBILE_VIEWPORT = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
+const ACTIVE_NODE_COUNT = IS_MOBILE_VIEWPORT ? 15 : NODE_COUNT;
+const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
 const FIRING_MIN_GAP_FRAMES = 130;
 const FIRING_RANDOM_GAP_FRAMES = 130;
+const TARGET_FRAME_MS = IS_MOBILE_VIEWPORT ? 1000 / 30 : 0;
 const WAVES = [
   { nx: 1, ny: 0.3, nz: 0.2, phase: 0, speed: 0.011 },
   { nx: 0.2, ny: 1, nz: 0.4, phase: 2.1, speed: 0.009 },
@@ -167,8 +170,9 @@ function distributeLabels(points) {
   const labelPool = buildLabelPool(points.length);
   let bestAssignment = labelPool.slice();
   let bestScore = -Infinity;
+  const passCount = IS_MOBILE_VIEWPORT ? 360 : 2200;
 
-  for (let i = 0; i < 2200; i++) {
+  for (let i = 0; i < passCount; i++) {
     const candidate = shuffle(labelPool);
     const score = scoreAssignment(points, candidate);
     if (score > bestScore) {
@@ -272,10 +276,12 @@ WAVES.forEach((w) => {
   w.nz /= len;
 });
 
-const points = fibSphere(NODE_COUNT);
+const points = fibSphere(ACTIVE_NODE_COUNT);
 const assignedLabels = distributeLabels(points);
 const tabStops = new Set();
 let activeNode = null;
+let isPageVisible = !document.hidden;
+let lastDrawAt = 0;
 
 const nodes = points.map((point, index) => {
   const data = assignedLabels[index];
@@ -371,6 +377,9 @@ window.addEventListener("blur", () => {
   targetSpinVelocityX = 0;
   targetSpinVelocityY = 0;
 });
+document.addEventListener("visibilitychange", () => {
+  isPageVisible = !document.hidden;
+});
 
 function initPageTransitions() {
   const internalLinks = linkLayer.querySelectorAll("a[href$='.html']");
@@ -391,7 +400,18 @@ function initPageTransitions() {
   });
 }
 
-function draw() {
+function draw(now = 0) {
+  if (!isPageVisible) {
+    requestAnimationFrame(draw);
+    return;
+  }
+
+  if (TARGET_FRAME_MS && now - lastDrawAt < TARGET_FRAME_MS) {
+    requestAnimationFrame(draw);
+    return;
+  }
+
+  lastDrawAt = now;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   tick++;
 

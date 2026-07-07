@@ -147,6 +147,15 @@ textarea {
   font: inherit;
 }
 
+a,
+button,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 a {
   color: inherit;
   transition: transform 220ms var(--ease-out);
