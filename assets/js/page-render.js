@@ -2,6 +2,7 @@ import { pageData, primaryNav, routes } from "./page-data.js";
 
 const FORMSPREE_ENDPOINTS = {
   contact: "https://formspree.io/f/mqevwkpl",
+  review: "https://formspree.io/f/mqevwkpl",
   audit: "https://formspree.io/f/mrewrgpn",
 };
 
@@ -83,6 +84,49 @@ function renderContactFormModal() {
   `;
 }
 
+function renderReviewFormModal() {
+  return `
+    <div class="contact-form-modal" data-review-modal aria-hidden="true">
+      <form class="contact-form-card contact-form-card--review" data-review-form>
+        <div class="contact-form-card__header">
+          <div>
+            <h2>Write a review.</h2>
+            <p>Share what changed, what felt useful, and what someone should know before working with me.</p>
+          </div>
+          <button class="contact-form-card__close" type="button" data-review-close aria-label="Close review form">x</button>
+        </div>
+        <label>
+          Your name
+          <input name="name" type="text" autocomplete="name" required />
+        </label>
+        <label>
+          Your email
+          <input name="email" type="email" autocomplete="email" />
+        </label>
+        <label>
+          Project or service
+          <input name="project" type="text" placeholder="AI workflow, website, dashboard..." />
+        </label>
+        <label>
+          Rating
+          <select name="rating" required>
+            <option value="5">5 / 5</option>
+            <option value="4">4 / 5</option>
+            <option value="3">3 / 5</option>
+            <option value="2">2 / 5</option>
+            <option value="1">1 / 5</option>
+          </select>
+        </label>
+        <label>
+          Your review
+          <textarea name="review" rows="6" required></textarea>
+        </label>
+        <button class="contact-form-card__submit header-action header-action--primary" type="submit">Send Review</button>
+      </form>
+    </div>
+  `;
+}
+
 function initContactModal(scope = document) {
   const modal = scope.querySelector("[data-contact-modal]");
   const openers = [...scope.querySelectorAll("[data-contact-open]")];
@@ -140,6 +184,69 @@ function initContactModal(scope = document) {
     } finally {
       submitButton?.removeAttribute("disabled");
       if (submitButton) submitButton.textContent = "Send Brief";
+    }
+  });
+}
+
+function initReviewModal(scope = document) {
+  const modal = scope.querySelector("[data-review-modal]");
+  const openers = [...scope.querySelectorAll("[data-review-open]")];
+
+  if (!modal || openers.length === 0 || modal.dataset.bound === "true") {
+    return;
+  }
+
+  const form = modal.querySelector("[data-review-form]");
+  const closeButtons = [...modal.querySelectorAll("[data-review-close]")];
+  modal.dataset.bound = "true";
+
+  const open = () => {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    modal.querySelector("input, textarea, select")?.focus();
+  };
+
+  const close = () => {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+  };
+
+  openers.forEach((button) => button.addEventListener("click", open));
+  closeButtons.forEach((button) => button.addEventListener("click", close));
+  modal.addEventListener("click", (event) => {
+    if (event.target === modal) close();
+  });
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const submitButton = form.querySelector('[type="submit"]');
+    const data = new FormData(form);
+    data.append("_subject", `Portfolio review from ${data.get("name") || "new reviewer"}`);
+    data.append("form_type", "Review");
+    data.append("source", document.title || window.location.pathname);
+
+    submitButton?.setAttribute("disabled", "true");
+    if (submitButton) submitButton.textContent = "Sending...";
+
+    try {
+      const response = await fetch(FORMSPREE_ENDPOINTS.review, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: data,
+      });
+
+      if (!response.ok) {
+        throw new Error("Review submission failed");
+      }
+
+      form.reset();
+      close();
+      window.alert("Thanks. Your review has been sent.");
+    } catch (error) {
+      window.alert("Sorry, the review could not be sent. Please try again.");
+    } finally {
+      submitButton?.removeAttribute("disabled");
+      if (submitButton) submitButton.textContent = "Send Review";
     }
   });
 }
@@ -268,9 +375,7 @@ function renderReplicaChrome(rootPath, pageKey, page, showRail = true) {
     </aside>
   ` : "";
 
-  const actions = pageKey === "contact"
-    ? `<span class="page-header-spacer" aria-hidden="true"></span>`
-    : renderHeaderActions();
+  const actions = renderHeaderActions();
 
   return `
     <header class="replica-chrome">
@@ -616,7 +721,6 @@ function initTestimonialControls(shell, reviews) {
 }
 
 function renderTestimonialPage(rootPath, page) {
-  const contactHref = withRoot(rootPath, routes.contact);
   const homeHref = withRoot(rootPath, routes.home);
   const reviews = page.reviews ?? [];
   const score = page.rating ?? "4.9";
@@ -648,7 +752,7 @@ function renderTestimonialPage(rootPath, page) {
             <h2 id="testimonial-board-title">${page.boardTitle}</h2>
             <div class="testimonial-controls" aria-label="Review controls">
               <button type="button" data-testimonial-sort>Sort by: Most recent</button>
-              <a href="${contactHref}">Write a review</a>
+              <button type="button" data-review-open>Write a review</button>
             </div>
           </div>
           <div class="testimonial-grid" data-testimonial-grid>
@@ -657,6 +761,7 @@ function renderTestimonialPage(rootPath, page) {
         </section>
       </main>
       ${renderContactFormModal()}
+      ${renderReviewFormModal()}
     </div>
   `;
 }
@@ -688,6 +793,7 @@ export function renderPage({ body, shell }) {
     shell.innerHTML = renderTestimonialPage(rootPath, page);
     initTestimonialControls(shell, page.reviews ?? []);
     initContactModal(shell);
+    initReviewModal(shell);
     return;
   }
 

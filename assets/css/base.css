@@ -370,6 +370,7 @@ button {
 }
 
 .contact-form-card input,
+.contact-form-card select,
 .contact-form-card textarea {
   width: 100%;
   border: 1px solid rgba(201, 168, 76, 0.18);
@@ -377,6 +378,14 @@ button {
   padding: 0.9rem 1rem;
   color: var(--color-white);
   background: rgba(255, 255, 255, 0.045);
+}
+
+.contact-form-card select {
+  appearance: none;
+}
+
+.contact-form-card select option {
+  color: #070604;
 }
 
 .contact-form-card textarea {

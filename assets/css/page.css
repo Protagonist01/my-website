@@ -1725,7 +1725,7 @@ body[data-page="contact"] .replica-brand {
   box-shadow:
     0 0 18px rgba(201, 168, 76, 0.28),
     0 0 42px rgba(236, 208, 118, 0.16);
-  animation: works-light-scan 31s linear infinite;
+  animation: works-light-scan 24s linear infinite;
 }
 
 .works-stage__viewport {

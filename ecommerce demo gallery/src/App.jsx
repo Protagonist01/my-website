@@ -1144,7 +1144,7 @@ function CustomDemo() {
   )
 }
 
-function DemoBody({ id, onAudit }) {
+function DemoBody({ id }) {
   if (id === 'audit') return <AuditDemo />
   if (id === 'concierge') return <ConciergeDemo />
   if (id === 'dashboard') return <DashboardDemo />
@@ -1236,7 +1236,7 @@ function DemoVideo({ id, title }) {
   )
 }
 
-function DemoModal({ activeDemo, onClose, onAudit }) {
+function DemoModal({ activeDemo, onClose, onInquiry }) {
   const step = useMemo(() => demoSteps.find((item) => item.id === activeDemo) || { id: '', title: '' }, [activeDemo])
 
   const modalTitles = {
@@ -1251,15 +1251,39 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
   const title = step ? (modalTitles[step.id] || step.title) : ''
 
   const modalCtas = {
-    audit: 'Get Your Real Audit ->',
-    concierge: 'Get Claire for Your Store ->',
-    dashboard: 'Get Your Dashboard ->',
-    retention: 'Build My Retention System ->',
-    inventory: 'Get Inventory Alerts ->',
-    returns: 'Automate Your Returns ->',
-    custom: 'Discuss Your Custom Build ->'
+    audit: {
+      label: 'Ready to see your store leak map?',
+      button: 'Get Your Real Audit'
+    },
+    concierge: {
+      label: 'Ready to reduce repeat support?',
+      button: 'Build Your AI Concierge'
+    },
+    dashboard: {
+      label: 'Ready for one daily ops view?',
+      button: 'Build Your Dashboard'
+    },
+    retention: {
+      label: 'Ready to bring more buyers back?',
+      button: 'Build Your Retention System'
+    },
+    inventory: {
+      label: 'Ready to catch stock risk earlier?',
+      button: 'Set Up Inventory Alerts'
+    },
+    returns: {
+      label: 'Ready to save more returns?',
+      button: 'Automate Your Returns'
+    },
+    custom: {
+      label: 'Ready to map your missing system?',
+      button: 'Discuss Your Custom Build'
+    }
   }
-  const ctaText = modalCtas[step.id] || 'Get Started ->'
+  const cta = modalCtas[step.id] || {
+    label: 'Ready to build this for your store?',
+    button: 'Get Started'
+  }
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -1302,12 +1326,12 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
         </div>
         <div className="modal-body">
           <DemoVideo id={step.id} title={title} />
-          <DemoBody id={step.id} onAudit={onAudit} />
+          <DemoBody id={step.id} />
         </div>
         <div className="modal-cta-bar">
-          <span className="modal-cta-label">Ready to see this for your store?</span>
-          <button className="demo-primary" type="button" onClick={onAudit}>
-            {ctaText}
+          <span className="modal-cta-label">{cta.label}</span>
+          <button className="demo-primary" type="button" onClick={() => onInquiry(step.id)}>
+            {cta.button}
           </button>
         </div>
       </div>
@@ -1318,6 +1342,7 @@ function DemoModal({ activeDemo, onClose, onAudit }) {
 
 export default function App() {
   const [auditOpen, setAuditOpen] = useState(false)
+  const [contactMode, setContactMode] = useState('audit')
   const [activeDemo, setActiveDemo] = useState(null)
   const mainRef = useRef(null)
   const activeScene = useCinematicScroll(mainRef)
@@ -1328,6 +1353,13 @@ export default function App() {
 
   const openAudit = () => {
     setActiveDemo(null)
+    setContactMode('audit')
+    setAuditOpen(true)
+  }
+
+  const openInquiry = (mode = 'contact') => {
+    setActiveDemo(null)
+    setContactMode(mode)
     setAuditOpen(true)
   }
 
@@ -1336,14 +1368,14 @@ export default function App() {
       <CinematicBackground />
       <Header onChat={openAudit} />
       <SideIndex scenes={scenes} active={activeScene} onSelect={scrollToScene} />
-      <ContactModal open={auditOpen} onClose={() => setAuditOpen(false)} mode="audit" />
+      <ContactModal open={auditOpen} onClose={() => setAuditOpen(false)} mode={contactMode} />
       <main ref={mainRef} className="shopify-demo-page">
         <Hero onAudit={openAudit} />
         <VideoShowcase />
         <Steps onOpenDemo={setActiveDemo} />
         <RequestAuditSection onAudit={openAudit} />
       </main>
-      <DemoModal activeDemo={activeDemo} onClose={() => setActiveDemo(null)} onAudit={openAudit} />
+      <DemoModal activeDemo={activeDemo} onClose={() => setActiveDemo(null)} onInquiry={openInquiry} />
     </>
   )
 }
