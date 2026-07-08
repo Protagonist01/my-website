@@ -31,6 +31,7 @@ const ACTIVE_LABEL_SCALE = 1.1;
 const MOBILE_LABEL_SCALE = 0.84;
 const IS_MOBILE_VIEWPORT = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 const NETWORK_BRIGHTNESS = IS_MOBILE_VIEWPORT ? MOBILE_BRIGHTNESS_MULTIPLIER : BRIGHTNESS_MULTIPLIER;
+const NETWORK_Y_SCALE = IS_MOBILE_VIEWPORT ? 1.08 : 0.86;
 const ACTIVE_NODE_COUNT = IS_MOBILE_VIEWPORT ? 15 : NODE_COUNT;
 const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
@@ -270,7 +271,7 @@ function project(x, y, z) {
 
   return {
     sx: viewportWidth / 2 + x * radius * sc,
-    sy: viewportHeight / 2 + y * radius * sc * 0.86,
+    sy: viewportHeight / 2 + y * radius * sc * NETWORK_Y_SCALE,
     sc,
     z,
   };

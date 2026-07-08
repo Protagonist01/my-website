@@ -63,6 +63,7 @@ export function SkillStackPage() {
   const [current, setCurrent] = useState(0);
   const [contactOpen, setContactOpen] = useState(false);
   const [fits, setFits] = useState(() => skillStack.map(() => ({ offset: 0, scale: 1 })));
+  const [isMobile, setIsMobile] = useState(() => window.matchMedia("(max-width: 768px)").matches);
   const busyRef = useRef(false);
   const contentRefs = useRef([]);
   const touchYRef = useRef(0);
@@ -70,6 +71,21 @@ export function SkillStackPage() {
   const total = skillStack.length;
 
   useReactPageReady("SKILL STACK | Henry Fadeni");
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 768px)");
+    const syncMobile = () => {
+      setIsMobile(media.matches);
+
+      if (media.matches) {
+        setCurrent(0);
+      }
+    };
+
+    syncMobile();
+    media.addEventListener?.("change", syncMobile);
+    return () => media.removeEventListener?.("change", syncMobile);
+  }, []);
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -130,7 +146,7 @@ export function SkillStackPage() {
   }, []);
 
   const goTo = useCallback((next) => {
-    if (busyRef.current || next < 0 || next >= total) {
+    if (isMobile || busyRef.current || next < 0 || next >= total) {
       return;
     }
 
@@ -146,7 +162,7 @@ export function SkillStackPage() {
 
       return next;
     });
-  }, [total]);
+  }, [isMobile, total]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -164,6 +180,10 @@ export function SkillStackPage() {
   }, [current, goTo]);
 
   function onWheel(event) {
+    if (isMobile) {
+      return;
+    }
+
     if (Math.abs(event.deltaY) < 20) {
       return;
     }
@@ -177,6 +197,10 @@ export function SkillStackPage() {
   }
 
   function onTouchEnd(event) {
+    if (isMobile) {
+      return;
+    }
+
     const delta = touchYRef.current - event.changedTouches[0].clientY;
 
     if (Math.abs(delta) > 30) {
@@ -207,7 +231,7 @@ export function SkillStackPage() {
           <div className="source-stack__viewport" ref={viewportRef}>
             <div
               className="source-stack__track"
-              style={{ transform: `translate3d(0, ${current * -100}%, 0)` }}
+              style={{ transform: isMobile ? "none" : `translate3d(0, ${current * -100}%, 0)` }}
             >
               {skillStack.map((section, sectionIndex) => (
                 <article className="source-stack__section" key={section.num}>
@@ -245,7 +269,7 @@ export function SkillStackPage() {
           <div className="source-stack__big-count" aria-hidden="true">
             <span className="source-stack__zero">0</span>
             <span className="source-stack__digit-window">
-              <span style={{ transform: `translate3d(0, ${current * -1}em, 0)` }}>
+              <span style={{ transform: `translate3d(0, ${(isMobile ? total - 1 : current) * -1}em, 0)` }}>
                 {skillStack.map((section) => (
                   <span key={section.num}>{section.num.slice(1)}</span>
                 ))}

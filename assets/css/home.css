@@ -121,11 +121,28 @@ body.home::after {
 
 @media (max-width: 768px) {
   .home-signature {
+    top: clamp(0.82rem, 3.2vw, 1.05rem);
     gap: 0.65rem;
   }
 
+  .home-signature__mark {
+    width: clamp(2.1rem, 8vw, 2.45rem);
+    height: clamp(2.85rem, 10vw, 3.15rem);
+    font-size: clamp(0.66rem, 2.4vw, 0.76rem);
+  }
+
+  .home-signature__text {
+    gap: 0.22rem;
+  }
+
   .home-signature strong {
+    font-size: clamp(1.08rem, 5.1vw, 1.45rem);
     letter-spacing: 0.22em;
+  }
+
+  .home-signature__text > span {
+    font-size: clamp(0.72rem, 3.1vw, 0.88rem);
+    line-height: 1;
   }
 
   .network-link {
