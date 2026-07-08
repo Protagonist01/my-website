@@ -865,9 +865,10 @@ export function useCinematicScroll(containerRef) {
       const railEntryOffsetVh = lerp(34, 0, railEntryProgress)
       const railReveal = smoothstep(0, 0.16, agentsProgress)
       const railTrainEnd = isMobileViewport ? 0.955 : 0.94
-      const trainProgress = clamp01((agentsProgress - 0.18) / (railTrainEnd - 0.18))
+      const dialSceneProgress = Math.min(agentsProgress, railTrainEnd)
+      const trainProgress = clamp01((dialSceneProgress - 0.18) / (railTrainEnd - 0.18))
       const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.08) : trainProgress
-      const exactAgent = agentsProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
+      const exactAgent = dialSceneProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
       const activeAgent = Math.round(exactAgent)
       const liftProgress = 0
       const agentRail = getAgentRailConfig(agentItems)
@@ -875,10 +876,10 @@ export function useCinematicScroll(containerRef) {
       const exitAgentLiftVh = liftProgress * 112
       const exitAgentLiftPx = liftProgress * window.innerHeight * 1.12
 
-      agentsSection?.style.setProperty('--agents-flow-x', `${((0.18 - 0.5) * 34 + agentsProgress * -18).toFixed(2)}px`)
-      agentsSection?.style.setProperty('--agents-flow-y', `${((0.58 - 0.5) * 28 + agentsProgress * 22).toFixed(2)}px`)
-      agentsSection?.style.setProperty('--agents-light-x', `${lerp(12, 92, clamp01(0.18 * 0.72 + agentsProgress * 0.28)).toFixed(2)}%`)
-      agentsSection?.style.setProperty('--agents-light-y', `${lerp(62, 42, clamp01(0.58 * 0.62 + agentsProgress * 0.18)).toFixed(2)}%`)
+      agentsSection?.style.setProperty('--agents-flow-x', `${((0.18 - 0.5) * 34 + dialSceneProgress * -18).toFixed(2)}px`)
+      agentsSection?.style.setProperty('--agents-flow-y', `${((0.58 - 0.5) * 28 + dialSceneProgress * 22).toFixed(2)}px`)
+      agentsSection?.style.setProperty('--agents-light-x', `${lerp(12, 92, clamp01(0.18 * 0.72 + dialSceneProgress * 0.28)).toFixed(2)}%`)
+      agentsSection?.style.setProperty('--agents-light-y', `${lerp(62, 42, clamp01(0.58 * 0.62 + dialSceneProgress * 0.18)).toFixed(2)}%`)
 
       if (agentsList) {
         syncAgentDialSlots(agentRail)
@@ -904,7 +905,7 @@ export function useCinematicScroll(containerRef) {
         const bottomBand = 1 - smoothstep(96, 124, y)
         const visibilityBand = topBand * bottomBand * point.arcVisibility
         const lightBand = visibilityBand
-        const nonFinalExitFade = index === lastAgentIndex ? 1 : 1 - smoothstep(0.955, 1.035, agentsProgress)
+        const nonFinalExitFade = index === lastAgentIndex ? 1 : 1 - smoothstep(0.955, 1.035, dialSceneProgress)
 
         const opacity = clampRange(
           (0.58 + lightFocus * 0.42 + visual.lightBias * 0.2) * visibilityBand * belowFade * passedOpacity * nonFinalExitFade * railReveal,
