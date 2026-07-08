@@ -475,10 +475,10 @@ button {
   height: clamp(2.35rem, 3.35vw, 4.3rem);
   margin: 0 clamp(0.12rem, 0.5vw, 0.36rem);
   overflow: hidden;
-  border: 1px solid rgba(232, 201, 122, 0.28);
+  border: 1px solid rgba(0, 0, 0, 0.92);
   background: #030303;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.86) inset,
     0 0.42rem 1rem rgba(0, 0, 0, 0.34);
   vertical-align: middle;
 }

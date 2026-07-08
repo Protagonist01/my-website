@@ -487,6 +487,23 @@ export function useCinematicScroll(containerRef) {
     let pointerInside = false
     let lastPointer = null
     let lastTrailFrameAt = 0
+    let agentRailLayoutKey = ''
+
+    const syncAgentDialSlots = (rail) => {
+      const layoutKey = [
+        Math.round(rail.viewportW),
+        Math.round(rail.viewportH),
+        Math.round(rail.pivotX),
+        Math.round(rail.pivotY),
+        Math.round(rail.radius),
+        rail.itemAngle.toFixed(5),
+        agentItems.length
+      ].join(':')
+
+      if (layoutKey === agentRailLayoutKey) return
+      agentRailLayoutKey = layoutKey
+      setAgentDialSlots(agentItems, rail)
+    }
 
     const clearFeaturedTimers = () => {
       if (titleTimer !== null) window.clearTimeout(titleTimer)
@@ -847,8 +864,10 @@ export function useCinematicScroll(containerRef) {
       const railEntryProgress = smoothstep(0, 0.18, agentsProgress)
       const railEntryOffsetVh = lerp(34, 0, railEntryProgress)
       const railReveal = smoothstep(0, 0.16, agentsProgress)
-      const trainProgress = clamp01((agentsProgress - 0.18) / (0.97 - 0.18))
-      const exactAgent = agentsProgress >= 0.97 ? lastAgentIndex : lerp(0, lastAgentIndex, trainProgress)
+      const railTrainEnd = isMobileViewport ? 1 : 0.97
+      const trainProgress = clamp01((agentsProgress - 0.18) / (railTrainEnd - 0.18))
+      const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.24) : trainProgress
+      const exactAgent = agentsProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
       const activeAgent = Math.round(exactAgent)
       const liftProgress = 0
       const agentRail = getAgentRailConfig(agentItems)
@@ -862,7 +881,7 @@ export function useCinematicScroll(containerRef) {
       agentsSection?.style.setProperty('--agents-light-y', `${lerp(62, 42, clamp01(0.58 * 0.62 + agentsProgress * 0.18)).toFixed(2)}%`)
 
       if (agentsList) {
-        setAgentDialSlots(agentItems, agentRail)
+        syncAgentDialSlots(agentRail)
         agentsList.style.setProperty('--agents-dial-origin-x', `${agentRail.pivotX.toFixed(2)}px`)
         agentsList.style.setProperty('--agents-dial-origin-y', `${agentRail.pivotY.toFixed(2)}px`)
         agentsList.style.transform = `translate3d(0, ${(railEntryOffsetVh - exitAgentLiftVh).toFixed(2)}vh, 0) rotate(${(dialRotation * 180 / Math.PI).toFixed(3)}deg)`
@@ -874,28 +893,33 @@ export function useCinematicScroll(containerRef) {
         const point = getAgentRailPoint(index * agentRail.itemAngle - exactAgent * agentRail.itemAngle, relative, agentRail)
         const y = point.y + railEntryOffsetVh - exitAgentLiftVh
         const aboveTravel = Math.max(0, -relative)
-        const postMidAmount = smoothstep(0.04, 2.6, aboveTravel)
+        const belowTravel = Math.max(0, relative)
         const midpointFocus = point.centerNeutral * (0.74 + point.nearAmount * 0.26)
+        const incomingFocus = belowTravel > 0 ? (1 - smoothstep(0.8, 3.6, belowTravel)) * 0.42 : 0
+        const passedFade = aboveTravel > 0 ? 1 - smoothstep(0.12, 1.65, aboveTravel) : 1
+        const passedOpacity = aboveTravel > 0 ? lerp(0.24, 1, passedFade) : 1
+        const lightFocus = clampRange(midpointFocus + incomingFocus, 0, 1)
         const topBand = smoothstep(-20, 4, y)
         const bottomBand = 1 - smoothstep(96, 124, y)
         const visibilityBand = topBand * bottomBand * point.arcVisibility
+        const lightBand = bottomBand * point.arcVisibility
         const nonFinalExitFade = index === lastAgentIndex ? 1 : 1 - smoothstep(0.955, 1.035, agentsProgress)
 
         const opacity = clampRange(
-          (0.82 + midpointFocus * 0.08 + postMidAmount * 0.1 + visual.lightBias) * visibilityBand * nonFinalExitFade * railReveal,
+          (0.7 + lightFocus * 0.26 + incomingFocus * 0.12 + visual.lightBias * 0.25) * visibilityBand * passedOpacity * nonFinalExitFade * railReveal,
           0,
           1
         )
-        const brightness = clampRange(0.78 + midpointFocus * 0.5 + postMidAmount * 0.82 + visual.lightBias, 0.72, 2.08)
-        const blur = clampRange(0.08 + smoothstep(0.35, 4.2, point.distance) * 0.98 - postMidAmount * 0.62 - midpointFocus * 0.62, 0, 2)
-        const glow = visibilityBand * (midpointFocus * 1.02 + postMidAmount * 0.82)
+        const brightness = clampRange(0.78 + lightFocus * 0.58 + incomingFocus * 0.14 + visual.lightBias * 0.32 - (1 - passedFade) * 0.34, 0.68, 1.5)
+        const blur = clampRange(0.08 + smoothstep(0.35, 4.2, point.distance) * 0.98 - lightFocus * 0.64, 0, 2)
+        const glow = lightBand * (midpointFocus * 1.08 + incomingFocus * 0.72) * passedOpacity
 
         item.style.opacity = opacity.toFixed(4)
         item.style.filter = isMobileViewport ? 'none' : `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
           ? `0 0 ${(16 + glow * 38).toFixed(2)}px rgba(255, 255, 255, ${(glow * 0.42).toFixed(3)})`
           : 'none'
-        item.style.zIndex = `${20 + Math.round(midpointFocus * 88) + Math.round(postMidAmount * 70)}`
+        item.style.zIndex = `${20 + Math.round(lightFocus * 92) + Math.round(passedFade * 18)}`
         item.style.color = 'rgb(255, 255, 255)'
       })
       const contentOpacity = railReveal * smoothstep(-0.78, 0.08, exactAgent)
@@ -974,18 +998,18 @@ export function useCinematicScroll(containerRef) {
       trigger: container,
       start: 'top top',
       end: () => `+=${Math.max(1, container.scrollHeight - window.innerHeight)}`,
-      scrub: window.innerWidth <= 760 ? 0.18 : 0.8,
+      scrub: 0.8,
       invalidateOnRefresh: true,
       onUpdate: (self) => applyProgress(self.progress)
     })
 
-    const onScroll = () => {
+    const onResize = () => {
+      agentRailLayoutKey = ''
       const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
       applyProgress(window.scrollY / max)
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onScroll)
+    window.addEventListener('resize', onResize)
 
     return () => {
       clearFeaturedTimers()
@@ -1002,8 +1026,7 @@ export function useCinematicScroll(containerRef) {
         featuredCanvas.removeEventListener('mouseleave', deactivateFeaturedLiquid)
         featuredCanvas.removeEventListener('pointercancel', deactivateFeaturedLiquid)
       }
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onScroll)
+      window.removeEventListener('resize', onResize)
       trigger.kill()
     }
   }, [containerRef])
