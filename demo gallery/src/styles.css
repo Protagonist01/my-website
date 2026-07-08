@@ -530,6 +530,11 @@ button {
   animation-delay: 8s;
 }
 
+.video-pill video:only-child {
+  opacity: 1;
+  animation: none;
+}
+
 @keyframes video-pill-cycle {
   0%,
   30% {

@@ -866,7 +866,7 @@ export function useCinematicScroll(containerRef) {
       const railReveal = smoothstep(0, 0.16, agentsProgress)
       const railTrainEnd = isMobileViewport ? 1 : 0.97
       const trainProgress = clamp01((agentsProgress - 0.18) / (railTrainEnd - 0.18))
-      const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.24) : trainProgress
+      const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.08) : trainProgress
       const exactAgent = agentsProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
       const activeAgent = Math.round(exactAgent)
       const liftProgress = 0
@@ -895,7 +895,8 @@ export function useCinematicScroll(containerRef) {
         const aboveTravel = Math.max(0, -relative)
         const belowTravel = Math.max(0, relative)
         const midpointFocus = point.centerNeutral * (0.74 + point.nearAmount * 0.26)
-        const belowFade = belowTravel > 0 ? lerp(0.16, 0.48, midpointFocus) : 1
+        const belowApproach = smoothstep(0.14, 0.86, midpointFocus)
+        const belowFade = belowTravel > 0 ? lerp(0.34, 0.96, belowApproach) : 1
         const passedFade = aboveTravel > 0 ? 1 - smoothstep(0.18, 4.4, aboveTravel) : 1
         const passedOpacity = aboveTravel > 0 ? lerp(0.22, 1, passedFade) : 1
         const lightFocus = Math.pow(midpointFocus, 0.72)
@@ -998,7 +999,7 @@ export function useCinematicScroll(containerRef) {
       trigger: container,
       start: 'top top',
       end: () => `+=${Math.max(1, container.scrollHeight - window.innerHeight)}`,
-      scrub: 0.8,
+      scrub: window.innerWidth <= 760 ? 0.22 : 0.8,
       invalidateOnRefresh: true,
       onUpdate: (self) => applyProgress(self.progress)
     })

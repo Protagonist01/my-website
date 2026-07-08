@@ -32,10 +32,10 @@ const MOBILE_LABEL_SCALE = 0.84;
 const IS_MOBILE_VIEWPORT = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 const NETWORK_BRIGHTNESS = IS_MOBILE_VIEWPORT ? MOBILE_BRIGHTNESS_MULTIPLIER : BRIGHTNESS_MULTIPLIER;
 const NETWORK_Y_SCALE = IS_MOBILE_VIEWPORT ? 1.24 : 0.86;
-const WHEEL_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 1.46 : 1;
-const DRAG_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 1.82 : 1;
-const SPIN_LERP = IS_MOBILE_VIEWPORT ? 0.2 : 0.14;
-const SPIN_FRICTION = IS_MOBILE_VIEWPORT ? 0.972 : 0.965;
+const WHEEL_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 2.2 : 1;
+const DRAG_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 2.62 : 1;
+const SPIN_LERP = IS_MOBILE_VIEWPORT ? 0.34 : 0.14;
+const SPIN_FRICTION = IS_MOBILE_VIEWPORT ? 0.94 : 0.965;
 const ACTIVE_NODE_COUNT = IS_MOBILE_VIEWPORT ? 15 : NODE_COUNT;
 const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
@@ -376,13 +376,13 @@ function handleWheelRotation(event) {
     return;
   }
 
-  const inputStrength = clamp(gestureLength * 0.00015 * WHEEL_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.052 : 0.038);
-  const pitchInput = (-scrollY / gestureLength) * inputStrength;
+  const inputStrength = clamp(gestureLength * 0.00015 * WHEEL_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.074 : 0.038);
+  const pitchInput = ((IS_MOBILE_VIEWPORT ? scrollY : -scrollY) / gestureLength) * inputStrength;
   const yawInput = (scrollX / gestureLength) * inputStrength;
   const nextVelocity = clampVectorLength(
     targetSpinVelocityX + pitchInput,
     targetSpinVelocityY + yawInput,
-    IS_MOBILE_VIEWPORT ? 0.072 : 0.055
+    IS_MOBILE_VIEWPORT ? 0.092 : 0.055
   );
 
   targetSpinVelocityX = nextVelocity.x;
@@ -396,13 +396,13 @@ function pushRotation(deltaX, deltaY, strengthMultiplier = 1) {
     return;
   }
 
-  const inputStrength = clamp(gestureLength * 0.00018 * strengthMultiplier * DRAG_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.066 : 0.046);
-  const pitchInput = (-deltaY / gestureLength) * inputStrength;
+  const inputStrength = clamp(gestureLength * 0.00018 * strengthMultiplier * DRAG_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.084 : 0.046);
+  const pitchInput = ((IS_MOBILE_VIEWPORT ? deltaY : -deltaY) / gestureLength) * inputStrength;
   const yawInput = (deltaX / gestureLength) * inputStrength;
   const nextVelocity = clampVectorLength(
     targetSpinVelocityX + pitchInput,
     targetSpinVelocityY + yawInput,
-    IS_MOBILE_VIEWPORT ? 0.08 : 0.06
+    IS_MOBILE_VIEWPORT ? 0.1 : 0.06
   );
 
   targetSpinVelocityX = nextVelocity.x;
@@ -443,7 +443,7 @@ function handleTouchMove(event) {
     event.preventDefault();
   }
 
-  pushRotation(-deltaX, -deltaY, 1.35);
+  pushRotation(deltaX, deltaY, 1.45);
 }
 
 function handleTouchEnd(event) {

@@ -11,7 +11,7 @@ export function HeroScene() {
   const videoRefs = useRef([])
   const [isActive, setIsActive] = useState(false)
   const [isMobile, setIsMobile] = useState(() => window.matchMedia('(max-width: 768px)').matches)
-  const visibleVideos = useMemo(() => (isMobile ? projectVideos.slice(0, 1) : projectVideos), [isMobile])
+  const visibleVideos = useMemo(() => (isMobile ? [projectVideos[2]] : projectVideos), [isMobile])
 
   useEffect(() => {
     const media = window.matchMedia('(max-width: 768px)')

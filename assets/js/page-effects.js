@@ -176,6 +176,16 @@ function initWorksScrollStages() {
     let animationFrame = 0;
     let clearDragTimer = 0;
 
+    function getInteractionConfig(pointerType = "") {
+      const isMobile = window.innerWidth <= 768 || pointerType === "touch" || pointerType === "pen";
+
+      return {
+        dragGain: isMobile ? 2.55 : 1,
+        wheelGain: isMobile ? 0.48 : 0.084,
+        ease: isMobile ? 0.14 : 0.041
+      };
+    }
+
     function shouldIgnoreGestureTarget(target) {
       const element = target instanceof Element ? target : null;
 
@@ -206,7 +216,7 @@ function initWorksScrollStages() {
         return;
       }
 
-      progress += delta * 0.041;
+      progress += delta * getInteractionConfig().ease;
       sync();
       animationFrame = requestAnimationFrame(animate);
     }
@@ -254,8 +264,9 @@ function initWorksScrollStages() {
       }
 
       const unit = event.deltaMode === 1 ? 18 : event.deltaMode === 2 ? window.innerHeight : 1;
+      const { wheelGain } = getInteractionConfig();
       event.preventDefault();
-      shiftBy(dominantDelta * unit * 0.084);
+      shiftBy(dominantDelta * unit * wheelGain);
     }
 
     window.addEventListener("wheel", handleWheel, { passive: false, capture: true });
@@ -303,7 +314,8 @@ function initWorksScrollStages() {
       }
 
       const delta = dominantDelta;
-      targetProgress = clamp(startProgress - (delta / travel));
+      const { dragGain } = getInteractionConfig(event.pointerType);
+      targetProgress = clamp(startProgress - ((delta * dragGain) / travel));
       progress = targetProgress;
       sync();
     }

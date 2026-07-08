@@ -141,21 +141,16 @@ function getVideoWeights(count, exact, isSharp = false) {
   return weights
 }
 
-function getMobileVideoExact(progress, count) {
+function getMobileVideoStepTarget(progress, count) {
   if (count <= 1) return 0
 
-  const holdProgress = 0.22
-  const exitStart = 0.88
-  const timelineProgress = clamp01((progress - holdProgress) / (exitStart - holdProgress))
   const maxIndex = count - 1
-  const rawExact = timelineProgress * maxIndex
-  const baseIndex = clampRange(Math.floor(rawExact), 0, maxIndex)
+  const firstStepAt = 0.34
+  const stepSpan = 0.24
 
-  if (baseIndex >= maxIndex) return maxIndex
+  if (progress < firstStepAt) return 0
 
-  const localProgress = rawExact - baseIndex
-  const steadyBlend = smoothstep(0.18, 0.72, localProgress)
-  return baseIndex + steadyBlend
+  return clampRange(Math.floor((progress - firstStepAt) / stepSpan) + 1, 0, maxIndex)
 }
 
 function getAgentRailConfig(agentItems) {
@@ -538,6 +533,70 @@ export function useCinematicScroll(containerRef) {
     let lastTrailFrameAt = 0
     let agentRailLayoutKey = ''
     let scrollIdleTimer = null
+    let mobileVideoExact = 0
+    let mobileVideoTarget = 0
+    let mobileVideoFrame = null
+    let mobileVideoLastAt = 0
+    let latestVideoRenderState = null
+
+    const renderVideoLayers = ({ exactVideo, videoOpacity, videoEnter, videoExit, isMobileViewport }) => {
+      const videoWeights = getVideoWeights(videoPanels.length, exactVideo, isMobileViewport)
+      const displayedExactVideo = videoWeights.reduce((sum, weight, index) => sum + weight * index, 0)
+
+      videoPanels.forEach((panel, index) => {
+        const weight = videoWeights[index] || 0
+        const relative = index - displayedExactVideo
+        const slideY = clampRange(relative * 100, -112, 112)
+        panel.style.opacity = weight.toFixed(4)
+        panel.style.transform = `translate3d(0, ${slideY.toFixed(2)}%, 0)`
+      })
+
+      videoCopies.forEach((copy, index) => {
+        const weight = videoWeights[index] || 0
+        const side = index % 2 === 0 ? 1 : -1
+        copy.style.opacity = (weight * videoOpacity).toFixed(4)
+        copy.style.transform = `translate3d(${((1 - weight) * side * (isMobileViewport ? 18 : 54)).toFixed(2)}px, ${((1 - videoEnter) * (isMobileViewport ? 14 : 30) - videoExit * (isMobileViewport ? 8 : 16)).toFixed(2)}px, 0)`
+        copy.style.filter = isMobileViewport ? 'none' : `blur(${((1 - weight) * 8).toFixed(2)}px)`
+      })
+    }
+
+    const animateMobileVideoExact = (timestamp) => {
+      mobileVideoFrame = null
+
+      if (!latestVideoRenderState) return
+
+      if (!mobileVideoLastAt) {
+        mobileVideoLastAt = timestamp
+      }
+
+      const elapsed = Math.min(64, timestamp - mobileVideoLastAt)
+      mobileVideoLastAt = timestamp
+      const distance = mobileVideoTarget - mobileVideoExact
+      const speedPerSecond = 1.72
+      const maxStep = speedPerSecond * (elapsed / 1000)
+
+      if (Math.abs(distance) <= maxStep) {
+        mobileVideoExact = mobileVideoTarget
+      } else {
+        mobileVideoExact += Math.sign(distance) * maxStep
+      }
+
+      renderVideoLayers({
+        ...latestVideoRenderState,
+        exactVideo: mobileVideoExact
+      })
+
+      if (Math.abs(mobileVideoTarget - mobileVideoExact) > 0.001) {
+        mobileVideoFrame = window.requestAnimationFrame(animateMobileVideoExact)
+      } else {
+        mobileVideoLastAt = 0
+      }
+    }
+
+    const requestMobileVideoExact = () => {
+      if (mobileVideoFrame !== null) return
+      mobileVideoFrame = window.requestAnimationFrame(animateMobileVideoExact)
+    }
 
     const syncAgentDialSlots = (rail) => {
       const layoutKey = [
@@ -822,11 +881,7 @@ export function useCinematicScroll(containerRef) {
       const videoScaleY = isMobileViewport ? lerp(0.72, 1, videoEnter) : lerp(0.18, 1, videoEnter)
       const videoLift = lerp(isMobileViewport ? 10 : 22, 0, videoEnter) - videoExit * (isMobileViewport ? 12 : 24)
       const videoOpacity = videoEnter * (1 - videoExit)
-      const exactVideo = isMobileViewport
-        ? getMobileVideoExact(videoProgress, videoPanels.length)
-        : clamp01((videoProgress - 0.08) / 0.7) * Math.max(0, videoPanels.length - 1)
-      const videoWeights = getVideoWeights(videoPanels.length, exactVideo, isMobileViewport)
-      const displayedExactVideo = videoWeights.reduce((sum, weight, index) => sum + weight * index, 0)
+      const exactVideo = clamp01((videoProgress - 0.08) / 0.7) * Math.max(0, videoPanels.length - 1)
 
       if (videoFrame) {
         videoFrame.style.opacity = videoOpacity.toFixed(4)
@@ -835,21 +890,27 @@ export function useCinematicScroll(containerRef) {
         videoFrame.style.borderRadius = `${lerp(4, 18, videoEnter).toFixed(2)}px`
       }
 
-      videoPanels.forEach((panel, index) => {
-        const weight = videoWeights[index] || 0
-        const relative = index - displayedExactVideo
-        const slideY = clampRange(relative * 100, -112, 112)
-        panel.style.opacity = weight.toFixed(4)
-        panel.style.transform = `translate3d(0, ${slideY.toFixed(2)}%, 0)`
-      })
+      if (isMobileViewport) {
+        latestVideoRenderState = { videoOpacity, videoEnter, videoExit, isMobileViewport }
+        mobileVideoTarget = getMobileVideoStepTarget(videoProgress, videoPanels.length)
 
-      videoCopies.forEach((copy, index) => {
-        const weight = videoWeights[index] || 0
-        const side = index % 2 === 0 ? 1 : -1
-        copy.style.opacity = (weight * videoOpacity).toFixed(4)
-        copy.style.transform = `translate3d(${((1 - weight) * side * (isMobileViewport ? 18 : 54)).toFixed(2)}px, ${((1 - videoEnter) * (isMobileViewport ? 14 : 30) - videoExit * (isMobileViewport ? 8 : 16)).toFixed(2)}px, 0)`
-        copy.style.filter = isMobileViewport ? 'none' : `blur(${((1 - weight) * 8).toFixed(2)}px)`
-      })
+        if (videoProgress < 0.04) {
+          mobileVideoExact = 0
+          mobileVideoTarget = 0
+          mobileVideoLastAt = 0
+        }
+
+        renderVideoLayers({
+          ...latestVideoRenderState,
+          exactVideo: mobileVideoExact
+        })
+        requestMobileVideoExact()
+      } else {
+        latestVideoRenderState = null
+        mobileVideoExact = exactVideo
+        mobileVideoTarget = exactVideo
+        renderVideoLayers({ exactVideo, videoOpacity, videoEnter, videoExit, isMobileViewport })
+      }
 
       const headlineInStart = 0.045
       const headlineInEnd = 0.18
@@ -1095,7 +1156,7 @@ export function useCinematicScroll(containerRef) {
       trigger: container,
       start: 'top top',
       end: () => `+=${Math.max(1, container.scrollHeight - window.innerHeight)}`,
-      scrub: window.innerWidth <= 760 ? 0.38 : 1.25,
+      scrub: window.innerWidth <= 760 ? true : 1.25,
       invalidateOnRefresh: true,
       onUpdate: (self) => applyProgress(self.progress)
     })
@@ -1128,6 +1189,7 @@ export function useCinematicScroll(containerRef) {
       document.body.classList.remove('audit-reveal-active')
       if (foldFrame !== null) window.cancelAnimationFrame(foldFrame)
       if (trailFrame !== null) window.cancelAnimationFrame(trailFrame)
+      if (mobileVideoFrame !== null) window.cancelAnimationFrame(mobileVideoFrame)
       if (featuredCanvas) {
         featuredCanvas.removeEventListener('pointerenter', activateFeaturedLiquid)
         featuredCanvas.removeEventListener('mouseenter', activateFeaturedLiquid)
