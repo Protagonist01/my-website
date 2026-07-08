@@ -1,4 +1,5 @@
 import { pageData, primaryNav, routes } from "./page-data.js";
+import { showFormCelebration } from "../../src/utils/formCelebration.js";
 
 const FORMSPREE_ENDPOINTS = {
   contact: "https://formspree.io/f/mqevwkpl",
@@ -178,7 +179,7 @@ function initContactModal(scope = document) {
 
       form.reset();
       close();
-      window.alert("Thanks. Your brief has been sent.");
+      showFormCelebration("Message launched. Tiny confetti committee says: excellent brief.");
     } catch (error) {
       window.alert("Sorry, the form could not be sent. Please try again.");
     } finally {
@@ -241,7 +242,7 @@ function initReviewModal(scope = document) {
 
       form.reset();
       close();
-      window.alert("Thanks. Your review has been sent.");
+      showFormCelebration("Review received. The praise vault just got a little shinier.");
     } catch (error) {
       window.alert("Sorry, the review could not be sent. Please try again.");
     } finally {
@@ -730,7 +731,7 @@ function renderTestimonialPage(rootPath, page) {
     <div class="testimonial-shell">
       <header class="testimonial-chrome">
         ${renderWordmark(homeHref, "testimonial-brand")}
-        <span class="page-title-label testimonial-page-label">${page.navLabel ?? "TESTIMONIAL"}</span>
+        <span class="page-title-label testimonial-page-label">${page.navLabel ?? "Testimonials"}</span>
         <nav class="testimonial-actions" aria-label="Testimonial page actions">
           <button class="header-action header-action--primary" type="button" data-contact-open>Contact Me</button>
         </nav>

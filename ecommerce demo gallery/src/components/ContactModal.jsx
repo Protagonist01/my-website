@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
+import { showFormCelebration } from '../../../src/utils/formCelebration.js'
 
 const formspreeEndpoints = {
   contact: 'https://formspree.io/f/mqevwkpl',
@@ -116,8 +117,10 @@ export function ContactModal({ open, onClose, mode = 'contact' }) {
 
       formElement.reset()
       setStatus('sent')
+      showFormCelebration(mode === 'audit'
+        ? 'Audit request received. The checklist is already doing warmups.'
+        : 'Message launched. Tiny confetti committee says: excellent brief.')
       onClose()
-      window.alert(mode === 'audit' ? 'Thanks. Your audit request has been sent.' : 'Thanks. Your brief has been sent.')
     } catch (error) {
       setStatus('error')
       window.alert('Sorry, the form could not be sent. Please try again.')

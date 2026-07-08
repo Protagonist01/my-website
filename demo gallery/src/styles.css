@@ -243,7 +243,7 @@ button {
   font-size: clamp(1rem, 1.04vw, 1.14rem);
   font-weight: 900;
   letter-spacing: 0.22em;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
 }
 
@@ -269,7 +269,7 @@ button {
   font-size: clamp(1.02rem, 1.05vw, 1.16rem);
   font-weight: 900;
   letter-spacing: 0.18em;
-  text-transform: uppercase;
+  text-transform: none;
   cursor: pointer;
 }
 

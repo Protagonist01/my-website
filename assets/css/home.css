@@ -89,7 +89,7 @@ body.home::after {
   padding: 0.12rem 0.2rem;
   color: var(--color-white);
   text-decoration: none;
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
   transform: translate3d(-50%, -50%, 0);
   transform-origin: center;

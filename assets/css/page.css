@@ -79,7 +79,7 @@ body[data-page="about"] {
 
 .source-about__nav-link,
 .source-stack__tag {
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .source-page__identity,
@@ -447,7 +447,7 @@ body[data-page="about"] {
 .page-title-label {
   justify-self: center;
   color: var(--color-title-muted);
-  text-transform: uppercase;
+  text-transform: none;
   white-space: nowrap;
 }
 

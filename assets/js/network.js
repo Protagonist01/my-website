@@ -12,13 +12,13 @@ const PALETTE = {
 };
 
 const LABELS = [
-  { label: "CONTACT", href: "contact/index.html", kind: "primary" },
-  { label: "ABOUT", href: "about/index.html", kind: "primary" },
-  { label: "WORKS", href: "works/index.html", kind: "primary" },
-  { label: "PROJECTS", href: "demo gallery/index.html", kind: "primary" },
-  { label: "E-COMMERCE", href: "ecommerce demo gallery/index.html", kind: "primary" },
-  { label: "SKILL STACK", href: "my-stack/index.html", kind: "primary" },
-  { label: "TESTIMONIAL", href: "testimonial/index.html", kind: "primary" },
+  { label: "Contact", href: "contact/index.html", kind: "primary" },
+  { label: "About", href: "about/index.html", kind: "primary" },
+  { label: "Work", href: "works/index.html", kind: "primary" },
+  { label: "Projects", href: "demo gallery/index.html", kind: "primary" },
+  { label: "E-commerce", href: "ecommerce demo gallery/index.html", kind: "primary" },
+  { label: "Skills", href: "my-stack/index.html", kind: "primary" },
+  { label: "Testimonials", href: "testimonial/index.html", kind: "primary" },
 ];
 
 const NODE_COUNT = 23;

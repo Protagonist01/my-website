@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { showFormCelebration } from '../../../src/utils/formCelebration.js'
 
 const contactFormEndpoint = 'https://formspree.io/f/mqevwkpl'
 
@@ -26,8 +27,8 @@ export function ContactModal({ open, onClose }) {
 
       formElement.reset()
       setStatus('sent')
+      showFormCelebration('Message launched. Tiny confetti committee says: excellent brief.')
       onClose()
-      window.alert('Thanks. Your brief has been sent.')
     } catch (error) {
       setStatus('error')
       window.alert('Sorry, the form could not be sent. Please try again.')

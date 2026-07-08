@@ -14,18 +14,18 @@ export const routes = {
 };
 
 export const primaryNav = [
-  { key: "contact", label: "CONTACT" },
-  { key: "about", label: "ABOUT" },
-  { key: "works", label: "WORKS" },
-  { key: "demos", label: "DEMO GALLERY" },
-  { key: "e-commerce", label: "E-COMMERCE" },
-  { key: "my-stack", label: "SKILL STACK" },
-  { key: "testimonial", label: "TESTIMONIAL" },
+  { key: "contact", label: "Contact" },
+  { key: "about", label: "About" },
+  { key: "works", label: "Work" },
+  { key: "demos", label: "Projects" },
+  { key: "e-commerce", label: "E-commerce" },
+  { key: "my-stack", label: "Skills" },
+  { key: "testimonial", label: "Testimonials" },
 ];
 
 export const corePages = {
   about: {
-    navLabel: "ABOUT",
+    navLabel: "About",
     eyebrow: "Studio profile / systems practice",
     title: "I build lucid digital systems with an editorial pulse.",
     lead: [
@@ -82,14 +82,14 @@ export const corePages = {
     cta: {
       title: "Follow the system into the work.",
       copy: "The fastest path is through the category pages, where the methods become concrete.",
-      primary: { label: "Open Works", route: "works" },
+      primary: { label: "View Work", route: "works" },
       secondary: { label: "Start Contact", route: "contact" },
     },
     related: ["works", "my-stack", "testimonial"],
     footerNote: "Lagos-based / remote-friendly",
   },
   contact: {
-    navLabel: "CONTACT",
+    navLabel: "Contact",
     eyebrow: "Availability / collaboration",
     title: "Bring a hard product problem and we can shape the route together.",
     lead: [
@@ -157,14 +157,14 @@ export const corePages = {
     cta: {
       title: "Prefer to inspect the work first?",
       copy: "That path usually gives faster context than a long introductory email.",
-      primary: { label: "Open Works", route: "works" },
-      secondary: { label: "Back to Network", route: "home" },
+      primary: { label: "View Work", route: "works" },
+      secondary: { label: "Back to Home", route: "home" },
     },
     related: ["works", "about", "my-stack"],
     footerNote: "Open to selected collaborations",
   },
   "my-stack": {
-    navLabel: "SKILL STACK",
+    navLabel: "Skills",
     eyebrow: "Technical stack / delivery layer",
     title: "A small stack for clear AI products, automations, and working proof.",
     lead: [
@@ -221,14 +221,14 @@ export const corePages = {
     cta: {
       title: "See how the stack turns into finished work.",
       copy: "The category pages show where each part of the stack becomes visible to users or operators.",
-      primary: { label: "Open Works", route: "works" },
-      secondary: { label: "Open Contact", route: "contact" },
+      primary: { label: "View Work", route: "works" },
+      secondary: { label: "Contact", route: "contact" },
     },
     related: ["works", "contact", "about"],
     footerNote: "Tooling chosen for clarity and pace",
   },
   testimonial: {
-    navLabel: "TESTIMONIAL",
+    navLabel: "Testimonials",
     eyebrow: "Client voice / trust signals",
     boardTitle: "Five short reviews from AI, automation, and product builds.",
     rating: "5.0",
@@ -325,8 +325,8 @@ export const corePages = {
     cta: {
       title: "Want to see the work behind the praise?",
       copy: "The works pages show the systems these future testimonials can point back to.",
-      primary: { label: "Open Works", route: "works" },
-      secondary: { label: "Open Contact", route: "contact" },
+      primary: { label: "View Work", route: "works" },
+      secondary: { label: "Contact", route: "contact" },
     },
     related: ["works", "my-stack", "contact"],
     footerNote: "Testimonials ready for real client language",
@@ -389,8 +389,8 @@ export const corePages = {
     cta: {
       title: "See the experience translated into deliverables.",
       copy: "The works pages are where the operating logic becomes visible and specific.",
-      primary: { label: "Open Works", route: "works" },
-      secondary: { label: "Open Contact", route: "contact" },
+      primary: { label: "View Work", route: "works" },
+      secondary: { label: "Contact", route: "contact" },
     },
     related: ["works", "contact", "about"],
     footerNote: "Experience expressed as delivery judgment",

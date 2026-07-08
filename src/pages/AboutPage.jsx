@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useReactPageReady } from "./useReactPageReady.js";
+import { showFormCelebration } from "../utils/formCelebration.js";
 
 const rootPath = document.body.dataset.root || ".";
 const homeHref = `${rootPath}/index.html`.replace(/\/{2,}/g, "/");
@@ -29,8 +30,8 @@ function ContactFormModal({ open, onClose }) {
 
       formElement.reset();
       setStatus("sent");
+      showFormCelebration("Message launched. Tiny confetti committee says: excellent brief.");
       onClose();
-      window.alert("Thanks. Your brief has been sent.");
     } catch (error) {
       setStatus("error");
       window.alert("Sorry, the form could not be sent. Please try again.");
@@ -60,7 +61,7 @@ function ContactFormModal({ open, onClose }) {
 
 export function AboutPage() {
   const [contactOpen, setContactOpen] = useState(false);
-  useReactPageReady("ABOUT | Henry Fadeni");
+  useReactPageReady("About | Henry Fadeni");
 
   return (
     <div className="source-about">
@@ -69,7 +70,7 @@ export function AboutPage() {
           <span className="portfolio-wordmark__mark" aria-hidden="true">HF</span>
           <span className="portfolio-wordmark__name">Henry Fadeni</span>
         </a>
-        <span className="source-about__nav-link">ABOUT</span>
+        <span className="source-about__nav-link">About</span>
         <div className="source-page__actions">
           <button className="header-action header-action--primary" type="button" onClick={() => setContactOpen(true)}>Contact Me</button>
         </div>

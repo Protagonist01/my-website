@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { skillStack } from "../data/skillStack.js";
 import { useReactPageReady } from "./useReactPageReady.js";
+import { showFormCelebration } from "../utils/formCelebration.js";
 
 const rootPath = document.body.dataset.root || ".";
 const homeHref = `${rootPath}/index.html`.replace(/\/{2,}/g, "/");
@@ -30,8 +31,8 @@ function ContactFormModal({ open, onClose }) {
 
       formElement.reset();
       setStatus("sent");
+      showFormCelebration("Message launched. Tiny confetti committee says: excellent brief.");
       onClose();
-      window.alert("Thanks. Your brief has been sent.");
     } catch (error) {
       setStatus("error");
       window.alert("Sorry, the form could not be sent. Please try again.");
@@ -69,7 +70,7 @@ export function SkillStackPage() {
   const viewportRef = useRef(null);
   const total = skillStack.length;
 
-  useReactPageReady("SKILL STACK | Henry Fadeni");
+  useReactPageReady("Skills | Henry Fadeni");
 
   useLayoutEffect(() => {
     const viewport = viewportRef.current;
@@ -196,7 +197,7 @@ export function SkillStackPage() {
           <span className="portfolio-wordmark__mark" aria-hidden="true">HF</span>
           <span className="portfolio-wordmark__name">Henry Fadeni</span>
         </a>
-        <div className="source-stack__tag">SKILL STACK</div>
+        <div className="source-stack__tag">Skills</div>
         <div className="source-page__actions">
           <button className="header-action header-action--primary" type="button" onClick={() => setContactOpen(true)}>Contact Me</button>
         </div>

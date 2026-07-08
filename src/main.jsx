@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { createRoot } from "react-dom/client";
 import { renderPage } from "../assets/js/page-render.js";
+import { installGlobalHaptics } from "./utils/haptics.js";
 import {
   splitHeadline,
   initReveals,
@@ -13,6 +14,8 @@ import {
 } from "../assets/js/page-effects.js";
 import { AboutPage } from "./pages/AboutPage.jsx";
 import { SkillStackPage } from "./pages/SkillStackPage.jsx";
+
+installGlobalHaptics();
 
 function HomeApp() {
   useEffect(() => {

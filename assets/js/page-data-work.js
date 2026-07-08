@@ -1,7 +1,7 @@
 export const workPages = {
   works: {
-    navLabel: "WORKS",
-    stageTitle: "CLIENT WORKS",
+    navLabel: "Work",
+    stageTitle: "Client Work",
     eyebrow: "Selected client work / case studies",
     title: "Client systems shaped around measurable operations, usable interfaces, and safe public proof.",
     lead: [
@@ -110,7 +110,7 @@ export const workPages = {
     footerNote: "Client case studies with NDA-safe public proof",
   },
   "ai-agents": {
-    navLabel: "AI AGENTS",
+    navLabel: "AI Agents",
     eyebrow: "Works / AI agents",
     title: "Agent systems need more than prompts. They need trust, tools, state, and visible behavior.",
     lead: [
@@ -168,13 +168,13 @@ export const workPages = {
       title: "See the workflow side of the same system.",
       copy: "Many agent products become truly valuable only when paired with automated operational flows.",
       primary: { label: "Open AI Workflows", route: "ai-workflows" },
-      secondary: { label: "Back to Works", route: "works" },
+      secondary: { label: "Back to Work", route: "works" },
     },
     related: ["ai-workflows", "fullstack", "works"],
     footerNote: "Agent showcases ready for real deployment stories",
   },
   "ai-workflows": {
-    navLabel: "AI WORKFLOWS",
+    navLabel: "AI Workflows",
     eyebrow: "Works / AI workflows",
     title: "The quiet power move is often a workflow that removes five invisible chores from every week.",
     lead: [
@@ -232,13 +232,13 @@ export const workPages = {
       title: "Want to see the product-facing side too?",
       copy: "Workflow leverage is strongest when it pairs with a front end that makes the results legible.",
       primary: { label: "Open Fullstack", route: "fullstack" },
-      secondary: { label: "Back to Works", route: "works" },
+      secondary: { label: "Back to Work", route: "works" },
     },
     related: ["fullstack", "ai-agents", "works"],
     footerNote: "Workflow pages ready for real automation diagrams",
   },
   fullstack: {
-    navLabel: "FULLSTACK",
+    navLabel: "Full-stack",
     eyebrow: "Works / full-stack",
     title: "Full-stack work should feel coherent from the first pixel to the last integration.",
     lead: [
@@ -295,7 +295,7 @@ export const workPages = {
     cta: {
       title: "See the rest of the network.",
       copy: "The strongest builds here often borrow methods from both agent systems and workflow design.",
-      primary: { label: "Back to Works", route: "works" },
+      primary: { label: "Back to Work", route: "works" },
       secondary: { label: "Open AI Agents", route: "ai-agents" },
     },
     related: ["works", "ai-agents", "ai-workflows"],
