@@ -869,10 +869,12 @@ export function useCinematicScroll(containerRef) {
       const trainProgress = clamp01((dialSceneProgress - 0.18) / (railTrainEnd - 0.18))
       const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.08) : trainProgress
       const exactAgent = dialSceneProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
-      const activeAgent = Math.round(exactAgent)
+      const roundedAgent = Math.round(exactAgent)
+      const activeAgent = roundedAgent === lastAgentIndex && exactAgent < lastAgentIndex - 0.02
+        ? Math.max(0, lastAgentIndex - 1)
+        : roundedAgent
       const liftProgress = 0
       const agentRail = getAgentRailConfig(agentItems)
-      const dialRotation = -exactAgent * agentRail.itemAngle
       const exitAgentLiftVh = liftProgress * 112
       const exitAgentLiftPx = liftProgress * window.innerHeight * 1.12
 
@@ -883,9 +885,7 @@ export function useCinematicScroll(containerRef) {
 
       if (agentsList) {
         syncAgentDialSlots(agentRail)
-        agentsList.style.setProperty('--agents-dial-origin-x', `${agentRail.pivotX.toFixed(2)}px`)
-        agentsList.style.setProperty('--agents-dial-origin-y', `${agentRail.pivotY.toFixed(2)}px`)
-        agentsList.style.transform = `translate3d(0, ${(railEntryOffsetVh - exitAgentLiftVh).toFixed(2)}vh, 0) rotate(${(dialRotation * 180 / Math.PI).toFixed(3)}deg)`
+        agentsList.style.transform = 'translate3d(0, 0, 0)'
       }
 
       agentItems.forEach((item, index) => {
@@ -916,6 +916,9 @@ export function useCinematicScroll(containerRef) {
         const blur = clampRange(0.08 + smoothstep(0.35, 4.2, point.distance) * 0.98 - lightFocus * 0.72, 0, 2)
         const glow = lightBand * Math.pow(midpointFocus, 0.62) * passedOpacity
 
+        item.style.left = `${point.x.toFixed(2)}vw`
+        item.style.top = `${y.toFixed(2)}vh`
+        item.style.transform = `translate3d(0, -50%, 0) rotate(${point.rotation.toFixed(2)}deg)`
         item.style.opacity = opacity.toFixed(4)
         item.style.filter = isMobileViewport ? `brightness(${brightness.toFixed(3)})` : `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
         item.style.textShadow = glow > 0.05
