@@ -35,6 +35,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -72,6 +73,21 @@ a,
 input,
 textarea {
   font: inherit;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+a:active,
+a:focus,
+button:active,
+button:focus,
+[role="button"]:active,
+[role="button"]:focus {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+::selection {
+  background: rgba(201, 168, 76, 0.24);
+  color: rgb(255, 255, 255);
 }
 
 button {
@@ -3419,13 +3435,15 @@ body.scroll-active .side-index {
 }
 
 .commerce-demo-card:hover .auto-card-media img:first-child,
-.commerce-demo-card:focus-within .auto-card-media img:first-child {
+.commerce-demo-card:focus-within .auto-card-media img:first-child,
+.commerce-demo-card.is-touch-active .auto-card-media img:first-child {
   opacity: 0;
   transform: scale(1.035);
 }
 
 .commerce-demo-card:hover .auto-card-media img:last-child,
-.commerce-demo-card:focus-within .auto-card-media img:last-child {
+.commerce-demo-card:focus-within .auto-card-media img:last-child,
+.commerce-demo-card.is-touch-active .auto-card-media img:last-child {
   opacity: 1;
   transform: scale(1);
   filter: saturate(1) contrast(1) brightness(1);
@@ -6781,18 +6799,18 @@ body,
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
-    gap: clamp(0.45rem, 2.4vw, 0.65rem);
+    gap: clamp(0.32rem, 2vw, 0.52rem);
   }
 
   .shopify-demo-page .demo-primary,
   .shopify-demo-page .demo-secondary {
     flex: 1 1 0;
     min-width: 0;
-    max-width: 10.8rem;
-    min-height: 2.75rem;
-    padding: 0.74rem 0.58rem;
-    font-size: clamp(0.58rem, 2.45vw, 0.72rem);
-    letter-spacing: 0.06em;
+    max-width: 9.35rem;
+    min-height: 2.35rem;
+    padding: 0.58rem 0.4rem;
+    font-size: clamp(0.5rem, 2.15vw, 0.62rem);
+    letter-spacing: 0.045em;
     line-height: 1.05;
     white-space: normal;
   }

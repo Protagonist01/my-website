@@ -176,6 +176,8 @@ function VideoShowcase() {
 const autoKinds = ['flow', 'trigger', 'dashboard', 'runner', 'flow', 'trigger', 'dashboard']
 
 function Steps({ onOpenDemo }) {
+  const [activeOfferCard, setActiveOfferCard] = useState(null)
+
   return (
     <section
       id="automations-section"
@@ -192,11 +194,23 @@ function Steps({ onOpenDemo }) {
           {demoSteps.map((step, index) => (
             <figure
               key={step.id}
-              className={`auto-card ${autoKinds[index]} commerce-demo-card`}
+              className={`auto-card ${autoKinds[index]} commerce-demo-card ${activeOfferCard === index ? 'is-touch-active' : ''}`}
               data-auto-card={index}
               onClick={() => {
+                if (window.matchMedia?.('(hover: none), (pointer: coarse)').matches && activeOfferCard !== index) {
+                  setActiveOfferCard(index)
+                  return
+                }
+
                 onOpenDemo(step.id)
               }}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault()
+                  onOpenDemo(step.id)
+                }
+              }}
+              tabIndex={0}
               style={{ cursor: 'pointer' }}
             >
               <div className="auto-card-media" aria-hidden="true">

@@ -31,7 +31,11 @@ const ACTIVE_LABEL_SCALE = 1.1;
 const MOBILE_LABEL_SCALE = 0.84;
 const IS_MOBILE_VIEWPORT = window.matchMedia("(max-width: 768px), (pointer: coarse)").matches;
 const NETWORK_BRIGHTNESS = IS_MOBILE_VIEWPORT ? MOBILE_BRIGHTNESS_MULTIPLIER : BRIGHTNESS_MULTIPLIER;
-const NETWORK_Y_SCALE = IS_MOBILE_VIEWPORT ? 1.08 : 0.86;
+const NETWORK_Y_SCALE = IS_MOBILE_VIEWPORT ? 1.24 : 0.86;
+const WHEEL_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 1.46 : 1;
+const DRAG_RESPONSE_MULTIPLIER = IS_MOBILE_VIEWPORT ? 1.82 : 1;
+const SPIN_LERP = IS_MOBILE_VIEWPORT ? 0.2 : 0.14;
+const SPIN_FRICTION = IS_MOBILE_VIEWPORT ? 0.972 : 0.965;
 const ACTIVE_NODE_COUNT = IS_MOBILE_VIEWPORT ? 15 : NODE_COUNT;
 const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
@@ -372,13 +376,13 @@ function handleWheelRotation(event) {
     return;
   }
 
-  const inputStrength = clamp(gestureLength * 0.00015, 0, 0.038);
+  const inputStrength = clamp(gestureLength * 0.00015 * WHEEL_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.052 : 0.038);
   const pitchInput = (-scrollY / gestureLength) * inputStrength;
   const yawInput = (scrollX / gestureLength) * inputStrength;
   const nextVelocity = clampVectorLength(
     targetSpinVelocityX + pitchInput,
     targetSpinVelocityY + yawInput,
-    0.055
+    IS_MOBILE_VIEWPORT ? 0.072 : 0.055
   );
 
   targetSpinVelocityX = nextVelocity.x;
@@ -392,13 +396,13 @@ function pushRotation(deltaX, deltaY, strengthMultiplier = 1) {
     return;
   }
 
-  const inputStrength = clamp(gestureLength * 0.00018 * strengthMultiplier, 0, 0.046);
+  const inputStrength = clamp(gestureLength * 0.00018 * strengthMultiplier * DRAG_RESPONSE_MULTIPLIER, 0, IS_MOBILE_VIEWPORT ? 0.066 : 0.046);
   const pitchInput = (-deltaY / gestureLength) * inputStrength;
   const yawInput = (deltaX / gestureLength) * inputStrength;
   const nextVelocity = clampVectorLength(
     targetSpinVelocityX + pitchInput,
     targetSpinVelocityY + yawInput,
-    0.06
+    IS_MOBILE_VIEWPORT ? 0.08 : 0.06
   );
 
   targetSpinVelocityX = nextVelocity.x;
@@ -539,10 +543,10 @@ function draw(now = 0) {
 
   targetSpinVelocityX *= 0.9;
   targetSpinVelocityY *= 0.9;
-  spinVelocityX += (targetSpinVelocityX - spinVelocityX) * 0.14;
-  spinVelocityY += (targetSpinVelocityY - spinVelocityY) * 0.14;
-  spinVelocityX *= 0.965;
-  spinVelocityY *= 0.965;
+  spinVelocityX += (targetSpinVelocityX - spinVelocityX) * SPIN_LERP;
+  spinVelocityY += (targetSpinVelocityY - spinVelocityY) * SPIN_LERP;
+  spinVelocityX *= SPIN_FRICTION;
+  spinVelocityY *= SPIN_FRICTION;
   spinX += spinVelocityX;
   spinY += spinVelocityY;
 

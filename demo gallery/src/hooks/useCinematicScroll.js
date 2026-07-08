@@ -895,24 +895,24 @@ export function useCinematicScroll(containerRef) {
         const aboveTravel = Math.max(0, -relative)
         const belowTravel = Math.max(0, relative)
         const midpointFocus = point.centerNeutral * (0.74 + point.nearAmount * 0.26)
-        const incomingFocus = belowTravel > 0 ? (1 - smoothstep(0.8, 3.6, belowTravel)) * 0.42 : 0
-        const passedFade = aboveTravel > 0 ? 1 - smoothstep(0.12, 1.65, aboveTravel) : 1
-        const passedOpacity = aboveTravel > 0 ? lerp(0.24, 1, passedFade) : 1
-        const lightFocus = clampRange(midpointFocus + incomingFocus, 0, 1)
+        const belowFade = belowTravel > 0 ? lerp(0.28, 0.72, midpointFocus) : 1
+        const passedFade = aboveTravel > 0 ? 1 - smoothstep(0.18, 4.4, aboveTravel) : 1
+        const passedOpacity = aboveTravel > 0 ? lerp(0.22, 1, passedFade) : 1
+        const lightFocus = midpointFocus
         const topBand = smoothstep(-20, 4, y)
         const bottomBand = 1 - smoothstep(96, 124, y)
         const visibilityBand = topBand * bottomBand * point.arcVisibility
-        const lightBand = bottomBand * point.arcVisibility
+        const lightBand = visibilityBand
         const nonFinalExitFade = index === lastAgentIndex ? 1 : 1 - smoothstep(0.955, 1.035, agentsProgress)
 
         const opacity = clampRange(
-          (0.7 + lightFocus * 0.26 + incomingFocus * 0.12 + visual.lightBias * 0.25) * visibilityBand * passedOpacity * nonFinalExitFade * railReveal,
+          (0.7 + lightFocus * 0.3 + visual.lightBias * 0.2) * visibilityBand * belowFade * passedOpacity * nonFinalExitFade * railReveal,
           0,
           1
         )
-        const brightness = clampRange(0.78 + lightFocus * 0.58 + incomingFocus * 0.14 + visual.lightBias * 0.32 - (1 - passedFade) * 0.34, 0.68, 1.5)
+        const brightness = clampRange(0.74 + lightFocus * 0.68 + visual.lightBias * 0.25 - belowTravel * 0.08 - (1 - passedFade) * 0.24, 0.64, 1.48)
         const blur = clampRange(0.08 + smoothstep(0.35, 4.2, point.distance) * 0.98 - lightFocus * 0.64, 0, 2)
-        const glow = lightBand * (midpointFocus * 1.08 + incomingFocus * 0.72) * passedOpacity
+        const glow = lightBand * midpointFocus * passedOpacity
 
         item.style.opacity = opacity.toFixed(4)
         item.style.filter = isMobileViewport ? 'none' : `brightness(${brightness.toFixed(3)}) blur(${blur.toFixed(2)}px)`
