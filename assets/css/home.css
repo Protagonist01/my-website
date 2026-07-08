@@ -137,7 +137,7 @@ body.home::after {
 
   .home-signature strong {
     font-size: clamp(1.08rem, 5.1vw, 1.45rem);
-    letter-spacing: 0.22em;
+    letter-spacing: 0.08em;
   }
 
   .home-signature__text > span {

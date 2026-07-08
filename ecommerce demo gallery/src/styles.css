@@ -5520,6 +5520,8 @@ select,
   object-fit: contain;
   opacity: 0;
   transform: scale(1);
+  filter: contrast(1.08) saturate(1.05) brightness(1.04);
+  backface-visibility: hidden;
   transition: opacity 620ms ease, transform 900ms ease;
 }
 
@@ -5837,13 +5839,14 @@ body.audit-reveal-active .request-audit-section {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 1px solid rgba(232, 201, 122, 0.18);
+  border: 1px solid #000;
   border-radius: 12px;
   background: #030303;
   object-fit: contain;
   cursor: pointer;
-  filter: none;
+  filter: contrast(1.1) saturate(1.06) brightness(1.04);
   image-rendering: auto;
+  backface-visibility: hidden;
 }
 
 .demo-video-panel figcaption {
@@ -6347,8 +6350,8 @@ body.audit-reveal-active .request-audit-section {
   }
 
   .video-section {
-    height: 640vh;
-    min-height: 640vh;
+    height: 430vh;
+    min-height: 430vh;
   }
 
   .video-pin,
@@ -6362,10 +6365,14 @@ body.audit-reveal-active .request-audit-section {
 
   .video-frame {
     left: 50%;
-    top: 39%;
-    width: 90vw;
-    max-width: 34rem;
+    top: 37%;
+    width: 96vw;
+    max-width: 38rem;
     border-radius: 12px;
+    border-color: #000;
+    box-shadow:
+      0 1.6rem 4rem rgba(0, 0, 0, 0.66),
+      0 0 0 1px rgba(255, 255, 255, 0.08) inset;
   }
 
   .video-pause-label,
@@ -6808,14 +6815,16 @@ body,
   .shopify-demo-page .demo-primary,
   .shopify-demo-page .demo-secondary {
     width: 100%;
+    height: 2.45rem;
     flex: none;
     min-width: 0;
     max-width: none;
-    min-height: 2.3rem;
+    min-height: 2.45rem;
     padding: 0.55rem 0.3rem;
     font-size: clamp(0.46rem, 2vw, 0.58rem);
     letter-spacing: 0.035em;
     line-height: 1.05;
+    text-align: center;
     white-space: nowrap;
   }
 }
@@ -6828,6 +6837,8 @@ body,
 
   .shopify-demo-page .demo-primary,
   .shopify-demo-page .demo-secondary {
+    height: 2.35rem;
+    min-height: 2.35rem;
     padding-right: 0.22rem;
     padding-left: 0.22rem;
     font-size: clamp(0.42rem, 1.82vw, 0.52rem);
@@ -6930,9 +6941,11 @@ body,
 .modal-overlay .demo-video-panel video {
   background: #000 !important;
   object-fit: contain;
+  border-color: #000 !important;
+  filter: contrast(1.12) saturate(1.06) brightness(1.04);
   box-shadow:
     0 1.4rem 3rem rgba(0, 0, 0, 0.38),
-    0 0 0 1px rgba(232, 201, 122, 0.14) inset !important;
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset !important;
 }
 
 @media (max-width: 760px) {

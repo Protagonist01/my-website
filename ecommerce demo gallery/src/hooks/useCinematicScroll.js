@@ -135,10 +135,27 @@ function getVideoWeights(count, exact, isSharp = false) {
   }
 
   const localProgress = exact - baseIndex
-  const nextBlend = smoothstep(isSharp ? 0.42 : 0.58, isSharp ? 0.74 : 0.92, localProgress)
+  const nextBlend = smoothstep(isSharp ? 0.24 : 0.58, isSharp ? 0.62 : 0.92, localProgress)
   weights[baseIndex] = 1 - nextBlend
   weights[baseIndex + 1] = nextBlend
   return weights
+}
+
+function getMobileVideoExact(progress, count) {
+  if (count <= 1) return 0
+
+  const holdProgress = 0.22
+  const exitStart = 0.88
+  const timelineProgress = clamp01((progress - holdProgress) / (exitStart - holdProgress))
+  const maxIndex = count - 1
+  const rawExact = timelineProgress * maxIndex
+  const baseIndex = clampRange(Math.floor(rawExact), 0, maxIndex)
+
+  if (baseIndex >= maxIndex) return maxIndex
+
+  const localProgress = rawExact - baseIndex
+  const steadyBlend = smoothstep(0.18, 0.72, localProgress)
+  return baseIndex + steadyBlend
 }
 
 function getAgentRailConfig(agentItems) {
@@ -799,13 +816,15 @@ export function useCinematicScroll(containerRef) {
       document.body.classList.toggle('agents-active', inAgents)
       document.body.classList.toggle('workflows-active', inWorkflows)
 
-      const videoEnter = smoothstep(isMobileViewport ? 0.02 : 0.04, isMobileViewport ? 0.16 : 0.22, videoProgress)
-      const videoExit = smoothstep(isMobileViewport ? 0.94 : 0.935, 1, videoProgress)
+      const videoEnter = smoothstep(isMobileViewport ? 0.02 : 0.04, isMobileViewport ? 0.13 : 0.22, videoProgress)
+      const videoExit = smoothstep(isMobileViewport ? 0.92 : 0.935, 1, videoProgress)
       const videoScaleX = isMobileViewport ? lerp(0.78, 1, videoEnter) : lerp(0.28, 1, videoEnter)
       const videoScaleY = isMobileViewport ? lerp(0.72, 1, videoEnter) : lerp(0.18, 1, videoEnter)
       const videoLift = lerp(isMobileViewport ? 10 : 22, 0, videoEnter) - videoExit * (isMobileViewport ? 12 : 24)
       const videoOpacity = videoEnter * (1 - videoExit)
-      const exactVideo = clamp01((videoProgress - (isMobileViewport ? 0.05 : 0.08)) / (isMobileViewport ? 0.58 : 0.7)) * Math.max(0, videoPanels.length - 1)
+      const exactVideo = isMobileViewport
+        ? getMobileVideoExact(videoProgress, videoPanels.length)
+        : clamp01((videoProgress - 0.08) / 0.7) * Math.max(0, videoPanels.length - 1)
       const videoWeights = getVideoWeights(videoPanels.length, exactVideo, isMobileViewport)
       const displayedExactVideo = videoWeights.reduce((sum, weight, index) => sum + weight * index, 0)
 

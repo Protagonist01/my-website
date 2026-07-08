@@ -904,6 +904,10 @@ a.agent-item:focus-visible {
   color: #e8c97a;
 }
 
+.agent-item[data-agent-item="8"] {
+  font-size: clamp(3.2rem, 4.25vw, 6.3rem);
+}
+
 .agent-copy-stack {
   display: grid;
   gap: 1.2rem;
@@ -1033,6 +1037,10 @@ a.agent-item:focus-visible {
   max-width: 8.5ch;
   font-size: clamp(1.3rem, 1.7vw, 2.65rem);
   line-height: 0.9;
+}
+
+.agent-copy-stack .agents-logo[data-agent-logo="8"] {
+  font-size: clamp(1.18rem, 1.55vw, 2.42rem);
 }
 
 .agent-copy-stack .agents-text {
@@ -1704,6 +1712,10 @@ a.agent-item:focus-visible {
     font-size: clamp(1.75rem, 8.4vw, 3.15rem);
   }
 
+  .agent-item[data-agent-item="8"] {
+    font-size: clamp(1.62rem, 7.7vw, 2.92rem);
+  }
+
   .agents-info {
     left: auto;
     right: clamp(0.35rem, 1.9vw, 0.7rem);
@@ -1730,6 +1742,10 @@ a.agent-item:focus-visible {
     font-size: clamp(0.58rem, 2.18vw, 0.74rem);
     line-height: 1.18;
     white-space: normal;
+  }
+
+  .agent-copy-stack .agents-logo[data-agent-logo="8"] {
+    font-size: clamp(0.54rem, 2vw, 0.68rem);
   }
 
   .agent-copy-stack .agents-text {
