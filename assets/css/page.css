@@ -1728,6 +1728,12 @@ body[data-page="contact"] .replica-brand {
   animation: works-light-scan 24s linear infinite;
 }
 
+@media (max-width: 768px) {
+  .works-stage__line-light {
+    animation-duration: 18s;
+  }
+}
+
 .works-stage__viewport {
   position: relative;
   overflow: hidden;

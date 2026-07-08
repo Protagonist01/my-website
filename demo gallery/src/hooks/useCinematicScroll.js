@@ -864,11 +864,10 @@ export function useCinematicScroll(containerRef) {
       const railEntryProgress = smoothstep(0, 0.18, agentsProgress)
       const railEntryOffsetVh = lerp(34, 0, railEntryProgress)
       const railReveal = smoothstep(0, 0.16, agentsProgress)
-      const railTrainEnd = isMobileViewport ? 1 : 0.97
+      const railTrainEnd = isMobileViewport ? 0.955 : 0.94
       const trainProgress = clamp01((agentsProgress - 0.18) / (railTrainEnd - 0.18))
       const railProgress = isMobileViewport ? Math.pow(trainProgress, 1.08) : trainProgress
-      const finalLockStart = isMobileViewport ? 0.985 : 0.965
-      const exactAgent = agentsProgress >= finalLockStart ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
+      const exactAgent = agentsProgress >= railTrainEnd ? lastAgentIndex : lerp(0, lastAgentIndex, railProgress)
       const activeAgent = Math.round(exactAgent)
       const liftProgress = 0
       const agentRail = getAgentRailConfig(agentItems)
