@@ -1,0 +1,233 @@
+@font-face {
+  font-family: "Neue Montreal";
+  src: url("../../assets/fonts/NeueMontreal-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lores-12";
+  src: url("../../assets/fonts/LoRes12OT-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+
+:root {
+  color: #f0eee8;
+  background: #11110f;
+  font-family: "Neue Montreal", sans-serif;
+  letter-spacing: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 65rem;
+  height: 100vh;
+  overflow: hidden;
+  background: #11110f;
+}
+
+button,
+select {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.compare-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  align-items: center;
+  gap: 1.25rem;
+  height: 4.5rem;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(240, 238, 232, 0.16);
+  background: #11110f;
+}
+
+.compare-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: max-content;
+  font-family: "Lores-12", monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.compare-brand > span {
+  display: grid;
+  width: 2.3rem;
+  height: 2.3rem;
+  place-items: center;
+  border: 1px solid #e8cf8c;
+  color: #e8cf8c;
+}
+
+.compare-route {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.compare-route > span {
+  color: #9f9a90;
+  font-family: "Lores-12", monospace;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.compare-route select,
+.compare-refresh,
+.compare-viewports button {
+  min-height: 2.5rem;
+  border: 1px solid rgba(240, 238, 232, 0.2);
+  border-radius: 2px;
+  color: #f0eee8;
+  background: #191916;
+}
+
+.compare-route select {
+  min-width: 11rem;
+  padding: 0 0.75rem;
+}
+
+.compare-viewports {
+  display: inline-flex;
+}
+
+.compare-viewports button {
+  padding: 0 0.8rem;
+  border-right: 0;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.compare-viewports button:first-child {
+  border-radius: 2px 0 0 2px;
+}
+
+.compare-viewports button:last-child {
+  border-right: 1px solid rgba(240, 238, 232, 0.2);
+  border-radius: 0 2px 2px 0;
+}
+
+.compare-viewports button.is-active {
+  color: #11110f;
+  background: #e8cf8c;
+}
+
+.compare-refresh {
+  padding: 0 1rem;
+  cursor: pointer;
+}
+
+.compare-header button:hover,
+.compare-header button:focus-visible,
+.compare-header select:focus-visible {
+  border-color: #e8cf8c;
+  outline: 2px solid #e8cf8c;
+  outline-offset: 2px;
+}
+
+.compare-stage {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  height: calc(100vh - 4.5rem);
+  background: rgba(240, 238, 232, 0.18);
+}
+
+.compare-pane {
+  display: grid;
+  grid-template-rows: 3rem minmax(0, 1fr);
+  min-width: 0;
+  background: #0a0a09;
+}
+
+.compare-pane > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1rem;
+  border-bottom: 1px solid rgba(240, 238, 232, 0.12);
+}
+
+.compare-pane > header div {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.compare-pane > header div > span {
+  color: #e8cf8c;
+  font-family: "Lores-12", monospace;
+  font-size: 0.68rem;
+}
+
+.compare-pane > header strong,
+.compare-pane > header a {
+  font-size: 0.78rem;
+  font-weight: 400;
+}
+
+.compare-pane > header a {
+  color: #9f9a90;
+}
+
+.compare-pane > header a:hover,
+.compare-pane > header a:focus-visible {
+  color: #f0eee8;
+}
+
+.compare-frame-wrap {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  overflow: auto;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    #171714;
+  background-size: 20px 20px;
+}
+
+.compare-frame-wrap iframe {
+  flex: 1 1 100%;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+  transition: width 240ms ease;
+}
+
+.compare-stage[data-viewport="tablet"] .compare-frame-wrap iframe {
+  flex: 0 0 768px;
+  width: 768px;
+  max-width: none;
+}
+
+.compare-stage[data-viewport="mobile"] .compare-frame-wrap iframe {
+  flex: 0 0 390px;
+  width: 390px;
+  max-width: none;
+}
+
+@media (max-width: 1150px) {
+  .compare-header {
+    grid-template-columns: 1fr auto auto;
+  }
+
+  .compare-refresh {
+    display: none;
+  }
+}

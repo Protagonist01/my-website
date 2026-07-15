@@ -18,83 +18,83 @@ export const auditOptions = {
   bottleneck: ['Support overload', 'Low repeat purchases', 'Stockouts', 'Returns and refunds', 'Founder reporting']
 }
 
+export const offerPhases = [
+  { number: '01', title: 'Audit the leak' },
+  { number: '02', title: 'Prioritize' },
+  { number: '03', title: 'Build control' },
+  { number: '04', title: 'Prove and expand' }
+]
+
 export const demoSteps = [
   {
     id: 'audit',
     number: '01',
     eyebrow: 'Find the leak',
     title: 'Revenue Leak Audit',
-    promise: 'Show the founder where revenue is slipping before asking them to commit to a build.',
-    outcome: 'A mock report reveals the first recoverable leaks across support, retention, returns, inventory, and reporting.',
+    promise: 'See where revenue is slipping.',
+    outcome: 'Reveal the first recoverable leak.',
     cta: 'Request the real audit',
     metrics: ['$18.4k recoverable', '5 leak categories', '1 first build path'],
-    how: 'The live version would connect store, support, return, inventory, and email data. Today this gallery produces a realistic mock report so the founder understands the audit outcome immediately.'
   },
   {
     id: 'concierge',
     number: '02',
     eyebrow: 'Reduce repeat support',
     title: 'AI Support Concierge',
-    promise: 'Show how Claire can answer questions, guide shoppers, and ask for confirmation before taking action.',
-    outcome: 'A founder sees the difference between a simple FAQ bot and a site-aware assistant that can guide product, cart, quiz, and booking journeys.',
+    promise: 'Guide shoppers without losing control.',
+    outcome: 'Answer, recommend, and confirm.',
     cta: 'Request concierge audit',
     metrics: ['4 founder scenarios', 'Safe action guardrails', 'Live URL or video ready'],
-    how: 'The external chatbot can be embedded when the Clear Skin URL is ready. Until then, the gallery shows the exact founder-facing scenarios: answer, guide, confirm, and protect.'
   },
   {
     id: 'dashboard',
     number: '03',
     eyebrow: 'One daily view',
     title: 'AI Ops Dashboard',
-    promise: 'Give the owner one place to see the decisions that matter today.',
-    outcome: 'Tabs switch between revenue, support, returns, inventory, and retention so the founder sees daily priorities instead of scattered dashboards.',
+    promise: 'See the decisions that matter today.',
+    outcome: 'One daily operating view.',
     cta: 'Request dashboard audit',
     metrics: ['$47.3k revenue watched', '23 open tickets', '7 at-risk SKUs'],
-    how: 'The dashboard combines signals from Shopify, support, returns, inventory, and email tools, then summarizes what requires action.'
   },
   {
     id: 'retention',
     number: '04',
     eyebrow: 'Bring buyers back',
     title: 'Retention Automation',
-    promise: 'Turn first-time buyers into repeat buyers without asking the founder to manually manage segments.',
-    outcome: 'A clickable journey shows how buyers move into replenishment, VIP, win-back, and second-purchase paths.',
+    promise: 'Create the next purchase opportunity.',
+    outcome: 'Route buyers into the right lifecycle path.',
     cta: 'Request retention audit',
     metrics: ['4 buyer paths', '+14% repeat lift sample', 'Automated next-best nudge'],
-    how: 'Purchase history and timing rules decide the next best customer path. The model can write the message, but the approved business rules decide the flow.'
   },
   {
     id: 'inventory',
     number: '05',
     eyebrow: 'Protect margin',
     title: 'Inventory Intelligence',
-    promise: 'Catch stockout risk, slow movers, and reorder issues while there is still time to act.',
-    outcome: 'A sensitivity control changes the alert feed so the founder sees how proactive inventory decisions can protect sales.',
+    promise: 'Catch stock risk before it costs sales.',
+    outcome: 'Surface stockouts and slow movers early.',
     cta: 'Request inventory audit',
     metrics: ['3 stockout risks', '7 slow movers', '2 reorder nudges'],
-    how: 'SKU velocity, supplier lead time, margin, and stock thresholds feed alerts before the founder loses sales or overbuys.'
   },
   {
     id: 'returns',
     number: '06',
     eyebrow: 'Save more orders',
     title: 'Returns Automation',
-    promise: 'Turn refund requests into structured, exchange-first workflows when appropriate.',
-    outcome: 'A before-and-after walkthrough compares manual refund handling with an AI-assisted return path that captures reason, checks policy, and flags risk.',
+    promise: 'Resolve returns without defaulting to refunds.',
+    outcome: 'Compare refund-first and exchange-first paths.',
     cta: 'Request returns audit',
     metrics: ['90 sec assisted path', 'Exchange-first prompts', 'Risk flags visible'],
-    how: 'The automation checks policy and order context, captures return reasons, suggests exchange options, and escalates sensitive or suspicious cases.'
   },
   {
     id: 'custom',
     number: '07',
     eyebrow: 'Build the missing system',
     title: 'Custom Automation',
-    promise: 'Show that the offer is not a template. It can fit the founder’s actual backend bottleneck.',
-    outcome: 'A case study carousel shows app sync, 3PL inventory sync, claims workflow, and founder reporting examples.',
+    promise: 'Fit the system to the real bottleneck.',
+    outcome: 'Inspect four custom automation patterns.',
     cta: 'Request custom workflow audit',
     metrics: ['4 case studies', '15 hours/week saved', 'Store-specific rules'],
-    how: 'Custom builds start by mapping one manual workflow, then turning it into a controlled system with rules, approvals, and reporting.'
   }
 ]
 

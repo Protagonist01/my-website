@@ -63,7 +63,9 @@ export function initParallax() {
     return;
   }
 
+  let frame = 0;
   function update() {
+    frame = 0;
     const scrollY = window.scrollY;
     elements.forEach((element) => {
       const depth = Number(element.dataset.parallax);
@@ -71,11 +73,18 @@ export function initParallax() {
     });
   }
 
+  function schedule() {
+    if (!frame) frame = window.requestAnimationFrame(update);
+  }
+
   update();
-  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("scroll", schedule, { passive: true });
 }
 
 export function initTilt() {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
   document.querySelectorAll(".js-tilt").forEach((card) => {
     card.addEventListener("pointermove", (event) => {
       const rect = card.getBoundingClientRect();

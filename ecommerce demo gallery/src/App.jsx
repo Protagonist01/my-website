@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { demoSteps, scenes } from './data.js'
+import { demoSteps, offerPhases, scenes } from './data.js'
 import { useCinematicScroll } from './hooks/useCinematicScroll.js'
 import { CinematicBackground } from './components/CinematicBackground.jsx'
 import { Header } from './components/Header.jsx'
@@ -196,6 +196,8 @@ function Steps({ onOpenDemo }) {
               key={step.id}
               className={`auto-card ${autoKinds[index]} commerce-demo-card ${activeOfferCard === index ? 'is-touch-active' : ''}`}
               data-auto-card={index}
+              role="button"
+              aria-label={`Open ${step.title} demonstration`}
               onClick={() => {
                 if (window.matchMedia?.('(hover: none), (pointer: coarse)').matches && activeOfferCard !== index) {
                   setActiveOfferCard(index)
@@ -314,15 +316,12 @@ function AuditDemo() {
         <span>How the audit works</span>
         <div>
           <strong>Connect the signals</strong>
-          <p>We review support, returns, retention, inventory, and reporting data so the leak is tied to a real workflow.</p>
         </div>
         <div>
           <strong>Score the pressure points</strong>
-          <p>Each area is ranked by revenue risk, effort, and how quickly automation can help.</p>
         </div>
         <div>
           <strong>Choose the first build</strong>
-          <p>You get one clear starting recommendation, not a long wish list.</p>
         </div>
       </div>
 
@@ -330,7 +329,6 @@ function AuditDemo() {
         <span className="demo-callout__dot" aria-hidden="true" />
         <div>
           <p className="demo-callout__title">This is a sample audit report</p>
-          <p className="demo-callout__body">Below is a real example of what we find when auditing a mid-size Shopify store. Your store's results will be different — and specific to your operations. Request your free personalized audit below.</p>
         </div>
       </div>
 
@@ -456,7 +454,6 @@ function ConciergeDemo() {
         <div className="claire-avatar">C</div>
         <div className="claire-intro-text">
           <h3>Claire is not a generic chatbot.</h3>
-          <p>She's a site-aware concierge connected to your products, policies, orders, and booking system. She recommends from expert-approved pathways — not hallucinated routines — and asks for confirmation before touching your customer's cart.</p>
         </div>
       </div>
 
@@ -473,7 +470,6 @@ function ConciergeDemo() {
         <div className="embed-content">
           <div className="embed-icon">C</div>
           <p className="embed-text">Try Claire live — ask her anything</p>
-          <p className="embed-subtext">Loaded with a real skincare store's products, treatments & policies</p>
         </div>
       </div>
 
@@ -490,7 +486,6 @@ function ConciergeDemo() {
               <span className="indicator-dot" style={{ background: dotColors[item.tag] }} aria-hidden="true" />
             </div>
             <div className="scenario-title">{item.title}</div>
-            <div className="scenario-desc">{item.desc}</div>
             <span className={`scenario-tag ${tagClasses[item.tag]}`}>{item.tag}</span>
           </div>
         ))}
@@ -578,7 +573,6 @@ function ConciergeDemo() {
             </div>
           ))}
         </div>
-        <p className="bts-desc">The AI never invents recommendations. A deterministic layer selects the right products and safety rules, then the language model writes a natural response around that approved plan. This is what makes Claire safe for real customers.</p>
       </div>
     </>
   )
@@ -648,13 +642,6 @@ function DashboardDemo() {
 
   return (
     <>
-      <div className="demo-callout demo-callout--problem">
-        <span className="demo-callout__dot" aria-hidden="true" />
-        <div>
-          <p><strong>The problem:</strong> Most founders check 4-5 different dashboards every morning — Shopify, Klaviyo, Gorgias, Google Analytics, their spreadsheets. That's 30+ minutes before the day even starts.</p>
-        </div>
-      </div>
-
       <div className="dashboard-grid">
         {metrics.map((item) => (
             <div className="dash-metric" key={item.label}>
@@ -740,15 +727,6 @@ function RetentionDemo() {
 
   return (
     <>
-      <div className="demo-callout demo-callout--problem">
-        <span className="demo-callout__dot" aria-hidden="true" />
-        <div>
-          <p><strong>The problem:</strong> Only 12% of first-time buyers come back for a second purchase on the average Shopify store. You spent £20-£50 acquiring that customer — and they bought once and disappeared.</p>
-        </div>
-      </div>
-
-      <p className="demo-prose">Watch how a single purchase triggers an intelligent retention workflow that brings customers back — automatically.</p>
-
       <div className="flow-container">
         <div className="flow-steps" id="retention-flow">
           {flow.map((step, idx) => (
@@ -857,15 +835,6 @@ function InventoryDemo() {
 
   return (
     <>
-      <div className="demo-callout demo-callout--problem">
-        <span className="demo-callout__dot" aria-hidden="true" />
-        <div>
-          <p><strong>The problem:</strong> A single bestseller stockout costs the average Shopify store £2,000–£8,000 in lost sales. Meanwhile, slow movers tie up cash for months. Most stores find out about both too late.</p>
-        </div>
-      </div>
-
-      <p className="demo-prose">Watch real-time inventory alerts arrive as your system monitors SKU velocity, stock levels, and supplier lead times.</p>
-
       <div className="alert-feed" id="inventory-feed">
         {alerts.map((item, idx) => {
           const isVisible = animStage >= idx + 1
@@ -925,15 +894,6 @@ function ReturnsDemo() {
 
   return (
     <>
-      <div className="demo-callout demo-callout--problem">
-        <span className="demo-callout__dot" aria-hidden="true" />
-        <div>
-          <p><strong>The problem:</strong> 19.3% of online sales are returned (NRF 2025). Each return costs £8-15 to process manually — and most stores refund by default when an exchange would have kept the sale.</p>
-        </div>
-      </div>
-
-      <p className="demo-prose">See the difference: a customer wants to return a dress. Compare the manual process vs. AI-assisted exchange-first workflow.</p>
-
       <div className="comparison-grid">
         <div className="comparison-col without">
           <div className="comparison-header bad">
@@ -1091,8 +1051,6 @@ function CustomDemo() {
 
   return (
     <>
-      <p className="demo-prose">Every Shopify store has unique backend challenges. Here are real examples of custom systems we build.</p>
-
       <div className="case-carousel">
         <div className="case-track" style={{ transform: `translateX(-${active * 100}%)` }}>
           {cases.map((item, idx) => (
@@ -1284,6 +1242,8 @@ function DemoModal({ activeDemo, onClose, onInquiry }) {
     label: 'Ready to build this for your store?',
     button: 'Get Started'
   }
+  const phaseByDemo = { audit: 0, inventory: 1, concierge: 2, dashboard: 2, retention: 2, returns: 2, custom: 3 }
+  const activePhase = phaseByDemo[step.id] ?? 0
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
@@ -1311,29 +1271,46 @@ function DemoModal({ activeDemo, onClose, onInquiry }) {
       aria-labelledby="demo-modal-title"
       onClick={handleOverlayClick}
     >
-      <div className="modal">
-        <div className="modal-header">
-          <div>
+      <div className="modal offer-room">
+        <button type="button" className="modal-close offer-room__close" onClick={onClose} aria-label="Close demo" title="Close demo">x</button>
+
+        <aside className="offer-room__rail">
+          <header className="offer-room__header">
             <div className="modal-header__badge">
-              <span className="modal-header__step">{step.number} / 07</span>
+              <span className="modal-header__step">Offer {step.number} / 07</span>
               <span className="modal-header__divider" aria-hidden="true" />
               <span className="modal-header__step">{step.eyebrow}</span>
             </div>
             <h2 id="demo-modal-title">{title}</h2>
             <p>{step.promise}</p>
+          </header>
+
+          <div className="offer-room__metrics" aria-label="Illustrative demo signals">
+            {step.metrics.map((metric) => <span key={metric}>{metric}</span>)}
           </div>
-          <button type="button" className="modal-close" onClick={onClose} aria-label="Close demo">x</button>
-        </div>
-        <div className="modal-body">
+
+          <ol className="offer-room__phases" aria-label="Commerce offer sequence">
+            {offerPhases.map((phase, index) => (
+              <li key={phase.number} className={index === activePhase ? 'is-active' : index < activePhase ? 'is-complete' : ''}>
+                <span>{phase.number}</span>
+                <div><strong>{phase.title}</strong></div>
+              </li>
+            ))}
+          </ol>
+
+          <div className="offer-room__action">
+            <span className="modal-cta-label">{cta.label}</span>
+            <button className="demo-primary" type="button" onClick={() => onInquiry(step.id)}>{cta.button}</button>
+          </div>
+        </aside>
+
+        <main className="offer-room__demo">
+          <div className="offer-room__demo-heading">
+            <span>Interactive demonstration</span>
+          </div>
           <DemoVideo id={step.id} title={title} />
           <DemoBody id={step.id} />
-        </div>
-        <div className="modal-cta-bar">
-          <span className="modal-cta-label">{cta.label}</span>
-          <button className="demo-primary" type="button" onClick={() => onInquiry(step.id)}>
-            {cta.button}
-          </button>
-        </div>
+        </main>
       </div>
     </div>,
     document.body

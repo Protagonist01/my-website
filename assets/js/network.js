@@ -5,6 +5,38 @@ const body = document.body;
 
 body.classList.add("is-ready");
 
+const menuTrigger = document.querySelector(".home-menu-trigger");
+const homeMenu = document.querySelector(".home-menu");
+const homeSignature = document.querySelector(".home-signature");
+
+function setHomeMenu(open) {
+  if (!menuTrigger || !homeMenu) return;
+  body.classList.toggle("home-menu-open", open);
+  menuTrigger.setAttribute("aria-expanded", String(open));
+  menuTrigger.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+  homeMenu.setAttribute("aria-hidden", String(!open));
+  linkLayer.inert = open;
+  linkLayer.hidden = open;
+  linkLayer.setAttribute("aria-hidden", String(open));
+  if (homeSignature) homeSignature.inert = open;
+  if (homeSignature) homeSignature.hidden = open;
+  if (homeSignature) homeSignature.setAttribute("aria-hidden", String(open));
+  if (open) {
+    window.requestAnimationFrame(() => homeMenu.querySelector("a")?.focus());
+  }
+}
+
+menuTrigger?.addEventListener("click", () => {
+  setHomeMenu(!body.classList.contains("home-menu-open"));
+});
+homeMenu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setHomeMenu(false)));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && body.classList.contains("home-menu-open")) {
+    setHomeMenu(false);
+    menuTrigger?.focus();
+  }
+});
+
 const PALETTE = {
   offwhite: [255, 255, 255],
   gold: [201, 168, 76],
@@ -23,8 +55,8 @@ const LABELS = [
 
 const NODE_COUNT = 23;
 const NETWORK_SCALE = 1.105;
-const BRIGHTNESS_MULTIPLIER = 1.72;
-const MOBILE_BRIGHTNESS_MULTIPLIER = 1.46;
+const BRIGHTNESS_MULTIPLIER = 2.05;
+const MOBILE_BRIGHTNESS_MULTIPLIER = 1.72;
 const BRIGHTNESS_SPEED_MULTIPLIER = 1.45;
 const ACTIVE_EDGE_GLOW_MULTIPLIER = 1.45;
 const ACTIVE_LABEL_SCALE = 1.1;
@@ -41,8 +73,8 @@ const EDGE_COUNT = (ACTIVE_NODE_COUNT * (ACTIVE_NODE_COUNT - 1)) / 2;
 const FIRING_TRAVEL_FRAMES = 46;
 const FIRING_MIN_GAP_FRAMES = 130;
 const FIRING_RANDOM_GAP_FRAMES = 130;
-const TARGET_FRAME_MS = 0;
-const PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, IS_MOBILE_VIEWPORT ? 2 : 2.5);
+const TARGET_FRAME_MS = IS_MOBILE_VIEWPORT ? 32 : 0;
+const PIXEL_RATIO = Math.min(window.devicePixelRatio || 1, IS_MOBILE_VIEWPORT ? 1.35 : 2.5);
 let viewportWidth = window.innerWidth;
 let viewportHeight = window.innerHeight;
 const WAVES = [
@@ -655,7 +687,7 @@ function draw(now = 0) {
     const t3 = t * t * t;
     const wave = waveAt(point.ox, point.oy, point.oz, tick);
     const labelScale = window.innerWidth <= 768 ? MOBILE_LABEL_SCALE : 1;
-    const fontSize = Math.max(4, Math.round((4 + t3 * 27) * labelScale));
+    const fontSize = Math.max(8, Math.round((10 + t3 * 45) * labelScale));
     const alpha = (0.13 + t * 0.87) * NETWORK_BRIGHTNESS;
     const tracking = 0.14 + t * 0.08;
     const color = point.isActive ? activeLabelColor(t) : defaultLabelColor(t, wave);

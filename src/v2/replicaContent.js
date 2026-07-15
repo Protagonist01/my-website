@@ -1,0 +1,40 @@
+export const replicaContent = {
+  name: "Henry",
+  wordmark: "HENRY.",
+  heroTitle: ["Software & AI", "Engineer"],
+  year: "©2026",
+  since: "/CREATING SINCE 2020",
+  aboutHeading: "Hey!",
+  shortIntro: "I’m Henry, a software and AI engineer based in Lagos, working with teams worldwide.",
+  biography: [
+    "As an AI and software engineer, I build modern, scalable products and the dependable systems behind them.",
+    "I create and ship AI products, operational software, and web experiences that help teams move faster.",
+  ],
+  statement: "From idea to launch. AI and software engineering shaped into clean, scalable digital products that move fast, stay simple, and perform in real-world use.",
+  services: [
+    { title: "AI Engineering & Agent Systems", details: ["RAG & Agents", "Tool Use", "Evaluation & Guardrails"], href: "/v2/services/ai-engineering/" },
+    { title: "Machine Learning & Data Products", details: ["Predictive ML", "Analytics", "Data Pipelines"], href: "/v2/services/machine-learning/" },
+    { title: "Conversational AI & Voice Systems", details: ["Voice Agents", "Grounded Chat", "Controlled Actions"], href: "/v2/services/conversational-ai/" },
+    { title: "Full-Stack Product Engineering", details: ["Product UX", "Frontend & APIs", "Production Delivery"], href: "/v2/services/product-engineering/" },
+  ],
+  navigation: [
+    { label: "Home", href: "/v2/" },
+    { label: "About Me", href: "/v2/#about" },
+    { label: "Services", href: "/v2/#services" },
+    { label: "Featured Projects", href: "/v2/work/" },
+    { label: "E-Commerce", href: "/v2/#offers" },
+    { label: "Contact", href: "/v2/#contact" },
+  ],
+  contact: {
+    heading: "Let’s talk.",
+    introduction: "Have an AI or software project? Fill out the form, and I’ll get back to you soon.",
+    email: "hfadeni@gmail.com",
+    endpoint: "https://formspree.io/f/mqevwkpl",
+  },
+  socials: [
+    { label: "Instagram", href: "https://www.instagram.com/henry_fadeni/", icon: "instagram" },
+    { label: "LinkedIn", href: "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", icon: "linkedin" },
+    { label: "GitHub", href: "https://github.com/Protagonist01", icon: "github" },
+  ],
+  footerStatement: ["AI &", "Software", "Engineering."],
+};

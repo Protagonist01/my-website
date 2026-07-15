@@ -398,6 +398,53 @@ button {
   background: var(--color-gold);
 }
 
+.v1-version-switch {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 420;
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 2px;
+  background: rgba(5, 5, 4, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.v1-version-switch > * {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 0.7rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-other);
+  font-size: 0.65rem;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.v1-version-switch > *:last-child {
+  border-right: 0;
+}
+
+.v1-version-switch > [aria-current="page"] {
+  color: var(--color-black);
+  background: var(--color-gold-light);
+}
+
+.v1-version-switch a:hover,
+.v1-version-switch a:focus-visible {
+  color: var(--color-white);
+  background: rgba(255, 255, 255, 0.08);
+  outline: 1px solid var(--color-gold-light);
+  outline-offset: -2px;
+  transform: none;
+}
+
 .page-transition {
   position: fixed;
   inset: 0;
@@ -563,6 +610,10 @@ body.is-transitioning .page-transition {
 
   .eyebrow::before {
     width: 2rem;
+  }
+
+  .v1-version-switch > [aria-current="page"] {
+    display: none;
   }
 }
 

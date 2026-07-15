@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Henry Fadeni</title>
+<link rel="icon" href="/v2/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/css/base.css">
 <link rel="stylesheet" href="assets/css/home.css">
 </head>
@@ -18,6 +19,32 @@
     <span>Software &amp; AI Engineer</span>
   </span>
 </a>
+
+<button class="home-menu-trigger" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="home-menu">
+  <span></span>
+  <span></span>
+</button>
+
+<div class="home-menu" id="home-menu" aria-hidden="true">
+  <nav aria-label="Mobile portfolio navigation">
+    <a href="works/index.html"><span>01</span><strong>Work</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="demo gallery/index.html"><span>02</span><strong>Projects</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="ecommerce demo gallery/index.html"><span>03</span><strong>E-commerce</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="about/index.html"><span>04</span><strong>About</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="my-stack/index.html"><span>05</span><strong>Skills</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="testimonial/index.html"><span>06</span><strong>Testimonials</strong><span aria-hidden="true">-&gt;</span></a>
+    <a href="contact/index.html"><span>07</span><strong>Contact</strong><span aria-hidden="true">-&gt;</span></a>
+  </nav>
+  <div class="home-menu__versions" aria-label="Portfolio versions">
+    <span aria-current="page">V1</span>
+    <a href="/v2/">Open V2</a>
+  </div>
+</div>
+
+<nav class="v1-version-switch" aria-label="Portfolio versions">
+  <span aria-current="page">V1</span>
+  <a href="/v2/">V2</a>
+</nav>
 
 <div id="react-root" hidden></div>
 <script type="module" src="/src/main.jsx"></script>

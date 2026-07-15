@@ -3363,3 +3363,83 @@ body[data-page="testimonial"],
     right: -0.105em;
   }
 }
+
+/* Mobile usability refinement: preserve the V1 composition while making every action finger-sized. */
+@media (max-width: 768px) {
+  .portfolio-wordmark,
+  .portfolio-wordmark.source-about__name,
+  .portfolio-wordmark.source-stack__logo,
+  .portfolio-wordmark.brand-link,
+  .portfolio-wordmark.replica-brand,
+  .portfolio-wordmark.testimonial-brand,
+  .source-about__nav-link {
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    align-items: center;
+  }
+
+  .portfolio-wordmark__mark,
+  body[data-page="works"] .replica-brand .portfolio-wordmark__mark,
+  body[data-page="contact"] .replica-brand .portfolio-wordmark__mark {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-basis: 2.75rem;
+  }
+
+  .source-page__actions,
+  .page-header-actions,
+  .testimonial-actions {
+    min-height: 2.75rem;
+    max-width: none;
+  }
+
+  .source-page__actions .header-action,
+  .page-header-actions .header-action,
+  .testimonial-actions .header-action,
+  .testimonial-actions .testimonial-button,
+  .header-action {
+    min-width: 4.75rem;
+    min-height: 2.75rem;
+    padding-right: 0.7rem;
+    padding-left: 0.7rem;
+    overflow: visible;
+    line-height: 1.1;
+  }
+
+  .contact-form-card__close,
+  .testimonial-page-list .testimonial-page-button {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+  }
+
+  .gallery-card__cta,
+  .contact-method a,
+  .contact-node,
+  .contact-link-node,
+  .link-inline,
+  .testimonial-controls button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .gallery-card__cta,
+  .link-inline {
+    padding-right: 0.5rem;
+  }
+
+  .contact-link-node__label,
+  .contact-method a,
+  .works-card__title {
+    overflow-wrap: anywhere;
+  }
+
+  body[data-page] .v1-version-switch {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+}

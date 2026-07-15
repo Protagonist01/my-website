@@ -12,14 +12,13 @@ export const automationCopy = [
 
 export const agentCopy = [
   ['Clear Skin', 'Concierge skincare site for confident bookings.', 'https://github.com/Protagonist01/clear-skin-concierge-site'],
-  ['AI Voice Agent', 'Voice receptionist for calls and routing.', 'https://github.com/Protagonist01/ai-voice-receptionist'],
-  ['RAA Dashboard', 'Grounded analytics from business questions.', 'https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard'],
-  ['Code Review Agent', 'Practical AI review before merge time.', 'https://github.com/Protagonist01/code-review-agent'],
-  ['Self Healing Monitor', 'Failure detection with automatic recovery.', 'https://github.com/Protagonist01/self-healing-monitor'],
-  ['AboutFace Chatbot', 'Fast customer guidance with context.', 'https://github.com/Protagonist01/aboutface-chatbot-demo'],
-  ['Smart Todo App', 'AI task planning for daily execution.', 'https://github.com/Protagonist01/smart-todo-app'],
-  ['Portfolio Website', 'Cinematic system for project proof.', 'https://github.com/Protagonist01/my-website'],
-  ['AI Tools', 'Coming Soon']
+  ['AI Voice Agent', 'Controlled voice workflow with simulated booking.', '/v2/work/ai-voice-receptionist/'],
+  ['RAA Dashboard', 'Validated, traceable analytics from business questions.', '/v2/work/retrieval-analytics/'],
+  ['Code Review Agent', 'Inspectable AI review before merge time.', '/v2/work/code-review-agent/'],
+  ['Self Healing Monitor', 'Runbook diagnosis with policy-gated remediation.', '/v2/work/self-healing-monitor/'],
+  ['AboutFace Chatbot', 'Grounded product guidance with retrieved context.', '/v2/work/aboutface-chatbot/'],
+  ['Smart Todo App', 'Deterministic CLI task parsing with strong tests.', '/v2/work/smart-todo/'],
+  ['Portfolio Website', 'Cinematic system for project proof.', '/v2/work/portfolio-website/']
 ]
 
 export const featuredProjects = [

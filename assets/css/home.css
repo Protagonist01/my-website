@@ -119,9 +119,21 @@ body.home::after {
   font-style: italic;
 }
 
+.home-menu-trigger,
+.home-menu {
+  display: none;
+}
+
+.home-signature[hidden],
+#network-links[hidden] {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .home-signature {
     top: clamp(0.82rem, 3.2vw, 1.05rem);
+    min-height: 2.75rem;
+    align-items: center;
     gap: 0.65rem;
   }
 
@@ -146,6 +158,171 @@ body.home::after {
   }
 
   .network-link {
-    padding: 0.06rem 0.12rem;
+    min-width: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0.35rem;
+  }
+
+  .home-menu-trigger {
+    position: fixed;
+    top: 0.85rem;
+    right: 1rem;
+    z-index: 70;
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-content: center;
+    gap: 0.35rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--color-white);
+    background: rgba(0, 0, 0, 0.76);
+    scale: 1;
+    transition: scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .home-menu-trigger span {
+    display: block;
+    width: 1.2rem;
+    height: 1px;
+    background: currentColor;
+    transition: transform 260ms var(--ease-out);
+  }
+
+  body.home-menu-open .home-menu-trigger span:first-child {
+    transform: translateY(0.19rem) rotate(45deg);
+  }
+
+  body.home-menu-open .home-menu-trigger span:last-child {
+    transform: translateY(-0.19rem) rotate(-45deg);
+  }
+
+  .home-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 1.5rem;
+    padding: 5.75rem 1.25rem 1.25rem;
+    background: rgba(0, 0, 0, 0.98);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-1rem);
+    transition:
+      opacity 260ms var(--ease-out),
+      visibility 260ms var(--ease-out),
+      transform 260ms var(--ease-out);
+  }
+
+  body.home-menu-open .home-menu {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+
+  .home-menu nav {
+    display: grid;
+    align-content: center;
+  }
+
+  .home-menu nav a {
+    display: grid;
+    grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 3.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+    color: var(--color-white);
+    text-decoration: none;
+    scale: 1;
+    translate: 0;
+    transform-origin: left center;
+    transition: scale 380ms cubic-bezier(0.34, 1.56, 0.64, 1), translate 380ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .home-menu nav a > span:last-child {
+    display: inline-block;
+    rotate: 0deg;
+    translate: 0;
+    transition: rotate 360ms cubic-bezier(0.34, 1.56, 0.64, 1), translate 360ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .home-menu nav a:first-child {
+    border-top: 1px solid rgba(255, 255, 255, 0.16);
+  }
+
+  .home-menu nav a > span {
+    color: var(--color-gold-light);
+    font-family: var(--font-other);
+    font-size: 0.65rem;
+  }
+
+  .home-menu nav strong {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+    font-weight: 400;
+  }
+
+  .home-menu__versions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+  }
+
+  .home-menu__versions > * {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    color: var(--color-white);
+    font-family: var(--font-other);
+    font-size: 0.68rem;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .home-menu__versions > *:last-child {
+    border-right: 0;
+  }
+
+  .home-menu__versions [aria-current="page"] {
+    color: var(--color-black);
+    background: var(--color-gold-light);
+  }
+
+  body.home-menu-open #c,
+  body.home-menu-open #network-links {
+    opacity: 0.16;
+  }
+
+  body.home .v1-version-switch {
+    display: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .home-menu-trigger:hover {
+    scale: 1.06;
+  }
+
+  .home-menu nav a:hover {
+    scale: 1.018;
+    translate: 0.35rem 0;
+  }
+
+  .home-menu nav a:hover > span:last-child {
+    rotate: 45deg;
+    translate: 0.2rem 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-menu-trigger,
+  .home-menu nav a,
+  .home-menu nav a > span:last-child {
+    transition: none;
   }
 }

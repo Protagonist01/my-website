@@ -10,6 +10,11 @@ const FORMSPREE_ENDPOINTS = {
 const WORK_IMAGE_URLS = {
   "works/works images/testimony.png": new URL("../../works/works images/testimony.png", import.meta.url).href,
   "works/works images/fq4.png": new URL("../../works/works images/fq4.png", import.meta.url).href,
+  "assets/images/v2-work/framewise.webp": new URL("../../assets/images/v2-work/framewise.webp", import.meta.url).href,
+  "assets/images/v2-work/threadmark.webp": new URL("../../assets/images/v2-work/threadmark.webp", import.meta.url).href,
+  "assets/images/v2-work/cartpilot.webp": new URL("../../assets/images/v2-work/cartpilot.webp", import.meta.url).href,
+  "assets/images/v2-work/marginguard.webp": new URL("../../assets/images/v2-work/marginguard.webp", import.meta.url).href,
+  "assets/images/v2-work/clear-skin-treatments.webp": new URL("../../assets/images/v2-work/clear-skin-treatments.webp", import.meta.url).href,
 };
 
 const REPLICA_PAGES = new Set(["contact", "works"]);
@@ -53,6 +58,15 @@ function renderHeaderActions() {
     <div class="page-header-actions">
       <button class="header-action header-action--primary" type="button" data-contact-open>Contact Me</button>
     </div>
+  `;
+}
+
+function renderVersionSwitch() {
+  return `
+    <nav class="v1-version-switch" aria-label="Portfolio versions">
+      <span aria-current="page">V1</span>
+      <a href="/v2/">V2</a>
+    </nav>
   `;
 }
 
@@ -792,6 +806,7 @@ export function renderPage({ body, shell }) {
 
   if (pageKey === "testimonial") {
     shell.innerHTML = renderTestimonialPage(rootPath, page);
+    shell.insertAdjacentHTML("beforeend", renderVersionSwitch());
     initTestimonialControls(shell, page.reviews ?? []);
     initContactModal(shell);
     initReviewModal(shell);
@@ -800,6 +815,7 @@ export function renderPage({ body, shell }) {
 
   if (REPLICA_PAGES.has(pageKey)) {
     shell.innerHTML = `${renderReplicaPage(rootPath, pageKey, page)}${renderContactFormModal()}`;
+    shell.insertAdjacentHTML("beforeend", renderVersionSwitch());
     initContactModal(shell);
     return;
   }
@@ -872,6 +888,8 @@ export function renderPage({ body, shell }) {
     </footer>
     ${renderContactFormModal()}
   `;
+
+  shell.insertAdjacentHTML("beforeend", renderVersionSwitch());
 
   initContactModal(shell);
 }

@@ -291,6 +291,17 @@ button {
   background: var(--gallery-gold-bright);
 }
 
+.version-button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--gallery-gold-bright);
+  font-size: 0.68rem;
+  letter-spacing: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
 .menu-lines {
   display: grid;
   gap: 4px;
@@ -1665,6 +1676,40 @@ a.agent-item:focus-visible {
 }
 
 @media (max-width: 1023px) {
+  .brand-mark,
+  .brand-mark__badge,
+  .chrome-button,
+  .modal-header button,
+  .nav-overlay-top button,
+  .language-matrix button,
+  .agent-item--link,
+  .agents-link {
+    min-height: 2.75rem !important;
+  }
+
+  .brand-mark__badge,
+  .version-button,
+  .modal-header button,
+  .language-matrix button {
+    width: 2.75rem !important;
+    min-width: 2.75rem !important;
+    height: 2.75rem !important;
+  }
+
+  .agent-item--link,
+  .agents-link {
+    display: inline-flex;
+    align-items: center;
+    min-width: 2.75rem !important;
+  }
+
+  .nav-stack button,
+  .index-node {
+    min-height: 2.75rem !important;
+  }
+}
+
+@media (max-width: 1023px) {
   .cinematic-scroll .scene {
     min-height: 260vh;
   }
@@ -1859,5 +1904,38 @@ body,
     padding: 0 0.48rem;
     font-size: clamp(0.5rem, 1.95vw, 0.6rem);
     letter-spacing: 0.07em;
+  }
+
+  .brand-mark,
+  .brand-mark__badge,
+  .chat-button,
+  .version-button,
+  .modal-header button,
+  .nav-overlay-top button,
+  .language-matrix button {
+    min-height: 2.75rem;
+  }
+
+  .brand-mark__badge,
+  .modal-header button,
+  .version-button,
+  .language-matrix button {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    height: 2.75rem;
+  }
+
+  .brand-mark__badge {
+    font-size: 0.72rem;
+  }
+
+  .chrome-actions {
+    gap: 0.4rem;
+  }
+
+  .chat-button,
+  .nav-stack button,
+  .index-node {
+    min-height: 2.75rem;
   }
 }

@@ -103,6 +103,40 @@ To run this project locally, make sure you have [Node.js](https://nodejs.org/) i
     npm run preview
     ```
 
+### Deploying to Vercel
+
+This repository is configured as a Vite multi-page site with Vercel serverless functions. Vercel should use Node.js 22, run `npm run build`, and publish the generated `dist` directory. These values are committed in `package.json` and `vercel.json`.
+
+Before deploying, copy `.env.example` to `.env` for local development and configure the same server-side variables in the Vercel project's Preview and Production environments:
+
+- `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is required for the portfolio assistant.
+- `CAL_API_KEY` is required for live availability, verification, and booking.
+- `OPENAI_MODEL` and `OPENROUTER_MODEL` are optional provider overrides.
+- `PUBLIC_SITE_URL` should be the deployed V2 URL, for example `https://your-domain.example/v2/`.
+
+Never expose those credentials with a `VITE_` prefix. The Formspree contact forms call Formspree directly and do not require a Vercel environment variable.
+
+Run the release check before every deployment:
+
+```bash
+npm ci
+npm run deploy:check
+```
+
+After deployment, smoke-test `/v2/`, one case-study route such as `/v2/work/cartpilot/`, one offer route such as `/v2/offers/revenue-leak-audit/`, the assistant, and the booking flow. Preview deployments should receive the same environment variables when those integrations need to be tested there.
+
+### V2 reference replica
+
+Open `/v2/` after starting the development server. The V2 landing sequence is split into editable files:
+
+- `src/v2/replicaContent.js` contains the name, biography, statement, and services.
+- `src/v2/replicaAnimationConfig.js` contains the shared scroll and portrait transform values.
+- `src/v2/ReplicaHome.jsx` contains the semantic components and GSAP ScrollTrigger timelines.
+- `src/v2/replica.css` contains the exact desktop/mobile layout calibration.
+- Replace `assets/images/v2-hero/henry-bw.webp` to change the portrait. Keep the same crop for the monochrome and generated red faces so the flip remains seamless.
+
+The navigation supports click-outside and Escape dismissal. Reduced-motion users receive the settled portrait and fully revealed statement without scrubbed 3D motion.
+
 ---
 
 ## 🔒 Configuration & Best Practices

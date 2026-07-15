@@ -11,9 +11,14 @@ dist/
 *.err.log
 qa-artifacts/
 test-results/
-archive/
-context/
-demos/context/
+playwright-report/
+.playwright-cli/
+output/
+.codex-server/
+coverage/
+/archive/
+/context/
+/demos/context/
 .codex-screenshots/
 .codex-chrome-profile*/
 edge-cdp-profile/

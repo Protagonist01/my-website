@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#11110f">
+  <link rel="icon" href="/v2/favicon.svg" type="image/svg+xml">
+  <title>V1 / V2 Comparison | Henry Fadeni</title>
+  <link rel="stylesheet" href="/src/compare/styles.css">
+</head>
+<body>
+  <header class="compare-header">
+    <a class="compare-brand" href="/v2/" aria-label="Open V2 home">
+      <span>HF</span>
+      <strong>Version comparison</strong>
+    </a>
+
+    <label class="compare-route" for="compare-route">
+      <span>Route</span>
+      <select id="compare-route"></select>
+    </label>
+
+    <div class="compare-viewports" aria-label="Preview viewport">
+      <button type="button" data-viewport="desktop" class="is-active">Desktop</button>
+      <button type="button" data-viewport="tablet">Tablet</button>
+      <button type="button" data-viewport="mobile">Mobile</button>
+    </div>
+
+    <button class="compare-refresh" id="compare-refresh" type="button">Refresh both</button>
+  </header>
+
+  <main class="compare-stage" data-viewport="desktop">
+    <section class="compare-pane" aria-labelledby="v1-label">
+      <header>
+        <div>
+          <span>V1</span>
+          <strong id="v1-label">Current website</strong>
+        </div>
+        <a id="v1-open" href="/" target="_blank" rel="noreferrer">Open separately <span aria-hidden="true">-&gt;</span></a>
+      </header>
+      <div class="compare-frame-wrap">
+        <iframe id="v1-frame" title="V1 website preview" src="/"></iframe>
+      </div>
+    </section>
+
+    <section class="compare-pane" aria-labelledby="v2-label">
+      <header>
+        <div>
+          <span>V2</span>
+          <strong id="v2-label">Redesign</strong>
+        </div>
+        <a id="v2-open" href="/v2/" target="_blank" rel="noreferrer">Open separately <span aria-hidden="true">-&gt;</span></a>
+      </header>
+      <div class="compare-frame-wrap">
+        <iframe id="v2-frame" title="V2 website preview" src="/v2/"></iframe>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/src/compare/main.js"></script>
+</body>
+</html>
