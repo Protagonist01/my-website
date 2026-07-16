@@ -35,6 +35,7 @@ export const replicaContent = {
     { label: "Instagram", href: "https://www.instagram.com/henry_fadeni/", icon: "instagram" },
     { label: "LinkedIn", href: "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", icon: "linkedin" },
     { label: "GitHub", href: "https://github.com/Protagonist01", icon: "github" },
+    { label: "Gmail", href: "mailto:hfadeni@gmail.com", icon: "gmail" },
   ],
   footerStatement: ["AI &", "Software", "Engineering."],
 };

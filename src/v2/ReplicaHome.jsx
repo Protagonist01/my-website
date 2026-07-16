@@ -210,6 +210,9 @@ function SocialIcon({ name }) {
   if (name === "linkedin") {
     return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9v10M5 5.6v.1M9.5 19V9m0 4.4c.7-2.7 5.8-3.2 5.8.8V19M3 9h4M3 19h4" /><circle className="is-filled" cx="5" cy="5.6" r="1.35" /></svg>;
   }
+  if (name === "gmail") {
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 6.5 12 13l8.5-6.5M4 6h16v12H4zM4 7v11m16-11v11" /></svg>;
+  }
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.3 19.6c-4.7 1.4-4.7-2.3-6.5-2.8m13 5.2v-3.5c0-1 .1-1.7-.5-2.4 3.2-.4 6.5-1.6 6.5-7.1a5.5 5.5 0 0 0-1.5-3.9 5.2 5.2 0 0 0-.1-3.9s-1.2-.4-4 1.5a13.7 13.7 0 0 0-7.2 0C5.2.8 4 1.2 4 1.2a5.2 5.2 0 0 0-.1 3.9A5.5 5.5 0 0 0 2.4 9c0 5.5 3.3 6.7 6.5 7.1-.5.5-.6 1.1-.6 2.4V22" /></svg>;
 }
 
@@ -217,7 +220,7 @@ function SocialLinks() {
   return (
     <div className="replica-socials" aria-label="Social links">
       {replicaContent.socials.map((social) => (
-        <a href={social.href} key={social.label} aria-label={social.label} target="_blank" rel="noreferrer"><SocialIcon name={social.icon} /></a>
+        <a href={social.href} key={social.label} aria-label={social.label} target={social.href.startsWith("mailto:") ? undefined : "_blank"} rel={social.href.startsWith("mailto:") ? undefined : "noreferrer"}><SocialIcon name={social.icon} /></a>
       ))}
     </div>
   );
