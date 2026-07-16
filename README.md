@@ -112,7 +112,7 @@ Before deploying, copy `.env.example` to `.env` for local development and config
 - `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is required for the portfolio assistant.
 - `CAL_API_KEY` is required for live availability, verification, and booking.
 - `OPENAI_MODEL` and `OPENROUTER_MODEL` are optional provider overrides.
-- `PUBLIC_SITE_URL` should be the deployed V2 URL, for example `https://your-domain.example/v2/`.
+- `PUBLIC_SITE_URL` should be the deployed site URL, for example `https://your-domain.example/`.
 
 Never expose those credentials with a `VITE_` prefix. The Formspree contact forms call Formspree directly and do not require a Vercel environment variable.
 
@@ -123,11 +123,11 @@ npm ci
 npm run deploy:check
 ```
 
-After deployment, smoke-test `/v2/`, one case-study route such as `/v2/work/cartpilot/`, one offer route such as `/v2/offers/revenue-leak-audit/`, the assistant, and the booking flow. Preview deployments should receive the same environment variables when those integrations need to be tested there.
+After deployment, smoke-test `/`, one case-study route such as `/v2/work/cartpilot/`, one offer route such as `/v2/offers/revenue-leak-audit/`, the assistant, and the booking flow. Preview deployments should receive the same environment variables when those integrations need to be tested there.
 
-### V2 reference replica
+### Current portfolio experience
 
-Open `/v2/` after starting the development server. The V2 landing sequence is split into editable files:
+Open `/` after starting the development server. The current landing sequence is split into editable files:
 
 - `src/v2/replicaContent.js` contains the name, biography, statement, and services.
 - `src/v2/replicaAnimationConfig.js` contains the shared scroll and portrait transform values.

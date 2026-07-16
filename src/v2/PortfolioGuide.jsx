@@ -397,7 +397,7 @@ export default function PortfolioGuide({ page }) {
     if (!targets.length) return undefined;
 
     const isHomeHero = () => (
-      window.location.pathname === "/v2/"
+      ["/", "/v2/"].includes(window.location.pathname)
       && window.scrollY < Math.min(320, window.innerHeight * .4)
     );
 

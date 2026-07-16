@@ -52,7 +52,7 @@ export function FloatingNavigation({ items = replicaContent.navigation.slice(1) 
   return (
     <nav className={`replica-nav${open ? " is-open" : ""}`} ref={navRef} aria-label="Primary navigation">
       <div className="replica-nav__top">
-        <a href="/v2/" onClick={() => setOpen(false)}>{replicaContent.name}</a>
+        <a href="/" onClick={() => setOpen(false)}>{replicaContent.name}</a>
         <button type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="replica-menu" onClick={() => setOpen((value) => !value)}>
           {open ? <span className="replica-nav__close" aria-hidden="true" /> : <span className="replica-nav__dots" aria-hidden="true"><i /><i /><i /></span>}
         </button>
@@ -68,13 +68,6 @@ export function FloatingNavigation({ items = replicaContent.navigation.slice(1) 
               onClick={() => setOpen(false)}
             ><span>{item.label}</span>{item.arrow && <span className="replica-nav__link-arrow" aria-hidden="true">{item.arrow}</span>}</a>
           ))}
-        </div>
-        <div className="replica-nav__version">
-          <span>Website version</span>
-          <a href="/" tabIndex={open ? 0 : -1} aria-label="Switch from portfolio V2 to V1">
-            <span>V1</span>
-            <span aria-current="page">V2</span>
-          </a>
         </div>
       </div>
     </nav>
@@ -343,7 +336,7 @@ function useContactLauncher(rootRef, openContact) {
       if (!link || !root.contains(link)) return;
       if (link.hasAttribute("data-header-contact")) return;
       const href = link.getAttribute("href") || "";
-      const isContactLink = href === "#contact" || href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:");
+      const isContactLink = href === "#contact" || href.includes("/#contact") || href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:");
       if (!isContactLink) return;
       event.preventDefault();
       openContact();
@@ -390,10 +383,6 @@ export function SiteFooter() {
           <div className="replica-footer__contact"><h2>/Contact</h2><a href={`mailto:${replicaContent.contact.email}`}>{replicaContent.contact.email}</a></div>
         </div>
         <RisingWordmark word={replicaContent.wordmark} />
-        <a className="replica-version-switch" href="/" aria-label="Switch from portfolio V2 to V1">
-          <span>V1</span>
-          <span aria-current="page">V2</span>
-        </a>
       </div>
     </footer>
   );

@@ -18,12 +18,12 @@ export const replicaContent = {
     { title: "Full-Stack Product Engineering", details: ["Product UX", "Frontend & APIs", "Production Delivery"], href: "/v2/services/product-engineering/" },
   ],
   navigation: [
-    { label: "Home", href: "/v2/" },
-    { label: "About Me", href: "/v2/#about" },
-    { label: "Services", href: "/v2/#services" },
+    { label: "Home", href: "/" },
+    { label: "About Me", href: "/#about" },
+    { label: "Services", href: "/#services" },
     { label: "Featured Projects", href: "/v2/work/" },
-    { label: "E-Commerce", href: "/v2/#offers" },
-    { label: "Contact", href: "/v2/#contact" },
+    { label: "E-Commerce", href: "/#offers" },
+    { label: "Contact", href: "/#contact" },
   ],
   contact: {
     heading: "Let’s talk.",

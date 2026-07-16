@@ -10,7 +10,7 @@
 .replica-end *, .replica-end *::before, .replica-end *::after { box-sizing: border-box; }
 
 .replica-nav { position: fixed; z-index: 50; top: 29px; left: 50%; width: 320px; height: 60px; overflow: hidden; border-radius: 19px; background: #111; color: #fff; scale: 1; transform: translateX(-50%); transform-origin: top center; transition: height .72s cubic-bezier(.16, 1, .3, 1), scale .42s cubic-bezier(.34, 1.56, .64, 1); }
-.replica-nav.is-open { height: 372px; }
+.replica-nav.is-open { height: 314px; }
 .replica-nav__top { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 15px 0 17px; }
 .replica-nav__top > a { color: inherit; font-size: 21px; font-weight: 600; text-decoration: none; }
 .replica-nav button { display: grid; width: 44px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: #f5f4ef; color: #111; cursor: pointer; place-items: center; }
@@ -28,11 +28,6 @@
 .replica-nav.is-open .replica-nav__links a:nth-child(3) { transition-delay: .44s; }
 .replica-nav.is-open .replica-nav__links a:nth-child(4) { transition-delay: .56s; }
 .replica-nav.is-open .replica-nav__links a:nth-child(5) { transition-delay: .68s; }
-.replica-nav__version { display: flex; align-items: center; justify-content: space-between; margin: 0 16px 14px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,.16); opacity: 0; transform: translateY(-8px); transition: opacity .32s ease, transform .48s cubic-bezier(.16, 1, .3, 1); }
-.replica-nav.is-open .replica-nav__version { opacity: 1; transform: none; transition-delay: .78s; }
-.replica-nav__version > span { color: rgba(255,255,255,.55); font-size: 11px; font-weight: 600; letter-spacing: .045em; text-transform: uppercase; }
-.replica-nav__version a { display: inline-flex; align-items: center; gap: 12px; min-height: 34px; padding: 0 12px; border-radius: 8px; background: #f5f4ef; color: #111; font-size: 12px; font-weight: 650; line-height: 1; text-decoration: none; }
-.replica-nav__version [aria-current="page"] { opacity: .45; }
 .replica-nav a:focus-visible, .replica-nav button:focus-visible { outline: 2px solid #ff2a22; outline-offset: 3px; }
 
 @media (hover: hover) and (pointer: fine) {
@@ -184,12 +179,6 @@
   93% { opacity: 1; transform: translateY(-1px); }
   100% { opacity: 1; transform: translateY(0); }
 }
-.replica-version-switch { position: absolute; z-index: 3; right: calc((100vw - 100%) / -2 + 156px); bottom: 24px; display: inline-flex; align-items: center; gap: 14px; height: 38px; padding: 0 13px; border: 1px solid var(--light-text); border-radius: 8px; background: var(--light-text); color: var(--ink); font-size: 13px; font-weight: 600; line-height: 1; text-decoration: none; transition: background-color .18s ease, color .18s ease; }
-.replica-version-switch [aria-current="page"] { opacity: .5; }
-.replica-version-switch:hover { background: transparent; color: var(--light-text); }
-.replica-version-switch:focus-visible { outline: 2px solid var(--light-text); outline-offset: 3px; }
-.replica-footer .replica-version-switch { display: none; }
-
 @media (max-width: 900px) {
   .replica-hero__title { width: 86vw; }
   .replica-hero h1 { font-size: clamp(4rem, 9vw, 5rem); }
@@ -204,7 +193,7 @@
 
 @media (max-width: 700px) {
   .replica-nav { top: 30px; width: calc(100vw - 30px); max-width: 360px; height: 60px; }
-  .replica-nav.is-open { height: min(372px, calc(100svh - 60px)); height: min(372px, calc(100dvh - 60px)); }
+  .replica-nav.is-open { height: min(314px, calc(100svh - 60px)); height: min(314px, calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
@@ -312,7 +301,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__right a span, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a, .replica-version-switch { transition: none; }
+  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__right a span, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
   .replica-nav__links a { animation: none !important; }
   .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { opacity: 1; transform: none; animation: none; transition: none; }
   .replica-intro { height: 200vh; }

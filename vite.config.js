@@ -62,18 +62,6 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
         home: resolve(__dirname, "index.html"),
-        about: resolve(__dirname, "about/index.html"),
-        contact: resolve(__dirname, "contact/index.html"),
-        experience: resolve(__dirname, "experience/index.html"),
-        "my-stack": resolve(__dirname, "my-stack/index.html"),
-        testimonial: resolve(__dirname, "testimonial/index.html"),
-        demos: resolve(__dirname, "demos/index.html"),
-        works: resolve(__dirname, "works/index.html"),
-        "works-ai-agents": resolve(__dirname, "works/ai-agents/index.html"),
-        "works-ai-workflows": resolve(__dirname, "works/ai-workflows/index.html"),
-        "works-fullstack": resolve(__dirname, "works/fullstack/index.html"),
-        "demo-gallery": resolve(__dirname, "demo gallery/index.html"),
-        "ecommerce-demo-gallery": resolve(__dirname, "ecommerce demo gallery/index.html"),
         "v2-home": resolve(__dirname, "v2/index.html"),
         "v2-work": resolve(__dirname, "v2/work/index.html"),
         "v2-case-clear-skin": resolve(__dirname, "v2/work/clear-skin/index.html"),
@@ -106,9 +94,7 @@ export default defineConfig(({ mode }) => {
         "v2-offer-retention-automation": resolve(__dirname, "v2/offers/retention-automation/index.html"),
         "v2-offer-inventory-intelligence": resolve(__dirname, "v2/offers/inventory-intelligence/index.html"),
         "v2-offer-returns-automation": resolve(__dirname, "v2/offers/returns-automation/index.html"),
-        "v2-offer-custom-automation": resolve(__dirname, "v2/offers/custom-automation/index.html"),
-        compare: resolve(__dirname, "compare/index.html"),
-        clone: resolve(__dirname, "clone/index.html")
+        "v2-offer-custom-automation": resolve(__dirname, "v2/offers/custom-automation/index.html")
         }
       }
     }
