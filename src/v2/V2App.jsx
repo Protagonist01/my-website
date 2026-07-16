@@ -905,7 +905,7 @@ function OffersShowcase() {
         const gatewayCard = gateway?.querySelector(".v2-offers-mobile-gateway-card");
         const gatewayNumber = gateway?.querySelector(".v2-offers-mobile-gateway-number");
         const handoffDuration = 3.15;
-        const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+        const viewportHeight = () => intro.clientHeight || window.innerHeight;
         gsap.set([gatewayCard, gatewayNumber], { autoAlpha: 0 });
         const reveal = gsap.timeline({
           scrollTrigger: {
@@ -953,7 +953,11 @@ function OffersShowcase() {
         ScrollTrigger.refresh();
       }, section);
       let refreshTimer = 0;
+      let viewportWidth = window.visualViewport?.width || window.innerWidth;
       const refresh = () => {
+        const nextWidth = window.visualViewport?.width || window.innerWidth;
+        if (Math.abs(nextWidth - viewportWidth) < 2) return;
+        viewportWidth = nextWidth;
         window.clearTimeout(refreshTimer);
         refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
       };
@@ -989,7 +993,7 @@ function OffersShowcase() {
     const render = () => {
       frame = 0;
       const rect = stage.getBoundingClientRect();
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const viewportHeight = pin?.clientHeight || window.innerHeight;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const progress = clamp(-rect.top / travel);
       const chapterEnd = .95;
@@ -999,8 +1003,8 @@ function OffersShowcase() {
       const exact = chapterProgress * Math.max(0, cards.length - 1);
       const numberReveal = smoothstep(.42, .86, arrivalProgress);
       const exit = smoothstep(chapterEnd, 1, progress);
-      const coverReveal = smoothstep(.93, 1, progress);
-      const coverLift = coverReveal * viewportHeight * 1.12;
+      const coverReveal = smoothstep(.88, 1, progress);
+      const coverLift = coverReveal * viewportHeight;
       const currentEntryY = 42 * (1 - entryReveal);
 
       if (pin) {
@@ -1025,25 +1029,19 @@ function OffersShowcase() {
         const activeStrength = clamp(1 - distance);
         const near = clamp(1 - distance / 1.65);
         const farFade = clamp(2.2 - distance);
-        const colorStrength = smoothstep(.22, .92, activeStrength);
-        const x = 50 + relative * 60 + (index === 0 ? (1 - entryReveal) * 35 : 0);
-        const y = 46 + relative * 50 + currentEntryY;
+        const x = relative * pin.clientWidth * .6 + (index === 0 ? (1 - entryReveal) * pin.clientWidth * .35 : 0);
+        const y = relative * viewportHeight * .5 + currentEntryY;
         const opacity = (.08 + near * .92) * farFade * entryReveal;
 
-        card.style.left = `${x.toFixed(2)}%`;
-        card.style.top = `${y.toFixed(2)}%`;
         card.style.opacity = opacity.toFixed(4);
-        card.style.transform = "translate3d(-50%, -50%, 0)";
-        card.style.filter = `brightness(${(.72 + colorStrength * .36).toFixed(3)})`;
+        card.style.transform = `translate3d(-50%, -50%, 0) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
         card.style.zIndex = `${10 + Math.round(activeStrength * 30)}`;
-        card.style.setProperty("--v2-auto-card-veil", (.64 * (1 - colorStrength)).toFixed(3));
         card.classList.toggle("is-scroll-active", activeStrength > .62);
       });
 
       numbers.forEach((number, index) => {
         number.style.opacity = "1";
         number.style.transform = `translate3d(0, ${((index - exact) * 100).toFixed(2)}%, 0)`;
-        number.style.filter = "none";
       });
     };
 
@@ -1092,7 +1090,7 @@ function OffersShowcase() {
           </article>
 
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 200}svh`, "--v2-offers-mobile-stage-height-dvh": `${commerceOffers.length * 100 + 200}dvh` }} aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 200}svh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
                 <div className="v2-offers-mobile-ambient" aria-hidden="true" />
                 <div className="v2-offers-mobile-grid" aria-hidden="true" />

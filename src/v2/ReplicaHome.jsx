@@ -405,13 +405,18 @@ export function EndingSequence() {
     const updateEnding = () => {
       frame = 0;
       const rect = ending.getBoundingClientRect();
+      const sticky = ending.querySelector(".replica-ending__sticky");
+      const viewportHeight = sticky?.clientHeight || window.innerHeight;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
         ending.classList.remove("is-footer-visible");
         gsap.set([cover, under], { clearProps: "transform" });
         return;
       }
-      const progress = Math.min(1, Math.max(0, -rect.top / Math.max(1, rect.height - window.innerHeight)));
+      const mobile = window.matchMedia("(max-width: 700px)").matches;
+      const overlap = mobile ? viewportHeight : 0;
+      const travel = Math.max(1, rect.height - viewportHeight - overlap);
+      const progress = Math.min(1, Math.max(0, (-rect.top - overlap) / travel));
       const reveal = progress * progress * (3 - (2 * progress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
@@ -523,7 +528,11 @@ function useReplicaMotion(rootRef) {
     }, root);
 
     let refreshTimer = 0;
+    let viewportWidth = window.visualViewport?.width || window.innerWidth;
     const refresh = () => {
+      const nextWidth = window.visualViewport?.width || window.innerWidth;
+      if (Math.abs(nextWidth - viewportWidth) < 2) return;
+      viewportWidth = nextWidth;
       window.clearTimeout(refreshTimer);
       refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
     };

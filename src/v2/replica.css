@@ -226,7 +226,7 @@
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
   .replica-end-container { width: calc(100% - 48px); }
-  .replica-ending { --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 212svh; height: 212dvh; }
+  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 312svh; }
   .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--replica-vh); overflow: hidden; }
   .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow-y: auto; will-change: transform; }
   .replica-ending__under { top: auto; height: var(--footer-panel-height); overflow: hidden; }

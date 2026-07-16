@@ -1109,7 +1109,7 @@ button, a { color: inherit; }
   .v2-offer-rail { overflow: clip; }
   .v2-offer-rail__viewport { height: auto; overflow: visible; }
   .v2-offer-track { display: block; width: 100%; height: auto; transform: none !important; will-change: auto; }
-  .v2-offers-intro { z-index: 3; width: 100%; min-height: 100svh; min-height: 100dvh; height: 100svh; height: 100dvh; padding-bottom: 7.5rem; background: var(--offers-background); }
+  .v2-offers-intro { z-index: 3; width: 100%; min-height: 100svh; height: 100svh; padding-bottom: 7.5rem; background: var(--offers-background); }
   .v2-offers-intro__content { position: relative; z-index: 2; display: block; will-change: transform, opacity; }
   .v2-offers-filters { display: none; }
   .v2-offers-mobile-gateway {
@@ -1141,25 +1141,20 @@ button, a { color: inherit; }
     height: var(--v2-offers-mobile-stage-height-svh, 900svh);
     min-height: var(--v2-offers-mobile-stage-height-svh, 900svh);
     margin-top: -100svh;
-    margin-top: -100dvh;
     background: transparent;
     color: #fff;
     pointer-events: none;
   }
-  @supports (height: 100dvh) {
-    .v2-offers-mobile-stage {
-      height: var(--v2-offers-mobile-stage-height-dvh, 900dvh);
-      min-height: var(--v2-offers-mobile-stage-height-dvh, 900dvh);
-    }
-  }
-  .v2-offer-rail + .replica-ending { z-index: 1; margin-top: -100svh; margin-top: -100dvh; }
-  .v2-offers-mobile-sticky { position: sticky; top: 0; height: 100svh; height: 100dvh; min-height: 100svh; min-height: 100dvh; overflow: hidden; isolation: isolate; background: #000; pointer-events: auto; will-change: transform, opacity; }
+  .v2-offer-rail + .replica-ending { z-index: 1; margin-top: -100svh; }
+  .v2-offers-mobile-sticky { position: sticky; top: 0; height: 100svh; min-height: 100svh; overflow: hidden; isolation: isolate; background: #000; pointer-events: auto; will-change: transform, opacity; }
   .v2-offers-mobile-ambient, .v2-offers-mobile-grid { position: absolute; z-index: -1; inset: 0; pointer-events: none; }
   .v2-offers-mobile-ambient { background: radial-gradient(circle at 76% 72%, rgba(232, 201, 122, .12), transparent 34%); transform: translate3d(var(--v2-auto-flow-x, 0), var(--v2-auto-flow-y, 0), 0); }
-  .v2-offers-mobile-grid { opacity: .16; background: linear-gradient(90deg, rgba(255, 247, 220, .07) 1px, transparent 1px), linear-gradient(180deg, rgba(255, 247, 220, .05) 1px, transparent 1px); background-position: var(--v2-auto-grid-x, 0) var(--v2-auto-grid-y, 0); background-size: 56px 56px; mask-image: radial-gradient(ellipse at 48% 50%, #000, transparent 74%); }
+  .v2-offers-mobile-grid { inset: -56px; opacity: .16; background: linear-gradient(90deg, rgba(255, 247, 220, .07) 1px, transparent 1px), linear-gradient(180deg, rgba(255, 247, 220, .05) 1px, transparent 1px); background-size: 56px 56px; transform: translate3d(var(--v2-auto-grid-x, 0), var(--v2-auto-grid-y, 0), 0); mask-image: radial-gradient(ellipse at 48% 50%, #000, transparent 74%); will-change: transform; }
   .v2-offers-mobile-cards { position: absolute; z-index: 20; inset: 0; pointer-events: none; }
   .v2-offers-mobile-card {
     position: absolute;
+    top: 46%;
+    left: 50%;
     width: min(72vw, 21rem);
     aspect-ratio: .78 / 1;
     overflow: hidden;
@@ -1170,7 +1165,7 @@ button, a { color: inherit; }
     opacity: 0;
     cursor: pointer;
     pointer-events: auto;
-    will-change: left, top, opacity, filter, transform;
+    will-change: opacity, transform;
   }
   .v2-offers-mobile-card::before { position: absolute; z-index: 2; inset: -1px; content: ""; background: linear-gradient(180deg, transparent 44%, rgba(0, 0, 0, .48) 82%, rgba(0, 0, 0, .72)), radial-gradient(circle at 80% 18%, rgba(232, 201, 122, .07), transparent 38%); pointer-events: none; }
   .v2-offers-mobile-card::after { position: absolute; z-index: 1; inset: -12px; content: ""; background: radial-gradient(ellipse at center, transparent 78%, rgba(0, 0, 0, .24)); opacity: .5; pointer-events: none; }
