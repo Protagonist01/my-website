@@ -481,10 +481,10 @@ function useReplicaMotion(rootRef) {
         const about = root.querySelector(".replica-about");
         const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
         const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
-        const portraitLift = () => -Math.min(282, viewportHeight() * .45);
+        const portraitLift = () => -Math.min(220, viewportHeight() * .22);
         timeline
           .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
-          .to(".replica-hero__since", { y: () => -viewportHeight() * .3, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
+          .to(".replica-hero__since", { y: () => viewportHeight() * .08, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)

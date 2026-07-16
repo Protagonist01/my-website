@@ -1535,6 +1535,7 @@ export function V2App({ page }) {
   };
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
-  const usesProjectNavigation = page === "work" || page.startsWith("case-") || page.startsWith("offer-");
+  const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
+  const usesProjectNavigation = page === "work" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
   return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={openContactFromLink}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

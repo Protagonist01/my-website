@@ -5,10 +5,10 @@ export const replicaContent = {
   year: "©2026",
   since: "/CREATING SINCE 2020",
   aboutHeading: "Hey!",
-  shortIntro: "I’m Henry, a software and AI engineer based in Lagos, working with teams worldwide.",
+  shortIntro: "I’m Henry, a software and AI engineer in Lagos, working with teams worldwide.",
   biography: [
-    "As an AI and software engineer, I build modern, scalable products and the dependable systems behind them.",
-    "I create and ship AI products, operational software, and web experiences that help teams move faster.",
+    "I build dependable AI products and software systems.",
+    "I turn complex ideas into products teams can use and trust.",
   ],
   statement: "From idea to launch. AI and software engineering shaped into clean, scalable digital products that move fast, stay simple, and perform in real-world use.",
   services: [
