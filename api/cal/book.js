@@ -103,10 +103,12 @@ export default async function handler(req, res) {
           timeZone,
           language: "en",
         },
+        bookingFieldsResponses: {
+          title: eventType.title,
+        },
         metadata: {
           source: "portfolio-chat",
         },
-        location: eventType.location,
         ...(emailVerificationCode ? { emailVerificationCode } : {}),
       }),
       signal: AbortSignal.timeout(20_000),
