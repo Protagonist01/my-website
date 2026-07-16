@@ -1376,6 +1376,19 @@ body.hf-guide-max-open {
     height: 64px;
   }
 
+  .hf-guide.is-mobile-case .hf-guide-launcher,
+  .hf-guide.is-mobile-case .hf-guide-launcher .hf-guide-avatar {
+    width: 46px;
+    height: 52px;
+  }
+
+  .hf-guide.is-mobile-case.is-story-active:not(.is-open) {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(1rem);
+    transition: opacity .22s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
+  }
+
   .hf-guide-launcher__status {
     top: 10px;
     right: 1px;

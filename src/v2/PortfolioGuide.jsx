@@ -246,6 +246,7 @@ function Avatar({ large = false }) {
 
 export default function PortfolioGuide({ page }) {
   const route = `${window.location.pathname}${window.location.hash}`;
+  const isCasePage = page?.startsWith("case-") || page?.startsWith("offer-");
   const [open, setOpen] = useState(false);
   const [panelPhase, setPanelPhase] = useState("idle");
   const [maximized, setMaximized] = useState(false);
@@ -254,6 +255,8 @@ export default function PortfolioGuide({ page }) {
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
+  const [mobileCase, setMobileCase] = useState(false);
+  const [storyActive, setStoryActive] = useState(false);
   const [messages, setMessages] = useState(() => readSessionMessages(route));
   const promptContextKey = `${route}:${activeSection || "hero"}`;
   const inputRef = useRef(null);
@@ -271,6 +274,45 @@ export default function PortfolioGuide({ page }) {
   );
   const observedPromptContextRef = useRef(promptContextKey);
   const hasShownPromptOnPageRef = useRef(false);
+
+  useEffect(() => {
+    if (!isCasePage) return undefined;
+    const query = window.matchMedia("(max-width: 760px)");
+    const sync = () => setMobileCase(query.matches);
+    sync();
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, [isCasePage]);
+
+  useEffect(() => {
+    if (!mobileCase) {
+      setStoryActive(false);
+      return undefined;
+    }
+    const sections = [...document.querySelectorAll('[data-story-sequence="pin"], .v2-decision-replay')];
+    if (!sections.length) return undefined;
+    let frame = 0;
+    const sync = () => {
+      frame = 0;
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const active = sections.some((section) => {
+        const bounds = section.getBoundingClientRect();
+        return bounds.top < viewportHeight * .72 && bounds.bottom > viewportHeight * .2;
+      });
+      setStoryActive((current) => current === active ? current : active);
+    };
+    const requestSync = () => {
+      if (!frame) frame = window.requestAnimationFrame(sync);
+    };
+    requestSync();
+    window.addEventListener("scroll", requestSync, { passive: true });
+    window.visualViewport?.addEventListener("resize", requestSync, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", requestSync);
+      window.visualViewport?.removeEventListener("resize", requestSync);
+    };
+  }, [mobileCase, page]);
 
   const syncHeadOrigin = useCallback(() => {
     const launcher = launcherRef.current;
@@ -384,6 +426,7 @@ export default function PortfolioGuide({ page }) {
   useEffect(() => {
     if (
       open
+      || mobileCase
       || document.visibilityState === "hidden"
       || sessionStorage.getItem(PROMPT_MUTED_KEY) === "1"
       || prompt
@@ -413,7 +456,7 @@ export default function PortfolioGuide({ page }) {
     }, delay);
 
     return () => window.clearTimeout(showTimer);
-  }, [open, prompt, promptContextKey]);
+  }, [mobileCase, open, prompt, promptContextKey]);
 
   useEffect(() => {
     if (!prompt) return undefined;
@@ -624,7 +667,7 @@ export default function PortfolioGuide({ page }) {
     .find((message) => message.role === "assistant")?.id;
 
   return createPortal(
-    <div className={`hf-guide${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}`}>
+    <div className={`hf-guide${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}${storyActive ? " is-story-active" : ""}`}>
       {!open && prompt && (
         <div className="hf-guide-prompt" role="status">
           <span className="hf-guide-prompt__cloud" aria-hidden="true">

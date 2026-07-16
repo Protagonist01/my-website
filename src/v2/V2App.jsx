@@ -172,6 +172,26 @@ function useCaseStudyMotion(rootRef, page) {
         import("gsap/ScrollTrigger"),
       ]);
       if (cancelled) return;
+      const heroAsset = article.querySelector(".v2-case-head > figure img, .v2-case-head > figure video, .v2-offer-case__media img, .v2-offer-case__media video");
+      const heroVideoReady = heroAsset?.tagName === "VIDEO" && heroAsset.readyState < 1
+        ? new Promise((resolve) => {
+            const finish = () => {
+              window.clearTimeout(timeout);
+              heroAsset.removeEventListener("loadedmetadata", finish);
+              heroAsset.removeEventListener("error", finish);
+              resolve();
+            };
+            const timeout = window.setTimeout(finish, 2_000);
+            heroAsset.addEventListener("loadedmetadata", finish, { once: true });
+            heroAsset.addEventListener("error", finish, { once: true });
+          })
+        : Promise.resolve();
+      await Promise.allSettled([
+        document.fonts?.ready || Promise.resolve(),
+        heroAsset?.tagName === "IMG" ? heroAsset.decode?.() || Promise.resolve() : Promise.resolve(),
+        heroVideoReady,
+      ]);
+      if (cancelled) return;
       gsap.registerPlugin(ScrollTrigger);
       showContent();
 
@@ -258,15 +278,22 @@ function useCaseStudyMotion(rootRef, page) {
             if (!targets.length) return null;
             const wantsPin = section.dataset.storySequence === "pin";
             const canPin = wantsPin;
-            const pinOffset = mobile ? 152 : 176;
-            const distance = canPin
-              ? Math.max(window.innerHeight * (mobile ? .78 : 1.05), targets.length * (mobile ? 112 : 168))
-              : undefined;
+            const pinOffset = mobile
+              ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
+              : 176;
+            const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+            const contentOverflow = () => mobile && canPin
+              ? Math.max(0, section.scrollHeight - section.clientHeight)
+              : 0;
+            const distance = canPin ? () => Math.max(
+              viewportHeight() * (mobile ? .86 : 1.05),
+              targets.length * (mobile ? 104 : 168) + contentOverflow() * 1.35,
+            ) : undefined;
             const timeline = gsap.timeline({
               scrollTrigger: {
                 trigger: section,
                 start: canPin ? `top top+=${pinOffset}` : "top 88%",
-                end: canPin ? `+=${distance}` : "bottom 34%",
+                end: canPin ? () => `+=${Math.round(distance())}` : "bottom 34%",
                 pin: canPin,
                 pinSpacing: canPin,
                 anticipatePin: canPin ? 1 : 0,
@@ -289,6 +316,14 @@ function useCaseStudyMotion(rootRef, page) {
               stagger: mobile ? .34 : .52,
               ease: "none",
             });
+
+            if (mobile && canPin) {
+              timeline.to(targets, {
+                y: () => -contentOverflow(),
+                duration: () => Math.max(.5, contentOverflow() / 240),
+                ease: "none",
+              });
+            }
 
             if (canPin) timeline.to({}, { duration: mobile ? .2 : .26 });
             return timeline;
@@ -335,7 +370,20 @@ function useCaseStudyMotion(rootRef, page) {
 
       }, article);
 
-      window.requestAnimationFrame(() => ScrollTrigger.refresh());
+      let refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
+      let refreshTimer = 0;
+      const refresh = () => {
+        window.clearTimeout(refreshTimer);
+        refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
+      };
+      window.visualViewport?.addEventListener("resize", refresh, { passive: true });
+      window.addEventListener("orientationchange", refresh, { passive: true });
+      context.add(() => {
+        window.cancelAnimationFrame(refreshFrame);
+        window.clearTimeout(refreshTimer);
+        window.visualViewport?.removeEventListener("resize", refresh);
+        window.removeEventListener("orientationchange", refresh);
+      });
     };
 
     setup();
@@ -851,6 +899,7 @@ function OffersShowcase() {
 
     const setup = async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([import("gsap"), import("gsap/ScrollTrigger")]);
+      await document.fonts?.ready;
       if (disposed) return;
       gsap.registerPlugin(ScrollTrigger);
       context = gsap.context(() => {
@@ -859,11 +908,12 @@ function OffersShowcase() {
         const content = intro.querySelector(".v2-offers-intro__content");
         const gateway = intro.querySelector(".v2-offers-mobile-gateway");
         const handoffDuration = 3.15;
+        const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
         const reveal = gsap.timeline({
           scrollTrigger: {
             trigger: intro,
             start: "top top",
-            end: () => `+=${Math.round(window.innerHeight * 2.4)}`,
+            end: () => `+=${Math.round(viewportHeight() * 2.65)}`,
             pin: true,
             scrub: true,
             anticipatePin: 1,
@@ -894,6 +944,16 @@ function OffersShowcase() {
         }, "handoff");
         ScrollTrigger.refresh();
       }, section);
+      let refreshTimer = 0;
+      const refresh = () => {
+        window.clearTimeout(refreshTimer);
+        refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
+      };
+      window.visualViewport?.addEventListener("resize", refresh, { passive: true });
+      context.add(() => {
+        window.clearTimeout(refreshTimer);
+        window.visualViewport?.removeEventListener("resize", refresh);
+      });
     };
 
     setup();
@@ -921,7 +981,8 @@ function OffersShowcase() {
     const render = () => {
       frame = 0;
       const rect = stage.getBoundingClientRect();
-      const travel = Math.max(1, stage.offsetHeight - window.innerHeight);
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const progress = clamp(-rect.top / travel);
       const entryStart = .035;
       const entryEnd = .13;
@@ -933,18 +994,18 @@ function OffersShowcase() {
       const numberReveal = smoothstep(.12, .74, entryRevealRaw);
       const exit = smoothstep(chapterEnd, 1, progress);
       const coverReveal = smoothstep(.93, 1, progress);
-      const coverLiftVh = coverReveal * 112;
+      const coverLift = coverReveal * viewportHeight * 1.12;
       const currentEntryY = 42 * (1 - entryReveal);
 
       if (pin) {
-        pin.style.transform = `translate3d(0, -${coverLiftVh.toFixed(2)}vh, 0)`;
+        pin.style.transform = `translate3d(0, -${coverLift.toFixed(2)}px, 0)`;
         pin.style.pointerEvents = coverReveal > .82 ? "none" : "auto";
       }
 
       const number = stage.querySelector(".v2-offers-mobile-number");
       if (number) {
         number.style.opacity = (numberReveal * (1 - exit * .18)).toFixed(4);
-        number.style.transform = `translate3d(0, ${((1 - numberReveal) * window.innerHeight * .22).toFixed(2)}px, 0)`;
+        number.style.transform = `translate3d(0, ${((1 - numberReveal) * viewportHeight * .22).toFixed(2)}px, 0)`;
       }
 
       stage.style.setProperty("--v2-auto-flow-x", `${(-44 + progress * 72 + (.76 - .5) * 92).toFixed(2)}px`);
@@ -963,8 +1024,8 @@ function OffersShowcase() {
         const y = 46 + relative * 50 + currentEntryY;
         const opacity = (.08 + near * .92) * farFade * entryReveal;
 
-        card.style.left = `${x.toFixed(2)}vw`;
-        card.style.top = `${y.toFixed(2)}vh`;
+        card.style.left = `${x.toFixed(2)}%`;
+        card.style.top = `${y.toFixed(2)}%`;
         card.style.opacity = opacity.toFixed(4);
         card.style.transform = "translate3d(-50%, -50%, 0)";
         card.style.filter = `brightness(${(.72 + colorStrength * .36).toFixed(3)})`;
@@ -1019,7 +1080,7 @@ function OffersShowcase() {
           </article>
 
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 200}svh`, "--v2-offers-mobile-stage-height-dvh": `${commerceOffers.length * 100 + 200}dvh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
                 <div className="v2-offers-mobile-ambient" aria-hidden="true" />
                 <div className="v2-offers-mobile-grid" aria-hidden="true" />
@@ -1315,7 +1376,7 @@ function CaseStudy({ project }) {
         <figure data-reveal><ProjectMedia project={project} loading="eager" /></figure>
       </section>
 
-      <ExperienceNav />
+      <ExperienceNav hasGallery={project.gallery?.length > 0} />
 
       <section className="v2-case-outcome" id="outcome">
         <span>Outcome</span>
@@ -1347,12 +1408,12 @@ function CaseStudy({ project }) {
 
       <AnnotatedArtifactExplorer image={project.sourceImage || project.image} alt={`${project.title} annotated system artifact`} projectId={project.id} />
 
-      <section className="v2-case-process" data-story-sequence="pin">
+      <section className="v2-case-process" id="process" data-story-sequence="pin">
         <header data-reveal><span>06 / User flow</span><h2>{project.story?.processTitle || "From the first input to a useful next action."}</h2></header>
         <div>{project.phases?.map((phase) => <article data-reveal key={phase.num}><span>{phase.num}</span><h3>{phase.title}</h3><p>{phase.copy}</p></article>)}</div>
       </section>
 
-      {project.gallery?.length > 0 && <section className="v2-case-gallery"><header><span>07 / Product moments</span><h2>{project.story?.galleryTitle || "The product in use."}</h2></header><div>{project.gallery.map((item) => <figure key={`${item.image || item.video}-${item.caption}`}>{item.video ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" /> : <img src={item.image} alt={item.alt} loading="lazy" />}<figcaption>{item.caption}</figcaption></figure>)}</div></section>}
+      {project.gallery?.length > 0 && <section className="v2-case-gallery" id="gallery"><header><span>07 / Product moments</span><h2>{project.story?.galleryTitle || "The product in use."}</h2></header><div>{project.gallery.map((item) => <figure key={`${item.image || item.video}-${item.caption}`}>{item.video ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" /> : <img src={item.image} alt={item.alt} loading="lazy" />}<figcaption>{item.caption}</figcaption></figure>)}</div></section>}
       <ClientFitSection id={project.id} title={project.title} />
       <ConversionPanel id={project.id} title={project.title} />
       <a className="v2-next" href={next.href}><span>Next case</span><strong>{next.title}</strong><Arrow /></a>
@@ -1475,5 +1536,5 @@ export function V2App({ page }) {
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesProjectNavigation = page === "work" || page.startsWith("case-") || page.startsWith("offer-");
-  return <div className="v2-site" id="top" ref={root} onClick={openContactFromLink}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={openContactFromLink}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

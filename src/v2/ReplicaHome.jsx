@@ -478,13 +478,19 @@ function useReplicaMotion(rootRef) {
 
       mm.add("(max-width: 700px)", () => {
         const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: 0.45 } });
+        const about = root.querySelector(".replica-about");
+        const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+        const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
+        const portraitLift = () => -Math.min(282, viewportHeight() * .45);
         timeline
-          .to(".replica-hero__title", { y: -520, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
-          .to(".replica-hero__since", { y: -180, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
+          .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
+          .to(".replica-hero__since", { y: () => -viewportHeight() * .3, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
-          .to(".replica-portrait-wrap", { y: -282, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
+          .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
-          .to([".replica-about", ".replica-portrait-wrap"], { y: "-=680", autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82);
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .22, ease: "none" }, 0.58)
+          .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82)
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82);
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");
@@ -509,11 +515,35 @@ function useReplicaMotion(rootRef) {
           duration: .75,
           stagger: .55,
           ease: "none",
-        }, ">+.15");
+        }, ">+.15")
+        .to(".replica-services__inner", {
+          y: () => {
+            const inner = root.querySelector(".replica-services__inner");
+            const sticky = root.querySelector(".replica-services__sticky");
+            return -Math.max(0, (inner?.scrollHeight || 0) - (sticky?.clientHeight || window.innerHeight) + 24);
+          },
+          duration: 1.4,
+          ease: "none",
+        }, ">-.35");
 
     }, root);
 
+    let refreshTimer = 0;
+    const refresh = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
+    };
+    Promise.allSettled([
+      document.fonts?.ready || Promise.resolve(),
+      root.querySelector(".replica-portrait-face img")?.decode?.() || Promise.resolve(),
+    ]).then(refresh);
+    window.visualViewport?.addEventListener("resize", refresh, { passive: true });
+    window.addEventListener("orientationchange", refresh, { passive: true });
+
     return () => {
+      window.clearTimeout(refreshTimer);
+      window.visualViewport?.removeEventListener("resize", refresh);
+      window.removeEventListener("orientationchange", refresh);
       mm.revert();
       context.revert();
     };

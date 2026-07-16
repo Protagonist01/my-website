@@ -550,13 +550,22 @@ export function AnnotatedArtifactExplorer({ image, alt, projectId }) {
   </section>;
 }
 
-export function ExperienceNav({ offer = false }) {
+export function ExperienceNav({ offer = false, hasGallery = false }) {
   const [active, setActive] = useState(0);
   const [open, setOpen] = useState(false);
   const navRef = useRef(null);
   const items = useMemo(() => offer
     ? [["overview", "The problem", "01"], ["decisions", "The reasoning", "02"], ["process", "The approach", "04"], ["artifact", "See the work", "06"], ["fit", "Is it a fit?", "08"], ["discuss", "Start a project", "09"]]
-    : [["problem", "The problem", "01"], ["decisions", "The reasoning", "02"], ["system", "How it is built", "04"], ["artifact", "See the work", "05"], ["fit", "Is it a fit?", "08"], ["discuss", "Start a project", "09"]], [offer]);
+    : [
+        ["problem", "The problem", "01"],
+        ["decisions", "The reasoning", "02"],
+        ["system", "How it is built", "04"],
+        ["artifact", "See the work", "05"],
+        ["process", "The user flow", "06"],
+        ...(hasGallery ? [["gallery", "Product moments", "07"]] : []),
+        ["fit", "Is it a fit?", "08"],
+        ["discuss", "Start a project", "09"],
+      ], [offer, hasGallery]);
 
   useEffect(() => {
     const sections = items.map(([id]) => document.getElementById(id)).filter(Boolean);
