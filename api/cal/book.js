@@ -106,7 +106,6 @@ export default async function handler(req, res) {
         metadata: {
           source: "portfolio-chat",
         },
-        lengthInMinutes: eventType.duration,
         location: eventType.location,
         ...(emailVerificationCode ? { emailVerificationCode } : {}),
       }),

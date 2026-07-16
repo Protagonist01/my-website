@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createPortal } from "react-dom";
 import { GuideBooking } from "./GuideBooking.jsx";
 import { GuideInquiry } from "./GuideInquiry.jsx";
+import { navigateToTarget } from "./sectionNavigation.js";
 
 const avatar = new URL(
   "../../assets/images/v2-chat/henry-guide-avatar.webp",
@@ -634,7 +635,7 @@ export default function PortfolioGuide({ page }) {
 
   const runAction = (action) => {
     if (action.type === "navigate" || action.type === "show_projects") {
-      closeChat(() => window.location.assign(action.target));
+      closeChat(() => navigateToTarget(action.target));
       return;
     }
     if (action.type === "show_booking") {

@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { getCaseExperienceBlueprint } from "./caseStudyExperienceData.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
+import { revealSectionById } from "./sectionNavigation.js";
 
 const projectMeta = {
   "retrieval-analytics": {
@@ -436,18 +437,29 @@ export function DecisionReplay() {
     let frame = 0;
     const updateFromScroll = () => {
       frame = 0;
-      const travelLine = window.innerHeight * (window.innerWidth <= 720 ? .78 : .66);
       let next = 0;
-      let closestDistance = Number.POSITIVE_INFINITY;
-
-      steps.forEach((step, index) => {
-        const bounds = step.getBoundingClientRect();
-        const distance = Math.abs((bounds.top + bounds.height / 2) - travelLine);
-        if (distance < closestDistance) {
-          closestDistance = distance;
-          next = index;
-        }
-      });
+      if (window.innerWidth <= 720) {
+        const sectionBounds = section.getBoundingClientRect();
+        const sectionTop = window.scrollY + sectionBounds.top;
+        const layout = section.querySelector(".v2-decision-replay__layout");
+        const layoutTop = window.scrollY + (layout?.getBoundingClientRect().top || sectionBounds.top);
+        const pinOffset = Number.parseFloat(getComputedStyle(section).getPropertyValue("--case-pin-offset")) || 152;
+        const travelStart = layoutTop - pinOffset;
+        const travelEnd = Math.max(travelStart + 1, sectionTop + section.offsetHeight - window.innerHeight);
+        const progress = Math.min(1, Math.max(0, (window.scrollY - travelStart) / (travelEnd - travelStart)));
+        next = Math.min(beats.length - 1, Math.floor(progress * beats.length));
+      } else {
+        const travelLine = window.innerHeight * .66;
+        let closestDistance = Number.POSITIVE_INFINITY;
+        steps.forEach((step, index) => {
+          const bounds = step.getBoundingClientRect();
+          const distance = Math.abs((bounds.top + bounds.height / 2) - travelLine);
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            next = index;
+          }
+        });
+      }
 
       setActive((current) => current === next ? current : next);
       setHasProgress(next > 0);
@@ -481,7 +493,7 @@ export function DecisionReplay() {
   return <section ref={sectionRef} className={`v2-decision-replay phase-${active} is-entered`} id="decisions" data-phase={active} data-travelling-slider>
     <header>
       <span>02 / Product reasoning</span>
-      <h2>Five decisions from pressure to working system.</h2>
+      <h2>Five decisions behind {experience.title}.</h2>
     </header>
     <div className="v2-decision-replay__layout">
       <ol>{beats.map((item, index) => <li data-replay-index={index} className={active === index ? "is-active" : ""} key={item[1]}>
@@ -512,7 +524,7 @@ export function ProofCheckpoint() {
   if (!experience) return null;
   const copyBrief = async () => { await copyText(experience.brief); setStatus("Brief copied"); };
   const copyLink = async () => { await copyText(experience.buildShareUrl()); setStatus("Shareable link copied"); };
-  const discuss = () => document.getElementById("discuss")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  const discuss = () => revealSectionById("discuss");
   const emailHref = `mailto:?subject=${encodeURIComponent(`${experience.title} opportunity brief`)}&body=${encodeURIComponent(experience.brief)}`;
   return <section className="v2-proof-checkpoint" aria-labelledby={`${experience.id}-proof-title`}>
     <span>Result</span>

@@ -108,8 +108,8 @@ export const projects = [
     tone: "cool",
     featured: true,
     status: "Built product / Public repository",
-    lead: "The product does more than generate SQL: it shows the query, proves where the answer came from, and tracks whether the system is improving.",
-    challenge: "Most text-to-SQL demos stop after generation. This build had to resolve ambiguous questions, use business definitions consistently, block unsafe SQL, isolate workspaces, and expose failed evaluations instead of hiding them.",
+    lead: "Every answer arrives with its SQL, sources, and evaluation trail.",
+    challenge: "Business questions rarely match database terms. The system had to clarify intent, retrieve the right schema, block unsafe SQL, and expose failed evaluations.",
     role: "AI engineering, retrieval architecture, text-to-SQL validation, evaluation, backend APIs, and product interface.",
     story: {
       systemTitle: "Ground the question, constrain the query, and evaluate the answer as one product loop.",
@@ -118,9 +118,9 @@ export const projects = [
       galleryTitle: "The working product keeps the question, SQL, result, and explanation together.",
     },
     architecture: [
-      "Schema retrieval, a data dictionary, reusable metric definitions, and clarifying questions translate business language into the right database context.",
-      "sqlglot parsing, live table and column checks, mutation guards, and one repair attempt stop malformed or unsafe SQL before execution.",
-      "A read-only DuckDB sandbox streams SQL, tables, charts, sources, and explanations, while an 80-question evaluation set exposes accuracy, validity, and latency.",
+      "Retrieve matching schema, metric definitions, and business terms before generation.",
+      "Parse with sqlglot; reject mutations and unknown tables or columns.",
+      "Run in read-only DuckDB; return SQL, sources, charts, and evaluation results.",
     ],
     phases: [
       { num: "01", title: "Ground", copy: "Retrieve the schema context that matches the business question." },
@@ -155,7 +155,7 @@ export const projects = [
     featured: true,
     status: "Built product / Controlled SRE demonstration",
     lead: "An infrastructure agent becomes useful when its permission to act is smaller than its ability to reason.",
-    challenge: "The hard problem was not producing a diagnosis. It was deciding when an agent could restart a container, when scaling or rollback must wait, and how every recommendation, approval, attempt, and outcome would remain auditable.",
+    challenge: "Diagnosis was easy; permission was not. Restarts needed a strict allowlist, while scaling and rollback required approval and a complete audit trail.",
     role: "Agent architecture, runbook retrieval, policy design, approval workflow, observability, testing, and operator interface.",
     story: {
       systemTitle: "Make autonomy a policy decision, not a model-confidence shortcut.",
@@ -164,9 +164,9 @@ export const projects = [
       galleryTitle: "The control model is visible before and after remediation.",
     },
     architecture: [
-      "Prometheus Alertmanager sends an incident into a LangGraph diagnosis workflow with matching runbook context.",
-      "The proposed action passes a four-condition policy gate and a low-risk allowlist before autonomy is considered.",
-      "Higher-risk actions enter a human approval queue, while every decision and execution attempt is written to an audit record.",
+      "Join each Prometheus alert with deploy context, logs, and the matching runbook.",
+      "Check risk, evidence, confidence, and the low-risk action allowlist.",
+      "Auto-run permitted actions; queue the rest and record every attempt.",
     ],
     phases: [
       { num: "01", title: "Diagnose", copy: "Join the alert with service context and a retrieved runbook." },
@@ -200,8 +200,8 @@ export const projects = [
     tone: "cool",
     featured: true,
     status: "Public demo / Mocked calendar integration",
-    lead: "Voice AI is not only a conversation; it is a sequence of tools, confirmations, and recovery states happening in real time.",
-    challenge: "The conversation had to remain natural while caller identity, treatment choice, availability, booking fields, tool failures, and the final SMS stayed explicit. The calendar behavior also needed honest labeling because the Acuity integration is mocked.",
+    lead: "A clinic call becomes a visible sequence of tools, confirmations, and recovery states.",
+    challenge: "The call had to feel natural while identity, treatment, mocked availability, tool failures, confirmation, and the final SMS stayed explicit.",
     role: "Voice-agent design, tool schemas, FastAPI webhooks, telephony integration, conversation UX, analytics, and demo interface.",
     story: {
       systemTitle: "Let the caller hear one conversation while the system maintains typed operational state.",
@@ -210,9 +210,9 @@ export const projects = [
       galleryTitle: "The call becomes a visible operating trail.",
     },
     architecture: [
-      "Vapi coordinates the real-time call while Deepgram, the language model, and ElevenLabs handle speech and response generation.",
-      "Structured availability and booking tools send explicit inputs to a FastAPI backend instead of relying on conversational memory alone.",
-      "Caller ID, tool events, end-of-call analytics, and Twilio SMS keep the simulated outcome visible after the call ends.",
+      "Vapi coordinates the call; Deepgram and ElevenLabs handle speech.",
+      "FastAPI receives typed availability and booking fields from bounded tools.",
+      "Caller ID, tool events, analytics, and Twilio SMS preserve the outcome.",
     ],
     phases: [
       { num: "01", title: "Listen", copy: "Capture why the caller is contacting the clinic and what information is missing." },
@@ -244,7 +244,7 @@ export const projects = [
     featured: true,
     status: "Built product / Public repository",
     lead: "The value of an AI review is not how much it says; it is whether each finding is grounded, located, and safe to use.",
-    challenge: "A useful review needed exact file and line context, but the system also had to authenticate webhooks, limit code exposure, support local Ollama or hosted providers, survive long-running jobs, and reject malformed findings before they reached a pull request.",
+    challenge: "Each finding needed an exact file and line. The system also had to verify webhooks, limit code exposure, survive long jobs, and reject malformed output.",
     role: "GitHub integration, agent workflow, diff parsing, structured outputs, asynchronous jobs, observability, tests, and evaluation harness.",
     story: {
       systemTitle: "Control what code leaves the repository and what model output is allowed back into GitHub.",
@@ -253,9 +253,9 @@ export const projects = [
       galleryTitle: "The review remains traceable from hunk to commit status.",
     },
     architecture: [
-      "A GitHub App verifies each pull-request webhook with HMAC-SHA256 before starting an asynchronous review job.",
-      "Celery and Redis move verified events into an asynchronous LangGraph workflow that reviews diff hunks with only the repository context each hunk needs.",
-      "A swappable OpenRouter, Ollama, Groq, OpenAI, or Anthropic backend returns structured findings that are validated before inline comments, summaries, or commit statuses are published.",
+      "Verify every pull-request webhook with HMAC-SHA256.",
+      "Use Celery, Redis, and LangGraph to review focused diff hunks asynchronously.",
+      "Validate provider output before publishing inline findings or commit status.",
     ],
     phases: [
       { num: "01", title: "Verify", copy: "Authenticate the webhook and load only the pull-request event that should run." },
@@ -286,7 +286,7 @@ export const projects = [
     featured: false,
     status: "Independent concept / Product promise",
     lead: "Create, refine, and resize visual systems from one reusable style memory.",
-    challenge: "Image generation is fast, but campaign work breaks when references, palette, lighting, composition, and approved revisions live in separate prompts with no shared history.",
+    challenge: "Campaign consistency breaks when references, palette, lighting, composition, and approved revisions live in separate prompts.",
     role: "Product concept, generation workflow, interface direction, and control model.",
     story: {
       systemTitle: "Hold the art direction before generating more.",
@@ -328,7 +328,7 @@ export const projects = [
     featured: false,
     status: "Independent concept / Product promise",
     lead: "Research becomes useful when synthesis remains verifiable.",
-    challenge: "A polished summary can hide weak citations and contradictory sources. The concept focuses on keeping the source segment, claim, and disagreement visible at the exact moment a reviewer needs to verify them.",
+    challenge: "A polished summary can hide weak citations and conflicting sources. Every claim therefore needs an openable source segment and visible disagreement.",
     role: "Product concept, retrieval architecture, citation model, and interface direction.",
     story: {
       systemTitle: "Keep the evidence attached from ingestion to export.",
@@ -370,7 +370,7 @@ export const projects = [
     featured: false,
     status: "Independent concept / Product promise",
     lead: "Natural-language discovery should shorten the route to a confident purchase.",
-    challenge: "Shoppers describe situations, preferences, and trade-offs rather than catalogue fields. The concept explores how an agent could map that intent to store tools while keeping price, policy, evidence, and cart authority visible.",
+    challenge: "Shoppers describe needs, not catalogue fields. The agent must translate intent while keeping price, policy, evidence, and cart authority visible.",
     role: "Product concept, agent actions, confirmation model, and commerce UX.",
     story: {
       systemTitle: "Translate intent without hiding the trade-offs.",
@@ -412,7 +412,7 @@ export const projects = [
     featured: false,
     status: "Independent concept / Product promise",
     lead: "Revenue is incomplete until the cost of earning it is visible.",
-    challenge: "Revenue dashboards rarely show which order-level costs created the gap between sales and contribution margin, or let an operator preview a guardrail before changing promotion or fulfilment rules.",
+    challenge: "Revenue dashboards hide the order-level costs behind margin loss. Operators also need to preview a guardrail before changing promotion or fulfilment rules.",
     role: "Product concept, margin model, intervention logic, and interface direction.",
     story: {
       systemTitle: "Reconcile the real cost of every order.",
@@ -454,7 +454,7 @@ export const projects = [
     featured: true,
     status: "Public repository / Built product",
     lead: "Conversation works as product infrastructure, not decoration.",
-    challenge: "The product had to unite treatment and product discovery, commerce, local booking persistence, accounts, reviews, and email with an AI layer that could help across the journey without bypassing deterministic safety or confirmation rules.",
+    challenge: "One concierge had to support discovery, commerce, booking, accounts, and email without bypassing safety rules or customer confirmation.",
     role: "Product strategy, full-stack engineering, AI orchestration, retrieval, and safety controls.",
     story: {
       systemTitle: "Treat the concierge as a typed product controller, not a chat overlay.",
@@ -463,9 +463,9 @@ export const projects = [
       galleryTitle: "The architecture becomes real in the customer journey.",
     },
     architecture: [
-      "Next.js route handlers connect the marketing site, catalogue, cart, checkout, accounts, reviews, booking, email, and diagnostics to one application model.",
-      "A deterministic router and bounded agent use approved product, treatment, policy, and recommendation tools, then return typed decisions the interface can inspect.",
-      "Product cards, quiz routes, cart proposals, and booking handoffs remain visible and require the appropriate user confirmation before state changes.",
+      "Next.js routes connect catalogue, cart, checkout, accounts, booking, and email.",
+      "A deterministic router and bounded agent return typed, inspectable decisions.",
+      "Cart and booking changes remain pending until the customer confirms.",
     ],
     phases: [
       { num: "01", title: "Guide", copy: "Connect intent to approved treatments and products." },
@@ -581,8 +581,8 @@ export const archiveProjects = [
     href: paths.testimony,
     tone: "warm",
     status: "Built client system / NDA-safe archive",
-    lead: "The improvement came from making state and exceptions visible, not from asking AI to publish unchecked.",
-    challenge: "Submissions moved through collection, review, editing, approval, and publishing across a large recurring handoff, making ownership and current status difficult to see.",
+    lead: "One review queue replaced a recurring ten-person handoff.",
+    challenge: "Collection, editing, approval, and publishing were split across people and tools, obscuring ownership and current status.",
     role: "Workflow design, product engineering, AI summaries, and delivery.",
     architecture: ["Structured intake brought each submission and its required context into one record.", "AI-assisted summaries shortened review while leaving editorial approval with a person.", "A single operator queue exposed ownership, current state, exceptions, and the final publishing trail."],
     phases: [
@@ -608,10 +608,10 @@ export const archiveProjects = [
     href: paths.fruitQuality,
     tone: "cool",
     status: "Built applied-ML system / Public archive",
-    lead: "The product connects what the fruit looks like now with how storage conditions may change its quality next.",
-    challenge: "A single ripeness label could not describe post-harvest condition. The system needed to combine image classification with temperature, packaging, colour inputs, six regression targets, time-series simulation, and traceable prediction history.",
+    lead: "One image predicts ripeness now and storage quality over 35 days.",
+    challenge: "A ripeness label alone could not describe post-harvest condition. The product combines image classification with storage inputs, six quality forecasts, and prediction history.",
     role: "Dataset preparation, classifier and regressor development, ONNX inference, FastAPI APIs, React product interface, persistence, and deployment.",
-    architecture: ["A MobileNetV2 classifier exported to ONNX returns unripe, ripe, or overripe probabilities from an uploaded image.", "A Random Forest model combines storage temperature, perforation, colour, and time to predict six quality indicators and a 35-day degradation curve.", "FastAPI serves inference, Supabase stores prediction history, and the React interface keeps inputs, confidence, metrics, curves, and past results together."],
+    architecture: ["MobileNetV2 in ONNX returns ripeness probabilities from the uploaded image.", "A Random Forest predicts six indicators across a 35-day storage curve.", "FastAPI serves inference; Supabase stores the React product's history."],
     phases: [
       { num: "01", title: "Inspect", copy: "Capture and validate a fruit image." },
       { num: "02", title: "Predict", copy: "Classify ripeness and forecast quality." },
