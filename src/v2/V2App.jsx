@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { allWork, caseStudies, homeFeaturedProjects, paths, projectNotes, projects, services } from "./data.js";
 import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
+import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
 import {
   AnnotatedArtifactExplorer,
   CaseHeroActions,
@@ -282,12 +283,9 @@ function useCaseStudyMotion(rootRef, page) {
               ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
               : 176;
             const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
-            const contentOverflow = () => mobile && canPin
-              ? Math.max(0, section.scrollHeight - section.clientHeight)
-              : 0;
             const distance = canPin ? () => Math.max(
               viewportHeight() * (mobile ? .86 : 1.05),
-              targets.length * (mobile ? 104 : 168) + contentOverflow() * 1.35,
+              targets.length * (mobile ? 96 : 168),
             ) : undefined;
             const timeline = gsap.timeline({
               scrollTrigger: {
@@ -316,14 +314,6 @@ function useCaseStudyMotion(rootRef, page) {
               stagger: mobile ? .34 : .52,
               ease: "none",
             });
-
-            if (mobile && canPin) {
-              timeline.to(targets, {
-                y: () => -contentOverflow(),
-                duration: () => Math.max(.5, contentOverflow() / 240),
-                ease: "none",
-              });
-            }
 
             if (canPin) timeline.to({}, { duration: mobile ? .2 : .26 });
             return timeline;
@@ -372,7 +362,11 @@ function useCaseStudyMotion(rootRef, page) {
 
       let refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
       let refreshTimer = 0;
+      let viewportWidth = window.visualViewport?.width || window.innerWidth;
       const refresh = () => {
+        const nextWidth = window.visualViewport?.width || window.innerWidth;
+        if (Math.abs(nextWidth - viewportWidth) < 2) return;
+        viewportWidth = nextWidth;
         window.clearTimeout(refreshTimer);
         refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
       };
@@ -423,21 +417,22 @@ function useInitialHashScroll(page) {
     const markInteraction = () => { userInteracted = true; };
     const scrollToTarget = () => {
       if (userInteracted) return;
-      document.getElementById(id)?.scrollIntoView({ block: "start", behavior: "auto" });
+      revealSectionById(id, { behavior: "auto", updateHistory: false });
     };
     const firstFrame = window.requestAnimationFrame(() => {
       secondFrame = window.requestAnimationFrame(scrollToTarget);
     });
-    const settleTimer = window.setTimeout(scrollToTarget, 350);
-    const layoutTimer = window.setTimeout(scrollToTarget, 900);
+    const settleTimers = [350, 900, 1800, 3200].map((delay) => window.setTimeout(scrollToTarget, delay));
+    const handleLoad = () => window.requestAnimationFrame(scrollToTarget);
+    window.addEventListener("load", handleLoad, { once: true });
     const interactionEvents = ["pointerdown", "touchstart", "wheel", "keydown"];
     interactionEvents.forEach((eventName) => window.addEventListener(eventName, markInteraction, { passive: true, once: true }));
 
     return () => {
       window.cancelAnimationFrame(firstFrame);
       window.cancelAnimationFrame(secondFrame);
-      window.clearTimeout(settleTimer);
-      window.clearTimeout(layoutTimer);
+      settleTimers.forEach((timer) => window.clearTimeout(timer));
+      window.removeEventListener("load", handleLoad);
       interactionEvents.forEach((eventName) => window.removeEventListener(eventName, markInteraction));
     };
   }, [page]);
@@ -907,8 +902,11 @@ function OffersShowcase() {
         const words = gsap.utils.toArray(".v2-offers-intro__word", intro);
         const content = intro.querySelector(".v2-offers-intro__content");
         const gateway = intro.querySelector(".v2-offers-mobile-gateway");
+        const gatewayCard = gateway?.querySelector(".v2-offers-mobile-gateway-card");
+        const gatewayNumber = gateway?.querySelector(".v2-offers-mobile-gateway-number");
         const handoffDuration = 3.15;
         const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+        gsap.set([gatewayCard, gatewayNumber], { autoAlpha: 0 });
         const reveal = gsap.timeline({
           scrollTrigger: {
             trigger: intro,
@@ -931,7 +929,7 @@ function OffersShowcase() {
         reveal.addLabel("handoff");
         reveal.to(content, {
           xPercent: -105,
-          opacity: .3,
+          opacity: 0,
           scale: .975,
           transformOrigin: "left center",
           duration: handoffDuration,
@@ -942,6 +940,16 @@ function OffersShowcase() {
           duration: handoffDuration,
           ease: "none",
         }, "handoff");
+        reveal.to(gatewayCard, {
+          autoAlpha: 1,
+          duration: handoffDuration * .58,
+          ease: "none",
+        }, "handoff+=0.52");
+        reveal.to(gatewayNumber, {
+          autoAlpha: 1,
+          duration: handoffDuration * .34,
+          ease: "none",
+        }, "handoff+=1.28");
         ScrollTrigger.refresh();
       }, section);
       let refreshTimer = 0;
@@ -984,14 +992,12 @@ function OffersShowcase() {
       const viewportHeight = window.visualViewport?.height || window.innerHeight;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const progress = clamp(-rect.top / travel);
-      const entryStart = .035;
-      const entryEnd = .13;
       const chapterEnd = .95;
-      const entryRevealRaw = clamp((progress - entryStart) / (entryEnd - entryStart));
-      const entryReveal = smoothstep(0, 1, entryRevealRaw);
-      const chapterProgress = clamp((progress - entryEnd) / (chapterEnd - entryEnd));
+      const arrivalProgress = clamp((viewportHeight - rect.top) / viewportHeight);
+      const entryReveal = smoothstep(.06, 1, arrivalProgress);
+      const chapterProgress = clamp(progress / chapterEnd);
       const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberReveal = smoothstep(.12, .74, entryRevealRaw);
+      const numberReveal = smoothstep(.42, .86, arrivalProgress);
       const exit = smoothstep(chapterEnd, 1, progress);
       const coverReveal = smoothstep(.93, 1, progress);
       const coverLift = coverReveal * viewportHeight * 1.12;
@@ -1020,7 +1026,7 @@ function OffersShowcase() {
         const near = clamp(1 - distance / 1.65);
         const farFade = clamp(2.2 - distance);
         const colorStrength = smoothstep(.22, .92, activeStrength);
-        const x = 50 + relative * 60;
+        const x = 50 + relative * 60 + (index === 0 ? (1 - entryReveal) * 35 : 0);
         const y = 46 + relative * 50 + currentEntryY;
         const opacity = (.08 + near * .92) * farFade * entryReveal;
 
@@ -1075,7 +1081,13 @@ function OffersShowcase() {
               </div>
             </div>
             {isMobile && (
-              <div className="v2-offers-mobile-gateway" aria-hidden="true" />
+              <div className="v2-offers-mobile-gateway" aria-hidden="true">
+                <figure className="v2-offers-mobile-gateway-card">
+                  <img src={commerceOffers[0].hoverImage} alt="" width="1086" height="1448" loading="eager" />
+                  <figcaption><strong>{commerceOffers[0].title}</strong></figcaption>
+                </figure>
+                <div className="v2-offers-mobile-gateway-number">01</div>
+              </div>
             )}
           </article>
 
@@ -1393,8 +1405,8 @@ function CaseStudy({ project }) {
 
       <section className="v2-case-challenge" id="problem" data-story-sequence="pin">
         <span>01 / Problem</span>
-        <h2>{project.challenge}</h2>
-        <p>{project.summary}</p>
+        <h2>{project.lead || project.outcome}</h2>
+        <p>{project.challenge}</p>
       </section>
 
       <DecisionReplay />
@@ -1428,7 +1440,7 @@ function OfferCaseStudy({ offer }) {
   const phases = [
     ["01", "Evidence", "Map the signals behind the operating pressure."],
     ["02", "Control", offer.approach],
-    ["03", "Delivery", offer.deliverables.join(" / ")],
+    ["03", "Delivery", "Package the agreed system, handoff, and operating notes."],
   ];
 
   return (
@@ -1526,6 +1538,7 @@ export function V2App({ page }) {
   const openContactFromLink = (event) => {
     const link = event.target.closest("a[href]");
     if (!link) return;
+    if (link.hasAttribute("data-header-contact")) return;
     const href = link.getAttribute("href") || "";
     if (href.includes("/#contact") || href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:")) {
       event.preventDefault();
@@ -1533,9 +1546,13 @@ export function V2App({ page }) {
       setContactOpen(true);
     }
   };
+  const handleRootClick = (event) => {
+    if (handleSectionNavigationClick(event)) return;
+    openContactFromLink(event);
+  };
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
   const usesProjectNavigation = page === "work" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
-  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={openContactFromLink}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

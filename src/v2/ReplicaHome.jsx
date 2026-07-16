@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { replicaContent } from "./replicaContent.js";
+import { handleSectionNavigationClick } from "./sectionNavigation.js";
 
 const portrait = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
 const portraitBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
@@ -332,6 +333,7 @@ function useContactLauncher(rootRef, openContact) {
     const root = rootRef.current;
     if (!root) return undefined;
     const launch = (event) => {
+      if (event.defaultPrevented) return;
       const link = event.target.closest("a[href]");
       if (!link || !root.contains(link)) return;
       if (link.hasAttribute("data-header-contact")) return;
@@ -545,7 +547,12 @@ export default function ReplicaHome({ works, offers }) {
   useReplicaMotion(root);
   useContactLauncher(root, () => setContactOpen(true));
   return (
-    <div className="replica-page" id="top" ref={root}>
+    <div className="replica-page" id="top" ref={root} onClick={(event) => {
+      const link = event.target.closest("a[href]");
+      const href = link?.getAttribute("href") || "";
+      const contactCta = link && !link.hasAttribute("data-header-contact") && (href === "#contact" || href.includes("/#contact"));
+      if (!contactCta) handleSectionNavigationClick(event);
+    }}>
       <FloatingNavigation />
       <main>
         <IntroSequence />
