@@ -1527,7 +1527,7 @@ export function V2App({ page }) {
     const link = event.target.closest("a[href]");
     if (!link) return;
     const href = link.getAttribute("href") || "";
-    if (href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:")) {
+    if (href.includes("/#contact") || href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:")) {
       event.preventDefault();
       setContactContext(link.dataset.contactContext || "");
       setContactOpen(true);

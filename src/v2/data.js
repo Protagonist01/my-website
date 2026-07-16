@@ -52,7 +52,7 @@ const aboutFaceImage = "https://raw.githubusercontent.com/Protagonist01/aboutfac
 const smartTodoImage = "https://raw.githubusercontent.com/Protagonist01/smart-todo-app/main/screenshots/3-list-tasks.png";
 
 export const paths = {
-  home: "/v2/",
+  home: "/",
   work: "/v2/work/",
   about: "/v2/about/",
   proof: "/v2/proof/",
