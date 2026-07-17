@@ -188,6 +188,7 @@
 }
 
 @media (max-width: 700px) {
+  .replica-intro__sticky { --mobile-portrait-top: 55%; --mobile-portrait-height: 170px; }
   .replica-nav { top: 30px; width: calc(100vw - 30px); max-width: 360px; height: 60px; }
   .replica-nav.is-open { height: min(314px, calc(100svh - 60px)); height: min(314px, calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
@@ -196,13 +197,13 @@
   .replica-nav__menu::-webkit-scrollbar { display: none; }
   .replica-intro { height: 320svh; }
   .replica-intro__sticky { min-height: 0; }
-  .replica-hero__title { top: 40.3%; width: 265px; }
+  .replica-hero__title { top: 37%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
   .replica-hero__spark { top: -48px; left: -12px; width: 56px; height: 56px; }
   .replica-hero__bolt { right: -8px; bottom: -32px; width: 59px; height: 59px; }
   .replica-hero__year { display: none; }
-  .replica-hero__since { right: auto; bottom: 24px; left: 20px; width: auto; font-size: 12px; letter-spacing: .025em; transform: none; }
-  .replica-portrait-wrap { top: 58%; width: 155px; height: 170px; }
+  .replica-hero__since { top: calc(var(--mobile-portrait-top) + var(--mobile-portrait-height) + 8px); right: auto; bottom: auto; left: calc(50% - 77.5px); width: auto; font-size: 12px; letter-spacing: .025em; white-space: nowrap; transform: none; }
+  .replica-portrait-wrap { top: var(--mobile-portrait-top); width: 155px; height: var(--mobile-portrait-height); }
   .replica-about { display: block; padding: 178px 20px 0; }
   .replica-about__left { display: block; padding: 0; }
   .replica-about h2 { margin-bottom: 270px; font-size: 45px; line-height: 1; }
@@ -222,7 +223,7 @@
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
   .replica-end-container { width: calc(100% - 48px); }
-  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 312svh; }
+  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 312svh; background: var(--ink); }
   .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--replica-vh); overflow: hidden; }
   .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow-y: auto; will-change: transform; }
   .replica-ending__under { top: auto; height: var(--footer-panel-height); overflow: hidden; }

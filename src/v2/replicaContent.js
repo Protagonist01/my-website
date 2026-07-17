@@ -3,7 +3,7 @@ export const replicaContent = {
   wordmark: "HENRY.",
   heroTitle: ["Software & AI", "Engineer"],
   year: "©2026",
-  since: "/CREATING SINCE 2020",
+  since: "/CREATING SINCE 2022",
   aboutHeading: "Hey!",
   shortIntro: "I’m Henry, a software and AI engineer in Lagos, working with teams worldwide.",
   biography: [

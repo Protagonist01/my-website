@@ -714,7 +714,7 @@ function OpeningSequence() {
           <h1>AI &amp; Software Engineer</h1>
           <figure><img src={heroBw} alt="Henry Fadeni in a black and white studio portrait" /></figure>
           <strong>{"\u00a9"}2026</strong>
-          <p>Creating useful systems<br />since 2020</p>
+          <p>Creating useful systems<br />since 2022</p>
         </article>
 
         <article className="v2-opening-scene v2-opening-about">
