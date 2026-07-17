@@ -195,9 +195,8 @@
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-.replica-intro { height: auto; }
-  .replica-intro__sticky { position: static; min-height: 0; overflow: visible; perspective: none; }
-  .replica-hero { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+  .replica-intro { height: 220svh; }
+  .replica-intro__sticky { min-height: 0; }
   .replica-hero__title { top: 37%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
   .replica-hero__spark { top: -48px; left: -12px; width: 56px; height: 56px; }
@@ -205,7 +204,7 @@
   .replica-hero__year { display: none; }
   .replica-hero__since { top: calc(var(--mobile-portrait-top) + var(--mobile-portrait-height) + 8px); right: auto; bottom: auto; left: calc(50% - 77.5px); width: auto; font-size: 12px; letter-spacing: .025em; white-space: nowrap; transform: none; }
   .replica-portrait-wrap { top: var(--mobile-portrait-top); width: 155px; height: var(--mobile-portrait-height); }
-  .replica-about { position: relative; display: block; padding: 178px 20px 5rem; }
+  .replica-about { display: block; padding: 178px 20px 0; }
   .replica-about__left { display: block; padding: 0; }
   .replica-about h2 { margin-bottom: 270px; font-size: 45px; line-height: 1; }
   .replica-about__left strong { display: block; width: 100%; margin-bottom: 14px; font-size: 15px; line-height: 1.35; }
