@@ -487,22 +487,38 @@ function useReplicaMotion(rootRef) {
           .to([".replica-about", ".replica-portrait-wrap"], { y: `-=${Math.round(window.innerHeight * 0.92)}`, autoAlpha: 0, duration: .2, ease: "power1.in" }, 0.8);
       });
 
-      mm.add("(max-width: 700px)", () => {
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true } });
-        const about = root.querySelector(".replica-about");
-        const sticky = root.querySelector(".replica-intro__sticky");
-        const viewportHeight = () => sticky?.clientHeight || window.innerHeight;
-        const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
+mm.add("(max-width: 700px)", () => {
+        const hero = root.querySelector(".replica-hero");
+        const portraitWrap = root.querySelector(".replica-portrait-wrap");
+        const portraitCard = root.querySelector(".replica-portrait-card");
+        const aboutNodes = gsap.utils.toArray(".replica-about__left > *, .replica-about__right > *");
+        const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
         const portraitLift = () => -Math.min(220, viewportHeight() * .22);
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: hero,
+            start: "top top",
+            end: () => `+=${Math.round(viewportHeight())}`,
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
         timeline
-          .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
+          .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .3, ease: "none" }, 0.05)
           .to(".replica-hero__since", { y: () => viewportHeight() * .08, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
-          .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
-          .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
-          .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .40, ease: "none" }, 0.42)
-          .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82)
-          .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82);
+          .to(portraitCard, { rotateY: 180, duration: .36, ease: "none" }, 0.1)
+          .to(portraitWrap, { y: portraitLift, scale: 1, autoAlpha: 1, duration: .36, ease: "none" }, 0.1)
+          .to([hero, portraitWrap], { autoAlpha: 0, duration: .18, ease: "none" }, 0.82);
+        if (aboutNodes.length) {
+          gsap.from(aboutNodes, {
+            y: 40,
+            opacity: 0,
+            duration: .9,
+            stagger: .08,
+            ease: "power2.out",
+            scrollTrigger: { trigger: ".replica-about", start: "top 78%", once: true },
+          });
+        }
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");

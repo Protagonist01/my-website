@@ -930,7 +930,7 @@ function OffersShowcase() {
 
     const render = () => {
       const rect = stage.getBoundingClientRect();
-      const stageLengthInViewports = commerceOffers.length + 2.6;
+      const stageLengthInViewports = commerceOffers.length + 1.6;
       const viewportHeight = stage.offsetHeight / stageLengthInViewports;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const targetProgress = clamp(-rect.top / travel);
@@ -938,13 +938,13 @@ function OffersShowcase() {
       displayedProgress = targetProgress;
       const progress = displayedProgress;
       const chapterStart = .34;
-      const chapterEnd = .92;
+      const chapterEnd = 1;
       const textTravel = smoothstep(.1, .3, progress);
       const worldReveal = smoothstep(.16, .32, progress);
       const entryReveal = smoothstep(.24, .38, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberProgress = clamp((targetProgress - chapterStart) / (.84 - chapterStart));
+      const numberProgress = clamp((targetProgress - chapterStart) / (chapterEnd - chapterStart));
       const numberExact = numberProgress * Math.max(0, numbers.length - 1);
       const numberReveal = smoothstep(.34, .42, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
@@ -1048,7 +1048,7 @@ function OffersShowcase() {
       <div ref={viewportRef} className="v2-offer-rail__viewport">
         <div ref={trackRef} className="v2-offer-track">
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 260}svh` }} aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 160}svh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
                 {offersIntro}
                 <div className="v2-offers-mobile-world" aria-hidden="false">
