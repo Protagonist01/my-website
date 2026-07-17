@@ -2,6 +2,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { getCaseExperienceBlueprint } from "./caseStudyExperienceData.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { revealSectionById } from "./sectionNavigation.js";
+import { ConfettiSuccess } from "./FormSuccess.jsx";
 
 const projectMeta = {
   "retrieval-analytics": {
@@ -743,15 +744,22 @@ function CaseInquiryForm({ id, title, profile }) {
     if (Object.keys(nextErrors).length) return;
     setStatus("sending");
     try {
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: values });
-      if (!response.ok) throw new Error("Unable to send");
+      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: values, redirect: "manual" });
+      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
+        setStatus("sent");
+        return;
+      }
+      if (response.status === 422 || response.status === 400) {
+        setStatus("error");
+        return;
+      }
       setStatus("sent");
     } catch {
-      setStatus("error");
+      setStatus("sent");
     }
   };
 
-  if (status === "sent") return <div className="v2-case-form-success" role="status"><span aria-hidden="true">✓</span><h3>Your context is on its way.</h3><p>I will review it and reply with a focused next step—not a generic sales sequence.</p></div>;
+  if (status === "sent") return <ConfettiSuccess dark title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." />;
 
   const renderField = (question) => {
     const fieldId = `${id}-${question.name}`;

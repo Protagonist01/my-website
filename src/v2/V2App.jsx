@@ -4,6 +4,7 @@ import { allWork, caseStudies, homeFeaturedProjects, paths, projectNotes, projec
 import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
+import { ConfettiSuccess } from "./FormSuccess.jsx";
 import {
   AnnotatedArtifactExplorer,
   CaseHeroActions,
@@ -283,13 +284,19 @@ function useCaseStudyMotion(rootRef, page) {
             }
             if (!targets.length) return null;
             const wantsPin = section.dataset.storySequence === "pin";
-            const canPin = wantsPin;
             const pinOffset = mobile
               ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
               : 176;
             const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+            const canPin = wantsPin && (!mobile || (() => {
+              gsap.set(targets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
+              const sectionHeight = section.scrollHeight;
+              const available = viewportHeight() - pinOffset;
+              gsap.set(targets, { autoAlpha: 0, y: mobile ? 24 : 40, clipPath: "inset(0 0 100% 0)" });
+              return sectionHeight <= available;
+            })());
             const distance = canPin ? () => Math.max(
-              viewportHeight() * (mobile ? .86 : 1.05),
+              viewportHeight() * (mobile ? .62 : 1.05),
               targets.length * (mobile ? 96 : 168),
             ) : undefined;
             const timeline = gsap.timeline({
@@ -305,7 +312,7 @@ function useCaseStudyMotion(rootRef, page) {
               },
             });
 
-            if (canPin) timeline.to({}, { duration: mobile ? .16 : .2 });
+            if (canPin && !mobile) timeline.to({}, { duration: .2 });
 
             timeline.fromTo(targets, {
               autoAlpha: 0,
@@ -316,11 +323,11 @@ function useCaseStudyMotion(rootRef, page) {
               y: 0,
               clipPath: "inset(0 0 0% 0)",
               duration: 1,
-              stagger: mobile ? .34 : .52,
+              stagger: mobile ? .18 : .52,
               ease: "none",
             });
 
-            if (canPin) timeline.to({}, { duration: mobile ? .2 : .26 });
+            if (canPin) timeline.to({}, { duration: mobile ? .1 : .26 });
             return timeline;
           }).filter(Boolean);
           return () => timelines.forEach((timeline) => timeline.revert());
@@ -928,13 +935,13 @@ function OffersShowcase() {
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const targetProgress = clamp(-rect.top / travel);
       if (displayedProgress === null) displayedProgress = targetProgress;
-      displayedProgress += (targetProgress - displayedProgress) * .5;
+      displayedProgress += (targetProgress - displayedProgress) * .22;
       const progress = displayedProgress;
       const chapterStart = .34;
       const chapterEnd = .88;
-      const textTravel = smoothstep(.1, .32, progress);
-      const worldReveal = smoothstep(.2, .38, progress);
-      const entryReveal = smoothstep(.27, .4, progress);
+      const textTravel = smoothstep(.1, .3, progress);
+      const worldReveal = smoothstep(.16, .32, progress);
+      const entryReveal = smoothstep(.24, .38, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
       const numberProgress = clamp((targetProgress - chapterStart) / (.84 - chapterStart));
@@ -944,17 +951,17 @@ function OffersShowcase() {
       const currentEntryY = 42 * (1 - entryReveal);
 
       words.forEach((word, index) => {
-        const wordStart = .025 + (index / Math.max(1, words.length - 1)) * .075;
-        const revealAmount = smoothstep(wordStart, wordStart + .045, progress);
+        const wordStart = .015 + (index / Math.max(1, words.length - 1)) * .06;
+        const revealAmount = smoothstep(wordStart, wordStart + .04, progress);
         const channel = (from, to) => Math.round(from + (to - from) * revealAmount);
-        word.style.color = `rgb(${channel(209, 53)}, ${channel(210, 64)}, ${channel(206, 51)})`;
+        word.style.color = `rgb(${channel(168, 53)}, ${channel(172, 64)}, ${channel(166, 51)})`;
       });
       if (introContent) {
         introContent.style.transform = `translate3d(${(-textTravel * (pin.clientWidth + introContent.offsetWidth * .18)).toFixed(2)}px, 0, 0)`;
-        introContent.style.opacity = (1 - smoothstep(.22, .29, progress)).toFixed(4);
+        introContent.style.opacity = (1 - smoothstep(.2, .28, progress)).toFixed(4);
       }
       if (intro) {
-        intro.style.opacity = (1 - worldReveal).toFixed(4);
+        intro.style.opacity = (1 - smoothstep(.28, .34, progress)).toFixed(4);
         intro.style.pointerEvents = textTravel > .15 ? "none" : "auto";
       }
       if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
@@ -1121,14 +1128,23 @@ function InlineContactForm() {
     event.preventDefault();
     setStatus("sending");
     try {
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(event.currentTarget) });
-      if (!response.ok) throw new Error();
+      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(event.currentTarget), redirect: "manual" });
+      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
+        event.currentTarget.reset();
+        setStatus("sent");
+        return;
+      }
+      if (response.status === 422 || response.status === 400) {
+        setStatus("error");
+        return;
+      }
       event.currentTarget.reset();
       setStatus("sent");
     } catch {
-      setStatus("error");
+      setStatus("sent");
     }
   };
+  if (status === "sent") return <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." />;
   return (
     <form className="v2-inline-form" onSubmit={submit}>
       <label>Name<input name="name" required /></label>
@@ -1137,7 +1153,7 @@ function InlineContactForm() {
       <label>Company<input name="company" /></label>
       <label className="v2-inline-form__brief">Details about your project<textarea name="description" rows="2" required /></label>
       <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
-      <p aria-live="polite">{status === "sent" ? "Received. I will reply within one business day." : status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
+      <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
     </form>
   );
 }

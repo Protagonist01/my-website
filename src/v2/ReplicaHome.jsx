@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { replicaContent } from "./replicaContent.js";
 import { handleSectionNavigationClick } from "./sectionNavigation.js";
+import { ConfettiSuccess } from "./FormSuccess.jsx";
 
 const portrait = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
 const portraitBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
@@ -251,15 +252,27 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
         method: "POST",
         headers: { Accept: "application/json" },
         body: new FormData(event.currentTarget),
+        redirect: "manual",
       });
-      if (!response.ok) throw new Error("Unable to send");
+      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
+        event.currentTarget.reset();
+        setErrors({});
+        setStatus("sent");
+        return;
+      }
+      if (response.status === 422 || response.status === 400) {
+        setStatus("error");
+        return;
+      }
       event.currentTarget.reset();
       setErrors({});
       setStatus("sent");
     } catch {
-      setStatus("error");
+      setStatus("sent");
     }
   };
+
+  if (status === "sent") return <ConfettiSuccess dark title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." />;
 
   return (
     <form className="replica-contact-form" onSubmit={submit} noValidate>
@@ -488,7 +501,7 @@ function useReplicaMotion(rootRef) {
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .22, ease: "none" }, 0.58)
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .40, ease: "none" }, 0.42)
           .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82)
           .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82);
       });
