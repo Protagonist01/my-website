@@ -931,12 +931,14 @@ function OffersShowcase() {
       displayedProgress += (targetProgress - displayedProgress) * .22;
       const progress = displayedProgress;
       const chapterStart = .34;
-      const chapterEnd = .94;
+      const chapterEnd = .88;
       const textTravel = smoothstep(.1, .32, progress);
       const worldReveal = smoothstep(.2, .38, progress);
       const entryReveal = smoothstep(.27, .4, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
+      const numberProgress = clamp((targetProgress - chapterStart) / (.84 - chapterStart));
+      const numberExact = numberProgress * Math.max(0, numbers.length - 1);
       const numberReveal = smoothstep(.34, .42, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
       const currentEntryY = 42 * (1 - entryReveal);
@@ -991,7 +993,7 @@ function OffersShowcase() {
 
       numbers.forEach((number, index) => {
         number.style.opacity = "1";
-        number.style.transform = `translate3d(0, ${((index - exact) * 100).toFixed(2)}%, 0)`;
+        number.style.transform = `translate3d(0, ${((index - numberExact) * 100).toFixed(2)}%, 0)`;
       });
 
       if (Math.abs(targetProgress - displayedProgress) > .0005) frame = window.requestAnimationFrame(render);

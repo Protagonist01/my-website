@@ -1158,10 +1158,10 @@ button, a { color: inherit; }
   .v2-offers-mobile-card:focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
   .v2-offers-mobile-card figcaption { position: absolute; z-index: 3; right: .95rem; bottom: .95rem; left: .95rem; color: #fff; }
   .v2-offers-mobile-card figcaption strong { display: block; max-width: 9.5ch; font-size: clamp(1.55rem, 7.2vw, 2.15rem); font-weight: 900; line-height: .9; letter-spacing: -.04em; }
-  .v2-offers-mobile-number { position: absolute; z-index: 44; bottom: 3.6rem; left: 1.25rem; display: flex; align-items: baseline; width: 1.25em; height: .82em; min-height: 0; overflow: visible; color: rgba(255,255,255,.72); font-family: var(--sans); font-size: clamp(5rem, 24vw, 6.5rem); font-weight: 650; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1, "tnum" 1; line-height: .78; letter-spacing: -.09em; pointer-events: none; }
-  .v2-offers-mobile-number__prefix { flex: 0 0 .62em; color: inherit; line-height: .78; }
-  .v2-offers-mobile-number__wheel { position: relative; display: block; flex: 0 0 .62em; width: .62em; height: .92em; margin-left: -.025em; overflow: hidden; }
-  .v2-offers-mobile-number__value { position: absolute; inset: 0; opacity: 1; line-height: .78; will-change: transform; }
+  .v2-offers-mobile-number { position: absolute; z-index: 44; bottom: 3.6rem; left: 1.25rem; display: flex; align-items: flex-start; width: 1.25em; height: .82em; min-height: 0; overflow: visible; color: rgba(255,255,255,.72); font-family: var(--sans); font-size: clamp(5rem, 24vw, 6.5rem); font-weight: 650; font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "lnum" 1, "tnum" 1; line-height: .78; letter-spacing: -.09em; pointer-events: none; }
+  .v2-offers-mobile-number__prefix { display: block; flex: 0 0 .62em; height: .82em; color: inherit; line-height: .78; }
+  .v2-offers-mobile-number__wheel { position: relative; display: block; flex: 0 0 .62em; width: .62em; height: .82em; margin-left: -.025em; overflow: hidden; }
+  .v2-offers-mobile-number__value { position: absolute; inset: 0; display: block; height: .82em; opacity: 1; line-height: .78; will-change: transform; }
 }
 
 @media (max-width: 700px) {
