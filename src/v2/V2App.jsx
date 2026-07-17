@@ -231,7 +231,7 @@ function useCaseStudyMotion(rootRef, page) {
           const parallax = gsap.fromTo(heroMedia, { yPercent: mobile ? -1 : -1.5 }, {
             yPercent: mobile ? 2.5 : 4.5,
             ease: "none",
-            scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: mobile ? .45 : .65 },
+            scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: mobile ? true : .65 },
           });
           return () => parallax.revert();
         });
@@ -300,7 +300,7 @@ function useCaseStudyMotion(rootRef, page) {
                 pin: canPin,
                 pinSpacing: canPin,
                 anticipatePin: canPin ? 1 : 0,
-                scrub: mobile ? .38 : .6,
+                scrub: mobile ? true : .6,
                 invalidateOnRefresh: true,
               },
             });
@@ -928,7 +928,7 @@ function OffersShowcase() {
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const targetProgress = clamp(-rect.top / travel);
       if (displayedProgress === null) displayedProgress = targetProgress;
-      displayedProgress += (targetProgress - displayedProgress) * .22;
+      displayedProgress += (targetProgress - displayedProgress) * .5;
       const progress = displayedProgress;
       const chapterStart = .34;
       const chapterEnd = .88;

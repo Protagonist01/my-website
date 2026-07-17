@@ -476,7 +476,7 @@ function useReplicaMotion(rootRef) {
       });
 
       mm.add("(max-width: 700px)", () => {
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: 0.6 } });
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true } });
         const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
         const viewportHeight = () => sticky?.clientHeight || window.innerHeight;

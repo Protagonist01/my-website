@@ -53,8 +53,8 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; background: var(--paper); }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); letter-spacing: 0; }
+html { scroll-behavior: auto; background: var(--paper); }
+body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); letter-spacing: 0; overscroll-behavior-y: none; }
 button, input, textarea { font: inherit; }
 button, a { color: inherit; }
 .v2-body :where(a, button, [role="button"], summary, label[for], input, textarea, select) {
