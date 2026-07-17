@@ -139,7 +139,6 @@ export function ConfettiSuccess({ title = "Excited to build with You", subtitle 
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </span>
-        <span className="v2-success-card__eyebrow">// Sent</span>
         <h3>{title}</h3>
         <p>{subtitle}</p>
         <button type="button" className="v2-success-card__dismiss" onClick={onClose}>Close</button>

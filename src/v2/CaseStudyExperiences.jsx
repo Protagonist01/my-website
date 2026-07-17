@@ -722,6 +722,7 @@ function CaseInquiryForm({ id, title, profile }) {
   const [status, setStatus] = useState("idle");
   const [errors, setErrors] = useState({});
   const [values, setValues] = useState(() => ({ name: "", email: "", ...Object.fromEntries(profile.questions.map((question) => [question.name, ""])) }));
+  const initialValues = useMemo(() => ({ name: "", email: "", ...Object.fromEntries(profile.questions.map((question) => [question.name, ""])) }), [profile.questions]);
 
   const change = (event) => {
     const { name, value } = event.target;
@@ -777,7 +778,7 @@ function CaseInquiryForm({ id, title, profile }) {
       <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : `Send ${offerCtaLabel(id)}`} <span aria-hidden="true">↗</span></button>
       <p className="v2-case-form__status" aria-live="polite">{status === "error" ? "The form could not send. Please try again." : ""}</p>
     </form>
-    {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." onClose={() => setStatus("idle")} />}
+    {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." onClose={() => { setValues(initialValues); setErrors({}); setStatus("idle"); }} />}
   </>;
 }
 
