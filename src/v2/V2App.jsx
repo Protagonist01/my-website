@@ -923,7 +923,9 @@ function OffersShowcase() {
     const render = () => {
       frame = 0;
       const rect = stage.getBoundingClientRect();
-      const viewportHeight = pin?.clientHeight || window.innerHeight;
+      const stageLengthInViewports = commerceOffers.length + 2.8;
+      const viewportHeight = stage.offsetHeight / stageLengthInViewports;
+      const visualViewportHeight = pin?.clientHeight || window.innerHeight;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const progress = clamp(-rect.top / travel);
       const chapterStart = .26;
@@ -936,7 +938,7 @@ function OffersShowcase() {
       const numberReveal = smoothstep(.27, .34, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
       const coverReveal = smoothstep(.88, 1, progress);
-      const coverLift = coverReveal * viewportHeight;
+      const coverLift = coverReveal * visualViewportHeight;
       const currentEntryY = 42 * (1 - entryReveal);
 
       words.forEach((word, index) => {

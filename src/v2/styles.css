@@ -1108,7 +1108,7 @@ button, a { color: inherit; }
 
 @media (max-width: 760px) {
   .v2-offer-rail { overflow: clip; }
-  .v2-offer-rail__viewport { height: auto; overflow: visible; background: #000; }
+  .v2-offer-rail__viewport { height: auto; overflow: visible; }
   .v2-offer-track { display: block; width: 100%; height: auto; transform: none !important; will-change: auto; }
   .v2-offers-intro { position: absolute; z-index: 30; inset: 0; width: 100%; min-height: 100svh; height: 100svh; padding-bottom: 7.5rem; background: var(--offers-background); will-change: opacity; }
   .v2-offers-intro__content { position: relative; z-index: 2; display: block; will-change: transform, opacity; }
@@ -1120,12 +1120,12 @@ button, a { color: inherit; }
     height: var(--v2-offers-mobile-stage-height-svh, 900svh);
     min-height: var(--v2-offers-mobile-stage-height-svh, 900svh);
     margin-top: 0;
-    background: #000;
+    background: transparent;
     color: #fff;
     pointer-events: none;
   }
   .v2-offer-rail + .replica-ending { z-index: 1; margin-top: -100svh; }
-  .v2-offers-mobile-sticky { position: sticky; top: 0; height: 100svh; min-height: 100svh; overflow: hidden; isolation: isolate; background: var(--offers-background); pointer-events: auto; will-change: transform; }
+  .v2-offers-mobile-sticky { position: sticky; top: 0; height: 100dvh; min-height: 100svh; overflow: hidden; isolation: isolate; background: var(--offers-background); pointer-events: auto; will-change: transform; }
   .v2-offers-mobile-world { position: absolute; z-index: 20; inset: 0; overflow: hidden; isolation: isolate; background: #000; opacity: 0; will-change: opacity; }
   .v2-offers-mobile-ambient, .v2-offers-mobile-grid { position: absolute; z-index: 0; inset: 0; pointer-events: none; }
   .v2-offers-mobile-ambient { background: radial-gradient(circle at 76% 72%, rgba(232, 201, 122, .12), transparent 34%); transform: translate3d(var(--v2-auto-flow-x, 0), var(--v2-auto-flow-y, 0), 0); }

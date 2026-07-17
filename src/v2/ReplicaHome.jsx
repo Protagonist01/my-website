@@ -406,7 +406,9 @@ export function EndingSequence() {
       frame = 0;
       const rect = ending.getBoundingClientRect();
       const sticky = ending.querySelector(".replica-ending__sticky");
-      const viewportHeight = sticky?.clientHeight || window.innerHeight;
+      const viewportHeight = window.matchMedia("(max-width: 700px)").matches
+        ? ending.offsetHeight / 3.12
+        : sticky?.clientHeight || window.innerHeight;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
         ending.classList.remove("is-footer-visible");
