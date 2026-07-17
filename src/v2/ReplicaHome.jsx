@@ -415,7 +415,7 @@ export function EndingSequence() {
       const rect = ending.getBoundingClientRect();
       const sticky = ending.querySelector(".replica-ending__sticky");
       const viewportHeight = window.matchMedia("(max-width: 700px)").matches
-        ? ending.offsetHeight / 3.12
+        ? ending.offsetHeight / 2.6
         : sticky?.clientHeight || window.innerHeight;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
