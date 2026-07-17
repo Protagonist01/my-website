@@ -415,10 +415,8 @@ export function EndingSequence() {
         gsap.set([cover, under], { clearProps: "transform" });
         return;
       }
-      const mobile = window.matchMedia("(max-width: 700px)").matches;
-      const overlap = mobile ? viewportHeight : 0;
-      const travel = Math.max(1, rect.height - viewportHeight - overlap);
-      const progress = Math.min(1, Math.max(0, (-rect.top - overlap) / travel));
+      const travel = Math.max(1, rect.height - viewportHeight);
+      const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const reveal = progress * progress * (3 - (2 * progress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
@@ -478,7 +476,7 @@ function useReplicaMotion(rootRef) {
       });
 
       mm.add("(max-width: 700px)", () => {
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: 0.45 } });
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: 0.6 } });
         const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
         const viewportHeight = () => sticky?.clientHeight || window.innerHeight;

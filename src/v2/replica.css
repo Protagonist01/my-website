@@ -195,7 +195,7 @@
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-  .replica-intro { height: 320svh; }
+  .replica-intro { height: 300svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__title { top: 37%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
@@ -224,7 +224,7 @@
   .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
   .replica-end-container { width: calc(100% - 48px); }
   .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 312svh; }
-  .replica-ending__sticky { position: sticky; top: 0; display: block; height: 100dvh; min-height: var(--replica-vh); overflow: hidden; }
+  .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--replica-vh); overflow: hidden; }
   .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow-y: auto; will-change: transform; }
   .replica-ending__under { top: auto; height: var(--footer-panel-height); overflow: hidden; }
   .replica-ending__under .replica-footer, .replica-ending__under .replica-footer__shell,

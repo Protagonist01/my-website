@@ -913,6 +913,7 @@ function OffersShowcase() {
     const words = [...(intro?.querySelectorAll(".v2-offers-intro__word") || [])];
     const offerWorld = stage.querySelector(".v2-offers-mobile-world");
     let frame = 0;
+    let displayedProgress = null;
 
     const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
     const smoothstep = (edge0, edge1, value) => {
@@ -921,24 +922,23 @@ function OffersShowcase() {
     };
 
     const render = () => {
-      frame = 0;
       const rect = stage.getBoundingClientRect();
-      const stageLengthInViewports = commerceOffers.length + 2.8;
+      const stageLengthInViewports = commerceOffers.length + 4.4;
       const viewportHeight = stage.offsetHeight / stageLengthInViewports;
-      const visualViewportHeight = pin?.clientHeight || window.innerHeight;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
-      const progress = clamp(-rect.top / travel);
-      const chapterStart = .26;
+      const targetProgress = clamp(-rect.top / travel);
+      if (displayedProgress === null) displayedProgress = targetProgress;
+      displayedProgress += (targetProgress - displayedProgress) * .22;
+      const progress = displayedProgress;
+      const chapterStart = .34;
       const chapterEnd = .94;
-      const textTravel = smoothstep(.12, .27, progress);
-      const worldReveal = smoothstep(.18, .3, progress);
-      const entryReveal = smoothstep(.22, .31, progress);
+      const textTravel = smoothstep(.1, .32, progress);
+      const worldReveal = smoothstep(.2, .38, progress);
+      const entryReveal = smoothstep(.27, .4, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberReveal = smoothstep(.27, .34, progress);
+      const numberReveal = smoothstep(.34, .42, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
-      const coverReveal = smoothstep(.88, 1, progress);
-      const coverLift = coverReveal * visualViewportHeight;
       const currentEntryY = 42 * (1 - entryReveal);
 
       words.forEach((word, index) => {
@@ -958,8 +958,8 @@ function OffersShowcase() {
       if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
 
       if (pin) {
-        pin.style.transform = `translate3d(0, -${coverLift.toFixed(2)}px, 0)`;
-        pin.style.pointerEvents = coverReveal > .82 ? "none" : "auto";
+        pin.style.transform = "translate3d(0, 0, 0)";
+        pin.style.pointerEvents = "auto";
       }
 
       const number = stage.querySelector(".v2-offers-mobile-number");
@@ -993,6 +993,12 @@ function OffersShowcase() {
         number.style.opacity = "1";
         number.style.transform = `translate3d(0, ${((index - exact) * 100).toFixed(2)}%, 0)`;
       });
+
+      if (Math.abs(targetProgress - displayedProgress) > .0005) frame = window.requestAnimationFrame(render);
+      else {
+        displayedProgress = targetProgress;
+        frame = 0;
+      }
     };
 
     const schedule = () => {
@@ -1033,7 +1039,7 @@ function OffersShowcase() {
       <div ref={viewportRef} className="v2-offer-rail__viewport">
         <div ref={trackRef} className="v2-offer-track">
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 280}svh` }} aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 440}svh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
                 {offersIntro}
                 <div className="v2-offers-mobile-world" aria-hidden="false">
