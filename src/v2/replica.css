@@ -105,10 +105,6 @@
 .replica-ending { --ending-panel-height: var(--replica-vh); --footer-panel-height: clamp(28rem, 58svh, 36rem); position: relative; height: 212svh; background: #fffffd; }
 .replica-ending__sticky { position: sticky; top: calc(var(--replica-vh) - var(--ending-panel-height)); height: var(--ending-panel-height); overflow: hidden; }
 
-@supports (height: 100dvh) {
-  .replica-page,
-  .replica-end { --replica-vh: 100dvh; }
-}
 .replica-ending__under { position: absolute; z-index: 1; inset: 0; background: var(--ink); }
 .replica-ending__cover { position: relative; z-index: 2; width: 100%; height: 100%; background: #fffffd; will-change: transform; }
 .replica-ending__under .replica-footer, .replica-ending__cover .replica-contact { width: 100%; min-height: 100%; height: 100%; }
@@ -169,7 +165,7 @@
 .replica-footer__links a:focus-visible, .replica-footer__contact a:focus-visible { outline: 2px solid var(--light-text); outline-offset: 3px; }
 .replica-footer__contact a { color: var(--light-text); font-size: 16px; text-decoration: none; }
 .replica-footer__contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.replica-footer__wordmark { position: absolute; z-index: 1; bottom: -39px; left: 0; display: block; overflow: hidden; color: var(--footer-watermark); font-size: clamp(180px, 19vw, 370px); font-weight: 700; line-height: .76; letter-spacing: -.072em; white-space: nowrap; pointer-events: none; user-select: none; }
+.replica-footer__wordmark { position: absolute; z-index: 1; bottom: -39px; left: 0; display: block; width: max-content; padding-right: .1em; overflow: hidden; color: var(--footer-watermark); font-size: clamp(180px, 25.5vw, 390px); font-weight: 700; line-height: .76; letter-spacing: -.072em; white-space: nowrap; pointer-events: none; user-select: none; }
 .replica-footer__wordmark-text { display: block; opacity: 0; transform: translateY(112%); transition: opacity .25s ease, transform .45s ease; will-change: opacity, transform; }
 .replica-ending.is-footer-visible .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { animation: replica-wordmark-rise 1.8s both; }
 @keyframes replica-wordmark-rise {
@@ -198,7 +194,7 @@
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-  .replica-intro { height: 320vh; }
+  .replica-intro { height: 320svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__title { top: 40.3%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
@@ -214,7 +210,7 @@
   .replica-about__right { padding: 0; }
   .replica-about__right p { width: 100%; margin-bottom: 10px; font-size: 14px; line-height: 1.35; }
   .replica-about__right a { margin-top: 2px; font-size: 14px; }
-  .replica-statement-scene { height: 180vh; }
+  .replica-statement-scene { height: 180svh; }
   .replica-statement { padding: 0 24px; }
   .replica-statement p { width: 100%; font-size: 24px; line-height: 1.19; letter-spacing: -.025em; }
   .replica-services { height: 205svh; }
@@ -254,7 +250,7 @@
   .replica-footer__links, .replica-footer__contact { padding-top: 26px; }
   .replica-footer__links h2, .replica-footer__contact h2 { margin-bottom: 14px; }
   .replica-footer__contact a { overflow-wrap: anywhere; }
-  .replica-footer__wordmark { position: absolute; bottom: 0; left: 0; width: 100%; margin-top: 0; overflow: hidden; font-size: clamp(64px, 22vw, 92px); line-height: 1; }
+  .replica-footer__wordmark { position: absolute; bottom: 0; left: 0; width: max-content; margin-top: 0; overflow: hidden; font-size: clamp(76px, 27.7vw, 118px); line-height: 1; }
   .replica-ending.is-footer-visible .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { animation-name: replica-wordmark-rise; }
 }
 
@@ -297,7 +293,7 @@
   .replica-contact__copy h2 { font-size: clamp(40px, 12vw, 50px); overflow-wrap: anywhere; }
   .replica-footer__statement { font-size: clamp(38px, 11.5vw, 48px); }
   .replica-footer__links, .replica-footer__contact { padding-top: 42px; }
-  .replica-footer__wordmark { width: 100%; font-size: clamp(62px, 21vw, 84px); }
+  .replica-footer__wordmark { width: max-content; font-size: clamp(76px, 27.7vw, 118px); }
 }
 
 @media (prefers-reduced-motion: reduce) {

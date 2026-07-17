@@ -478,7 +478,8 @@ function useReplicaMotion(rootRef) {
       mm.add("(max-width: 700px)", () => {
         const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: 0.45 } });
         const about = root.querySelector(".replica-about");
-        const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
+        const sticky = root.querySelector(".replica-intro__sticky");
+        const viewportHeight = () => sticky?.clientHeight || window.innerHeight;
         const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
         const portraitLift = () => -Math.min(220, viewportHeight() * .22);
         timeline
@@ -529,24 +530,31 @@ function useReplicaMotion(rootRef) {
 
     let refreshTimer = 0;
     let viewportWidth = window.visualViewport?.width || window.innerWidth;
-    const refresh = () => {
+    const scheduleRefresh = () => {
+      window.clearTimeout(refreshTimer);
+      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
+    };
+    const refreshForViewportWidth = () => {
       const nextWidth = window.visualViewport?.width || window.innerWidth;
       if (Math.abs(nextWidth - viewportWidth) < 2) return;
       viewportWidth = nextWidth;
-      window.clearTimeout(refreshTimer);
-      refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
+      scheduleRefresh();
+    };
+    const refreshForOrientation = () => {
+      viewportWidth = window.visualViewport?.width || window.innerWidth;
+      scheduleRefresh();
     };
     Promise.allSettled([
       document.fonts?.ready || Promise.resolve(),
       root.querySelector(".replica-portrait-face img")?.decode?.() || Promise.resolve(),
-    ]).then(refresh);
-    window.visualViewport?.addEventListener("resize", refresh, { passive: true });
-    window.addEventListener("orientationchange", refresh, { passive: true });
+    ]).then(scheduleRefresh);
+    window.visualViewport?.addEventListener("resize", refreshForViewportWidth, { passive: true });
+    window.addEventListener("orientationchange", refreshForOrientation, { passive: true });
 
     return () => {
       window.clearTimeout(refreshTimer);
-      window.visualViewport?.removeEventListener("resize", refresh);
-      window.removeEventListener("orientationchange", refresh);
+      window.visualViewport?.removeEventListener("resize", refreshForViewportWidth);
+      window.removeEventListener("orientationchange", refreshForOrientation);
       mm.revert();
       context.revert();
     };

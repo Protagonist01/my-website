@@ -275,7 +275,12 @@ function useCaseStudyMotion(rootRef, page) {
         }, ({ conditions }) => {
           const mobile = conditions.mobile;
           const timelines = storySections.map((section) => {
-            const targets = storyTargets(section);
+            let targets = storyTargets(section);
+            if (mobile && section.matches(".v2-case-system, .v2-case-process")) {
+              const headerTargets = [...section.querySelectorAll(":scope > header > *")];
+              gsap.set(headerTargets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
+              targets = targets.filter((target) => !headerTargets.includes(target));
+            }
             if (!targets.length) return null;
             const wantsPin = section.dataset.storySequence === "pin";
             const canPin = wantsPin;
@@ -646,7 +651,17 @@ function useWorkSpecialisationsMotion(sectionRef) {
           });
         }
 
+        let viewportWidth = window.visualViewport?.width || window.innerWidth;
+        let viewportHeight = window.visualViewport?.height || window.innerHeight;
         const refresh = () => {
+          const nextWidth = window.visualViewport?.width || window.innerWidth;
+          const nextHeight = window.visualViewport?.height || window.innerHeight;
+          const mobile = nextWidth <= 700;
+          const widthChanged = Math.abs(nextWidth - viewportWidth) >= 2;
+          const heightChanged = Math.abs(nextHeight - viewportHeight) >= 2;
+          if (!widthChanged && (mobile || !heightChanged)) return;
+          viewportWidth = nextWidth;
+          viewportHeight = nextHeight;
           window.clearTimeout(resizeTimer);
           resizeTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120);
         };
@@ -887,101 +902,16 @@ function OffersShowcase() {
   }, [filter, filteredOffers.length, isMobile]);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    if (!section || !isMobile || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-    let context;
-    let disposed = false;
-
-    const setup = async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([import("gsap"), import("gsap/ScrollTrigger")]);
-      await document.fonts?.ready;
-      if (disposed) return;
-      gsap.registerPlugin(ScrollTrigger);
-      context = gsap.context(() => {
-        const intro = section.querySelector(".v2-offers-intro");
-        const words = gsap.utils.toArray(".v2-offers-intro__word", intro);
-        const content = intro.querySelector(".v2-offers-intro__content");
-        const gateway = intro.querySelector(".v2-offers-mobile-gateway");
-        const gatewayCard = gateway?.querySelector(".v2-offers-mobile-gateway-card");
-        const gatewayNumber = gateway?.querySelector(".v2-offers-mobile-gateway-number");
-        const handoffDuration = 3.15;
-        const viewportHeight = () => intro.clientHeight || window.innerHeight;
-        gsap.set([gatewayCard, gatewayNumber], { autoAlpha: 0 });
-        const reveal = gsap.timeline({
-          scrollTrigger: {
-            trigger: intro,
-            start: "top top",
-            end: () => `+=${Math.round(viewportHeight() * 2.65)}`,
-            pin: true,
-            scrub: true,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            onLeave: () => gsap.set(intro, { autoAlpha: 0 }),
-            onEnterBack: () => gsap.set(intro, { autoAlpha: 1 }),
-          },
-        });
-        reveal.to(words, {
-          color: "var(--offers-ink)",
-          stagger: { amount: 1.25, from: "start" },
-          duration: 1,
-          ease: "none",
-        });
-        reveal.addLabel("handoff");
-        reveal.to(content, {
-          xPercent: -105,
-          opacity: 0,
-          scale: .975,
-          transformOrigin: "left center",
-          duration: handoffDuration,
-          ease: "none",
-        }, "handoff");
-        reveal.to(gateway, {
-          xPercent: -100,
-          duration: handoffDuration,
-          ease: "none",
-        }, "handoff");
-        reveal.to(gatewayCard, {
-          autoAlpha: 1,
-          duration: handoffDuration * .58,
-          ease: "none",
-        }, "handoff+=0.52");
-        reveal.to(gatewayNumber, {
-          autoAlpha: 1,
-          duration: handoffDuration * .34,
-          ease: "none",
-        }, "handoff+=1.28");
-        ScrollTrigger.refresh();
-      }, section);
-      let refreshTimer = 0;
-      let viewportWidth = window.visualViewport?.width || window.innerWidth;
-      const refresh = () => {
-        const nextWidth = window.visualViewport?.width || window.innerWidth;
-        if (Math.abs(nextWidth - viewportWidth) < 2) return;
-        viewportWidth = nextWidth;
-        window.clearTimeout(refreshTimer);
-        refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
-      };
-      window.visualViewport?.addEventListener("resize", refresh, { passive: true });
-      context.add(() => {
-        window.clearTimeout(refreshTimer);
-        window.visualViewport?.removeEventListener("resize", refresh);
-      });
-    };
-
-    setup();
-    return () => {
-      disposed = true;
-      context?.revert();
-    };
-  }, [isMobile]);
-
-  useEffect(() => {
     const stage = mobileStageRef.current;
     if (!stage || !isMobile || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
     const cards = [...stage.querySelectorAll("[data-mobile-offer-card]")];
     const numbers = [...stage.querySelectorAll("[data-mobile-offer-number]")];
     const pin = stage.querySelector(".v2-offers-mobile-sticky");
+    const intro = stage.querySelector(".v2-offers-intro");
+    const introContent = intro?.querySelector(".v2-offers-intro__content");
+    const words = [...(intro?.querySelectorAll(".v2-offers-intro__word") || [])];
+    const offerWorld = stage.querySelector(".v2-offers-mobile-world");
     let frame = 0;
 
     const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
@@ -996,16 +926,34 @@ function OffersShowcase() {
       const viewportHeight = pin?.clientHeight || window.innerHeight;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const progress = clamp(-rect.top / travel);
-      const chapterEnd = .95;
-      const arrivalProgress = clamp((viewportHeight - rect.top) / viewportHeight);
-      const entryReveal = smoothstep(.06, 1, arrivalProgress);
-      const chapterProgress = clamp(progress / chapterEnd);
+      const chapterStart = .26;
+      const chapterEnd = .94;
+      const textTravel = smoothstep(.12, .27, progress);
+      const worldReveal = smoothstep(.18, .3, progress);
+      const entryReveal = smoothstep(.22, .31, progress);
+      const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberReveal = smoothstep(.42, .86, arrivalProgress);
+      const numberReveal = smoothstep(.27, .34, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
       const coverReveal = smoothstep(.88, 1, progress);
       const coverLift = coverReveal * viewportHeight;
       const currentEntryY = 42 * (1 - entryReveal);
+
+      words.forEach((word, index) => {
+        const wordStart = .025 + (index / Math.max(1, words.length - 1)) * .075;
+        const revealAmount = smoothstep(wordStart, wordStart + .045, progress);
+        const channel = (from, to) => Math.round(from + (to - from) * revealAmount);
+        word.style.color = `rgb(${channel(209, 53)}, ${channel(210, 64)}, ${channel(206, 51)})`;
+      });
+      if (introContent) {
+        introContent.style.transform = `translate3d(${(-textTravel * (pin.clientWidth + introContent.offsetWidth * .18)).toFixed(2)}px, 0, 0)`;
+        introContent.style.opacity = (1 - smoothstep(.22, .29, progress)).toFixed(4);
+      }
+      if (intro) {
+        intro.style.opacity = (1 - worldReveal).toFixed(4);
+        intro.style.pointerEvents = textTravel > .15 ? "none" : "auto";
+      }
+      if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
 
       if (pin) {
         pin.style.transform = `translate3d(0, -${coverLift.toFixed(2)}px, 0)`;
@@ -1058,76 +1006,73 @@ function OffersShowcase() {
     };
   }, [filteredOffers.length, isMobile]);
 
+  const offersIntro = (
+    <article className="v2-offers-intro">
+      <div className="v2-offers-intro__content">
+        <span className="v2-offers-intro__eyebrow">// E-commerce</span>
+        <div className="v2-offers-intro__headlines">
+          <h2 id="v2-offers-heading" className="v2-offers-intro__headline">
+            {OFFERS_STATEMENT.split(" ").map((word, index) => <React.Fragment key={`${word}-${index}`}><span className="v2-offers-intro__word">{word}</span>{index < OFFERS_STATEMENT.split(" ").length - 1 ? " " : ""}</React.Fragment>)}
+          </h2>
+        </div>
+        <div className="v2-offers-filters" aria-label="Filter commerce systems">
+          {OFFER_FILTERS.map((label) => (
+            <button key={label} type="button" className={label === filter ? "is-active" : ""} aria-pressed={label === filter} onClick={() => setFilter(label)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+
   return (
     <section ref={sectionRef} className={`v2-offer-rail${OFFERS_DEBUG ? " is-debug" : ""}`} id="offers" aria-labelledby="v2-offers-heading">
       <div ref={viewportRef} className="v2-offer-rail__viewport">
         <div ref={trackRef} className="v2-offer-track">
-          <article className="v2-offers-intro">
-            <div className="v2-offers-intro__content">
-              <span className="v2-offers-intro__eyebrow">// E-commerce</span>
-              <div className="v2-offers-intro__headlines">
-                <h2 id="v2-offers-heading" className="v2-offers-intro__headline">
-                  {OFFERS_STATEMENT.split(" ").map((word, index) => <React.Fragment key={`${word}-${index}`}><span className="v2-offers-intro__word">{word}</span>{index < OFFERS_STATEMENT.split(" ").length - 1 ? " " : ""}</React.Fragment>)}
-                </h2>
-              </div>
-              <div className="v2-offers-filters" aria-label="Filter commerce systems">
-                {OFFER_FILTERS.map((label) => (
-                  <button key={label} type="button" className={label === filter ? "is-active" : ""} aria-pressed={label === filter} onClick={() => setFilter(label)}>
-                    {label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            {isMobile && (
-              <div className="v2-offers-mobile-gateway" aria-hidden="true">
-                <figure className="v2-offers-mobile-gateway-card">
-                  <img src={commerceOffers[0].hoverImage} alt="" width="1086" height="1448" loading="eager" />
-                  <figcaption><strong>{commerceOffers[0].title}</strong></figcaption>
-                </figure>
-                <div className="v2-offers-mobile-gateway-number">01</div>
-              </div>
-            )}
-          </article>
-
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 200}svh` }} aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 280}svh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
-                <div className="v2-offers-mobile-ambient" aria-hidden="true" />
-                <div className="v2-offers-mobile-grid" aria-hidden="true" />
-                <div className="v2-offers-mobile-cards" aria-label="Shopify automation offers">
-                  {commerceOffers.map((offer, index) => (
-                    <figure
-                      className="v2-offers-mobile-card"
-                      data-mobile-offer-card
-                      role="button"
-                      tabIndex="0"
-                      aria-label={`Open ${offer.title}`}
-                      key={offer.id}
-                      onClick={() => window.location.assign(offer.href)}
-                      onKeyDown={(event) => {
-                        if (event.key !== "Enter" && event.key !== " ") return;
-                        event.preventDefault();
-                        window.location.assign(offer.href);
-                      }}
-                    >
-                      <div className="v2-offers-mobile-card__media" aria-hidden="true">
-                        <img src={offer.image} alt="" width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
-                        <img src={offer.hoverImage} alt="" width="1086" height="1448" loading="lazy" />
-                      </div>
-                      <figcaption><strong>{offer.title}</strong></figcaption>
-                    </figure>
-                  ))}
-                </div>
-                <div className="v2-offers-mobile-number" aria-hidden="true">
-                  <span className="v2-offers-mobile-number__prefix">0</span>
-                  <span className="v2-offers-mobile-number__wheel">
-                    {commerceOffers.map((offer, index) => <span className="v2-offers-mobile-number__value" data-mobile-offer-number key={offer.id}>{index + 1}</span>)}
-                  </span>
+                {offersIntro}
+                <div className="v2-offers-mobile-world" aria-hidden="false">
+                  <div className="v2-offers-mobile-ambient" aria-hidden="true" />
+                  <div className="v2-offers-mobile-grid" aria-hidden="true" />
+                  <div className="v2-offers-mobile-cards" aria-label="Shopify automation offers">
+                    {commerceOffers.map((offer, index) => (
+                      <figure
+                        className="v2-offers-mobile-card"
+                        data-mobile-offer-card
+                        role="button"
+                        tabIndex="0"
+                        aria-label={`Open ${offer.title}`}
+                        key={offer.id}
+                        onClick={() => window.location.assign(offer.href)}
+                        onKeyDown={(event) => {
+                          if (event.key !== "Enter" && event.key !== " ") return;
+                          event.preventDefault();
+                          window.location.assign(offer.href);
+                        }}
+                      >
+                        <div className="v2-offers-mobile-card__media" aria-hidden="true">
+                          <img src={offer.image} alt="" width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
+                          <img src={offer.hoverImage} alt="" width="1086" height="1448" loading="lazy" />
+                        </div>
+                        <figcaption><strong>{offer.title}</strong></figcaption>
+                      </figure>
+                    ))}
+                  </div>
+                  <div className="v2-offers-mobile-number" aria-hidden="true">
+                    <span className="v2-offers-mobile-number__prefix">0</span>
+                    <span className="v2-offers-mobile-number__wheel">
+                      {commerceOffers.map((offer, index) => <span className="v2-offers-mobile-number__value" data-mobile-offer-number key={offer.id}>{index + 1}</span>)}
+                    </span>
+                  </div>
                 </div>
               </div>
             </section>
           ) : (
             <>
+              {offersIntro}
               {filteredOffers.map((offer, index) => (
                 <React.Fragment key={offer.id}>
                   <article className="v2-offer-info">
@@ -1348,7 +1293,7 @@ function ServicePage({ service }) {
     </section>
     <section className="v2-service-proof">
       <header data-reveal><span>Relevant proof</span><h2>See the capability inside real projects.</h2></header>
-      <div>{related.map((project) => <a href={project.href} key={project.id}><ProjectMedia project={project} compact /><span>{project.status}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Open the story <Arrow /></strong></a>)}</div>
+      <div>{related.map((project) => <a href={project.href} key={project.id}><div className="v2-service-proof__media"><ProjectMedia project={project} compact /></div><span>{project.status}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Open the story <Arrow /></strong></a>)}</div>
     </section>
     <section className="v2-service-cta" data-reveal><span>Have this kind of pressure?</span><h2>Bring the problem. I’ll map the first useful system.</h2><a href="/v2/contact/" data-contact-context={`I'd like to discuss ${service.navLabel}.`}>Start a focused conversation <Arrow /></a></section>
   </article>;
@@ -1371,6 +1316,18 @@ function ProjectNote({ project }) {
 function CaseStudy({ project }) {
   const position = caseStudies.findIndex((item) => item.id === project.id);
   const next = caseStudies[(position + 1) % caseStudies.length];
+  const hasGallery = project.gallery?.length > 0;
+  const chapterNumbers = {
+    outcome: "01",
+    problem: "02",
+    decisions: "03",
+    system: "04",
+    artifact: "05",
+    process: "06",
+    gallery: "07",
+    fit: hasGallery ? "08" : "07",
+    discuss: hasGallery ? "09" : "08",
+  };
   return (
     <CaseExperienceProvider id={project.id} title={project.title}>
     <article className="v2-case">
@@ -1386,10 +1343,10 @@ function CaseStudy({ project }) {
         <figure data-reveal><ProjectMedia project={project} loading="eager" /></figure>
       </section>
 
-      <ExperienceNav hasGallery={project.gallery?.length > 0} />
+      <ExperienceNav hasGallery={hasGallery} />
 
       <section className="v2-case-outcome" id="outcome">
-        <span>Outcome</span>
+        <span>{chapterNumbers.outcome} / Outcome</span>
         <h2>{project.outcome}</h2>
         <dl>
           <div><dt>Status</dt><dd>{project.status}</dd></div>
@@ -1402,30 +1359,30 @@ function CaseStudy({ project }) {
       </section>
 
       <section className="v2-case-challenge" id="problem" data-story-sequence="pin">
-        <span>01 / Problem</span>
+        <span>{chapterNumbers.problem} / Problem</span>
         <h2>{project.lead || project.outcome}</h2>
         <p>{project.challenge}</p>
       </section>
 
-      <DecisionReplay />
+      <DecisionReplay chapterNumber={chapterNumbers.decisions} />
 
       <section className="v2-case-system" id="system" data-story-sequence="pin">
-        <header data-reveal><span>04 / System</span><h2>{project.story?.systemTitle || "See how the parts work together."}</h2></header>
+        <header data-reveal><span>{chapterNumbers.system} / System</span><h2>{project.story?.systemTitle || "See how the parts work together."}</h2></header>
         <div className="v2-case-system__grid">
           {project.architecture?.map((item, index) => <article data-reveal key={item}><span>0{index + 1}</span><small>{["Input", "Decision", "Control", "Result"][index] || "System step"}</small><p>{item}</p>{index < project.architecture.length - 1 && <i aria-hidden="true">→</i>}</article>)}
         </div>
       </section>
 
-      <AnnotatedArtifactExplorer image={project.sourceImage || project.image} alt={`${project.title} annotated system artifact`} projectId={project.id} />
+      <AnnotatedArtifactExplorer image={project.sourceImage || project.image} alt={`${project.title} annotated system artifact`} projectId={project.id} chapterNumber={chapterNumbers.artifact} />
 
       <section className="v2-case-process" id="process" data-story-sequence="pin">
-        <header data-reveal><span>06 / User flow</span><h2>{project.story?.processTitle || "From the first input to a useful next action."}</h2></header>
+        <header data-reveal><span>{chapterNumbers.process} / User flow</span><h2>{project.story?.processTitle || "From the first input to a useful next action."}</h2></header>
         <div>{project.phases?.map((phase) => <article data-reveal key={phase.num}><span>{phase.num}</span><h3>{phase.title}</h3><p>{phase.copy}</p></article>)}</div>
       </section>
 
-      {project.gallery?.length > 0 && <section className="v2-case-gallery" id="gallery"><header><span>07 / Product moments</span><h2>{project.story?.galleryTitle || "The product in use."}</h2></header><div>{project.gallery.map((item) => <figure key={`${item.image || item.video}-${item.caption}`}>{item.video ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" /> : <img src={item.image} alt={item.alt} loading="lazy" />}<figcaption>{item.caption}</figcaption></figure>)}</div></section>}
-      <ClientFitSection id={project.id} title={project.title} />
-      <ConversionPanel id={project.id} title={project.title} />
+      {hasGallery && <section className="v2-case-gallery" id="gallery"><header><span>{chapterNumbers.gallery} / Product moments</span><h2>{project.story?.galleryTitle || "The product in use."}</h2></header><div>{project.gallery.map((item) => <figure key={`${item.image || item.video}-${item.caption}`}>{item.video ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" /> : <img src={item.image} alt={item.alt} loading="lazy" />}<figcaption>{item.caption}</figcaption></figure>)}</div></section>}
+      <ClientFitSection id={project.id} title={project.title} chapterNumber={chapterNumbers.fit} />
+      <ConversionPanel id={project.id} title={project.title} chapterNumber={chapterNumbers.discuss} />
       <a className="v2-next" href={next.href}><span>Next case</span><strong>{next.title}</strong><Arrow /></a>
     </article>
     </CaseExperienceProvider>

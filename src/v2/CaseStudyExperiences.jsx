@@ -421,7 +421,7 @@ function ExperienceControlDeck() {
   </div>;
 }
 
-export function DecisionReplay() {
+export function DecisionReplay({ chapterNumber }) {
   const experience = useCaseExperience();
   const sectionRef = useRef(null);
   const mapRef = useRef(null);
@@ -492,7 +492,7 @@ export function DecisionReplay() {
   const stage = replayStages[active] || replayStages[0];
   return <section ref={sectionRef} className={`v2-decision-replay phase-${active} is-entered`} id="decisions" data-phase={active} data-travelling-slider>
     <header>
-      <span>02 / Product reasoning</span>
+      <span>{chapterNumber || (experience.offer ? "02" : "03")} / Product reasoning</span>
       <h2>Five decisions behind {experience.title}.</h2>
     </header>
     <div className="v2-decision-replay__layout">
@@ -544,16 +544,16 @@ export function ProofCheckpoint() {
   </section>;
 }
 
-export function AnnotatedArtifactExplorer({ image, alt, projectId }) {
+export function AnnotatedArtifactExplorer({ image, alt, projectId, chapterNumber }) {
   const experience = useCaseExperience();
   const [active, setActive] = useState(null);
   const artifact = experience?.blueprint?.artifact;
   if (!experience || !artifact || (!image && !hasProjectVisual(projectId))) return null;
   const annotation = active === null ? null : artifact.annotations[active];
   return <section className="v2-artifact-explorer is-entered" id="artifact">
-    <header><span>{experience.offer ? "06" : "05"} / System proof</span><h2>{artifact.title}</h2></header>
+    <header><span>{chapterNumber || (experience.offer ? "06" : "05")} / System proof</span><h2>{artifact.title}</h2></header>
     <div className="v2-artifact-explorer__surface">
-      <figure>{hasProjectVisual(projectId) ? <ProjectVisual id={projectId} artifact /> : <img src={image} alt={alt} loading="lazy" />}<figcaption>{artifact.caption}</figcaption>
+      <figure><p className="v2-artifact-explorer__hint"><span aria-hidden="true">↳</span> Select a numbered point on the image to inspect it.</p>{hasProjectVisual(projectId) ? <ProjectVisual id={projectId} artifact /> : <img src={image} alt={alt} loading="lazy" />}<figcaption>{artifact.caption}</figcaption>
         <div className="v2-artifact-hotspots">{artifact.annotations.map((item, index) => <button type="button" className={active === index ? "is-active" : ""} style={{ left: `${item[0]}%`, top: `${item[1]}%`, "--hotspot-delay": `${index * 120}ms` }} onClick={() => setActive(index)} aria-label={`Inspect ${item[2]}`} aria-pressed={active === index} key={item[2]}><span>{index + 1}</span><small>{item[2]}</small></button>)}</div>
       </figure>
       {annotation ? <aside key={`${active}-${experience.lens}`}><button type="button" aria-label="Close annotation" onClick={() => setActive(null)}>×</button><span>Point 0{active + 1} of 0{artifact.annotations.length}</span><h3>{annotation[2]}</h3><p>{annotation[experience.lens === "executive" ? 3 : 4]}</p><small>{experienceViews[experience.lens].label}</small></aside> : <aside className="is-empty"><span>Three marked decisions</span><h3>Select a point.</h3><button type="button" onClick={() => setActive(0)}>Open point 01 <span aria-hidden="true">→</span></button></aside>}
@@ -569,15 +569,16 @@ export function ExperienceNav({ offer = false, hasGallery = false }) {
   const items = useMemo(() => offer
     ? [["overview", "The problem", "01"], ["decisions", "The reasoning", "02"], ["process", "The approach", "04"], ["artifact", "See the work", "06"], ["fit", "Is it a fit?", "08"], ["discuss", "Start a project", "09"]]
     : [
-        ["problem", "The problem", "01"],
-        ["decisions", "The reasoning", "02"],
-        ["system", "How it is built", "04"],
-        ["artifact", "See the work", "05"],
-        ["process", "The user flow", "06"],
-        ...(hasGallery ? [["gallery", "Product moments", "07"]] : []),
-        ["fit", "Is it a fit?", "08"],
-        ["discuss", "Start a project", "09"],
-      ], [offer, hasGallery]);
+        ["outcome", "The outcome"],
+        ["problem", "The problem"],
+        ["decisions", "The reasoning"],
+        ["system", "How it is built"],
+        ["artifact", "See the work"],
+        ["process", "The user flow"],
+        ...(hasGallery ? [["gallery", "Product moments"]] : []),
+        ["fit", "Is it a fit?"],
+        ["discuss", "Start a project"],
+      ].map(([id, label], index) => [id, label, String(index + 1).padStart(2, "0")]), [offer, hasGallery]);
 
   useEffect(() => {
     const sections = items.map(([id]) => document.getElementById(id)).filter(Boolean);
@@ -684,26 +685,26 @@ export function DecisionSection({ id }) {
   );
 }
 
-export function ClientFitSection({ id, offer = false, title }) {
+export function ClientFitSection({ id, offer = false, title, chapterNumber }) {
   const meta = offer ? offerMeta[id] : projectMeta[id];
   if (!meta) return null;
   return (
     <section className="v2-client-fit" id="fit" data-story-sequence={offer ? "pin" : undefined}>
-      <div className="v2-client-fit__intro"><span>Fit</span><h2>{offer ? "A fit when these constraints are familiar." : "Useful when the same operating pattern appears."}</h2></div>
+      <div className="v2-client-fit__intro"><span>{chapterNumber ? `${chapterNumber} / Fit` : "Fit"}</span><h2>{offer ? "A fit when these constraints are familiar." : "Useful when the same operating pattern appears."}</h2></div>
       <ul>{meta.fit.map((item) => <li key={item}><span aria-hidden="true">↳</span>{item}</li>)}</ul>
       <div className="v2-client-fit__deliverables"><span>What the engagement can include</span>{meta.deliverables.map((item) => <strong key={item}>{item}</strong>)}</div>
     </section>
   );
 }
 
-export function ConversionPanel({ id, offer = false, title }) {
+export function ConversionPanel({ id, offer = false, title, chapterNumber }) {
   const meta = offer ? offerMeta[id] : projectMeta[id];
   const profile = inquiryProfiles[id];
   if (!meta || !profile) return null;
   return (
     <section className="v2-conversion" id="discuss">
       <div className="v2-conversion__copy">
-        <span>{offer ? "Ready to remove the pressure?" : "Have a related problem?"}</span>
+        <span>{chapterNumber ? `${chapterNumber} / ${offer ? "Ready to remove the pressure?" : "Have a related problem?"}` : offer ? "Ready to remove the pressure?" : "Have a related problem?"}</span>
         <h2>{meta.cta}</h2>
         <p>{profile.intro}</p>
       </div>
