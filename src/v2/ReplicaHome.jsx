@@ -561,9 +561,44 @@ function useReplicaMotion(rootRef) {
   }, [rootRef]);
 }
 
+function useMobileVisualViewport(rootRef) {
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return undefined;
+    const mobile = window.matchMedia("(max-width: 700px)");
+    let frame = 0;
+
+    const update = () => {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        if (!mobile.matches) {
+          root.style.removeProperty("--mobile-visual-height");
+          return;
+        }
+        const height = Math.ceil(window.visualViewport?.height || window.innerHeight);
+        root.style.setProperty("--mobile-visual-height", `${height}px`);
+      });
+    };
+
+    update();
+    window.visualViewport?.addEventListener("resize", update, { passive: true });
+    window.addEventListener("orientationchange", update, { passive: true });
+    mobile.addEventListener("change", update);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.visualViewport?.removeEventListener("resize", update);
+      window.removeEventListener("orientationchange", update);
+      mobile.removeEventListener("change", update);
+      root.style.removeProperty("--mobile-visual-height");
+    };
+  }, [rootRef]);
+}
+
 export default function ReplicaHome({ works, offers }) {
   const root = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
+  useMobileVisualViewport(root);
   useReplicaMotion(root);
   useContactLauncher(root, () => setContactOpen(true));
   return (
