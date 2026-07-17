@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
-const CONFETTI_COLORS = ["#735cff", "#e8c97a", "#4b7180", "#354033", "#ffffff", "#c9a850"];
+const CONFETTI_COLORS = ["#d2b45f", "#337c6a", "#579c89", "#faf9f5", "#0a0a09", "#8c7026"];
 
 function fireConfetti(canvas) {
   if (!canvas) return undefined;
@@ -11,17 +12,18 @@ function fireConfetti(canvas) {
   if (!parent) return undefined;
 
   const resize = () => {
-    canvas.width = parent.clientWidth * (window.devicePixelRatio || 1);
-    canvas.height = parent.clientHeight * (window.devicePixelRatio || 1);
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = parent.clientWidth * dpr;
+    canvas.height = parent.clientHeight * dpr;
     canvas.style.width = `${parent.clientWidth}px`;
     canvas.style.height = `${parent.clientHeight}px`;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+    ctx.scale(dpr, dpr);
   };
   resize();
 
   const pieces = [];
-  const pieceCount = 140;
+  const pieceCount = 130;
   const width = parent.clientWidth;
   const height = parent.clientHeight;
 
@@ -99,26 +101,50 @@ function fireConfetti(canvas) {
   };
 }
 
-export function ConfettiSuccess({ title = "Excited to build with You", subtitle = "Your context is on its way. I'll reply within one business day with a focused next step.", dark = false }) {
+export function ConfettiSuccess({ title = "Excited to build with You", subtitle = "Your context is on its way. I'll reply within one business day with a focused next step.", onClose }) {
   const canvasRef = useRef(null);
+  const cardRef = useRef(null);
+  const closeBtnRef = useRef(null);
 
   useEffect(() => {
     const cleanup = fireConfetti(canvasRef.current);
     return cleanup || undefined;
   }, []);
 
-  return (
-    <div className={`v2-form-success${dark ? " v2-form-success--dark" : ""}`} role="status" aria-live="polite">
-      <canvas ref={canvasRef} className="v2-form-success__confetti" aria-hidden="true" />
-      <div className="v2-form-success__card">
-        <span className="v2-form-success__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event) => {
+      if (event.key === "Escape") onClose?.();
+    };
+    document.addEventListener("keydown", onKey);
+    window.requestAnimationFrame(() => closeBtnRef.current?.focus());
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [onClose]);
+
+  const onBackdropClick = (event) => {
+    if (event.target === event.currentTarget) onClose?.();
+  };
+
+  return createPortal(
+    <div className="v2-success-overlay" role="dialog" aria-modal="true" aria-label="Message sent" onMouseDown={onBackdropClick}>
+      <canvas ref={canvasRef} className="v2-success-overlay__confetti" aria-hidden="true" />
+      <article ref={cardRef} className="v2-success-card">
+        <button ref={closeBtnRef} type="button" className="v2-success-card__close" onClick={onClose} aria-label="Close confirmation">{"\u00d7"}</button>
+        <span className="v2-success-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20 6L9 17l-5-5" />
           </svg>
         </span>
+        <span className="v2-success-card__eyebrow">// Sent</span>
         <h3>{title}</h3>
         <p>{subtitle}</p>
-      </div>
-    </div>
+        <button type="button" className="v2-success-card__dismiss" onClick={onClose}>Close</button>
+      </article>
+    </div>,
+    document.body,
   );
 }

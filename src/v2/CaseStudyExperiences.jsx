@@ -745,10 +745,6 @@ function CaseInquiryForm({ id, title, profile }) {
     setStatus("sending");
     try {
       const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: values, redirect: "manual" });
-      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
-        setStatus("sent");
-        return;
-      }
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
@@ -758,8 +754,6 @@ function CaseInquiryForm({ id, title, profile }) {
       setStatus("sent");
     }
   };
-
-  if (status === "sent") return <ConfettiSuccess dark title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." />;
 
   const renderField = (question) => {
     const fieldId = `${id}-${question.name}`;
@@ -771,17 +765,20 @@ function CaseInquiryForm({ id, title, profile }) {
     </div>;
   };
 
-  return <form className="v2-case-form" onSubmit={submit} noValidate>
-    <input type="hidden" name="inquiry_context" value={`${title} / ${id}`} />
-    <input type="hidden" name="interaction_lens" value={experience?.lens || "executive"} />
-    <input type="hidden" name="interaction_summary" value={experience?.brief || ""} />
-    <input type="hidden" name="interaction_scenario" value={JSON.stringify(experience?.scenario || {})} />
-    <div className="v2-case-field"><label htmlFor={`${id}-name`}>Name</label><input id={`${id}-name`} name="name" value={values.name} onChange={change} autoComplete="name" placeholder="Your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${id}-name-error` : undefined} />{errors.name && <span className="v2-case-field__error" id={`${id}-name-error`}>{errors.name}</span>}</div>
-    <div className="v2-case-field"><label htmlFor={`${id}-email`}>Work email</label><input id={`${id}-email`} name="email" value={values.email} onChange={change} type="email" autoComplete="email" placeholder="you@company.com" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${id}-email-error` : undefined} />{errors.email && <span className="v2-case-field__error" id={`${id}-email-error`}>{errors.email}</span>}</div>
-    {profile.questions.map(renderField)}
-    <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : `Send ${offerCtaLabel(id)}`} <span aria-hidden="true">↗</span></button>
-    <p className="v2-case-form__status" aria-live="polite">{status === "error" ? "The form could not send. Please try again." : ""}</p>
-  </form>;
+  return <>
+    <form className="v2-case-form" onSubmit={submit} noValidate>
+      <input type="hidden" name="inquiry_context" value={`${title} / ${id}`} />
+      <input type="hidden" name="interaction_lens" value={experience?.lens || "executive"} />
+      <input type="hidden" name="interaction_summary" value={experience?.brief || ""} />
+      <input type="hidden" name="interaction_scenario" value={JSON.stringify(experience?.scenario || {})} />
+      <div className="v2-case-field"><label htmlFor={`${id}-name`}>Name</label><input id={`${id}-name`} name="name" value={values.name} onChange={change} autoComplete="name" placeholder="Your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${id}-name-error` : undefined} />{errors.name && <span className="v2-case-field__error" id={`${id}-name-error`}>{errors.name}</span>}</div>
+      <div className="v2-case-field"><label htmlFor={`${id}-email`}>Work email</label><input id={`${id}-email`} name="email" value={values.email} onChange={change} type="email" autoComplete="email" placeholder="you@company.com" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${id}-email-error` : undefined} />{errors.email && <span className="v2-case-field__error" id={`${id}-email-error`}>{errors.email}</span>}</div>
+      {profile.questions.map(renderField)}
+      <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : `Send ${offerCtaLabel(id)}`} <span aria-hidden="true">↗</span></button>
+      <p className="v2-case-form__status" aria-live="polite">{status === "error" ? "The form could not send. Please try again." : ""}</p>
+    </form>
+    {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." onClose={() => setStatus("idle")} />}
+  </>;
 }
 
 function offerCtaLabel(id) {

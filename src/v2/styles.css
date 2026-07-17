@@ -2544,29 +2544,23 @@ button, a { color: inherit; }
   .v2-direction-arrow { transition: none !important; }
 }
 
-/* Glassy confetti success card — shared across all contact forms */
-.v2-form-success {
-  position: relative;
+/* Glassy confetti success overlay — themed to the site's editorial palette */
+.v2-success-overlay {
+  position: fixed;
+  z-index: 500;
+  inset: 0;
   display: grid;
-  align-content: center;
-  justify-items: center;
-  min-height: 18rem;
-  padding: clamp(1.75rem, 4vw, 3rem);
-  border-radius: 1.1rem;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
-  backdrop-filter: blur(22px) saturate(160%);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  padding: clamp(1.25rem, 4vw, 3rem);
   overflow: hidden;
-  animation: v2-form-success-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  background: rgba(10, 10, 9, 0.46);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  place-items: center;
+  animation: v2-success-overlay-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  font-family: var(--sans);
 }
 
-.v2-form-success--dark {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-}
-
-.v2-form-success__confetti {
+.v2-success-overlay__confetti {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -2575,72 +2569,139 @@ button, a { color: inherit; }
   z-index: 1;
 }
 
-.v2-form-success__card {
+.v2-success-card {
   position: relative;
   z-index: 2;
   display: grid;
   justify-items: center;
-  gap: 1rem;
+  gap: 1.1rem;
+  width: min(440px, 100%);
+  padding: clamp(2.25rem, 5vw, 3.25rem) clamp(1.75rem, 4vw, 2.75rem) clamp(1.75rem, 4vw, 2.25rem);
   text-align: center;
+  border-radius: 1.15rem;
+  background: linear-gradient(160deg, rgba(250, 249, 245, 0.94), rgba(242, 240, 233, 0.88));
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border: 1px solid rgba(200, 197, 186, 0.6);
+  box-shadow: var(--shadow-high), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: var(--ink);
+  animation: v2-success-card-in 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
 }
 
-.v2-form-success__icon {
+.v2-success-card__close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
   display: grid;
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--line);
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(115, 92, 255, 0.28), rgba(232, 201, 122, 0.22));
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: #fff;
+  background: var(--paper-bright);
+  color: var(--ink);
+  font: 400 1.25rem/1 var(--sans);
+  cursor: pointer;
   place-items: center;
-  animation: v2-form-success-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.12s both;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
 }
 
-.v2-form-success__icon svg { width: 1.6rem; height: 1.6rem; }
+.v2-success-card__close:hover { transform: rotate(8deg) scale(1.05); background: var(--gray-200); }
+.v2-success-card__close:focus-visible { outline: 2px solid var(--primary-500); outline-offset: 3px; }
 
-.v2-form-success__card h3 {
-  max-width: 16ch;
+.v2-success-card__icon {
+  display: grid;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  background: var(--primary-100);
+  color: var(--primary-800);
+  place-items: center;
+  animation: v2-success-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.18s both;
+}
+
+.v2-success-card__icon svg { width: 1.5rem; height: 1.5rem; }
+
+.v2-success-card__eyebrow {
+  color: var(--gold);
+  font: 500 0.62rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: v2-success-fade 0.5s ease 0.24s both;
+}
+
+.v2-success-card h3 {
+  max-width: 14ch;
   margin: 0;
   font-family: var(--display);
-  font-size: clamp(1.85rem, 4.5vw, 2.7rem);
-  font-weight: 500;
+  font-size: clamp(2.1rem, 5vw, 2.85rem);
+  font-weight: 400;
   line-height: 0.95;
-  letter-spacing: -.032em;
-  color: #fff;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-  animation: v2-form-success-fade 0.52s ease 0.18s both;
+  letter-spacing: -0.042em;
+  color: var(--ink);
+  animation: v2-success-fade 0.5s ease 0.2s both;
 }
 
-.v2-form-success__card p {
-  max-width: 32rem;
+.v2-success-card p {
+  max-width: 30rem;
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.92rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.72);
-  animation: v2-form-success-fade 0.52s ease 0.26s both;
+  color: var(--gray-600);
+  animation: v2-success-fade 0.5s ease 0.28s both;
 }
 
-.v2-form-success--dark .v2-form-success__card p { color: rgba(244, 243, 237, 0.68); }
+.v2-success-card__dismiss {
+  margin-top: 0.4rem;
+  padding: 0.65rem 1.6rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper-bright);
+  font: 600 0.72rem/1 var(--sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  animation: v2-success-fade 0.5s ease 0.34s both;
+}
 
-@keyframes v2-form-success-in {
-  from { opacity: 0; transform: scale(0.94) translateY(12px); }
+.v2-success-card__dismiss:hover { background: var(--gray-800); transform: translateY(-1px); }
+.v2-success-card__dismiss:focus-visible { outline: 2px solid var(--primary-500); outline-offset: 3px; }
+
+@keyframes v2-success-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes v2-success-card-in {
+  from { opacity: 0; transform: scale(0.94) translateY(14px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-@keyframes v2-form-success-pop {
+@keyframes v2-success-pop {
   0% { transform: scale(0); }
   60% { transform: scale(1.12); }
   100% { transform: scale(1); }
 }
 
-@keyframes v2-form-success-fade {
+@keyframes v2-success-fade {
   from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+@media (max-width: 480px) {
+  .v2-success-card { gap: 0.9rem; }
+  .v2-success-card h3 { font-size: clamp(1.85rem, 7vw, 2.35rem); }
+  .v2-success-card p { font-size: 0.86rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .v2-form-success,
-  .v2-form-success__icon,
-  .v2-form-success__card h3,
-  .v2-form-success__card p { animation: none; }
+  .v2-success-overlay,
+  .v2-success-card,
+  .v2-success-card__icon,
+  .v2-success-card__eyebrow,
+  .v2-success-card h3,
+  .v2-success-card p,
+  .v2-success-card__dismiss { animation: none; }
 }

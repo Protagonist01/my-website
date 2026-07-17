@@ -254,12 +254,6 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
         body: new FormData(event.currentTarget),
         redirect: "manual",
       });
-      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
-        event.currentTarget.reset();
-        setErrors({});
-        setStatus("sent");
-        return;
-      }
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
@@ -272,29 +266,30 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
     }
   };
 
-  if (status === "sent") return <ConfettiSuccess dark title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." />;
-
   return (
-    <form className="replica-contact-form" onSubmit={submit} noValidate>
-      <input type="hidden" name="inquiry_context" value={initialProject} />
-      <div className="replica-field">
-        <label htmlFor={`${formId}-name`}>Name</label>
-        <input id={`${formId}-name`} name="name" placeholder="Enter your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-name-error` : undefined} />
-        {errors.name && <span className="replica-field__error" id={`${formId}-name-error`}>{errors.name}</span>}
-      </div>
-      <div className="replica-field">
-        <label htmlFor={`${formId}-email`}>Email</label>
-        <input id={`${formId}-email`} name="email" type="email" placeholder="Enter your email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${formId}-email-error` : undefined} />
-        {errors.email && <span className="replica-field__error" id={`${formId}-email-error`}>{errors.email}</span>}
-      </div>
-      <div className="replica-field replica-field--project">
-        <label htmlFor={`${formId}-project`}>Your Project</label>
-        <textarea id={`${formId}-project`} name="description" placeholder="Tell me about your project" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
-        {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
-      </div>
-      <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit"}</button>
-      <p className="replica-contact-form__status" aria-live="polite">{status === "sent" ? "Thanks. I’ll get back to you soon." : status === "error" ? `Unable to send. Email ${replicaContent.contact.email}.` : ""}</p>
-    </form>
+    <>
+      <form className="replica-contact-form" onSubmit={submit} noValidate>
+        <input type="hidden" name="inquiry_context" value={initialProject} />
+        <div className="replica-field">
+          <label htmlFor={`${formId}-name`}>Name</label>
+          <input id={`${formId}-name`} name="name" placeholder="Enter your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-name-error` : undefined} />
+          {errors.name && <span className="replica-field__error" id={`${formId}-name-error`}>{errors.name}</span>}
+        </div>
+        <div className="replica-field">
+          <label htmlFor={`${formId}-email`}>Email</label>
+          <input id={`${formId}-email`} name="email" type="email" placeholder="Enter your email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${formId}-email-error` : undefined} />
+          {errors.email && <span className="replica-field__error" id={`${formId}-email-error`}>{errors.email}</span>}
+        </div>
+        <div className="replica-field replica-field--project">
+          <label htmlFor={`${formId}-project`}>Your Project</label>
+          <textarea id={`${formId}-project`} name="description" placeholder="Tell me about your project" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
+          {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
+        </div>
+        <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit"}</button>
+        <p className="replica-contact-form__status" aria-live="polite">{status === "error" ? `Unable to send. Email ${replicaContent.contact.email}.` : ""}</p>
+      </form>
+      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." onClose={() => setStatus("idle")} />}
+    </>
   );
 }
 

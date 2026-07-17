@@ -935,7 +935,7 @@ function OffersShowcase() {
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const targetProgress = clamp(-rect.top / travel);
       if (displayedProgress === null) displayedProgress = targetProgress;
-      displayedProgress += (targetProgress - displayedProgress) * .22;
+      displayedProgress = targetProgress;
       const progress = displayedProgress;
       const chapterStart = .34;
       const chapterEnd = .88;
@@ -1129,11 +1129,6 @@ function InlineContactForm() {
     setStatus("sending");
     try {
       const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(event.currentTarget), redirect: "manual" });
-      if (response.ok || response.type === "opaqueredirect" || response.status === 0) {
-        event.currentTarget.reset();
-        setStatus("sent");
-        return;
-      }
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
@@ -1144,17 +1139,19 @@ function InlineContactForm() {
       setStatus("sent");
     }
   };
-  if (status === "sent") return <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." />;
   return (
-    <form className="v2-inline-form" onSubmit={submit}>
-      <label>Name<input name="name" required /></label>
-      <label>Email<input name="email" type="email" required /></label>
-      <label>Phone<input name="phone" type="tel" /></label>
-      <label>Company<input name="company" /></label>
-      <label className="v2-inline-form__brief">Details about your project<textarea name="description" rows="2" required /></label>
-      <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
-      <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
-    </form>
+    <>
+      <form className="v2-inline-form" onSubmit={submit}>
+        <label>Name<input name="name" required /></label>
+        <label>Email<input name="email" type="email" required /></label>
+        <label>Phone<input name="phone" type="tel" /></label>
+        <label>Company<input name="company" /></label>
+        <label className="v2-inline-form__brief">Details about your project<textarea name="description" rows="2" required /></label>
+        <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
+        <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
+      </form>
+      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." onClose={() => setStatus("idle")} />}
+    </>
   );
 }
 
