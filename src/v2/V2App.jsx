@@ -1124,24 +1124,27 @@ function OffersShowcase() {
 
 function InlineContactForm() {
   const [status, setStatus] = useState("idle");
+  const formRef = useRef(null);
   const submit = async (event) => {
     event.preventDefault();
+    const form = formRef.current;
     setStatus("sending");
     try {
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(event.currentTarget), redirect: "manual" });
+      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(form), redirect: "manual" });
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
       }
-      event.currentTarget.reset();
+      form?.reset();
       setStatus("sent");
     } catch {
+      form?.reset();
       setStatus("sent");
     }
   };
   return (
     <>
-      <form className="v2-inline-form" onSubmit={submit}>
+      <form ref={formRef} className="v2-inline-form" onSubmit={submit}>
         <label>Name<input name="name" required /></label>
         <label>Email<input name="email" type="email" required /></label>
         <label>Phone<input name="phone" type="tel" /></label>
@@ -1150,7 +1153,7 @@ function InlineContactForm() {
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
         <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
       </form>
-      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." onClose={() => setStatus("idle")} />}
+      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." onClose={() => { formRef.current?.reset(); setStatus("idle"); }} />}
     </>
   );
 }

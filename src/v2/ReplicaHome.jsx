@@ -230,6 +230,7 @@ function SocialLinks() {
 function ContactForm({ initialProject = "", formId = "replica" }) {
   const [status, setStatus] = useState("idle");
   const [errors, setErrors] = useState({});
+  const formRef = useRef(null);
 
   const validate = (form) => {
     const values = new FormData(form);
@@ -245,30 +246,33 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
 
   const submit = async (event) => {
     event.preventDefault();
-    if (status === "sending" || !validate(event.currentTarget)) return;
+    const form = formRef.current;
+    if (status === "sending" || !validate(form)) return;
     setStatus("sending");
     try {
       const response = await fetch(replicaContent.contact.endpoint, {
         method: "POST",
         headers: { Accept: "application/json" },
-        body: new FormData(event.currentTarget),
+        body: new FormData(form),
         redirect: "manual",
       });
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
       }
-      event.currentTarget.reset();
+      form?.reset();
       setErrors({});
       setStatus("sent");
     } catch {
+      form?.reset();
+      setErrors({});
       setStatus("sent");
     }
   };
 
   return (
     <>
-      <form className="replica-contact-form" onSubmit={submit} noValidate>
+      <form ref={formRef} className="replica-contact-form" onSubmit={submit} noValidate>
         <input type="hidden" name="inquiry_context" value={initialProject} />
         <div className="replica-field">
           <label htmlFor={`${formId}-name`}>Name</label>
@@ -288,7 +292,7 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit"}</button>
         <p className="replica-contact-form__status" aria-live="polite">{status === "error" ? `Unable to send. Email ${replicaContent.contact.email}.` : ""}</p>
       </form>
-      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." onClose={() => setStatus("idle")} />}
+      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." onClose={() => { formRef.current?.reset(); setErrors({}); setStatus("idle"); }} />}
     </>
   );
 }
