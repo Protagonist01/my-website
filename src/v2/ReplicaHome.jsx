@@ -419,16 +419,16 @@ export function EndingSequence() {
       const rect = ending.getBoundingClientRect();
       const sticky = ending.querySelector(".replica-ending__sticky");
       const viewportHeight = sticky?.clientHeight || window.innerHeight;
-      const naturalMobileFlow = window.matchMedia("(max-width: 700px)").matches;
-      const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches && !naturalMobileFlow;
+      const mobileOverlay = window.matchMedia("(max-width: 700px)").matches;
+      const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
-        ending.classList.toggle("is-footer-visible", naturalMobileFlow && under.getBoundingClientRect().top <= viewportHeight * .92);
+        ending.classList.remove("is-footer-visible");
         gsap.set([cover, under], { clearProps: "transform" });
         return;
       }
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
-      const reveal = progress * progress * (3 - (2 * progress));
+      const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
       ending.classList.toggle("is-footer-visible", reveal >= .86);

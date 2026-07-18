@@ -223,13 +223,13 @@
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
   .replica-end-container { width: calc(100% - 48px); }
-  .replica-ending { --replica-vh: 100svh; --footer-panel-height: auto; height: auto; }
-  .replica-ending__sticky { position: relative; top: auto; display: flex; height: auto; min-height: 0; overflow: visible; flex-direction: column; }
-  .replica-ending__under, .replica-ending__cover { position: relative; inset: auto; overflow: visible; will-change: auto; }
-  .replica-ending__under { order: 2; height: auto; overflow: hidden; }
-  .replica-ending__cover { order: 1; height: auto; transform: none !important; }
+  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: calc(var(--mobile-visual-height, 100dvh) + var(--footer-panel-height)); }
+  .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--mobile-visual-height, 100dvh); min-height: 0; overflow: hidden; }
+  .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+  .replica-ending__under { top: auto; height: var(--footer-panel-height); }
+  .replica-ending__cover { height: 100%; }
   .replica-ending__under .replica-footer, .replica-ending__under .replica-footer__shell,
-  .replica-ending__cover .replica-contact { height: auto; }
+  .replica-ending__cover .replica-contact { height: 100%; }
   .replica-contact { min-height: 0; padding: 82px 0 68px; }
   .replica-contact__grid { display: flex; flex-direction: column; }
   .replica-contact__copy { display: contents; min-height: 0; }
