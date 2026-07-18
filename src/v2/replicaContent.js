@@ -5,7 +5,7 @@ export const replicaContent = {
   year: "©2026",
   since: "/CREATING SINCE 2022",
   aboutHeading: "Hey!",
-  shortIntro: "I’m Henry, a software and AI engineer in Lagos, working with teams worldwide.",
+  shortIntro: "I’m Henry, a software and AI engineer working with teams worldwide.",
   biography: [
     "I build dependable AI products and software systems.",
     "I turn complex ideas into products teams can use and trust.",
@@ -21,7 +21,7 @@ export const replicaContent = {
     { label: "Home", href: "/" },
     { label: "About Me", href: "/#about" },
     { label: "Services", href: "/#services" },
-    { label: "Featured Projects", href: "/v2/work/" },
+    { label: "Featured Projects", href: "/#work" },
     { label: "E-Commerce", href: "/#offers" },
     { label: "Contact", href: "/#contact" },
   ],

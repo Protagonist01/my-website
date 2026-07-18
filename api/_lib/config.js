@@ -35,12 +35,12 @@ export const CAL_EVENT_SLUGS = new Set(CAL_EVENT_TYPES.map((eventType) => eventT
 export const RAA_REPOSITORY_URL = "https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard";
 
 export const APPROVED_ROUTES = new Map([
-  ["/v2/", "Home"],
-  ["/v2/#about", "About Henry"],
-  ["/v2/#services", "Services"],
-  ["/v2/#offers", "Offers"],
-  ["/v2/#work", "Featured work"],
-  ["/v2/#contact", "Contact"],
+  ["/", "Home"],
+  ["/#about", "About Henry"],
+  ["/#services", "Services"],
+  ["/#offers", "Offers"],
+  ["/#work", "Featured work"],
+  ["/#contact", "Contact"],
   ["/v2/work/", "All work"],
   ["/v2/about/", "About"],
   ["/v2/proof/", "Proof"],

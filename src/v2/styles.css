@@ -2437,6 +2437,7 @@ button, a { color: inherit; }
 @media (max-width: 720px) and (max-height: 700px) {
   .v2-case [data-story-sequence="pin"],
   .v2-offer-case [data-story-sequence="pin"] {
+    min-height: 0;
     padding-top: 1rem;
     padding-bottom: 1rem;
   }

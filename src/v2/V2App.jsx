@@ -747,7 +747,7 @@ function OpeningSequence() {
           <span className="v2-scene-label">01 / About</span>
           <h2>Hey!</h2>
           <figure><img src={heroBlue} alt="Henry Fadeni in a blue studio portrait" /></figure>
-          <p>I am Henry, an AI and software engineer based in Lagos and working worldwide.</p>
+          <p>I am Henry, an AI and software engineer working worldwide.</p>
           <p>I help product teams turn difficult ideas and operational pressure into software people can trust.</p>
         </article>
 

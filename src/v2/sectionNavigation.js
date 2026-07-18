@@ -5,8 +5,28 @@ const HOME_PROGRESS = Object.freeze({
   offers: .08,
 });
 
+const HOME_SECTION_IDS = new Set(Object.keys(HOME_PROGRESS).concat("contact"));
+
 function normalizePath(pathname) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+}
+
+function navigationUrl(href) {
+  if (typeof href !== "string" || !href.trim()) return null;
+  let url;
+  try {
+    url = new URL(href, window.location.href);
+  } catch {
+    return null;
+  }
+
+  const id = url.hash ? decodeURIComponent(url.hash.slice(1)) : "";
+  if (url.origin === window.location.origin
+    && normalizePath(url.pathname) === "/v2"
+    && (!id || HOME_SECTION_IDS.has(id))) {
+    url.pathname = "/";
+  }
+  return url;
 }
 
 function navigationOffset() {
@@ -78,7 +98,8 @@ export async function revealSectionById(id, { behavior = "smooth", updateHistory
 }
 
 export function navigateToTarget(href, options = {}) {
-  const url = new URL(href, window.location.href);
+  const url = navigationUrl(href);
+  if (!url) return Promise.resolve(false);
   const sameDocument = url.origin === window.location.origin
     && normalizePath(url.pathname) === normalizePath(window.location.pathname)
     && url.search === window.location.search;
@@ -95,7 +116,8 @@ export function handleSectionNavigationClick(event) {
   if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
   const link = event.target.closest("a[href]");
   if (!link || link.target === "_blank" || link.hasAttribute("download")) return false;
-  const url = new URL(link.href, window.location.href);
+  const url = navigationUrl(link.href);
+  if (!url) return false;
   const sameDocument = url.origin === window.location.origin
     && normalizePath(url.pathname) === normalizePath(window.location.pathname)
     && url.search === window.location.search;

@@ -496,9 +496,9 @@ function useReplicaMotion(rootRef) {
         timeline
           .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
           .to(".replica-hero__since", { y: () => viewportHeight() * .08, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
-          .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
-          .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
-          .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
+          .to(".replica-portrait-card", { rotateY: 180, duration: .52, ease: "none" }, 0.08)
+          .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .48, ease: "none" }, 0.08)
+          .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.42)
           .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52);
       });
 
