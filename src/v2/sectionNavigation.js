@@ -1,6 +1,6 @@
 const HOME_PROGRESS = Object.freeze({
-  about: .5,
-  services: .16,
+  about: { mobile: 1, desktop: .5 },
+  services: { mobile: 1, desktop: .32 },
   work: .06,
   offers: .08,
 });
@@ -9,6 +9,13 @@ const HOME_SECTION_IDS = new Set(Object.keys(HOME_PROGRESS).concat("contact"));
 
 function normalizePath(pathname) {
   return pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+}
+
+function homeProgress(id) {
+  const configured = HOME_PROGRESS[id];
+  if (typeof configured === "number") return configured;
+  if (!configured) return undefined;
+  return window.innerWidth <= 700 ? configured.mobile : configured.desktop;
 }
 
 function navigationUrl(href) {
@@ -50,8 +57,9 @@ function triggerForTarget(ScrollTrigger, target) {
 }
 
 function triggerProgress(target, trigger) {
-  if (HOME_PROGRESS[target.id] !== undefined) return HOME_PROGRESS[target.id];
-  if (target.matches("[data-story-sequence='pin']")) return .3;
+  const configured = homeProgress(target.id);
+  if (configured !== undefined) return configured;
+  if (target.matches("[data-story-sequence='pin']")) return .82;
   if (trigger?.vars?.pin) return .18;
   return 0;
 }
@@ -62,7 +70,7 @@ function measuredDestination(target) {
     if (scene) {
       const sceneTop = scene.getBoundingClientRect().top + window.scrollY;
       const travel = Math.max(0, scene.offsetHeight - window.innerHeight);
-      return sceneTop + (travel * HOME_PROGRESS.about);
+      return sceneTop + (travel * homeProgress("about"));
     }
   }
 
