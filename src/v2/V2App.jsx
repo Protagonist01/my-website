@@ -284,11 +284,12 @@ function useCaseStudyMotion(rootRef, page) {
             }
             if (!targets.length) return null;
             const wantsPin = section.dataset.storySequence === "pin";
+            const usesNaturalMobileFlow = mobile && section.matches(".v2-case-process, .v2-offer-case__process");
             const pinOffset = mobile
               ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
               : 176;
             const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
-            const canPin = wantsPin && (!mobile || (() => {
+            const canPin = wantsPin && !usesNaturalMobileFlow && (!mobile || (() => {
               gsap.set(targets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
               const sectionHeight = section.scrollHeight;
               const available = viewportHeight() - pinOffset;
@@ -296,8 +297,8 @@ function useCaseStudyMotion(rootRef, page) {
               return sectionHeight <= available;
             })());
             const distance = canPin ? () => Math.max(
-              viewportHeight() * (mobile ? .62 : 1.05),
-              targets.length * (mobile ? 96 : 168),
+              viewportHeight() * (mobile ? .42 : 1.05),
+              targets.length * (mobile ? 64 : 168),
             ) : undefined;
             const timeline = gsap.timeline({
               scrollTrigger: {
@@ -803,6 +804,7 @@ function OffersShowcase() {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const mobileStageRef = useRef(null);
+  const mobileStageViewports = commerceOffers.length * .68 + 1.4;
   const filteredOffers = useMemo(
     () => filter === "ALL SYSTEMS" ? commerceOffers : commerceOffers.filter((offer) => offer.filter === filter),
     [filter],
@@ -930,7 +932,7 @@ function OffersShowcase() {
 
     const render = () => {
       const rect = stage.getBoundingClientRect();
-      const stageLengthInViewports = commerceOffers.length + 2.6;
+      const stageLengthInViewports = mobileStageViewports;
       const viewportHeight = stage.offsetHeight / stageLengthInViewports;
       const travel = Math.max(1, stage.offsetHeight - viewportHeight);
       const targetProgress = clamp(-rect.top / travel);
@@ -1021,7 +1023,7 @@ function OffersShowcase() {
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
     };
-  }, [filteredOffers.length, isMobile]);
+  }, [filteredOffers.length, isMobile, mobileStageViewports]);
 
   const offersIntro = (
     <article className="v2-offers-intro">
@@ -1048,7 +1050,7 @@ function OffersShowcase() {
       <div ref={viewportRef} className="v2-offer-rail__viewport">
         <div ref={trackRef} className="v2-offer-track">
           {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${commerceOffers.length * 100 + 260}svh` }} aria-label="E-commerce offers">
+            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${mobileStageViewports * 100}svh` }} aria-label="E-commerce offers">
               <div className="v2-offers-mobile-sticky">
                 {offersIntro}
                 <div className="v2-offers-mobile-world" aria-hidden="false">
@@ -1534,6 +1536,6 @@ export function V2App({ page }) {
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
-  const usesProjectNavigation = page === "work" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
+  const usesProjectNavigation = page === "about" || page === "work" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
   return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

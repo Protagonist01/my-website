@@ -195,7 +195,7 @@
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-  .replica-intro { height: 220svh; }
+  .replica-intro { height: 175svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__title { top: 37%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
@@ -211,10 +211,10 @@
   .replica-about__right { padding: 0; }
   .replica-about__right p { width: 100%; margin-bottom: 10px; font-size: 14px; line-height: 1.35; }
   .replica-about__right a { margin-top: 2px; font-size: 14px; }
-  .replica-statement-scene { height: 180svh; }
+  .replica-statement-scene { height: 130svh; }
   .replica-statement { padding: 0 24px; }
   .replica-statement p { width: 100%; font-size: 24px; line-height: 1.19; letter-spacing: -.025em; }
-  .replica-services { height: 205svh; }
+  .replica-services { height: 150svh; }
   .replica-services__sticky { align-items: start; }
   .replica-services__inner { width: calc(100% - 36px); padding: 100px 0 16px; }
   .replica-services__inner > h2 { margin-bottom: 12px; font-size: 38px; }
@@ -223,7 +223,7 @@
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
   .replica-end-container { width: calc(100% - 48px); }
-  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 260svh; }
+  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: 200svh; }
   .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--mobile-visual-height, 100dvh); min-height: var(--replica-vh); overflow: hidden; }
   .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow-y: auto; will-change: transform; }
   .replica-ending__under { top: auto; height: var(--footer-panel-height); overflow: hidden; }

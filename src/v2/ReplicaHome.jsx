@@ -418,9 +418,7 @@ export function EndingSequence() {
       frame = 0;
       const rect = ending.getBoundingClientRect();
       const sticky = ending.querySelector(".replica-ending__sticky");
-      const viewportHeight = window.matchMedia("(max-width: 700px)").matches
-        ? ending.offsetHeight / 2.6
-        : sticky?.clientHeight || window.innerHeight;
+      const viewportHeight = sticky?.clientHeight || window.innerHeight;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
         ending.classList.remove("is-footer-visible");
@@ -506,7 +504,8 @@ function useReplicaMotion(rootRef) {
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");
-      const reveal = gsap.timeline({ scrollTrigger: { trigger: ".replica-statement-scene", start: "top top", end: "bottom bottom", scrub: replicaAnimation.statementScrub } });
+      const mobileScroll = window.matchMedia("(max-width: 700px)").matches;
+      const reveal = gsap.timeline({ scrollTrigger: { trigger: ".replica-statement-scene", start: "top top", end: "bottom bottom", scrub: mobileScroll ? true : replicaAnimation.statementScrub } });
       reveal.to(wordElements, { color: "#111111", duration: .12, stagger: { amount: 1.88, from: "start" }, ease: "none" });
 
       const servicesTimeline = gsap.timeline({
@@ -514,7 +513,7 @@ function useReplicaMotion(rootRef) {
           trigger: ".replica-services",
           start: "top top",
           end: "bottom bottom",
-          scrub: .6,
+          scrub: mobileScroll ? true : .6,
           invalidateOnRefresh: true,
         },
       });
