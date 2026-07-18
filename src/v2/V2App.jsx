@@ -804,7 +804,7 @@ function OffersShowcase() {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const mobileStageRef = useRef(null);
-  const mobileStageViewports = commerceOffers.length * .68 + 1.4;
+  const mobileStageViewports = commerceOffers.length * .68 + 1.15;
   const filteredOffers = useMemo(
     () => filter === "ALL SYSTEMS" ? commerceOffers : commerceOffers.filter((offer) => offer.filter === filter),
     [filter],
@@ -939,16 +939,17 @@ function OffersShowcase() {
       if (displayedProgress === null) displayedProgress = targetProgress;
       displayedProgress = targetProgress;
       const progress = displayedProgress;
-      const chapterStart = .34;
+      const chapterStart = .31;
       const chapterEnd = .92;
-      const textTravel = smoothstep(.1, .3, progress);
-      const worldReveal = smoothstep(.16, .32, progress);
-      const entryReveal = smoothstep(.24, .38, progress);
+      const textTravel = smoothstep(.1, .22, progress);
+      const worldReveal = smoothstep(.2, .28, progress);
+      const entryReveal = smoothstep(.2, .3, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
       const numberProgress = clamp((targetProgress - chapterStart) / (.84 - chapterStart));
       const numberExact = numberProgress * Math.max(0, numbers.length - 1);
-      const numberReveal = smoothstep(.34, .42, progress);
+      const numberReveal = smoothstep(.22, .29, progress);
+      const followingCardsReveal = smoothstep(.3, .345, progress);
       const exit = smoothstep(chapterEnd, 1, progress);
       const currentEntryY = 42 * (1 - entryReveal);
 
@@ -960,10 +961,10 @@ function OffersShowcase() {
       });
       if (introContent) {
         introContent.style.transform = `translate3d(${(-textTravel * (pin.clientWidth + introContent.offsetWidth * .18)).toFixed(2)}px, 0, 0)`;
-        introContent.style.opacity = (1 - smoothstep(.2, .28, progress)).toFixed(4);
+        introContent.style.opacity = (1 - smoothstep(.18, .24, progress)).toFixed(4);
       }
       if (intro) {
-        intro.style.opacity = (1 - smoothstep(.28, .34, progress)).toFixed(4);
+        intro.style.opacity = (1 - smoothstep(.2, .27, progress)).toFixed(4);
         intro.style.pointerEvents = textTravel > .15 ? "none" : "auto";
       }
       if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
@@ -992,7 +993,7 @@ function OffersShowcase() {
         const farFade = clamp(2.2 - distance);
         const x = relative * pin.clientWidth * .6 + (index === 0 ? (1 - entryReveal) * pin.clientWidth * .35 : 0);
         const y = relative * viewportHeight * .5 + currentEntryY;
-        const opacity = (.08 + near * .92) * farFade * entryReveal;
+        const opacity = (.08 + near * .92) * farFade * entryReveal * (index === 0 ? 1 : followingCardsReveal);
 
         card.style.opacity = opacity.toFixed(4);
         card.style.transform = `translate3d(-50%, -50%, 0) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;

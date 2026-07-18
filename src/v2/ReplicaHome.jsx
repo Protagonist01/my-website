@@ -498,9 +498,9 @@ function useReplicaMotion(rootRef) {
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .40, ease: "none" }, 0.42)
-          .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82)
-          .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .18, ease: "power1.in" }, 0.82);
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52)
+          .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .22, ease: "power1.in" }, 0.58)
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .22, ease: "power1.in" }, 0.58);
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");
@@ -508,26 +508,47 @@ function useReplicaMotion(rootRef) {
       const reveal = gsap.timeline({ scrollTrigger: { trigger: ".replica-statement-scene", start: "top top", end: "bottom bottom", scrub: mobileScroll ? true : replicaAnimation.statementScrub } });
       reveal.to(wordElements, { color: "#111111", duration: .12, stagger: { amount: 1.88, from: "start" }, ease: "none" });
 
+      const services = root.querySelector(".replica-services");
+      const servicesHeading = services?.querySelector(".replica-services__inner > h2");
+      const serviceItems = gsap.utils.toArray(".replica-services__list > a", services);
       const servicesTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: ".replica-services",
+          trigger: services,
           start: "top top",
           end: "bottom bottom",
           scrub: mobileScroll ? true : .6,
           invalidateOnRefresh: true,
         },
       });
-      servicesTimeline
-        .fromTo(".replica-services__inner > h2", { y: 48, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: "none" })
-        .fromTo(".replica-services__list > a", { y: -18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)" }, {
+
+      if (mobileScroll) {
+        gsap.fromTo(servicesHeading, { y: 48, autoAlpha: 0 }, {
+          y: 0,
+          autoAlpha: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: services,
+            start: "top bottom",
+            end: "top top+=100",
+            scrub: true,
+            invalidateOnRefresh: true,
+          },
+        });
+      } else {
+        servicesTimeline.fromTo(servicesHeading, { y: 48, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: "none" });
+      }
+
+      servicesTimeline.fromTo(serviceItems, { y: -18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)" }, {
           y: 0,
           autoAlpha: 1,
           clipPath: "inset(0 0 0% 0)",
           duration: .75,
           stagger: .55,
           ease: "none",
-        }, ">+.15")
-        .to(".replica-services__inner", {
+        }, mobileScroll ? 0 : ">+.15");
+
+      if (!mobileScroll) {
+        servicesTimeline.to(".replica-services__inner", {
           y: () => {
             const inner = root.querySelector(".replica-services__inner");
             const sticky = root.querySelector(".replica-services__sticky");
@@ -536,6 +557,7 @@ function useReplicaMotion(rootRef) {
           duration: 1.4,
           ease: "none",
         }, ">-.35");
+      }
 
     }, root);
 
