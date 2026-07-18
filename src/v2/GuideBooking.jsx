@@ -39,6 +39,34 @@ function formatSlot(value, timeZone, withDate = true) {
   }
 }
 
+function slotDateKey(value, timeZone) {
+  try {
+    const parts = new Intl.DateTimeFormat("en", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(new Date(value));
+    const datePart = (type) => parts.find((part) => part.type === type)?.value;
+    return `${datePart("year")}-${datePart("month")}-${datePart("day")}`;
+  } catch {
+    return new Date(value).toISOString().slice(0, 10);
+  }
+}
+
+function formatSlotDate(value, timeZone) {
+  try {
+    return new Intl.DateTimeFormat("en", {
+      timeZone,
+      weekday: "long",
+      month: "short",
+      day: "numeric",
+    }).format(new Date(value));
+  } catch {
+    return value;
+  }
+}
+
 export function GuideBooking({ onClose, onBooked }) {
   const [eventType, setEventType] = useState(null);
   const [slots, setSlots] = useState([]);
@@ -49,7 +77,24 @@ export function GuideBooking({ onClose, onBooked }) {
   const [details, setDetails] = useState({ name: "", email: "" });
   const [verificationCode, setVerificationCode] = useState("");
   const [slotsRequest, setSlotsRequest] = useState(0);
+  const [activeDateIndex, setActiveDateIndex] = useState(0);
   const timeZone = useMemo(() => Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC", []);
+  const slotDays = useMemo(() => {
+    const days = new Map();
+    slots.forEach((slot) => {
+      const key = slotDateKey(slot.start, timeZone);
+      if (!days.has(key)) {
+        days.set(key, {
+          key,
+          label: formatSlotDate(slot.start, timeZone),
+          slots: [],
+        });
+      }
+      days.get(key).slots.push(slot);
+    });
+    return Array.from(days.values());
+  }, [slots, timeZone]);
+  const activeDay = slotDays[activeDateIndex] || slotDays[0] || null;
 
   useEffect(() => {
     if (!eventType || step !== "slots") return undefined;
@@ -57,6 +102,7 @@ export function GuideBooking({ onClose, onBooked }) {
     setStatus("loading");
     setError("");
     setSlots([]);
+    setActiveDateIndex(0);
     const params = new URLSearchParams({ eventTypeSlug: eventType.slug, timeZone });
     fetch(`/api/cal/slots?${params}`, { signal: controller.signal })
       .then(async (response) => {
@@ -66,6 +112,7 @@ export function GuideBooking({ onClose, onBooked }) {
       })
       .then((payload) => {
         setSlots(payload.slots || []);
+        setActiveDateIndex(0);
         setStatus("ready");
       })
       .catch((requestError) => {
@@ -79,6 +126,7 @@ export function GuideBooking({ onClose, onBooked }) {
   const chooseEvent = (item) => {
     setEventType(item);
     setSelectedSlot(null);
+    setActiveDateIndex(0);
     setStep("slots");
   };
 
@@ -204,10 +252,39 @@ export function GuideBooking({ onClose, onBooked }) {
         <div className="hf-guide-card__toolbar"><button type="button" onClick={() => setStep("event")}>← Meeting type</button><span>{timeZone.replaceAll("_", " ")}</span></div>
         {status === "loading" && <div className="hf-guide-loading"><i /><i /><i /><span>Checking Henry’s calendar…</span></div>}
         {status === "ready" && slots.length === 0 && <div className="hf-guide-empty"><strong>No openings in the next two weeks.</strong><p>Cal.com may show dates beyond this window.</p></div>}
-        {status === "ready" && slots.length > 0 && <div className="hf-booking__slot-grid">
-          {slots.slice(0, 18).map((slot) => <button type="button" key={slot.start} onClick={() => { setSelectedSlot(slot); setStep("details"); }}>
-            <span>{formatSlot(slot.start, timeZone)}</span><i aria-hidden="true">→</i>
-          </button>)}
+        {status === "ready" && activeDay && <div className="hf-booking__slot-browser">
+          <nav className="hf-booking__date-nav" aria-label="Available appointment dates">
+            <button
+              type="button"
+              onClick={() => setActiveDateIndex((index) => Math.max(0, index - 1))}
+              disabled={activeDateIndex === 0}
+              aria-label="Show previous available day"
+            >
+              <span aria-hidden="true">←</span>
+            </button>
+            <div aria-live="polite">
+              <strong>{activeDay.label}</strong>
+              <span>{activeDateIndex + 1} of {slotDays.length} available days</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setActiveDateIndex((index) => Math.min(slotDays.length - 1, index + 1))}
+              disabled={activeDateIndex === slotDays.length - 1}
+              aria-label="Show next available day"
+            >
+              <span aria-hidden="true">→</span>
+            </button>
+          </nav>
+          <div
+            className="hf-booking__slot-grid"
+            key={activeDay.key}
+            role="group"
+            aria-label={`Available times for ${activeDay.label}`}
+          >
+            {activeDay.slots.map((slot) => <button type="button" key={slot.start} onClick={() => { setSelectedSlot(slot); setStep("details"); }}>
+              <span>{formatSlot(slot.start, timeZone, false)}</span><i aria-hidden="true">→</i>
+            </button>)}
+          </div>
         </div>}
       </div>}
 
