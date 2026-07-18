@@ -1224,7 +1224,7 @@ function WorkSpecialisations({ home = false, items = projects }) {
   useWorkSpecialisationsMotion(sectionRef);
   return (
     <section className={home ? "v2-home-works" : undefined} aria-label={home ? "Featured Projects" : undefined}>
-      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span><h2>AI and software products shaped around useful outcomes.</h2><p>Featured AI and software projects showing the interface decisions, engineering, and outcomes behind each case study.</p></header>}
+      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span><h2>AI and software projects, from user problem to working system.</h2><p>See what each product does, why I built it that way, and the evidence or limitations behind the result.</p></header>}
       <section ref={sectionRef} className="v2-works-scroll" id={home ? "work" : "selected-work"} data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">
@@ -1298,20 +1298,20 @@ function WorkPage() {
   return <>
     <section className="v2-work-index-hero">
       <span>Selected work / AI, ML & software</span>
-      <h1>Products built to turn complex work into clear decisions.</h1>
+      <h1>AI and software products, explained through the problems they solve.</h1>
       <div>
-        <p>Start with six detailed stories across creative AI, research, analytics, commerce, skincare, and applied machine learning. Then explore five more projects and three hobby projects that show how the same thinking travels across different constraints.</p>
-        <nav aria-label="Work page actions"><a className="v2-action v2-action--primary" href="#selected-work">Explore the six stories <Arrow /></a><a className="v2-action v2-action--text" href={paths.contact}>Discuss a project <Arrow /></a></nav>
+        <p>Start with six featured case studies covering creative AI, research, analytics, commerce, skincare, and machine learning. Each story explains the user, problem, key decisions, system, result, and project limits.</p>
+        <nav aria-label="Work page actions"><a className="v2-action v2-action--primary" href="#selected-work">Read the featured stories <Arrow /></a><a className="v2-action v2-action--text" href={paths.contact}>Discuss your project <Arrow /></a></nav>
       </div>
       <dl><div><dt>01</dt><dd>Featured stories</dd></div><div><dt>02</dt><dd>Additional projects</dd></div><div><dt>03</dt><dd>Hobby projects</dd></div></dl>
     </section>
     <WorkSpecialisations items={homeFeaturedProjects} />
     <section className="v2-work-library" id="more-work" aria-labelledby="work-library-title">
-      <header data-reveal><span>More projects</span><h2 id="work-library-title">Agents and operational products built around clear controls.</h2><p>Five projects showing how evidence, permissions, human review, and useful outcomes stay connected.</p></header>
+      <header data-reveal><span>More projects</span><h2 id="work-library-title">Five more AI and software systems.</h2><p>Explore incident response, voice booking, code review, commerce intelligence, and a client publishing workflow.</p></header>
       <div>{additionalCases.map((project, index) => <WorkLibraryCard project={project} index={index} key={project.id} />)}</div>
     </section>
     <section className="v2-project-notes" aria-labelledby="project-notes-title">
-      <header><span>Hobby Projects</span><h2 id="project-notes-title">Small builds where curiosity became working software.</h2><p>Three personal projects exploring grounded chat, deterministic productivity, and the portfolio system itself.</p></header>
+      <header><span>Hobby Projects</span><h2 id="project-notes-title">Smaller products built to test a focused idea.</h2><p>Explore a grounded skincare chatbot, a deterministic task manager, and the design and engineering behind this portfolio.</p></header>
       <div>{projectNotes.map((project) => <a href={project.href} key={project.id}><ProjectMedia project={project} compact /><span>{project.index} / {project.type}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Explore the hobby project <Arrow /></strong></a>)}</div>
     </section>
   </>;
@@ -1333,14 +1333,14 @@ function ServicePage({ service }) {
       <ol>{service.problems.map((problem, index) => <li key={problem}><span>0{index + 1}</span><p>{problem}</p></li>)}</ol>
     </section>
     <section className="v2-service-method">
-      <header data-reveal><span>How the engagement moves</span><h2>From pressure to an operating system.</h2></header>
+      <header data-reveal><span>How the work moves</span><h2>From a defined problem to a tested product.</h2></header>
       <div>{service.system.map((step) => <article data-reveal key={step.num}><span>{step.num}</span><h3>{step.title}</h3><p>{step.copy}</p></article>)}</div>
     </section>
     <section className="v2-service-proof">
-      <header data-reveal><span>Relevant proof</span><h2>See the capability inside real projects.</h2></header>
+      <header data-reveal><span>Relevant projects</span><h2>See how I applied this work in practice.</h2></header>
       <div>{related.map((project) => <a href={project.href} key={project.id}><div className="v2-service-proof__media"><ProjectMedia project={project} compact /></div><span>{project.status}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Open the story <Arrow /></strong></a>)}</div>
     </section>
-    <section className="v2-service-cta" data-reveal><span>Have this kind of pressure?</span><h2>Bring the problem. I’ll map the first useful system.</h2><a href="/v2/contact/" data-contact-context={`I'd like to discuss ${service.navLabel}.`}>Start a focused conversation <Arrow /></a></section>
+    <section className="v2-service-cta" data-reveal><span>Have a related problem?</span><h2>Tell me what is not working. I will identify the first practical system to build.</h2><a href="/v2/contact/" data-contact-context={`I'd like to discuss ${service.navLabel}.`}>Discuss your project <Arrow /></a></section>
   </article>;
 }
 
@@ -1498,7 +1498,7 @@ function OfferCaseStudy({ offer }) {
 }
 
 function AboutPage() {
-  return <><PageTitle kicker="About" title="AI & software engineering with product judgment." /><section className="v2-about" data-reveal><p>I am an AI and software engineer working where intelligent products and dependable systems meet.</p><p>The goal is simple: make difficult technology useful, trustworthy, and easy to operate.</p></section></>;
+  return <><PageTitle kicker="About Henry" title="I build AI and software products people can understand and use." /><section className="v2-about" data-reveal><p>I am Henry, a software and AI engineer based in Lagos and working with teams worldwide. I build AI agents, machine-learning products, voice systems, and full-stack web applications.</p><p>I work across the complete product: define the user problem, design the interface, build the backend and AI workflow, test failure cases, deploy it, and keep important decisions visible to people.</p></section></>;
 }
 
 function ContactDialog({ open, onClose }) {
