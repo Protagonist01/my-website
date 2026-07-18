@@ -940,17 +940,15 @@ function OffersShowcase() {
       displayedProgress = targetProgress;
       const progress = displayedProgress;
       const chapterStart = .31;
-      const chapterEnd = .92;
+      const chapterEnd = .995;
       const textTravel = smoothstep(.1, .22, progress);
       const worldReveal = smoothstep(.2, .28, progress);
       const entryReveal = smoothstep(.2, .3, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberProgress = clamp((targetProgress - chapterStart) / (.84 - chapterStart));
-      const numberExact = numberProgress * Math.max(0, numbers.length - 1);
+      const numberExact = chapterProgress * Math.max(0, numbers.length - 1);
       const numberReveal = smoothstep(.22, .29, progress);
       const followingCardsReveal = smoothstep(.3, .345, progress);
-      const exit = smoothstep(chapterEnd, 1, progress);
       const currentEntryY = 42 * (1 - entryReveal);
 
       words.forEach((word, index) => {
@@ -976,7 +974,7 @@ function OffersShowcase() {
 
       const number = stage.querySelector(".v2-offers-mobile-number");
       if (number) {
-        number.style.opacity = (numberReveal * (1 - exit * .18)).toFixed(4);
+        number.style.opacity = numberReveal.toFixed(4);
         number.style.transform = `translate3d(0, ${((1 - numberReveal) * viewportHeight * .22).toFixed(2)}px, 0)`;
       }
 

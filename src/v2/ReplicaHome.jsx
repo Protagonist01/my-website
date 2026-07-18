@@ -419,9 +419,10 @@ export function EndingSequence() {
       const rect = ending.getBoundingClientRect();
       const sticky = ending.querySelector(".replica-ending__sticky");
       const viewportHeight = sticky?.clientHeight || window.innerHeight;
-      const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+      const naturalMobileFlow = window.matchMedia("(max-width: 700px)").matches;
+      const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches && !naturalMobileFlow;
       if (!animated) {
-        ending.classList.remove("is-footer-visible");
+        ending.classList.toggle("is-footer-visible", naturalMobileFlow && under.getBoundingClientRect().top <= viewportHeight * .92);
         gsap.set([cover, under], { clearProps: "transform" });
         return;
       }
@@ -498,14 +499,25 @@ function useReplicaMotion(rootRef) {
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.1)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .32, ease: "none" }, 0.1)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.38)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52)
-          .to(".replica-about", { y: () => -(aboutOverflow() + viewportHeight() * .88), autoAlpha: 0, duration: .22, ease: "power1.in" }, 0.58)
-          .to(".replica-portrait-wrap", { y: () => portraitLift() - viewportHeight() * .88, autoAlpha: 0, duration: .22, ease: "power1.in" }, 0.58);
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52);
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");
       const mobileScroll = window.matchMedia("(max-width: 700px)").matches;
-      const reveal = gsap.timeline({ scrollTrigger: { trigger: ".replica-statement-scene", start: "top top", end: "bottom bottom", scrub: mobileScroll ? true : replicaAnimation.statementScrub } });
+      const reveal = gsap.timeline({
+        scrollTrigger: mobileScroll ? {
+          trigger: ".replica-statement p",
+          start: "top bottom",
+          end: "center center",
+          scrub: true,
+          invalidateOnRefresh: true,
+        } : {
+          trigger: ".replica-statement-scene",
+          start: "top top",
+          end: "bottom bottom",
+          scrub: replicaAnimation.statementScrub,
+        },
+      });
       reveal.to(wordElements, { color: "#111111", duration: .12, stagger: { amount: 1.88, from: "start" }, ease: "none" });
 
       const services = root.querySelector(".replica-services");
@@ -514,38 +526,23 @@ function useReplicaMotion(rootRef) {
       const servicesTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: services,
-          start: "top top",
-          end: "bottom bottom",
+          start: mobileScroll ? "top bottom" : "top top",
+          end: mobileScroll ? "top top" : "bottom bottom",
           scrub: mobileScroll ? true : .6,
           invalidateOnRefresh: true,
         },
       });
 
-      if (mobileScroll) {
-        gsap.fromTo(servicesHeading, { y: 48, autoAlpha: 0 }, {
-          y: 0,
-          autoAlpha: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: services,
-            start: "top bottom",
-            end: "top top+=100",
-            scrub: true,
-            invalidateOnRefresh: true,
-          },
-        });
-      } else {
-        servicesTimeline.fromTo(servicesHeading, { y: 48, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .7, ease: "none" });
-      }
-
-      servicesTimeline.fromTo(serviceItems, { y: -18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)" }, {
+      servicesTimeline
+        .fromTo(servicesHeading, { y: 48, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: mobileScroll ? .22 : .7, ease: "none" })
+        .fromTo(serviceItems, { y: -18, autoAlpha: 0, clipPath: "inset(0 0 100% 0)" }, {
           y: 0,
           autoAlpha: 1,
           clipPath: "inset(0 0 0% 0)",
-          duration: .75,
-          stagger: .55,
+          duration: mobileScroll ? .28 : .75,
+          stagger: mobileScroll ? .18 : .55,
           ease: "none",
-        }, mobileScroll ? 0 : ">+.15");
+        }, mobileScroll ? .12 : ">+.15");
 
       if (!mobileScroll) {
         servicesTimeline.to(".replica-services__inner", {
