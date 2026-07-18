@@ -1,7 +1,7 @@
 # Henry Fadeni - Public Portfolio Knowledge Base
 
-Version: 1.5  
-Last verified: 2026-07-14  
+Version: 1.6
+Last verified: 2026-07-18
 Scope: V2 portfolio assistant  
 Owner: Henry Fadeni  
 Public contact: hfadeni@gmail.com  
@@ -66,25 +66,25 @@ The assistant may use a warm first-person portfolio voice, but it must not imply
 
 ## Core Identity
 
-Henry Fadeni is a Software and AI Engineer based in Lagos, Nigeria, working with teams remotely.
+Henry Fadeni is a Software and AI Engineer based in Lagos, Nigeria, working remotely with teams worldwide.
 
-He builds practical AI systems, automation workflows, data products, and full-stack software. His work focuses on systems that move beyond a text-only chatbot by retrieving trusted context, returning validated outputs, using bounded tools, exposing important decisions, and keeping consequential actions under user or operator control.
+He builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications. He works across the complete product: defining the user problem, designing the interface, building the backend and AI workflow, testing failure cases, deploying the product, and keeping important decisions visible to people.
 
 His engineering background includes AI engineering, data systems, full-stack product development, electrical automation, control systems, and applied research.
 
 Short introduction:
 
-> Henry is a Software and AI Engineer who builds AI agents, retrieval systems, workflow automation, analytics products, and full-stack software designed for real operational use.
+> Henry is a Software and AI Engineer who builds complete AI and software products that people can understand, use, and review.
 
 Longer introduction:
 
-> Henry helps teams turn scattered data, documents, workflows, calls, and operational signals into useful software. He builds RAG pipelines, autonomous and human-in-the-loop agents, text-to-SQL analytics, AI voice workflows, e-commerce automation, and production-style LLM applications. His approach emphasizes guardrails, evaluation, observability, clear interfaces, and measurable user value.
+> Henry helps teams turn scattered data, documents, workflows, calls, and operational signals into useful software. He builds RAG pipelines, human-in-the-loop agents, text-to-SQL analytics, voice workflows, e-commerce automation, machine-learning products, and full-stack applications. He connects each model to a clear interface, defined tools, tests, failure handling, and human review where needed.
 
 ## Positioning
 
 Primary positioning:
 
-> Software and AI engineering shaped into clean, scalable products that move from idea to working system.
+> Henry builds AI and software products from the first user problem through the interface, backend, AI workflow, testing, and deployment.
 
 What differentiates Henry's work:
 
@@ -101,7 +101,7 @@ What differentiates Henry's work:
 
 Route: /v2/services/ai-engineering/
 
-Henry builds AI products that combine trusted context, retrieval, typed tools, permissions, evaluation, observability, and a clean human handoff. This service covers RAG systems, agent workflows, text-to-SQL products, developer agents, and operations agents.
+Henry helps teams turn an AI demo into a working product that uses approved knowledge, calls defined tools, records what happened, and sends uncertain or high-risk cases to a person. This service covers RAG systems, agent workflows, text-to-SQL products, developer agents, and operations agents.
 
 Typical capabilities:
 
@@ -113,16 +113,16 @@ Typical capabilities:
 
 Good fit:
 
-- An AI prototype needs to become a dependable product or workflow.
-- The system must use real tools without hiding what it changed.
-- Quality, latency, or policy behavior needs a measurable evaluation path.
-- Consequential actions require confirmation, policy gates, or human review.
+- A prototype can answer questions but cannot safely update a product, workflow, or internal system.
+- The team cannot see which source, tool, or rule produced an answer or action.
+- There is no repeatable test set for accuracy, tool use, refusals, latency, or escalation.
+- Important actions require confirmation, permission rules, or human review.
 
 ### Machine Learning & Data Products
 
 Route: /v2/services/machine-learning/
 
-Henry builds predictive machine-learning systems, analytics products, retrieval pipelines, evaluation workflows, and user interfaces that turn complex data into an inspectable decision.
+Henry builds text-to-SQL analytics, predictive models, retrieval systems, evaluation pipelines, APIs, and interfaces that turn data into a result a user can inspect and act on.
 
 Typical capabilities:
 
@@ -134,16 +134,16 @@ Typical capabilities:
 
 Good fit:
 
-- A model performs in a notebook but does not yet support a real operating decision.
-- Teams wait for analysts to translate recurring questions into queries.
-- Predictions need confidence, threshold, explanation, and review states.
-- A data product needs frontend, API, evaluation, and monitoring around the model.
+- A model works in a notebook but users have no reliable way to submit inputs or receive results.
+- Recurring business questions still depend on an analyst writing every query by hand.
+- Users see a prediction without its input quality, confidence, threshold, or review status.
+- The model needs an API, interface, evaluation, monitoring, and feedback path around it.
 
 ### Conversational AI & Voice Systems
 
 Route: /v2/services/conversational-ai/
 
-Henry builds grounded chat and real-time voice systems for support, guidance, booking, and other workflows where conversation must connect to approved knowledge, bounded tools, confirmation, and human escalation.
+Henry builds support, guided-selling, booking, internal-assistant, and voice workflows that answer from approved information, use defined tools, confirm important details, and transfer the full context to a person when needed.
 
 Typical capabilities:
 
@@ -155,16 +155,16 @@ Typical capabilities:
 
 Good fit:
 
-- Customers repeat questions but still need a person for every next step.
-- A chatbot needs approved knowledge, actions, and escalation rather than generic answers.
-- Calls or chats end without a structured outcome the team can review.
-- A voice workflow needs clear disclosure, confirmation, and failure recovery.
+- Customers repeat the same questions, but every booking, order check, or next step still needs a person.
+- A chatbot can produce a confident answer that is not supported by approved product or policy information.
+- Calls and chats end without a saved result, confirmation, escalation reason, or responsible owner.
+- A voice workflow needs clear disclosure, confirmation, failure recovery, and a handoff with context.
 
 ### Full-Stack Product Engineering
 
 Route: /v2/services/product-engineering/
 
-Henry builds complete digital products that connect product framing, interaction design, frontend, backend, data, AI behavior, testing, deployment, and operational edge cases.
+Henry helps founders and teams define a product, design the interaction, build the frontend and backend, connect data and AI, handle failure states, test it, and prepare it for deployment.
 
 Typical capabilities:
 
@@ -176,9 +176,9 @@ Typical capabilities:
 
 Good fit:
 
-- A founder needs a working product rather than an isolated model or interface demo.
-- Frontend, backend, AI, and data decisions must behave as one coherent system.
-- Mobile, accessibility, failure recovery, and operational handoff matter to launch quality.
+- A product idea is split between design, frontend, backend, and AI work with no clear technical route from one to the next.
+- The main demo works, but mobile layouts, loading, errors, permissions, recovery, and edge cases remain fragile.
+- A model or automation exists, but users still need a clear interface and the team needs an operational handoff.
 - One technical partner needs to carry the product from scope through delivery.
 
 ## Engagement Options
@@ -401,19 +401,22 @@ Dates: April 2022-July 2022.
 
 ## Project Evidence Rules
 
-Use these labels exactly:
+Use the current project label from this list and preserve its meaning:
 
 - Built product / public repository: implemented system with a public source repository.
-- Public demo: implemented portfolio demonstration; limitations must remain visible.
-- Built system / NDA-safe case study: implementation is documented without exposing restricted client material.
+- Built product / controlled SRE demonstration: implemented system demonstrated against intentionally faulty services, not unattended production infrastructure.
+- Public demo / mocked calendar integration: implemented demonstration whose availability and booking records are simulated.
+- Built client system / NDA-safe archive: implementation is documented without exposing restricted client material.
+- Built applied-ML system / public archive: implemented machine-learning product with public source evidence and documented model results.
 - Interactive product concept: a designed and interactive concept, not a shipped client system.
-- Modeled scenario: a demonstrative model or scenario, not observed client performance.
+- Modeled commerce scenario: a demonstrative commerce model, not observed client performance.
+- Hobby project: a smaller working product or supporting build story, not client work.
 
 Never convert a target, threshold, modeled benefit, or scenario into a measured production outcome.
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 as of 2026-07-14. The work collection is organized into six featured stories, five additional systems, and three hobby projects.
+Decision status: implemented in V2 and verified on 2026-07-18. The work collection is organized into six featured stories, five additional projects, and three hobby projects.
 
 Publication rules:
 
@@ -423,16 +426,23 @@ Publication rules:
 
 Published full case studies:
 
-1. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a business question becomes safe, traceable SQL and a useful answer.
-2. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how an AI agent earns permission to act on an incident through policy gates, audit records, and human approval.
-3. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes a controlled booking workflow. Always disclose that calendar availability and bookings are simulated.
-4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how pull-request review stays inspectable, private, and under team control. Repository targets are not measured results.
+1. Framewise: /v2/work/framewise/. Core story: how an approved campaign direction becomes reusable visual rules across formats. This is an interactive concept.
+2. Threadmark: /v2/work/threadmark/. Core story: how mixed research sources become a short brief while every claim stays connected to supporting or conflicting evidence. This is an interactive concept.
+3. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
+4. CartPilot: /v2/work/cartpilot/. Core story: how a shopper's request becomes a transparent comparison and a cart action that waits for confirmation. This is an interactive concept.
+5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
+6. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
+7. MarginGuard: /v2/work/marginguard/. Core story: how order revenue and variable costs become a ranked list of recoverable margin leaks and a modeled rule preview. This is a modeled commerce scenario.
+8. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
+9. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
+10. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
+11. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
 
 Hobby project treatments:
 
-- AboutFace Chatbot: /v2/work/aboutface-chatbot/. A hobby project paired with Clear Skin, showing the progression from grounded text answers to controlled product actions.
-- Smart Todo App: /v2/work/smart-todo/. A deterministic hobby project. Describe it as a regex-driven Python command-line task manager with strong automated testing, not as an AI or LLM task planner.
-- Portfolio Website: /v2/work/portfolio-website/. A hobby project covering interaction design, motion, responsive systems, content architecture, assistant grounding, and QA. It is not a client project.
+- AboutFace Chatbot: /v2/work/aboutface-chatbot/. A dedicated hobby-project note paired with Clear Skin, showing the progression from grounded text answers to typed product actions.
+- Smart Todo App: /v2/work/smart-todo/. A dedicated hobby-project note for a deterministic, regex-driven Python command-line task manager with strong automated testing. It is not an AI or LLM task planner.
+- Portfolio Website: /v2/work/portfolio-website/. A dedicated hobby-project note covering interaction design, motion, responsive systems, content architecture, assistant grounding, and QA. It is not a client project.
 - AI Tools / Coming Soon: a placeholder, not an evidenced project. Remove it from the gallery and never cite it as completed work.
 
 ## Built Projects and Public Demos
@@ -447,7 +457,7 @@ Navigation rule: use the exact repository URL above. Never map this project to t
 
 Summary:
 
-> A natural-language analytics product that generates validated SQL, executes it against DuckDB, and streams tables, charts, SQL, and plain-English explanations through a FastAPI and Next.js interface.
+> A text-to-SQL analytics workspace where a user asks a business question in plain English and receives a validated query, result, chart, explanation, and source trail.
 
 Key implementation evidence:
 
@@ -485,7 +495,7 @@ Dedicated V2 case study: /v2/work/code-review-agent/. Do not convert repository 
 
 Summary:
 
-> A GitHub-integrated agent that receives pull-request webhooks, parses diffs, retrieves repository context, runs an inspectable LangGraph review workflow, and posts structured review output and commit status information.
+> A GitHub review agent that verifies pull-request events, reviews changed lines with focused repository context, and publishes validated inline findings tied to an exact file and line.
 
 Key implementation evidence:
 
@@ -516,7 +526,7 @@ Repository: https://github.com/Protagonist01/clear-skin-concierge-site
 
 Summary:
 
-> A Next.js clinic-commerce experience combining treatment and product pages, cart and checkout flows, booking, reviews, account access, a skin quiz, and an AI concierge that returns typed frontend decisions.
+> A full-stack skincare clinic and commerce product with an AI concierge that answers from approved content and prepares typed product, quiz, cart, treatment, booking, or escalation proposals for the interface.
 
 Key implementation evidence:
 
@@ -544,7 +554,7 @@ Dedicated V2 case study: /v2/work/ai-voice-receptionist/
 
 Summary:
 
-> A real-time voice AI demonstration for a clinic, using FastAPI, Vapi, Twilio, Deepgram, ElevenLabs, and an LLM to answer calls, discuss treatments and pricing, check simulated availability, create simulated bookings, and send SMS confirmations.
+> A voice receptionist demonstration that answers clinic questions, checks simulated appointment availability, confirms booking details, creates an ephemeral simulated booking, and sends an SMS summary.
 
 Key implementation evidence:
 
@@ -569,13 +579,13 @@ Relevant questions:
 
 ### Self-Healing Microservices Monitor
 
-Status: Built product / public repository and SRE demonstration.  
+Status: Built product / controlled SRE demonstration with a public repository.
 Repository: https://github.com/Protagonist01/self-healing-monitor
 Dedicated V2 case study: /v2/work/self-healing-monitor/  
 
 Summary:
 
-> An AI-assisted SRE system that receives Prometheus alerts, retrieves runbook context, diagnoses incidents, proposes remediation, applies a policy gate, and routes risky actions to a human approval queue.
+> An incident-response agent that reads Prometheus alerts, logs, deployment context, service health, and runbooks before recommending a recovery action. Low-risk allowlisted actions may run, while higher-risk actions require operator approval.
 
 Key implementation evidence:
 
@@ -599,13 +609,13 @@ Relevant questions:
 
 ### Feijoa Fruit Quality ML System
 
-Status: Built product / public repository and deployed browser demo.  
+Status: Built applied-ML system / public archive with a deployed browser demo.
 V2 route: /v2/work/archive/fruit-quality/  
 Repository: https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction
 
 Summary:
 
-> A machine-learning product that classifies feijoa ripeness from images and predicts post-harvest quality indicators under changing storage conditions.
+> A deployed machine-learning product that uses a feijoa image to classify current ripeness and forecast six quality measures over 35 days of storage.
 
 Key implementation evidence:
 
@@ -631,15 +641,15 @@ Relevant questions:
 
 ### About Face RAG Chatbot
 
-Status: Public demo and public repository.  
+Status: Hobby project / public demo and public repository.
 Year listed in resume: 2025.  
 Repository: https://github.com/Protagonist01/aboutface-chatbot-demo  
 Demo: https://aboutface-chatbot-demo.vercel.app/
-Case study treatment: supporting evolution story paired with Clear Skin; no standalone full case study is planned.  
+Case study treatment: dedicated hobby-project note paired with Clear Skin; it is not presented as a full client case study.
 
 Summary:
 
-> A brand-aligned RAG chatbot for a cosmetics product catalogue, using embeddings and Pinecone retrieval to ground product, ingredient, shipping, returns, and recommendation answers.
+> A skincare support chatbot that answers product, ingredient, shipping, returns, and recommendation questions from an approved catalogue knowledge base using embeddings and Pinecone retrieval.
 
 Key implementation evidence:
 
@@ -660,12 +670,12 @@ Relevant questions:
 
 ### Smart Todo App
 
-Status: Built product / public repository; supporting project card only.  
+Status: Hobby project / public repository with a dedicated project note.
 Repository: https://github.com/Protagonist01/smart-todo-app
 
 Summary:
 
-> A keyboard-focused Python command-line task manager that uses regular expressions to parse dates, times, tags, priorities, assignments, and durations from compact task entries.
+> A keyboard-focused Python task manager that turns one compact command into dates, times, tags, priorities, assignments, and durations without using an AI model or a long form.
 
 Key implementation evidence:
 
@@ -677,16 +687,16 @@ Key implementation evidence:
 Important qualifiers:
 
 - This is a regex-driven parser, not an LLM or generative-AI product.
-- Keep it as a compact engineering-discipline card. Do not present it as a full case study or a primary example of Henry's current AI-systems positioning.
+- Keep it as a compact hobby-project note. Do not present it as client work or a primary example of Henry's current AI-systems positioning.
 
 ### Portfolio Website
 
-Status: Built product / public repository; secondary build story.  
+Status: Hobby project / public repository; this website.
 Repository: https://github.com/Protagonist01/my-website
 
 Summary:
 
-> Henry's interactive portfolio and conversion system, combining multi-page React and Vite architecture, cinematic interaction design, responsive case-study storytelling, contextual inquiry flows, and browser-based QA.
+> This responsive portfolio combines project case studies, service pages, motion, reduced-motion states, contextual inquiry, and an AI guide grounded in published site content.
 
 Important qualifiers:
 
@@ -695,12 +705,12 @@ Important qualifiers:
 
 ### Automated Testimony Operations
 
-Status: Built system / NDA-safe case study.  
+Status: Built client system / NDA-safe archive.
 V2 route: /v2/work/archive/testimony-operations/
 
 Summary:
 
-> A collection, review, editing, and publishing workflow that normalized submissions into one queue, added AI summaries and approval routing, and moved approved testimony into traceable output.
+> A workflow system that brings testimony intake, editing, approval, and publishing into one queue while protecting confidential client details.
 
 Documented V2 outcome:
 
@@ -717,7 +727,7 @@ These are intentionally labeled concepts and must not be described as shipped cl
 Status: Interactive product concept.  
 Route: /v2/work/framewise/
 
-An AI image studio concept for generating, refining, and adapting campaign visuals while preserving approved palette, composition, mood, and creative constraints.
+A creative-AI product concept that saves an approved campaign's palette, lighting, composition, typography, and references so teams can create consistent variants across formats.
 
 Demonstrates: generation workflows, visual style memory, visible creative locks, and campaign adaptation.
 
@@ -726,7 +736,7 @@ Demonstrates: generation workflows, visual style memory, visible creative locks,
 Status: Interactive product concept.  
 Route: /v2/work/threadmark/
 
-A multimodal research workspace concept that turns websites, PDFs, recordings, and images into source-backed briefs while preserving evidence and surfacing contradictions.
+A research-workspace concept that turns websites, PDFs, recordings, and images into a concise brief with a source attached to every claim and conflicting evidence shown for review.
 
 Demonstrates: mixed-source retrieval, citation interaction design, evidence architecture, and verifiable synthesis.
 
@@ -735,7 +745,7 @@ Demonstrates: mixed-source retrieval, citation interaction design, evidence arch
 Status: Interactive commerce concept.  
 Route: /v2/work/cartpilot/
 
-A shopping-agent concept that translates intent into product constraints, compares trade-offs, explains policies, and prepares cart changes for explicit confirmation.
+A guided-shopping concept that turns a customer's natural-language needs into product filters, evidence-backed comparisons, and a cart action the customer must confirm.
 
 Demonstrates: guided selling, typed actions, safe cart proposals, and confirmation-first commerce UX.
 
@@ -744,7 +754,7 @@ Demonstrates: guided selling, typed actions, safe cart proposals, and confirmati
 Status: Modeled commerce scenario.  
 Route: /v2/work/marginguard/
 
-An AI profitability concept that reconciles revenue with discounts, returns, fulfilment, and product cost, then ranks recoverable leaks and previews interventions.
+A commerce-intelligence concept that calculates contribution margin per order, finds where profit is leaking, ranks recoverable losses, and previews a rule before the team applies it.
 
 Demonstrates: contribution-margin modeling, leak prioritization, decision dashboards, and intervention previews.
 
@@ -874,12 +884,12 @@ Display the homepage featured work in this order:
 The V2 Work page presents the portfolio in three levels so visitors can understand the collection quickly:
 
 1. Six featured case studies in the same order as the homepage featured work.
-2. Five additional systems in this exact order: MarginGuard, Self-Healing Monitor, AI Voice Receptionist, AI Code Review Agent, and Automated Testimony Operations.
+2. Five additional projects in this exact order: MarginGuard, Self-Healing Monitor, AI Voice Receptionist, AI Code Review Agent, and Automated Testimony Operations.
 3. Three hobby projects: AboutFace Chatbot, Smart Todo App, and Portfolio Website.
 
-The page introduction describes the work as products built to turn complex work into clear decisions. Every featured, additional-system, and hobby-project card uses purpose-built project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These editorial covers explain the project context; they must not be treated as generic evidence of a shipped client interface. Project status and qualifiers remain the source of truth.
+The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Every featured, additional-project, and hobby-project card uses purpose-built project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These editorial covers explain the project context; they must not be treated as generic evidence of a shipped client interface. Project status and qualifiers remain the source of truth.
 
-All case-study and offer pages share one scroll-synchronous chapter navigator. The progress line begins at zero, advances continuously with the real chapter positions, and must never jump ahead of the current scroll. The five-step decision replay follows the same rule on desktop: its line moves continuously through The problem, What we learned, The choice, The build, and The result; mobile uses explicit taps instead. Desktop e-commerce offer media must use the same viewport-position transformation for every offer, including the last card.
+All case-study and offer pages share one scroll-synchronous chapter navigator. The progress line begins at zero, advances continuously with the real chapter positions, and must never jump ahead of the current scroll. The five-step project story follows the same rule on desktop and uses these labels: Problem, What I found, Decision, How it works, and Result. Mobile uses explicit taps instead. Desktop e-commerce offer media must use the same viewport-position transformation for every offer, including the last card.
 
 ### Service Pages
 
@@ -986,7 +996,7 @@ Suggestions should be relevant to the active page and conversation state. Do not
 
 ### What does Henry do?
 
-Henry is a Software and AI Engineer who builds AI agents, retrieval systems, workflow automation, analytics products, e-commerce systems, and full-stack software.
+Henry is a Software and AI Engineer who builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications. He can work from the first user problem through interface design, backend and AI implementation, testing, deployment, and handoff.
 
 ### Where is Henry based?
 
