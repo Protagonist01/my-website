@@ -275,29 +275,28 @@ function useCaseStudyMotion(rootRef, page) {
           desktop: "(min-width: 721px)",
         }, ({ conditions }) => {
           const mobile = conditions.mobile;
+          const naturalFlowSections = new Set();
           const timelines = storySections.map((section) => {
-            let targets = storyTargets(section);
-            if (mobile && section.matches(".v2-case-system, .v2-case-process")) {
-              const headerTargets = [...section.querySelectorAll(":scope > header > *")];
-              gsap.set(headerTargets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
-              targets = targets.filter((target) => !headerTargets.includes(target));
-            }
+            const targets = storyTargets(section);
             if (!targets.length) return null;
             const wantsPin = section.dataset.storySequence === "pin";
-            const usesNaturalMobileFlow = mobile && section.matches(".v2-case-process, .v2-offer-case__process");
             const pinOffset = mobile
               ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
               : 176;
             const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
-            const canPin = wantsPin && !usesNaturalMobileFlow && (!mobile || (() => {
+            const canPin = wantsPin && (!mobile || (() => {
               gsap.set(targets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
               const sectionHeight = section.scrollHeight;
               const available = viewportHeight() - pinOffset;
               gsap.set(targets, { autoAlpha: 0, y: mobile ? 24 : 40, clipPath: "inset(0 0 100% 0)" });
               return sectionHeight <= available;
             })());
+            if (mobile && wantsPin && !canPin) {
+              section.classList.add("uses-natural-mobile-flow");
+              naturalFlowSections.add(section);
+            }
             const distance = canPin ? () => Math.max(
-              viewportHeight() * (mobile ? .42 : 1.05),
+              mobile ? 160 : viewportHeight() * 1.05,
               targets.length * (mobile ? 64 : 168),
             ) : undefined;
             const timeline = gsap.timeline({
@@ -324,14 +323,17 @@ function useCaseStudyMotion(rootRef, page) {
               y: 0,
               clipPath: "inset(0 0 0% 0)",
               duration: 1,
-              stagger: mobile ? .18 : .52,
+              stagger: mobile ? .75 : .52,
               ease: "none",
             });
 
-            if (canPin) timeline.to({}, { duration: mobile ? .1 : .26 });
+            if (canPin && !mobile) timeline.to({}, { duration: .26 });
             return timeline;
           }).filter(Boolean);
-          return () => timelines.forEach((timeline) => timeline.revert());
+          return () => {
+            timelines.forEach((timeline) => timeline.revert());
+            naturalFlowSections.forEach((section) => section.classList.remove("uses-natural-mobile-flow"));
+          };
         });
 
         revealNodes.forEach((node) => {
@@ -360,14 +362,30 @@ function useCaseStudyMotion(rootRef, page) {
 
         const nextLink = article.querySelector(".v2-next, .v2-offer-case__next");
         if (nextLink) {
-          gsap.from(nextLink.querySelectorAll("span, strong, [aria-hidden='true']"), {
-            autoAlpha: 0,
-            x: -28,
-            duration: 1,
-            stagger: .1,
-            ease: "power3.out",
-            clearProps: "opacity,visibility,transform",
-            scrollTrigger: { trigger: nextLink, start: "top 88%", once: true },
+          const nextTargets = [...nextLink.querySelectorAll("span, strong, [aria-hidden='true']")];
+          matchMedia.add({
+            mobile: "(max-width: 720px)",
+            desktop: "(min-width: 721px)",
+          }, ({ conditions }) => {
+            const mobile = conditions.mobile;
+            const revealTargets = mobile ? [nextLink] : nextTargets;
+            const reveal = gsap.timeline({
+              scrollTrigger: mobile
+                ? { trigger: nextLink, start: "top 94%", end: "top 62%", scrub: true }
+                : { trigger: nextLink, start: "top 88%", once: true },
+            });
+            reveal.fromTo(revealTargets, {
+              autoAlpha: 0,
+              x: -28,
+            }, {
+              autoAlpha: 1,
+              x: 0,
+              duration: 1,
+              stagger: mobile ? 0 : .1,
+              ease: mobile ? "none" : "power3.out",
+              clearProps: mobile ? undefined : "opacity,visibility,transform",
+            });
+            return () => reveal.revert();
           });
         }
 
