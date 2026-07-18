@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "cleanUrls": true,
   "functions": {
-    "api/chat.js": {
+    "api/chat.py": {
       "includeFiles": "knowledge/henry-context.md",
       "maxDuration": 60
     },

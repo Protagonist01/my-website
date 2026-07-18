@@ -10,6 +10,7 @@
 [![GSAP](https://img.shields.io/badge/GSAP-88CE02?style=flat&logo=greensock&logoColor=white)](https://gsap.com)
 [![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat&logo=vercel&logoColor=white)](https://vercel.com)
 [![Node.js](https://img.shields.io/badge/Node.js_22-339933?style=flat&logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![Python](https://img.shields.io/badge/Python_3.12+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
 
 A multi-page portfolio that explains AI and software projects through the problems they solve,
 the decisions behind them, how the systems work, the evidence available, and the limits of each approach.
@@ -83,14 +84,29 @@ Problem → Discovery → Decision → How It Works → Result
 
 ### 🤖 Grounded Portfolio Assistant
 
-An AI assistant that answers questions about Henry's work, services, skills, and availability — grounded in canonical public context, never fabricating claims.
+An AI assistant that answers questions about Henry's work, services, skills, and availability. The React interface calls a Python serverless endpoint that retrieves relevant sections from the canonical public context, requests a structured answer from OpenAI, and falls back to OpenRouter when required.
+
+The backend also validates every proposed action against an allowlist. Navigation, booking, project inquiry, and project-view actions are returned as UI proposals; the model cannot execute them directly.
 
 | Component | Path |
 |:--|:--|
 | Public knowledge base | [`henry-context.md`](knowledge/henry-context.md) |
-| Retrieval & response logic | [`assistant.js`](api/_lib/assistant.js) |
-| API entry point | [`chat.js`](api/chat.js) |
+| Retrieval & response logic | [`assistant.py`](api/_lib/assistant.py) |
+| Python configuration and action allowlist | [`config.py`](api/_lib/config.py) |
+| API entry point | [`chat.py`](api/chat.py) |
 | Client interface | [`PortfolioGuide.jsx`](src/v2/PortfolioGuide.jsx) |
+| Local Vite-to-Python adapter | [`local-python-chat.js`](scripts/local-python-chat.js) |
+| Assistant tests | [`test_chat_python.py`](tests/test_chat_python.py) |
+
+Assistant request flow:
+
+```text
+Visitor → React chat panel → POST /api/chat → Python retrieval and safety layer
+                                                ↓
+                                    OpenAI → OpenRouter fallback
+                                                ↓
+                         Structured answer + validated UI action proposals
+```
 
 ### 📅 Live Booking
 
@@ -113,15 +129,22 @@ Visitors can send project inquiries directly or through the portfolio assistant.
 
 ```
 .
-├── api/                          Serverless APIs (assistant, Cal.com)
-│   ├── _lib/                     Shared logic, config, HTTP utilities
-│   └── cal/                      Availability, booking, verification
+├── api/                          Serverless APIs
+│   ├── chat.py                   Python portfolio assistant endpoint
+│   ├── _lib/
+│   │   ├── assistant.py          Retrieval, prompting, provider fallback, action safety
+│   │   ├── config.py             Python models, routes, and event-type configuration
+│   │   ├── config.js             JavaScript Cal.com and shared route configuration
+│   │   └── http.js               JavaScript HTTP helpers for Cal.com endpoints
+│   └── cal/                      JavaScript availability, booking, verification
 ├── assets/                       Images, fonts, legacy assets
 ├── knowledge/
 │   └── henry-context.md          Canonical knowledge for the AI guide
 ├── src/
 │   └── v2/                       React components, data, motion, styling
-├── tests/                        Booking & navigation tests
+├── scripts/
+│   └── local-python-chat.js      Vite development bridge to the Python endpoint
+├── tests/                        Assistant, booking & navigation tests
 ├── v2/                           HTML entry points for V2 pages
 ├── demo gallery/                 AI & automation demo gallery
 ├── ecommerce demo gallery/       E-commerce demo gallery
@@ -139,7 +162,7 @@ Visitors can send project inquiries directly or through the portfolio assistant.
 
 ### Prerequisites
 
-- **Node.js 22** and **npm**
+- **Node.js 22**, **npm**, and **Python 3.12+**
 
 ### Setup
 
@@ -152,6 +175,8 @@ npm run dev
 ```
 
 Open the local URL printed by Vite. Both `/` and `/v2/` load the current portfolio.
+
+During local development, Vite handles the frontend and Cal.com JavaScript routes. Requests to `/api/chat` are passed to `api/chat.py` through the local adapter. On Vercel, `api/chat.py` runs directly as a Python Function.
 
 <details>
 <summary><strong>Environment Variables</strong></summary>
@@ -185,8 +210,11 @@ PUBLIC_SITE_URL=https://your-domain.example/v2/
 | `npm run dev` | Start the Vite dev server |
 | `npm run build` | Production build |
 | `npm run preview` | Preview the production build |
+| `npm run test:chat` | Run Python assistant, action-safety, fallback, and endpoint tests |
 | `npm run test:booking` | Run Cal.com booking request tests |
 | `npm run deploy:check` | Verify the build compiles cleanly |
+
+Run the navigation suite directly with `node --test tests/section-navigation.test.js`.
 
 </details>
 
@@ -201,7 +229,7 @@ Configured for **Vercel** out of the box.
 | Framework | Vite |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Runtime | Node.js 22 |
+| Runtimes | Python 3.12 assistant · Node.js 22 booking APIs |
 | Assistant timeout | 60 s |
 | Booking API timeout | 30 s |
 
@@ -209,7 +237,9 @@ Configured for **Vercel** out of the box.
 
 ```bash
 npm ci
+npm run test:chat
 npm run test:booking
+node --test tests/section-navigation.test.js
 npm run deploy:check
 ```
 

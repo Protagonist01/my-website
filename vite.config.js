@@ -23,7 +23,7 @@ function copyStaticDirs(directories) {
 
 function localApiRoutes() {
   const routes = new Map([
-    ["/api/chat", () => import("./api/chat.js")],
+    ["/api/chat", () => import("./scripts/local-python-chat.js")],
     ["/api/cal/slots", () => import("./api/cal/slots.js")],
     ["/api/cal/book", () => import("./api/cal/book.js")],
     ["/api/cal/verify", () => import("./api/cal/verify.js")],

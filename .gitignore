@@ -25,6 +25,10 @@ edge-cdp-profile/
 
 # debug/utility scripts
 *.py
+!api/**/*.py
+!tests/**/*.py
+__pycache__/
+*.py[cod]
 
 # agent workspace
 .agents/
