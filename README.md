@@ -1,151 +1,263 @@
-# 🌌 Henry Fadeni — Portfolio Website
+# Henry Fadeni - Software and AI Portfolio
 
-A premium, interactive personal portfolio showcasing full-stack software engineering, AI-driven automation workflows, and operational systems for e-commerce. Built with high-fidelity animations, modular React architecture, and multi-page routing.
+A responsive, multi-page portfolio for Henry Fadeni, a Software and AI Engineer based in Lagos and working with teams worldwide.
 
----
+The site explains AI and software projects through the problems they solve, the decisions behind them, how the systems work, the evidence available, and the limits of each project. It also includes service pages, interactive e-commerce offer demonstrations, a source-grounded portfolio assistant, project inquiry forms, and live Cal.com booking.
 
-## 🛠️ Built With
+## What the portfolio covers
 
-<p align="left">
-  <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" /></a>
-  <a href="https://vite.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite" /></a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"><img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" /></a>
-  <a href="https://gsap.com/"><img src="https://img.shields.io/badge/GSAP-88CE02?style=for-the-badge&logo=greensock&logoColor=white" alt="GSAP" /></a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/HTML"><img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" /></a>
-  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS"><img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3" /></a>
-</p>
+- AI engineering and agent systems
+- Machine-learning and analytics products
+- Conversational AI and voice systems
+- Full-stack product engineering
+- E-commerce operations and automation concepts
+- Interactive case studies with desktop and mobile experiences
 
----
+## Portfolio structure
 
-## 🌟 Key Highlights & Capabilities
+### Featured case studies
 
-This portfolio is not just a static resume—it's a navigable hub demonstrating end-to-end engineering skills and practical business systems:
+| Project | Type | Route |
+| --- | --- | --- |
+| Framewise | Interactive creative-AI concept | `/v2/work/framewise/` |
+| Threadmark | Interactive research-product concept | `/v2/work/threadmark/` |
+| Retrieval-Augmented Analytics | Built text-to-SQL product with public repository | `/v2/work/retrieval-analytics/` |
+| CartPilot | Interactive guided-shopping concept | `/v2/work/cartpilot/` |
+| Clear Skin Concierge | Built clinic-commerce and AI concierge product | `/v2/work/clear-skin/` |
+| Fruit Quality Prediction | Built applied-ML system and public archive | `/v2/work/archive/fruit-quality/` |
 
-*   🤖 **AI Systems & Autonomous Demos:** Interactive simulations of agent-driven workflows, multi-step LLM chains, and intelligent automation.
-*   ⚙️ **E-Commerce Operations Automation:** Real-world workflows mapped to code (support escalation, customer retention logic, inventory tracking, smart returns, and automated reporting).
-*   🎨 **Immersive User Experience:** Smooth micro-animations and physics-based transitions using GSAP and modern CSS layout techniques.
-*   📐 **Modular Architecture:** Multi-page Vite setup optimized for performant sub-page routing and shared state management.
+### Additional projects
 
----
+| Project | Type | Route |
+| --- | --- | --- |
+| MarginGuard | Modeled commerce-intelligence scenario | `/v2/work/marginguard/` |
+| Self-Healing Monitor | Controlled SRE-agent demonstration | `/v2/work/self-healing-monitor/` |
+| AI Voice Receptionist | Public voice demo with simulated booking | `/v2/work/ai-voice-receptionist/` |
+| AI Code Review Agent | Built GitHub review agent with public repository | `/v2/work/code-review-agent/` |
+| Automated Testimony Operations | NDA-safe client workflow archive | `/v2/work/archive/testimony-operations/` |
 
-## 🗺️ Project Navigation
+### Hobby project notes
 
-The application is structured around dedicated experience layers:
+| Project | Focus | Route |
+| --- | --- | --- |
+| AboutFace Chatbot | Grounded skincare support chat | `/v2/work/aboutface-chatbot/` |
+| Smart Todo App | Deterministic Python task parsing | `/v2/work/smart-todo/` |
+| Portfolio Website | Interaction design, frontend engineering, assistant grounding, and QA | `/v2/work/portfolio-website/` |
 
-| Section | Focus | Purpose |
-| :--- | :--- | :--- |
-| **🏠 Home** | Main Entrance | Landing page with key introductory hooks and global navigation. |
-| **💼 Works** | Project Hub | In-depth case studies across AI agents, full-stack systems, and engineering achievements. |
-| **⚡ General Demo Gallery** | Automation Demos | Interactive workspace proving the capability of autonomous pipelines. |
-| **🛒 E-commerce Gallery** | Commerce Systems | Simulated operational flows demonstrating business-logic automation. |
-| **💻 Stack** | Technology | Core tools, platforms, and programming capabilities. |
-| **✉️ Contact** | Connections | Lead generation and custom work intake requests. |
+The complete project index is available at `/v2/work/`.
 
----
+## Services
 
-## 📁 Repository Structure
+The portfolio presents four service areas:
+
+1. **AI Engineering & Agent Systems** - RAG, agent orchestration, defined tools, permissions, evaluation, observability, and human review.
+2. **Machine Learning & Data Products** - predictive models, text-to-SQL analytics, retrieval, data pipelines, APIs, interfaces, and model evaluation.
+3. **Conversational AI & Voice Systems** - grounded chat, voice workflows, booking and messaging tools, confirmation, and handoff with context.
+4. **Full-Stack Product Engineering** - product framing, interface design, frontend, backend, data, integrations, testing, deployment, and failure recovery.
+
+Service routes live under `/v2/services/`.
+
+## Key product features
+
+### Scroll-based case studies
+
+Project stories use a consistent sequence:
+
+1. Problem
+2. What I found
+3. Decision
+4. How it works
+5. Result
+
+Desktop experiences use scroll-driven chapter transitions. Mobile layouts use compact, viewport-aware sections and explicit interaction states. Reduced-motion users receive stable, fully readable alternatives.
+
+### Grounded portfolio assistant
+
+The assistant answers questions about Henry's work, services, skills, project evidence, and availability.
+
+- Canonical public context: [`knowledge/henry-context.md`](knowledge/henry-context.md)
+- Retrieval and response logic: [`api/_lib/assistant.js`](api/_lib/assistant.js)
+- API entry point: [`api/chat.js`](api/chat.js)
+- Client interface: [`src/v2/PortfolioGuide.jsx`](src/v2/PortfolioGuide.jsx)
+
+The assistant must not invent prices, client results, availability, credentials, or project claims. It keeps built products, demonstrations, concepts, modeled scenarios, hobby projects, and NDA-safe work clearly separated.
+
+### Live booking
+
+The portfolio can retrieve live Cal.com availability and create a booking only after the visitor reviews and confirms the details.
+
+- Availability: `api/cal/slots.js`
+- Booking: `api/cal/book.js`
+- Verification: `api/cal/verify.js`
+- Booking interface: `src/v2/GuideBooking.jsx`
+
+### Contact and project intake
+
+Visitors can send a project inquiry through the site or open a relevant inquiry from the portfolio assistant. Contact forms use Formspree directly and do not require a Vercel environment variable.
+
+## Technology
+
+### Frontend
+
+- React 19
+- Vite 7
+- GSAP and ScrollTrigger
+- Three.js
+- Modern CSS with responsive and reduced-motion states
+
+### Serverless and integrations
+
+- Vercel Functions
+- OpenAI or OpenRouter for the portfolio assistant
+- Cal.com for availability and booking
+- Formspree for contact forms
+
+### Quality and delivery
+
+- Node.js test runner
+- Vite production builds
+- Multi-page output
+- Security headers configured in `vercel.json`
+- Assistant rate limiting and validated UI actions
+
+## Repository structure
 
 ```text
 .
-├── about/                    # Personal bio and professional summary
-├── archive/                  # Historic project records and assets
-├── assets/                   # Shared styling (CSS) and helper scripts (JS)
-├── clone/                    # Interactive clones/mimics of existing systems
-├── contact/                  # Contact form handler and page
-├── context/                  # UI/UX design specifications and screenshots
-├── demo gallery/             # Live general automation interactive playground
-├── demos/                    # Source code for standalone automation modules
-├── dist/                     # Optimized static assets for CDN deployment
-├── ecommerce demo gallery/   # Live e-commerce systems interactive playground
-├── experience/               # Interactive career timeline and achievements
-├── my-stack/                 # Visual stack representation components
-├── qa-artifacts/             # Testing reports and verification assets
-├── src/                      # React core source code (layouts, components, global state)
-│   ├── data/                 # Static data configurations, project metadata
-│   ├── pages/                # Individual page views
-│   └── main.jsx              # React application entry point
-├── test-results/             # Output files from test runners and QA assertions
-├── testimonial/              # Testimonial showcase page
-├── web demos/                # Additional web-based demo projects
-├── works/                    # Category index pages for engineering projects
-└── vite.config.js            # Advanced multi-page Vite build configurations
+|-- api/                         # Portfolio assistant and Cal.com serverless APIs
+|   |-- _lib/                    # Shared assistant, configuration, and HTTP utilities
+|   `-- cal/                     # Availability, booking, and verification handlers
+|-- assets/                      # Shared images, fonts, legacy assets, and utilities
+|-- knowledge/
+|   `-- henry-context.md         # Canonical public knowledge for the AI guide
+|-- src/
+|   `-- v2/                      # Current React components, data, motion, and styling
+|-- tests/                       # Booking and navigation tests
+|-- v2/                          # HTML entry points for V2 pages and case studies
+|-- demo gallery/                # AI and automation demonstration gallery
+|-- ecommerce demo gallery/      # E-commerce systems demonstration gallery
+|-- web demos/                   # Static standalone demonstrations copied at build time
+|-- index.html                   # Primary V2 entry point
+|-- vite.config.js               # Multi-page build and local API middleware
+`-- vercel.json                  # Deployment, function, and security-header configuration
 ```
 
----
+Some legacy and experimental directories remain in the repository, but the current portfolio experience is implemented primarily in `src/v2`, `v2`, `api`, and `knowledge`.
 
-## 🚀 Getting Started
+## Local development
 
-To run this project locally, make sure you have [Node.js](https://nodejs.org/) installed, then follow these steps:
+### Requirements
 
-1.  **Clone the Repository:**
-    ```bash
-    git clone https://github.com/Protagonist01/my-website.git
-    cd my-website
-    ```
+- Node.js 22
+- npm
 
-2.  **Install Dependencies:**
-    ```bash
-    npm install
-    ```
+### Install and run
 
-3.  **Run Development Server:**
-    ```bash
-    npm run dev
-    ```
+```bash
+git clone https://github.com/Protagonist01/my-website.git
+cd my-website
+npm ci
+cp .env.example .env
+npm run dev
+```
 
-4.  **Build for Production:**
-    ```bash
-    npm run build
-    ```
+Open the local URL printed by Vite. The root route and `/v2/` both load the current portfolio experience.
 
-5.  **Preview the Local Build:**
-    ```bash
-    npm run preview
-    ```
+On Windows PowerShell, copy the environment file with:
 
-### Deploying to Vercel
+```powershell
+Copy-Item .env.example .env
+```
 
-This repository is configured as a Vite multi-page site with Vercel serverless functions. Vercel should use Node.js 22, run `npm run build`, and publish the generated `dist` directory. These values are committed in `package.json` and `vercel.json`.
+## Environment variables
 
-Before deploying, copy `.env.example` to `.env` for local development and configure the same server-side variables in the Vercel project's Preview and Production environments:
+The `.env.example` file documents the supported server-side settings:
 
-- `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is required for the portfolio assistant.
-- `CAL_API_KEY` is required for live availability, verification, and booking.
-- `OPENAI_MODEL` and `OPENROUTER_MODEL` are optional provider overrides.
-- `PUBLIC_SITE_URL` should be the deployed site URL, for example `https://your-domain.example/`.
+```dotenv
+OPENAI_API_KEY=
+OPENROUTER_API_KEY=
+CAL_API_KEY=
+OPENAI_MODEL=gpt-5.4-mini
+OPENROUTER_MODEL=openai/gpt-5.4-mini
+PUBLIC_SITE_URL=https://your-domain.example/v2/
+```
 
-Never expose those credentials with a `VITE_` prefix. The Formspree contact forms call Formspree directly and do not require a Vercel environment variable.
+- Configure at least one of `OPENAI_API_KEY` or `OPENROUTER_API_KEY` to use the portfolio assistant.
+- Configure `CAL_API_KEY` to use live availability, verification, and booking.
+- The model variables are optional overrides.
+- Set `PUBLIC_SITE_URL` to the deployed portfolio URL.
+- Never expose these credentials with a `VITE_` prefix.
 
-Run the release check before every deployment:
+## Validation commands
+
+```bash
+# Production build
+npm run build
+
+# Cal.com booking request tests
+npm run test:booking
+
+# Deployment build check
+npm run deploy:check
+
+# Preview the generated build
+npm run preview
+```
+
+After a deployment, smoke-test:
+
+- `/`
+- `/v2/work/`
+- at least one project case study
+- at least one service page
+- at least one e-commerce offer page
+- the portfolio assistant
+- availability and booking
+- the contact form
+- a mobile viewport and reduced-motion mode
+
+## Deployment
+
+The repository is configured for Vercel:
+
+- Framework: Vite
+- Build command: `npm run build`
+- Output directory: `dist`
+- Runtime: Node.js 22
+- Assistant timeout: 60 seconds
+- Booking API timeout: 30 seconds
+
+Add the environment variables to both Preview and Production when those integrations need to work in both environments.
+
+Before deployment:
 
 ```bash
 npm ci
+npm run test:booking
 npm run deploy:check
 ```
 
-After deployment, smoke-test `/`, one case-study route such as `/v2/work/cartpilot/`, one offer route such as `/v2/offers/revenue-leak-audit/`, the assistant, and the booking flow. Preview deployments should receive the same environment variables when those integrations need to be tested there.
+## Evidence and claim policy
 
-### Current portfolio experience
+This portfolio deliberately includes several kinds of work. Their labels matter:
 
-Open `/` after starting the development server. The current landing sequence is split into editable files:
+- **Built product / public repository** means the implementation has public source evidence.
+- **Controlled demonstration** means the system is implemented, but the environment or operational claims are intentionally limited.
+- **Public demo with simulated integration** means the experience works while a named external system is mocked or ephemeral.
+- **NDA-safe archive** means the implementation is described without restricted client details.
+- **Interactive product concept** means the product and interaction are designed, but it is not presented as shipped client work.
+- **Modeled scenario** means displayed impact is illustrative, not measured production performance.
 
-- `src/v2/replicaContent.js` contains the name, biography, statement, and services.
-- `src/v2/replicaAnimationConfig.js` contains the shared scroll and portrait transform values.
-- `src/v2/ReplicaHome.jsx` contains the semantic components and GSAP ScrollTrigger timelines.
-- `src/v2/replica.css` contains the exact desktop/mobile layout calibration.
-- Replace `assets/images/v2-hero/henry-bw.webp` to change the portrait. Keep the same crop for the monochrome and generated red faces so the flip remains seamless.
+Targets, thresholds, modeled benefits, and synthetic evaluation results must never be presented as observed client outcomes.
 
-The navigation supports click-outside and Escape dismissal. Reduced-motion users receive the settled portrait and fully revealed statement without scrubbed 3D motion.
+## About Henry
 
----
+Henry Fadeni is a Software and AI Engineer based in Lagos, Nigeria, working remotely with teams worldwide. He builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications.
 
-## 🔒 Configuration & Best Practices
+- GitHub: [Protagonist01](https://github.com/Protagonist01)
+- LinkedIn: [Henry Fadeni](https://www.linkedin.com/in/henry-fadeni-ai-engineer/)
+- Email: [hfadeni@gmail.com](mailto:hfadeni@gmail.com)
 
-- **Environment Isolation:** Sensitive credentials, local logs, and development environment variables (`.env`, `*.log`, `node_modules/`, `dist/`) are explicitly ignored to ensure zero leaking of production configuration.
-- **Multi-page Optimization:** Vite is configured to compile independent entry points to reduce bundle sizes and speed up initial page loading times.
+## License
 
----
-
-## 🧑‍💻 About Henry Fadeni
-
-Henry Fadeni is a **Software and AI Engineer** specializing in the design and deployment of intelligent automation systems, full-stack web applications, and operationally complex workflows. By bridging the gap between deep technical implementation and business-driven value, Henry builds software that makes organizational processes faster, more logical, and highly scalable.
+No open-source license is currently declared. Unless a license is added, the repository remains all rights reserved.
