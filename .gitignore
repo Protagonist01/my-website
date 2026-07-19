@@ -27,8 +27,10 @@ edge-cdp-profile/
 *.py
 !api/**/*.py
 !tests/**/*.py
+!scripts/run_chat_evals.py
 __pycache__/
 *.py[cod]
+eval-results/
 
 # agent workspace
 .agents/

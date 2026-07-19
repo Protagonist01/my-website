@@ -10,9 +10,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test:chat": "python -m unittest discover -s tests -p \"test_chat_python.py\" -v",
+    "test:chat": "python -m unittest discover -s tests -p \"test_*.py\" -v",
+    "eval:chat": "python scripts/run_chat_evals.py --mode static",
+    "eval:chat:live": "python scripts/run_chat_evals.py --mode live --output eval-results/live.json",
     "test:booking": "node --test tests/cal-booking.test.js",
-    "deploy:check": "npm run build"
+    "deploy:check": "npm run test:chat && npm run eval:chat && npm run build"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.2.0",
