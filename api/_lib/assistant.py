@@ -28,7 +28,10 @@ ALWAYS_GROUNDED_HEADINGS = {
     "Privacy and Safety Rules",
     "Core Identity",
     "Positioning",
+    "Engagement Options",
+    "Project Evidence Rules",
     "Case Study Editorial Plan",
+    "Unsupported or Dynamic Questions",
 }
 STOP_WORDS = {
     "about", "after", "again", "also", "and", "are", "can", "does", "for", "from",
@@ -129,6 +132,7 @@ def _retrieve_knowledge(query: str, page: str) -> dict[str, Any]:
     return {
         "content": "\n\n".join(parts),
         "count": len(bounded),
+        "headings": [section["heading"] for section in bounded],
     }
 
 
@@ -278,7 +282,7 @@ def _provider_list() -> list[dict[str, Any]]:
 
     providers = [
         {"name": "openai", "model": OPENAI_MODEL, "url": "https://api.openai.com/v1/responses", "key": os.environ.get("OPENAI_API_KEY"), "headers": {}},
-        {"name": "openrouter", "model": OPENROUTER_MODEL, "url": "https://openrouter.ai/api/v1/responses", "key": os.environ.get("OPENROUTER_API_KEY"), "headers": {"HTTP-Referer": os.environ.get("PUBLIC_SITE_URL", "https://henryfadeni.com/v2/"), "X-Title": "Henry Fadeni Portfolio Guide"}},
+        {"name": "openrouter", "model": OPENROUTER_MODEL, "url": "https://openrouter.ai/api/v1/responses", "key": os.environ.get("OPENROUTER_API_KEY"), "headers": {"HTTP-Referer": os.environ.get("PUBLIC_SITE_URL", "https://henryfadeni.vercel.app/v2/"), "X-Title": "Henry Fadeni Portfolio Guide"}},
     ]
     return [provider for provider in providers if provider["key"]]
 
@@ -306,6 +310,10 @@ def _request_provider(provider: dict[str, Any], messages: list[dict[str, str]], 
     except URLError as error:
         raise RuntimeError(f"{provider['name']} request failed: {error.reason}") from error
     parsed = _align_actions_with_intent(_parse_assistant_response(response_payload), messages[-1]["content"])
+    raw_usage = response_payload.get("usage", {}) if isinstance(response_payload.get("usage"), dict) else {}
+    input_tokens = raw_usage.get("input_tokens", raw_usage.get("prompt_tokens", 0))
+    output_tokens = raw_usage.get("output_tokens", raw_usage.get("completion_tokens", 0))
+    total_tokens = raw_usage.get("total_tokens", input_tokens + output_tokens)
     return {
         **parsed,
         "meta": {
@@ -314,6 +322,11 @@ def _request_provider(provider: dict[str, Any], messages: list[dict[str, str]], 
             "latencyMs": round((time.monotonic() - started_at) * 1000),
             "fallback": provider["name"] != "openai",
             "retrievedSections": retrieved["count"],
+            "usage": {
+                "inputTokens": int(input_tokens or 0),
+                "outputTokens": int(output_tokens or 0),
+                "totalTokens": int(total_tokens or 0),
+            },
         },
     }
 

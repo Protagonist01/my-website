@@ -1,0 +1,70 @@
+name: Chat evaluations
+
+on:
+  push:
+    paths:
+      - "api/**"
+      - "evals/**"
+      - "knowledge/**"
+      - "scripts/run_chat_evals.py"
+      - "tests/test_*.py"
+      - ".github/workflows/chat-evals.yml"
+  pull_request:
+    paths:
+      - "api/**"
+      - "evals/**"
+      - "knowledge/**"
+      - "scripts/run_chat_evals.py"
+      - "tests/test_*.py"
+      - ".github/workflows/chat-evals.yml"
+  workflow_dispatch:
+    inputs:
+      run_live:
+        description: "Run live provider evaluations using repository secrets"
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  static-evaluations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run assistant unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
+      - name: Run static evaluation gate
+        run: python scripts/run_chat_evals.py --mode static --output eval-results/static.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: static-chat-evaluation
+          path: eval-results/static.json
+          if-no-files-found: ignore
+
+  live-evaluations:
+    if: github.event_name == 'workflow_dispatch' && inputs.run_live
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Run live model evaluation gate
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'gpt-5.4-mini' }}
+          OPENROUTER_MODEL: ${{ vars.OPENROUTER_MODEL || 'openai/gpt-5.4-mini' }}
+        run: python scripts/run_chat_evals.py --mode live --output eval-results/live.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: live-chat-evaluation
+          path: eval-results/live.json
+          if-no-files-found: ignore

@@ -15,7 +15,7 @@
 A multi-page portfolio that explains AI and software projects through the problems they solve,
 the decisions behind them, how the systems work, the evidence available, and the limits of each approach.
 
-[Live Site](https://henryfadeni.com) · [LinkedIn](https://www.linkedin.com/in/henry-fadeni-ai-engineer/) · [Email](mailto:hfadeni@gmail.com)
+[Live Site](https://henryfadeni.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/henry-fadeni-ai-engineer/) · [Email](mailto:hfadeni@gmail.com)
 
 </div>
 
@@ -108,6 +108,22 @@ Visitor → React chat panel → POST /api/chat → Python retrieval and safety 
                          Structured answer + validated UI action proposals
 ```
 
+#### Chatbot evaluations
+
+The versioned evaluation set at [`portfolio_chat_v1.json`](evals/portfolio_chat_v1.json) checks representative portfolio questions and actions. It covers grounded facts, retrieval relevance, unsupported pricing, assistant disclosure, prompt injection, evidence labels, booking, inquiry, and approved navigation.
+
+```bash
+# Free local/CI gate: retrieval, deterministic actions, schema, and evaluator tests
+npm run eval:chat
+
+# Full provider run: grades real OpenAI/OpenRouter answers and writes a JSON report
+npm run eval:chat:live
+```
+
+Live reports include pass rates by dimension, average and p95 latency, provider/model information, token usage, returned messages, suggestions, and actions. Set `EVAL_INPUT_COST_PER_MILLION` and `EVAL_OUTPUT_COST_PER_MILLION` to add a cost estimate without hard-coding model prices in the repository. Generated reports are written to `eval-results/` and are not committed.
+
+The [`Chat evaluations`](.github/workflows/chat-evals.yml) GitHub Actions workflow runs the free gate on relevant pushes and pull requests. A full live run can be started manually with the `run_live` option after adding `OPENAI_API_KEY` and/or `OPENROUTER_API_KEY` as repository secrets.
+
 ### 📅 Live Booking
 
 Retrieves real-time Cal.com availability and creates bookings after visitor confirmation.
@@ -190,7 +206,11 @@ CAL_API_KEY=
 # Optional overrides
 OPENAI_MODEL=gpt-5.4-mini
 OPENROUTER_MODEL=openai/gpt-5.4-mini
-PUBLIC_SITE_URL=https://your-domain.example/v2/
+PUBLIC_SITE_URL=https://henryfadeni.vercel.app/v2/
+
+# Optional evaluation cost rates per 1M tokens
+EVAL_INPUT_COST_PER_MILLION=
+EVAL_OUTPUT_COST_PER_MILLION=
 ```
 
 | Variable | Required | Purpose |
@@ -199,6 +219,7 @@ PUBLIC_SITE_URL=https://your-domain.example/v2/
 | `CAL_API_KEY` | For booking | Enables live availability & booking |
 | `OPENAI_MODEL` / `OPENROUTER_MODEL` | No | Override default model |
 | `PUBLIC_SITE_URL` | Recommended | Deployed portfolio URL |
+| `EVAL_INPUT_COST_PER_MILLION` / `EVAL_OUTPUT_COST_PER_MILLION` | No | Add estimated USD cost to live evaluation reports |
 
 </details>
 
@@ -212,7 +233,9 @@ PUBLIC_SITE_URL=https://your-domain.example/v2/
 | `npm run preview` | Preview the production build |
 | `npm run test:chat` | Run Python assistant, action-safety, fallback, and endpoint tests |
 | `npm run test:booking` | Run Cal.com booking request tests |
-| `npm run deploy:check` | Verify the build compiles cleanly |
+| `npm run eval:chat` | Run the free retrieval and deterministic-action evaluation gate |
+| `npm run eval:chat:live` | Evaluate real provider answers and write a JSON report |
+| `npm run deploy:check` | Run Python tests, static evaluations, and the production build |
 
 Run the navigation suite directly with `node --test tests/section-navigation.test.js`.
 
