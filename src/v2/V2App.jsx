@@ -1168,7 +1168,7 @@ function InlineContactForm() {
         <label>Email<input name="email" type="email" required /></label>
         <label>Phone<input name="phone" type="tel" /></label>
         <label>Company<input name="company" /></label>
-        <label className="v2-inline-form__brief">Details about your project<textarea name="description" rows="2" required /></label>
+        <label className="v2-inline-form__brief">Tell me about the role or project<textarea name="description" rows="2" required /></label>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
         <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
       </form>
@@ -1181,7 +1181,7 @@ function ClosingCta() {
   return (
     <section className="v2-closing" id="contact">
       <div className="v2-closing__top"><strong>Henry Fadeni</strong><span>Contact / Menu</span></div>
-      <div className="v2-closing__statement"><span>Write me</span><h2>Great products<br />begin with a<br />conversation</h2></div>
+      <div className="v2-closing__statement"><span>Roles, contracts & projects</span><h2>Great products<br />begin with a<br />conversation</h2><p>Currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering.</p></div>
       <InlineContactForm />
     </section>
   );
@@ -1498,7 +1498,7 @@ function OfferCaseStudy({ offer }) {
 }
 
 function AboutPage() {
-  return <><PageTitle kicker="About Henry" title="I build AI and software products people can understand and use." /><section className="v2-about" data-reveal><p>I am Henry, a software and AI engineer based in Lagos and working with teams worldwide. I build AI agents, machine-learning products, voice systems, and full-stack web applications.</p><p>I work across the complete product: define the user problem, design the interface, build the backend and AI workflow, test failure cases, deploy it, and keep important decisions visible to people.</p></section></>;
+  return <><PageTitle kicker="About Henry" title="I build AI and software products people can understand and use." /><section className="v2-about" data-reveal><p>I am Henry, a software and AI engineer based in Lagos and working with teams worldwide. I build AI agents, machine-learning products, voice systems, and full-stack web applications.</p><p>I work across the complete product: define the user problem, design the interface, build the backend and AI workflow, test failure cases, deploy it, and keep important decisions visible to people.</p></section><section className="v2-about-availability" data-reveal><span>Availability</span><h2>Open to roles, contracts, and selected freelance projects.</h2><div><p>I am currently available for full-time employment, contract engagements, and focused AI or software project work with teams worldwide.</p><a href="/v2/contact/" data-contact-context="I'd like to discuss a role or project.">Discuss a role or project <Arrow /></a></div></section></>;
 }
 
 function ContactDialog({ open, onClose }) {

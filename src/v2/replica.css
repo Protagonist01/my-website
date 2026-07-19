@@ -117,7 +117,7 @@
 .replica-contact__grid { display: grid; grid-template-columns: minmax(0, 520px) 500px; column-gap: 160px; align-items: stretch; }
 .replica-contact__copy { display: flex; min-height: 455px; flex-direction: column; justify-content: space-between; }
 .replica-contact__copy h2 { margin: 4px 0 13px; font-size: 80px; font-weight: 700; line-height: .92; letter-spacing: -.047em; }
-.replica-contact__copy p { margin: 0; font-size: 17px; line-height: 1.4; white-space: nowrap; }
+.replica-contact__copy p { max-width: 520px; margin: 0; font-size: 17px; line-height: 1.4; white-space: normal; }
 .replica-socials { display: flex; gap: 12px; }
 .replica-socials a { display: grid; width: 40px; height: 40px; border-radius: 8px; background: var(--paper-muted); color: var(--ink); transition: color .18s ease, background-color .18s ease, transform .18s ease; place-items: center; }
 .replica-socials a:hover { background: var(--ink); color: var(--light-text); transform: translateY(-2px); }

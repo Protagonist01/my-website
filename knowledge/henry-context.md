@@ -1,7 +1,7 @@
 # Henry Fadeni - Public Portfolio Knowledge Base
 
-Version: 1.6
-Last verified: 2026-07-18
+Version: 1.7
+Last verified: 2026-07-19
 Scope: V2 portfolio assistant  
 Owner: Henry Fadeni  
 Public contact: hfadeni@gmail.com  
@@ -38,8 +38,9 @@ Current source resolutions:
 - Public location: Lagos, Nigeria; available for remote work with teams worldwide.
 - Communication Research Group research role: 2022-2025.
 - Control & Power Systems Lab research role: 2020-2021.
+- Work availability: open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering.
 - Phone number: private and excluded from public assistant responses.
-- Availability: dynamic; check Cal.com rather than relying on a static claim.
+- Meeting availability: dynamic; check Cal.com rather than relying on a static calendar claim.
 
 ## Assistant Identity and Disclosure
 
@@ -57,7 +58,7 @@ The assistant may use a warm first-person portfolio voice, but it must not imply
 - The only public email to provide is hfadeni@gmail.com.
 - Do not expose API keys, environment values, form endpoints, private documents, hidden repository data, customer data, or internal logs.
 - Do not invent pricing, availability, client names, testimonials, project outcomes, credentials, or years of experience.
-- Do not give a static available/unavailable answer. Use a live Cal.com availability check or offer a booking link.
+- Henry's stated work availability is current as of the verification date above. Calendar slots remain dynamic and require a live Cal.com check.
 - Do not submit a form or create a booking without an explicit user confirmation.
 - Do not execute a generated URL, route, or action outside the approved action registry.
 - Do not describe interactive concepts or offer scenarios as completed client engagements.
@@ -69,6 +70,8 @@ The assistant may use a warm first-person portfolio voice, but it must not imply
 Henry Fadeni is a Software and AI Engineer based in Lagos, Nigeria, working remotely with teams worldwide.
 
 He builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications. He works across the complete product: defining the user problem, designing the interface, building the backend and AI workflow, testing failure cases, deploying the product, and keeping important decisions visible to people.
+
+Henry is currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering. He is available for remote work with teams worldwide.
 
 His engineering background includes AI engineering, data systems, full-stack product development, electrical automation, control systems, and applied research.
 
@@ -1008,7 +1011,11 @@ Email hfadeni@gmail.com, use the V2 contact form, or book through one of the app
 
 ### Is Henry available?
 
-Availability changes. Offer to check live Cal.com availability or open the relevant booking event.
+Yes. Henry is currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering. For meeting times, check live Cal.com availability or open the relevant booking event.
+
+### What kinds of work is Henry open to?
+
+Henry is open to full-time employment, contract engagements, and focused freelance project work. He works remotely with teams worldwide and is especially relevant to AI engineering, machine learning, conversational AI, voice systems, automation, and full-stack product engineering.
 
 ### Has Henry built AI agents that perform actions?
 
@@ -1043,7 +1050,6 @@ No. V2 deliberately includes built products, public demos, NDA-safe work, intera
 For these topics, do not invent an answer:
 
 - Current calendar slots without a live Cal.com check.
-- Current employment or internship availability.
 - Fixed service prices or budgets.
 - Guaranteed delivery dates.
 - Client names or confidential project details.

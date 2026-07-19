@@ -27,7 +27,7 @@ export const replicaContent = {
   ],
   contact: {
     heading: "Let’s talk.",
-    introduction: "Have an AI or software project? Fill out the form, and I’ll get back to you soon.",
+    introduction: "Currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering.",
     email: "hfadeni@gmail.com",
     endpoint: "https://formspree.io/f/mqevwkpl",
   },

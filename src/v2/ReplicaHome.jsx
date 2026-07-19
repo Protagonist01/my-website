@@ -285,8 +285,8 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
           {errors.email && <span className="replica-field__error" id={`${formId}-email-error`}>{errors.email}</span>}
         </div>
         <div className="replica-field replica-field--project">
-          <label htmlFor={`${formId}-project`}>Your Project</label>
-          <textarea id={`${formId}-project`} name="description" placeholder="Tell me about your project" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
+          <label htmlFor={`${formId}-project`}>Role or project</label>
+          <textarea id={`${formId}-project`} name="description" placeholder="Tell me about the opportunity" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
           {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
         </div>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit"}</button>
