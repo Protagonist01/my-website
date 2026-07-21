@@ -57,6 +57,7 @@ export const paths = {
   about: "/v2/about/",
   proof: "/v2/proof/",
   contact: "/v2/contact/",
+  ecommerce: "/v2/ecommerce/",
   aiEngineering: "/v2/services/ai-engineering/",
   machineLearning: "/v2/services/machine-learning/",
   conversationalAI: "/v2/services/conversational-ai/",

@@ -5,6 +5,7 @@ import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from 
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
+import EcommerceLanding from "./EcommerceLanding.jsx";
 import {
   AnnotatedArtifactExplorer,
   CaseHeroActions,
@@ -27,7 +28,7 @@ const OFFER_FILTERS = ["ALL SYSTEMS", "REVENUE", "CUSTOMER", "OPERATIONS"];
 const OFFERS_STATEMENT = "I help growing Shopify brands automate the operations behind the store: support, returns, inventory, reporting, retention, and customer experience with AI agents, workflow automation, and custom software.";
 const PROJECT_PAGE_NAVIGATION = [
   { label: "Featured Projects", href: paths.work },
-  { label: "E-commerce", href: `${paths.home}#offers` },
+  { label: "E-commerce", href: paths.ecommerce },
   { label: "About", href: paths.about },
   { label: "Start a project", href: `${paths.home}#contact`, arrow: "↗" },
 ];
@@ -135,7 +136,7 @@ function useReveal(rootRef, page) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
-    if (page.startsWith("case-") || page.startsWith("offer-")) return undefined;
+    if (page === "ecommerce" || page.startsWith("case-") || page.startsWith("offer-")) return undefined;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -1447,7 +1448,7 @@ function OfferCaseStudy({ offer }) {
     <CaseExperienceProvider id={offer.id} title={offer.title} offer>
     <article className="v2-offer-case">
       <section className="v2-offer-case__hero">
-        <a className="v2-offer-case__back" href="/v2/#offers">{"\u2190"} All offers</a>
+        <a className="v2-offer-case__back" href="/v2/ecommerce/#offers">{"\u2190"} All offers</a>
         <div className="v2-offer-case__meta"><span>{offer.number} / {offer.category}</span><span>{offer.year}</span></div>
         <div className="v2-offer-case__heading" data-reveal>
           <span>{offer.valueLabel}<EvidenceLabel id={offer.id} offer /></span>
@@ -1508,6 +1509,7 @@ function ContactDialog({ open, onClose }) {
 
 function Renderer({ page }) {
   if (page === "home") return <Home />;
+  if (page === "ecommerce") return <EcommerceLanding />;
   if (page === "work") return <WorkPage />;
   if (page === "about") return <AboutPage />;
   if (page === "contact") return <PageTitle kicker="Contact" title="Tell me what should change." />;
@@ -1553,6 +1555,6 @@ export function V2App({ page }) {
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
-  const usesProjectNavigation = page === "about" || page === "work" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
+  const usesProjectNavigation = page === "about" || page === "work" || page === "ecommerce" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
   return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

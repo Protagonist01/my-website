@@ -81,6 +81,7 @@ export default defineConfig(({ mode }) => {
         "v2-about": resolve(__dirname, "v2/about/index.html"),
         "v2-proof": resolve(__dirname, "v2/proof/index.html"),
         "v2-contact": resolve(__dirname, "v2/contact/index.html"),
+        "v2-ecommerce": resolve(__dirname, "v2/ecommerce/index.html"),
         "v2-ai-agents": resolve(__dirname, "v2/services/ai-agents/index.html"),
         "v2-ai-workflows": resolve(__dirname, "v2/services/ai-workflows/index.html"),
         "v2-ai-engineering": resolve(__dirname, "v2/services/ai-engineering/index.html"),

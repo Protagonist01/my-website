@@ -10,6 +10,7 @@ import PortfolioGuide from "./PortfolioGuide.jsx";
 import "./styles.css";
 import "./replica.css";
 import "./guide.css";
+import "./ecommerce.css";
 
 const root = document.getElementById("v2-root");
 
