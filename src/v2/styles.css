@@ -88,7 +88,7 @@ button, a { color: inherit; }
 .v2-menu strong { font-size: .67rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .v2-menu i { display: grid; gap: .22rem; }
 .v2-menu i span { display: block; width: 1.2rem; height: 1px; background: currentColor; transition: transform .25s, opacity .25s; }
-.v2-mobile-nav { position: fixed; z-index: 100; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 1.25rem; padding: 3rem; background: var(--ink); color: var(--paper-bright); }
+.v2-mobile-nav { position: fixed; z-index: 100; inset: 0; display: flex; min-height: 100%; flex-direction: column; justify-content: safe center; gap: 1.25rem; padding: 5rem 3rem 3rem; overflow-y: auto; overscroll-behavior: contain; background: var(--ink); color: var(--paper-bright); }
 .v2-mobile-nav > a, .v2-mobile-nav > button:not(:first-child) { padding: 0; border: 0; background: none; font-family: var(--display); font-size: 4rem; text-align: left; text-decoration: none; cursor: pointer; scale: 1; translate: 0; transform-origin: left center; transition: scale .4s cubic-bezier(.34, 1.56, .64, 1), translate .4s cubic-bezier(.34, 1.56, .64, 1); }
 .v2-mobile-nav > button:first-child { position: absolute; top: 1.5rem; right: 1.5rem; border: 0; background: none; color: inherit; font-size: 2.5rem; cursor: pointer; }
 
@@ -978,8 +978,8 @@ button, a { color: inherit; }
 @media (max-width: 620px) {
   :root { --gutter: 1.25rem; }
   .v2-header { top: .75rem; width: calc(100% - 2.5rem); }
-  .v2-mobile-nav { padding: 1.5rem; }
-  .v2-mobile-nav > a, .v2-mobile-nav > button:not(:first-child) { font-size: 3.2rem; }
+  .v2-mobile-nav { gap: clamp(.65rem, 2.2vh, 1.25rem); padding: 5rem 1.5rem 1.5rem; }
+  .v2-mobile-nav > a, .v2-mobile-nav > button:not(:first-child) { font-size: clamp(2.25rem, min(13vw, 7vh), 3.2rem); }
   .v2-opening { height: 500vh; }
   .v2-opening-scene { padding: 5.5rem var(--gutter) 1.2rem; }
   .v2-scene-label { top: 5.5rem; }
