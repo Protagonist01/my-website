@@ -53,7 +53,7 @@ export function FloatingNavigation({ items = replicaContent.navigation.slice(1) 
   }, [open]);
 
   return (
-    <nav className={`replica-nav${open ? " is-open" : ""}`} ref={navRef} aria-label="Primary navigation">
+    <nav className={`replica-nav${open ? " is-open" : ""}`} ref={navRef} aria-label="Primary navigation" style={{ "--replica-nav-open-height": `${74 + (items.length * 44)}px` }}>
       <div className="replica-nav__top">
         <a href="/" onClick={() => setOpen(false)}>{replicaContent.name}</a>
         <button type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="replica-menu" onClick={() => setOpen((value) => !value)}>
@@ -62,13 +62,14 @@ export function FloatingNavigation({ items = replicaContent.navigation.slice(1) 
       </div>
       <div className="replica-nav__menu" id="replica-menu" aria-hidden={!open}>
         <div className="replica-nav__links">
-          {items.map((item) => (
+          {items.map((item, index) => (
             <a
               href={item.href}
               key={item.label}
               tabIndex={open ? 0 : -1}
               data-header-contact={item.href.includes("#contact") ? "" : undefined}
               onClick={() => setOpen(false)}
+              style={{ "--replica-nav-index": index }}
             ><span>{item.label}</span>{item.arrow && <span className="replica-nav__link-arrow" aria-hidden="true">{item.arrow}</span>}</a>
           ))}
         </div>
