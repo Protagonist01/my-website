@@ -139,6 +139,31 @@ Retrieves real-time Cal.com availability and creates bookings after visitor conf
 
 Visitors can send project inquiries directly or through the portfolio assistant. Forms use Formspree — no additional server-side env vars needed.
 
+### Referral partner programme
+
+The public programme at `/v2/referrals/` accepts applications for manually approved referral links. Approved partners sign in without a password at `/v2/referrals/dashboard/` to see clicks, enquiries, commission status, and a redacted payout method.
+
+| Rule | Implementation |
+|:--|:--|
+| Gig or contract commission | 10% of the first cleared payment |
+| Employment commission | 5% of the first cleared salary payment |
+| Attribution | First approved referrer for 60 days |
+| Clearance | 14 days after the first payment clears |
+| Payouts | Nigerian/international bank transfer or USDT on TRON (TRC-20) |
+
+The browser stores the first approved referral locally while the FastAPI endpoint also sets an HTTP-only attribution cookie. Every v2 project enquiry sends the referral code to Formspree and records a privacy-limited lead through `/api/referrals`. Supabase is never written to directly by the public browser.
+
+Referral setup:
+
+1. Create a Supabase project and run `supabase/migrations/202607220001_referral_campaign.sql` in its SQL editor.
+2. Add the server and public Supabase values listed below to `.env` and Vercel.
+3. In Supabase Auth URL Configuration, allow the production and local `/v2/referrals/dashboard/` redirect URLs used by passwordless email sign-in.
+4. Approve an application by changing `referral_profiles.status` from `pending` to `approved` in the Supabase Table Editor.
+5. When an enquiry becomes a client or hire, set its `referral_leads.status` to `won` and enter `opportunity_type`, `first_payment_amount`, `first_payment_currency`, and `first_payment_cleared_at`. The database creates the 5% or 10% commission automatically.
+6. After clearance, record the payout by changing the commission to `paid` and adding `paid_at` plus a bank reference or TRON transaction hash in `payment_reference`.
+
+Payout account details are available only through the server service role; partner dashboards receive a redacted display label. For a larger programme, move bank and wallet details to a dedicated encrypted payout provider before automating transfers.
+
 ---
 
 ## 🏗 Architecture
@@ -147,8 +172,10 @@ Visitors can send project inquiries directly or through the portfolio assistant.
 .
 ├── api/                          Serverless APIs
 │   ├── chat.py                   Python portfolio assistant endpoint
+│   ├── referrals.py              FastAPI referral endpoint
 │   ├── _lib/
 │   │   ├── assistant.py          Retrieval, prompting, provider fallback, action safety
+│   │   ├── referrals.py          Referral rules and server-only Supabase gateway
 │   │   ├── config.py             Python models, routes, and event-type configuration
 │   │   ├── config.js             JavaScript Cal.com and shared route configuration
 │   │   └── http.js               JavaScript HTTP helpers for Cal.com endpoints
@@ -160,6 +187,8 @@ Visitors can send project inquiries directly or through the portfolio assistant.
 │   └── v2/                       React components, data, motion, styling
 ├── scripts/
 │   └── local-python-chat.js      Vite development bridge to the Python endpoint
+├── supabase/
+│   └── migrations/               Referral tables, RLS, and commission trigger
 ├── tests/                        Assistant, booking & navigation tests
 ├── v2/                           HTML entry points for V2 pages
 ├── demo gallery/                 AI & automation demo gallery
@@ -186,6 +215,7 @@ Visitors can send project inquiries directly or through the portfolio assistant.
 git clone https://github.com/Protagonist01/my-website.git
 cd my-website
 npm ci
+python -m pip install -r requirements.txt
 cp .env.example .env       # on PowerShell: Copy-Item .env.example .env
 npm run dev
 ```
@@ -203,10 +233,20 @@ OPENAI_API_KEY=
 OPENROUTER_API_KEY=
 CAL_API_KEY=
 
+# Referral programme: service-role credentials are server-only
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+SUPABASE_PUBLISHABLE_KEY=
+REFERRAL_HASH_SALT=
+
+# Public keys used only for passwordless partner sign-in
+VITE_SUPABASE_URL=
+VITE_SUPABASE_PUBLISHABLE_KEY=
+
 # Optional overrides
 OPENAI_MODEL=gpt-5.4-mini
 OPENROUTER_MODEL=openai/gpt-5.4-mini
-PUBLIC_SITE_URL=https://henryfadeni.vercel.app/v2/
+PUBLIC_SITE_URL=https://henryfadeni.vercel.app
 
 # Optional evaluation cost rates per 1M tokens
 EVAL_INPUT_COST_PER_MILLION=
@@ -217,6 +257,10 @@ EVAL_OUTPUT_COST_PER_MILLION=
 |:--|:--|:--|
 | `OPENAI_API_KEY` _or_ `OPENROUTER_API_KEY` | For assistant | Powers the portfolio assistant |
 | `CAL_API_KEY` | For booking | Enables live availability & booking |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | For referrals | Server-only database access for applications, attribution, leads, commissions, and payout details |
+| `SUPABASE_PUBLISHABLE_KEY` | For referrals | Lets the FastAPI endpoint validate partner sessions |
+| `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` | For referrals | Public passwordless sign-in configuration; never use the service-role key here |
+| `REFERRAL_HASH_SALT` | Recommended | Salts one-way visitor identifiers used for click counting |
 | `OPENAI_MODEL` / `OPENROUTER_MODEL` | No | Override default model |
 | `PUBLIC_SITE_URL` | Recommended | Deployed portfolio URL |
 | `EVAL_INPUT_COST_PER_MILLION` / `EVAL_OUTPUT_COST_PER_MILLION` | No | Add estimated USD cost to live evaluation reports |
@@ -233,6 +277,7 @@ EVAL_OUTPUT_COST_PER_MILLION=
 | `npm run preview` | Preview the production build |
 | `npm run test:chat` | Run Python assistant, action-safety, fallback, and endpoint tests |
 | `npm run test:booking` | Run Cal.com booking request tests |
+| `npm run test:referrals` | Run referral application, attribution, dashboard, and payout tests |
 | `npm run eval:chat` | Run the free retrieval and deterministic-action evaluation gate |
 | `npm run eval:chat:live` | Evaluate real provider answers and write a JSON report |
 | `npm run deploy:check` | Run Python tests, static evaluations, and the production build |
@@ -252,7 +297,7 @@ Configured for **Vercel** out of the box.
 | Framework | Vite |
 | Build command | `npm run build` |
 | Output directory | `dist` |
-| Runtimes | Python 3.12 assistant · Node.js 22 booking APIs |
+| Runtimes | Python 3.12 FastAPI and assistant · Node.js 22 booking APIs |
 | Assistant timeout | 60 s |
 | Booking API timeout | 30 s |
 

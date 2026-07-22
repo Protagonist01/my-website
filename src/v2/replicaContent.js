@@ -23,6 +23,7 @@ export const replicaContent = {
     { label: "Services", href: "/#services" },
     { label: "Featured Projects", href: "/#work" },
     { label: "E-Commerce", href: "/v2/ecommerce/" },
+    { label: "Referral Programme", href: "/v2/referrals/" },
     { label: "Contact", href: "/#contact" },
   ],
   contact: {

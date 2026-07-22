@@ -24,6 +24,7 @@ function copyStaticDirs(directories) {
 function localApiRoutes() {
   const routes = new Map([
     ["/api/chat", () => import("./scripts/local-python-chat.js")],
+    ["/api/referrals", () => import("./scripts/local-python-referrals.js")],
     ["/api/cal/slots", () => import("./api/cal/slots.js")],
     ["/api/cal/book", () => import("./api/cal/book.js")],
     ["/api/cal/verify", () => import("./api/cal/verify.js")],
@@ -82,6 +83,8 @@ export default defineConfig(({ mode }) => {
         "v2-proof": resolve(__dirname, "v2/proof/index.html"),
         "v2-contact": resolve(__dirname, "v2/contact/index.html"),
         "v2-ecommerce": resolve(__dirname, "v2/ecommerce/index.html"),
+        "v2-referrals": resolve(__dirname, "v2/referrals/index.html"),
+        "v2-referral-dashboard": resolve(__dirname, "v2/referrals/dashboard/index.html"),
         "v2-ai-agents": resolve(__dirname, "v2/services/ai-agents/index.html"),
         "v2-ai-workflows": resolve(__dirname, "v2/services/ai-workflows/index.html"),
         "v2-ai-engineering": resolve(__dirname, "v2/services/ai-engineering/index.html"),

@@ -6,6 +6,8 @@ import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
 import EcommerceLanding from "./EcommerceLanding.jsx";
+import { ReferralCampaign, ReferralDashboard } from "./ReferralCampaign.jsx";
+import { captureReferralAttribution, enrichReferralFormData, recordReferralLead } from "./referralClient.js";
 import {
   AnnotatedArtifactExplorer,
   CaseHeroActions,
@@ -29,6 +31,7 @@ const OFFERS_STATEMENT = "I help growing Shopify brands automate the operations 
 const PROJECT_PAGE_NAVIGATION = [
   { label: "Featured Projects", href: paths.work },
   { label: "E-commerce", href: paths.ecommerce },
+  { label: "Referral Programme", href: paths.referrals },
   { label: "About", href: paths.about },
   { label: "Start a project", href: `${paths.home}#contact`, arrow: "↗" },
 ];
@@ -1150,11 +1153,18 @@ function InlineContactForm() {
     const form = formRef.current;
     setStatus("sending");
     try {
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: new FormData(form), redirect: "manual" });
+      const formData = enrichReferralFormData(new FormData(form));
+      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: formData, redirect: "manual" });
       if (response.status === 422 || response.status === 400) {
         setStatus("error");
         return;
       }
+      void recordReferralLead({
+        name: formData.get("name"),
+        email: formData.get("email"),
+        description: formData.get("description"),
+        source: "V2 inline contact form",
+      });
       form?.reset();
       setStatus("sent");
     } catch {
@@ -1510,6 +1520,8 @@ function ContactDialog({ open, onClose }) {
 function Renderer({ page }) {
   if (page === "home") return <Home />;
   if (page === "ecommerce") return <EcommerceLanding />;
+  if (page === "referrals") return <ReferralCampaign />;
+  if (page === "referral-dashboard") return <ReferralDashboard />;
   if (page === "work") return <WorkPage />;
   if (page === "about") return <AboutPage />;
   if (page === "contact") return <PageTitle kicker="Contact" title="Tell me what should change." />;
@@ -1535,6 +1547,9 @@ export function V2App({ page }) {
   useHomeMotion(root, page);
   useCaseStudyMotion(root, page);
   useEffect(() => {
+    void captureReferralAttribution();
+  }, []);
+  useEffect(() => {
     if (page === "contact") setContactOpen(true);
   }, [page]);
   const openContactFromLink = (event) => {
@@ -1555,6 +1570,6 @@ export function V2App({ page }) {
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
-  const usesProjectNavigation = page === "about" || page === "work" || page === "ecommerce" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
+  const usesProjectNavigation = page === "about" || page === "work" || page === "ecommerce" || page === "referrals" || page === "referral-dashboard" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
   return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

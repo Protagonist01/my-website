@@ -11,6 +11,7 @@ import "./styles.css";
 import "./replica.css";
 import "./guide.css";
 import "./ecommerce.css";
+import "./referrals.css";
 
 const root = document.getElementById("v2-root");
 

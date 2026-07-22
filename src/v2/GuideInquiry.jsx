@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { enrichReferralFormData, recordReferralLead } from "./referralClient.js";
 
 const CONTACT_ENDPOINT = "https://formspree.io/f/mqevwkpl";
 const SERVICE_OPTIONS = ["AI Engineering & Agent Systems", "Machine Learning & Data Products", "Conversational AI & Voice Systems", "Full-Stack Product Engineering", "Not sure yet"];
@@ -28,8 +29,10 @@ export function GuideInquiry({ initialService, conversationContext, onClose, onS
     formData.append("source", "V2 portfolio assistant");
     if (conversationContext) formData.append("conversation_context", conversationContext.slice(0, 600));
     try {
+      enrichReferralFormData(formData);
       const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: formData });
       if (!response.ok) throw new Error("The inquiry could not be sent.");
+      void recordReferralLead({ name: values.name, email: values.email, description: values.description, source: "V2 portfolio assistant" });
       setStatus("sent");
       setStep("sent");
       onSubmitted?.(values);

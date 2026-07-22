@@ -9,6 +9,9 @@
       "includeFiles": "knowledge/henry-context.md",
       "maxDuration": 60
     },
+    "api/referrals.py": {
+      "maxDuration": 30
+    },
     "api/cal/*.js": {
       "maxDuration": 30
     }

@@ -32,6 +32,8 @@ APPROVED_ROUTES = {
     "/v2/services/conversational-ai/": "Conversational AI & Voice Systems",
     "/v2/services/product-engineering/": "Full-Stack Product Engineering",
     "/v2/services/ecommerce-automation/": "E-commerce automation",
+    "/v2/referrals/": "Referral programme",
+    "/v2/referrals/dashboard/": "Referral partner dashboard",
     "/v2/offers/revenue-leak-audit/": "Revenue Leak Audit",
     "/v2/offers/ai-support-concierge/": "AI Support Concierge",
     "/v2/offers/ai-ops-dashboard/": "AI Ops Dashboard",

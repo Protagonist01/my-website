@@ -65,7 +65,8 @@ test("visible homepage navigation points to its matching page sections", () => {
       ["About Me", "/#about"],
       ["Services", "/#services"],
       ["Featured Projects", "/#work"],
-      ["E-Commerce", "/#offers"],
+      ["E-Commerce", "/v2/ecommerce/"],
+      ["Referral Programme", "/v2/referrals/"],
       ["Contact", "/#contact"],
     ],
   );
