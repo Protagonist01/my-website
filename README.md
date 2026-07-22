@@ -124,6 +124,14 @@ Live reports include pass rates by dimension, average and p95 latency, provider/
 
 The [`Chat evaluations`](.github/workflows/chat-evals.yml) GitHub Actions workflow runs the free gate on relevant pushes and pull requests. A full live run can be started manually with the `run_live` option after adding `OPENAI_API_KEY` and/or `OPENROUTER_API_KEY` as repository secrets.
 
+#### Chat experience feedback
+
+After a visitor has sent at least two messages and received a successful answer, closing the guide shows one short thumbs-up/thumbs-down prompt. A rating can include an optional 500-character note. The prompt is non-blocking, appears only once per conversation, and resets when chat history is cleared.
+
+Feedback is sent to the server-only `/api/feedback` endpoint and stored in Supabase. It includes a random conversation ID, rating, optional note, page, trigger, message counts, and the last assistant message ID. Chat message contents and visitor IP addresses are not stored with feedback.
+
+Run `supabase/migrations/202607220002_chat_feedback.sql` after the referral migration, then use the same server-only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` values. The public browser never receives the service-role key.
+
 ### 📅 Live Booking
 
 Retrieves real-time Cal.com availability and creates bookings after visitor confirmation.
@@ -222,7 +230,7 @@ npm run dev
 
 Open the local URL printed by Vite. Both `/` and `/v2/` load the current portfolio.
 
-During local development, Vite handles the frontend and Cal.com JavaScript routes. Requests to `/api/chat` are passed to `api/chat.py` through the local adapter. On Vercel, `api/chat.py` runs directly as a Python Function.
+During local development, Vite handles the frontend and Cal.com JavaScript routes. Requests to `/api/chat` and `/api/feedback` are passed to their Python endpoints through local adapters. On Vercel, both run directly as Python Functions.
 
 <details>
 <summary><strong>Environment Variables</strong></summary>
@@ -257,7 +265,7 @@ EVAL_OUTPUT_COST_PER_MILLION=
 |:--|:--|:--|
 | `OPENAI_API_KEY` _or_ `OPENROUTER_API_KEY` | For assistant | Powers the portfolio assistant |
 | `CAL_API_KEY` | For booking | Enables live availability & booking |
-| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | For referrals | Server-only database access for applications, attribution, leads, commissions, and payout details |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | For referrals and chat feedback | Server-only database access for referral records and chat ratings |
 | `SUPABASE_PUBLISHABLE_KEY` | For referrals | Lets the FastAPI endpoint validate partner sessions |
 | `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` | For referrals | Public passwordless sign-in configuration; never use the service-role key here |
 | `REFERRAL_HASH_SALT` | Recommended | Salts one-way visitor identifiers used for click counting |
@@ -277,6 +285,7 @@ EVAL_OUTPUT_COST_PER_MILLION=
 | `npm run preview` | Preview the production build |
 | `npm run test:chat` | Run Python assistant, action-safety, fallback, and endpoint tests |
 | `npm run test:booking` | Run Cal.com booking request tests |
+| `npm run test:feedback` | Run chat-feedback API and browser-state tests |
 | `npm run test:referrals` | Run referral application, attribution, dashboard, and payout tests |
 | `npm run eval:chat` | Run the free retrieval and deterministic-action evaluation gate |
 | `npm run eval:chat:live` | Evaluate real provider answers and write a JSON report |

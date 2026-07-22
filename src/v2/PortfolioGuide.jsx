@@ -2,6 +2,14 @@ import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useSta
 import { createPortal } from "react-dom";
 import { GuideBooking } from "./GuideBooking.jsx";
 import { GuideInquiry } from "./GuideInquiry.jsx";
+import {
+  buildChatFeedbackPayload,
+  canRequestChatFeedback,
+  createChatFeedbackSession,
+  readChatFeedbackSession,
+  saveChatFeedbackSession,
+  withFeedbackStatus,
+} from "./chatFeedback.js";
 import { navigateToTarget } from "./sectionNavigation.js";
 
 const avatar = new URL(
@@ -50,6 +58,18 @@ function icon(name) {
         <path d="M10 11v5M14 11v5" />
       </>
     ),
+    thumbUp: (
+      <>
+        <path d="M7 10v10H4a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h3Z" />
+        <path d="M7 18h9.2a2 2 0 0 0 1.95-1.56l1.15-5A2 2 0 0 0 17.35 9H13l.7-3.3A2.25 2.25 0 0 0 9.85 3.65L7 7.5V18Z" />
+      </>
+    ),
+    thumbDown: (
+      <>
+        <path d="M17 14V4h3a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-3Z" />
+        <path d="M17 6H7.8a2 2 0 0 0-1.95 1.56l-1.15 5A2 2 0 0 0 6.65 15H11l-.7 3.3a2.25 2.25 0 0 0 3.85 2.05L17 16.5V6Z" />
+      </>
+    ),
   };
 
   return <svg viewBox="0 0 24 24" aria-hidden="true">{paths[name]}</svg>;
@@ -71,6 +91,7 @@ function createWelcomeMessage(page, section = "") {
     content: "Hi — ask me about Henry’s work, services, skills, or availability.",
     suggestions: pageSuggestions(page, section),
     actions: [],
+    outcome: "welcome",
   };
 }
 
@@ -79,7 +100,7 @@ function readSessionMessages(page) {
     const stored = JSON.parse(sessionStorage.getItem(CHAT_HISTORY_KEY) || "null");
     if (!Array.isArray(stored) || !stored.length) return [createWelcomeMessage(page)];
 
-    const messages = stored.map((message) => {
+    const messages = stored.map((message, index) => {
       if (!message || !["assistant", "user"].includes(message.role)) return null;
       if (typeof message.content !== "string" || !message.content.trim()) return null;
       return {
@@ -92,6 +113,9 @@ function readSessionMessages(page) {
         actions: Array.isArray(message.actions)
           ? message.actions.filter((action) => action && typeof action === "object").slice(0, 6)
           : [],
+        outcome: ["welcome", "success", "error"].includes(message.outcome)
+          ? message.outcome
+          : message.role === "assistant" && index === 0 ? "welcome" : "success",
       };
     }).filter(Boolean);
 
@@ -245,6 +269,81 @@ function Avatar({ large = false }) {
   );
 }
 
+function FeedbackPrompt({ feedback, onDismiss, onRate, onCommentChange, onSendNote, onFinish }) {
+  const isRating = feedback.stage === "rating";
+  const isNote = feedback.stage === "note";
+
+  return (
+    <aside className={`hf-guide-feedback is-${feedback.stage}`} aria-label="Chat experience feedback" aria-live="polite">
+      <span className="hf-guide-feedback__signal" aria-hidden="true" />
+      <button
+        className="hf-guide-feedback__close"
+        type="button"
+        onClick={onDismiss}
+        aria-label="Dismiss chat feedback"
+      >
+        {icon("close")}
+      </button>
+
+      {isRating && (
+        <>
+          <span className="hf-guide-feedback__eyebrow">Quick check · 10 seconds</span>
+          <h2>Did this chat help?</h2>
+          <p>Your answer helps me make the guide sharper.</p>
+          <div className="hf-guide-feedback__ratings" aria-label="Rate this chat">
+            <button type="button" disabled={feedback.sending} onClick={() => onRate("positive")}>
+              {icon("thumbUp")}
+              <span>Yes, it helped</span>
+            </button>
+            <button type="button" disabled={feedback.sending} onClick={() => onRate("negative")}>
+              {icon("thumbDown")}
+              <span>Needs work</span>
+            </button>
+          </div>
+          {feedback.sending && <small className="hf-guide-feedback__status">Saving your rating…</small>}
+          {feedback.error && <small className="hf-guide-feedback__error" role="alert">{feedback.error}</small>}
+        </>
+      )}
+
+      {isNote && (
+        <>
+          <span className="hf-guide-feedback__eyebrow">Rating saved</span>
+          <h2>{feedback.rating === "positive" ? "What worked well?" : "What should improve?"}</h2>
+          <p>This note is optional. No chat transcript is attached.</p>
+          <label className="hf-guide-feedback__note">
+            <span>Optional note</span>
+            <textarea
+              rows="3"
+              maxLength="500"
+              value={feedback.comment}
+              onChange={(event) => onCommentChange(event.target.value)}
+              placeholder="A short note…"
+              disabled={feedback.sending}
+            />
+          </label>
+          <div className="hf-guide-feedback__note-actions">
+            <button type="button" className="is-primary" disabled={!feedback.comment.trim() || feedback.sending} onClick={onSendNote}>
+              {feedback.sending ? "Saving…" : "Send note"}
+            </button>
+            <button type="button" disabled={feedback.sending} onClick={onFinish}>Done</button>
+          </div>
+          {feedback.error && <small className="hf-guide-feedback__error" role="alert">{feedback.error}</small>}
+        </>
+      )}
+
+      {feedback.stage === "thanks" && (
+        <div className="hf-guide-feedback__thanks">
+          <span aria-hidden="true">✓</span>
+          <div>
+            <strong>Thank you.</strong>
+            <small>Your feedback is saved.</small>
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
+
 export default function PortfolioGuide({ page }) {
   const route = `${window.location.pathname}${window.location.hash}`;
   const isCasePage = page?.startsWith("case-") || page?.startsWith("offer-");
@@ -259,6 +358,8 @@ export default function PortfolioGuide({ page }) {
   const [mobileCase, setMobileCase] = useState(false);
   const [storyActive, setStoryActive] = useState(false);
   const [messages, setMessages] = useState(() => readSessionMessages(route));
+  const [feedbackSession, setFeedbackSession] = useState(() => readChatFeedbackSession(sessionStorage));
+  const [feedback, setFeedback] = useState(null);
   const promptContextKey = `${route}:${activeSection || "hero"}`;
   const inputRef = useRef(null);
   const scrollRef = useRef(null);
@@ -267,6 +368,7 @@ export default function PortfolioGuide({ page }) {
   const lookFrameRef = useRef(0);
   const transitionTimerRef = useRef(0);
   const requestAbortRef = useRef(null);
+  const feedbackTriggerRef = useRef("chat_close");
   const promptIndexRef = useRef(
     Number.parseInt(sessionStorage.getItem(PROMPT_KEY) || "0", 10) || 0,
   );
@@ -329,15 +431,21 @@ export default function PortfolioGuide({ page }) {
 
   const openChat = useCallback(() => {
     window.clearTimeout(transitionTimerRef.current);
+    if (feedback) {
+      if (feedbackSession.status === "unrated") {
+        setFeedbackSession((current) => withFeedbackStatus(current, "dismissed"));
+      }
+      setFeedback(null);
+    }
     setPrompt(null);
     setPanelPhase("opening");
     setOpen(true);
     transitionTimerRef.current = window.setTimeout(() => {
       setPanelPhase("idle");
     }, CHAT_TRANSITION_MS);
-  }, []);
+  }, [feedback, feedbackSession.status]);
 
-  const closeChat = useCallback((afterClose) => {
+  const closeChat = useCallback((afterClose, { offerFeedback = true } = {}) => {
     if (!open) {
       if (typeof afterClose === "function") afterClose();
       return;
@@ -349,9 +457,20 @@ export default function PortfolioGuide({ page }) {
     transitionTimerRef.current = window.setTimeout(() => {
       setOpen(false);
       setPanelPhase("idle");
+      if (offerFeedback && canRequestChatFeedback(messages, feedbackSession, { busy, activeCard: Boolean(activeCard) })) {
+        setPrompt(null);
+        setFeedback({
+          stage: "rating",
+          rating: null,
+          comment: "",
+          trigger: feedbackTriggerRef.current,
+          sending: false,
+          error: "",
+        });
+      }
       if (typeof afterClose === "function") afterClose();
     }, CHAT_TRANSITION_MS);
-  }, [open, panelPhase]);
+  }, [open, panelPhase, messages, feedbackSession, busy, activeCard]);
 
   useLayoutEffect(() => {
     if (!open) return undefined;
@@ -387,6 +506,23 @@ export default function PortfolioGuide({ page }) {
       // The assistant remains usable when session storage is unavailable.
     }
   }, [messages]);
+
+  useEffect(() => {
+    saveChatFeedbackSession(sessionStorage, feedbackSession);
+  }, [feedbackSession]);
+
+  useEffect(() => {
+    if (!feedback || feedback.sending) return undefined;
+    if (feedback.stage !== "rating" && feedback.stage !== "thanks") return undefined;
+    const delay = feedback.stage === "rating" ? 8_000 : 2_400;
+    const timer = window.setTimeout(() => {
+      if (feedback.stage === "rating" && feedbackSession.status === "unrated") {
+        setFeedbackSession((current) => withFeedbackStatus(current, "dismissed"));
+      }
+      setFeedback(null);
+    }, delay);
+    return () => window.clearTimeout(timer);
+  }, [feedback, feedbackSession.status]);
 
   useEffect(() => () => {
     window.clearTimeout(transitionTimerRef.current);
@@ -431,6 +567,7 @@ export default function PortfolioGuide({ page }) {
       || document.visibilityState === "hidden"
       || sessionStorage.getItem(PROMPT_MUTED_KEY) === "1"
       || prompt
+      || feedback
     ) return undefined;
 
     const isFirstPromptOnPage = !hasShownPromptOnPageRef.current;
@@ -457,7 +594,7 @@ export default function PortfolioGuide({ page }) {
     }, delay);
 
     return () => window.clearTimeout(showTimer);
-  }, [mobileCase, open, prompt, promptContextKey]);
+  }, [mobileCase, open, prompt, promptContextKey, feedback]);
 
   useEffect(() => {
     if (!prompt) return undefined;
@@ -597,6 +734,7 @@ export default function PortfolioGuide({ page }) {
         content: payload.message,
         suggestions: payload.suggestions || [],
         actions: payload.actions || [],
+        outcome: "success",
       }]);
     } catch (error) {
       if (error.name === "AbortError") return;
@@ -610,6 +748,7 @@ export default function PortfolioGuide({ page }) {
           label: "Send a project inquiry",
           service: null,
         }],
+        outcome: "error",
       }]);
     } finally {
       if (requestAbortRef.current === requestController) {
@@ -617,6 +756,58 @@ export default function PortfolioGuide({ page }) {
         setBusy(false);
       }
     }
+  };
+
+  const dismissFeedback = () => {
+    if (feedbackSession.status === "unrated") {
+      setFeedbackSession((current) => withFeedbackStatus(current, "dismissed"));
+    }
+    setFeedback(null);
+  };
+
+  const saveFeedback = async ({ rating, comment = "" }) => {
+    const payload = buildChatFeedbackPayload({
+      messages,
+      session: feedbackSession,
+      rating,
+      comment,
+      page: `${window.location.pathname}${window.location.hash}`,
+      trigger: feedback?.trigger || "chat_close",
+    });
+    const response = await fetch("/api/feedback", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(result.error || "Your feedback could not be saved. Please try again.");
+  };
+
+  const submitFeedbackRating = async (rating) => {
+    if (!feedback || feedback.sending) return;
+    setFeedback((current) => ({ ...current, rating, sending: true, error: "" }));
+    try {
+      await saveFeedback({ rating });
+      setFeedbackSession((current) => withFeedbackStatus(current, "rated"));
+      setFeedback((current) => ({ ...current, stage: "note", rating, sending: false, error: "" }));
+    } catch (error) {
+      setFeedback((current) => ({ ...current, sending: false, error: error.message }));
+    }
+  };
+
+  const submitFeedbackNote = async () => {
+    if (!feedback?.comment.trim() || feedback.sending) return;
+    setFeedback((current) => ({ ...current, sending: true, error: "" }));
+    try {
+      await saveFeedback({ rating: feedback.rating, comment: feedback.comment });
+      setFeedback((current) => ({ ...current, stage: "thanks", sending: false, error: "" }));
+    } catch (error) {
+      setFeedback((current) => ({ ...current, sending: false, error: error.message }));
+    }
+  };
+
+  const finishFeedback = () => {
+    setFeedback((current) => ({ ...current, stage: "thanks", sending: false, error: "" }));
   };
 
   const clearChatHistory = () => {
@@ -630,12 +821,15 @@ export default function PortfolioGuide({ page }) {
     } catch {
       // State still clears when session storage is unavailable.
     }
+    setFeedback(null);
+    setFeedbackSession(createChatFeedbackSession());
+    feedbackTriggerRef.current = "chat_close";
     setMessages([createWelcomeMessage(route, activeSection)]);
   };
 
   const runAction = (action) => {
     if (action.type === "navigate" || action.type === "show_projects") {
-      closeChat(() => navigateToTarget(action.target));
+      closeChat(() => navigateToTarget(action.target), { offerFeedback: false });
       return;
     }
     if (action.type === "show_booking") {
@@ -668,8 +862,19 @@ export default function PortfolioGuide({ page }) {
     .find((message) => message.role === "assistant")?.id;
 
   return createPortal(
-    <div className={`hf-guide${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}${storyActive ? " is-story-active" : ""}`}>
-      {!open && prompt && (
+    <div className={`hf-guide${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}${storyActive ? " is-story-active" : ""}`}>
+      {!open && feedback && (
+        <FeedbackPrompt
+          feedback={feedback}
+          onDismiss={dismissFeedback}
+          onRate={submitFeedbackRating}
+          onCommentChange={(comment) => setFeedback((current) => ({ ...current, comment, error: "" }))}
+          onSendNote={submitFeedbackNote}
+          onFinish={finishFeedback}
+        />
+      )}
+
+      {!open && !feedback && prompt && (
         <div className="hf-guide-prompt" role="status">
           <span className="hf-guide-prompt__cloud" aria-hidden="true">
             {Array.from({ length: 8 }, (_, index) => (
@@ -771,7 +976,9 @@ export default function PortfolioGuide({ page }) {
                         content: `Your ${booking.title || "meeting"} is confirmed. Cal.com sent the details to your email.`,
                         suggestions: ["What should I review before the call?", "Show me relevant projects"],
                         actions: [],
+                        outcome: "success",
                       }]);
+                      feedbackTriggerRef.current = "booking_complete";
                       setActiveCard(null);
                     }}
                   />
@@ -788,7 +995,9 @@ export default function PortfolioGuide({ page }) {
                         content: "Your project inquiry was sent. Henry now has the details you reviewed and confirmed.",
                         suggestions: ["Show me related work", "Book a discovery call"],
                         actions: [],
+                        outcome: "success",
                       }]);
+                      feedbackTriggerRef.current = "inquiry_complete";
                       setActiveCard(null);
                     }}
                   />

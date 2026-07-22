@@ -76,7 +76,6 @@ export function ReferralCampaign() {
     <article className="referral-page">
       <section className="referral-hero">
         <div className="referral-hero__copy">
-          <span className="referral-kicker">Henry partner referrals / Applications open</span>
           <h1>Make the introduction. <em>Share in the first win.</em></h1>
           <p>Introduce a client, founder, recruiter, or employer who needs AI and software engineering. If the opportunity converts, you receive a percentage of the first cleared payment.</p>
           <div className="referral-actions"><a href="#apply">Apply for my referral link <Arrow /></a><a href="#rules">See the exact rules <span aria-hidden="true">↓</span></a></div>

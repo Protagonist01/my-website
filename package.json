@@ -14,8 +14,9 @@
     "eval:chat": "python scripts/run_chat_evals.py --mode static",
     "eval:chat:live": "python scripts/run_chat_evals.py --mode live --output eval-results/live.json",
     "test:booking": "node --test tests/cal-booking.test.js",
+    "test:feedback": "python -m unittest discover -s tests -p \"test_chat_feedback.py\" -v && node --test tests/chat-feedback.test.js",
     "test:referrals": "python -m unittest discover -s tests -p \"test_referrals.py\" -v",
-    "deploy:check": "npm run test:chat && npm run eval:chat && npm run build"
+    "deploy:check": "npm run test:chat && node --test tests/chat-feedback.test.js && npm run eval:chat && npm run build"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^5.2.0",
