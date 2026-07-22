@@ -9,6 +9,9 @@
       "includeFiles": "knowledge/henry-context.md",
       "maxDuration": 60
     },
+    "api/feedback.py": {
+      "maxDuration": 15
+    },
     "api/referrals.py": {
       "maxDuration": 30
     },

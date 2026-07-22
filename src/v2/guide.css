@@ -358,6 +358,238 @@
   height: 14px;
 }
 
+/* End-of-conversation feedback */
+.hf-guide-feedback {
+  position: absolute;
+  right: 82px;
+  bottom: 2px;
+  z-index: 3;
+  width: min(322px, calc(100vw - 112px));
+  padding: 19px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .15);
+  border-radius: 18px 18px 5px 18px;
+  background:
+    linear-gradient(135deg, rgba(117, 148, 255, .11), transparent 43%),
+    #111419;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .42), 0 1px 0 rgba(255, 255, 255, .05) inset;
+  animation: hf-guide-feedback-in 420ms cubic-bezier(.16, 1, .3, 1) both;
+  isolation: isolate;
+}
+
+.hf-guide-feedback::after {
+  position: absolute;
+  right: -7px;
+  bottom: 15px;
+  width: 16px;
+  height: 16px;
+  border-top: 1px solid rgba(255, 255, 255, .15);
+  border-right: 1px solid rgba(255, 255, 255, .15);
+  background: #111419;
+  content: "";
+  transform: rotate(45deg);
+}
+
+.hf-guide-feedback__signal {
+  position: absolute;
+  top: 0;
+  right: 42px;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--hf-blue), rgba(117, 148, 255, 0));
+}
+
+.hf-guide-feedback__close {
+  position: absolute;
+  z-index: 2;
+  top: 9px;
+  right: 9px;
+  display: grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--hf-subtle);
+  cursor: pointer;
+}
+
+.hf-guide-feedback__close:hover {
+  background: rgba(255, 255, 255, .08);
+  color: var(--hf-text);
+}
+
+.hf-guide-feedback__close svg {
+  width: 15px;
+  height: 15px;
+}
+
+.hf-guide-feedback__eyebrow {
+  display: block;
+  padding-right: 28px;
+  color: var(--hf-blue);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.hf-guide-feedback h2 {
+  margin: 7px 30px 0 0;
+  font-family: "Newsreader Variable", "Newsreader", serif;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -.025em;
+  line-height: 1.05;
+}
+
+.hf-guide-feedback > p {
+  margin: 7px 28px 0 0;
+  color: var(--hf-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.hf-guide-feedback__ratings {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.hf-guide-feedback__ratings button {
+  display: flex;
+  min-width: 0;
+  min-height: 46px;
+  padding: 9px 10px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--hf-line);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .035);
+  color: var(--hf-text);
+  font-size: 11px;
+  font-weight: 650;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.hf-guide-feedback__ratings button:hover:not(:disabled) {
+  border-color: rgba(117, 148, 255, .72);
+  background: rgba(117, 148, 255, .12);
+  transform: translateY(-2px);
+}
+
+.hf-guide-feedback__ratings button:disabled,
+.hf-guide-feedback__note-actions button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.hf-guide-feedback__ratings svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  color: var(--hf-blue);
+}
+
+.hf-guide-feedback__status,
+.hf-guide-feedback__error {
+  display: block;
+  margin-top: 10px;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.hf-guide-feedback__status { color: var(--hf-subtle); }
+.hf-guide-feedback__error { color: #ff9a9a; }
+
+.hf-guide-feedback__note {
+  display: grid;
+  margin-top: 14px;
+  gap: 6px;
+}
+
+.hf-guide-feedback__note > span {
+  color: var(--hf-subtle);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 9px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+}
+
+.hf-guide-feedback__note textarea {
+  width: 100%;
+  min-height: 70px;
+  padding: 10px 11px;
+  resize: vertical;
+  border: 1px solid var(--hf-line);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, .22);
+  color: var(--hf-text);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.hf-guide-feedback__note textarea::placeholder { color: var(--hf-subtle); }
+
+.hf-guide-feedback__note-actions {
+  display: flex;
+  margin-top: 10px;
+  gap: 8px;
+}
+
+.hf-guide-feedback__note-actions button {
+  min-height: 36px;
+  padding: 7px 12px;
+  border: 1px solid var(--hf-line);
+  border-radius: 9px;
+  background: transparent;
+  color: var(--hf-text);
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.hf-guide-feedback__note-actions button.is-primary {
+  border-color: var(--hf-blue);
+  background: var(--hf-blue);
+  color: #0b1020;
+}
+
+.hf-guide-feedback__thanks {
+  display: flex;
+  min-height: 50px;
+  padding-right: 28px;
+  align-items: center;
+  gap: 12px;
+}
+
+.hf-guide-feedback__thanks > span {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(114, 221, 160, .12);
+  color: var(--hf-success);
+  font-size: 17px;
+}
+
+.hf-guide-feedback__thanks div { display: grid; }
+.hf-guide-feedback__thanks strong { font-family: "Newsreader Variable", "Newsreader", serif; font-size: 22px; font-weight: 500; }
+.hf-guide-feedback__thanks small { color: var(--hf-muted); font-size: 11px; }
+
+.hf-guide.has-feedback .hf-guide-launcher .hf-guide-avatar img {
+  animation-play-state: paused;
+}
+
 /* Chat shell */
 .hf-guide-shell {
   --hf-head-origin-x: calc(100% - 28px);
@@ -1399,6 +1631,11 @@ body.hf-guide-max-open {
   to { opacity: 1; transform: none; }
 }
 
+@keyframes hf-guide-feedback-in {
+  from { opacity: 0; transform: translateX(16px) scale(.96); }
+  to { opacity: 1; transform: none; }
+}
+
 @keyframes hf-guide-message-in {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
@@ -1475,6 +1712,21 @@ body.hf-guide-max-open {
     min-height: 50px;
     padding: 7px 26px 7px 20px;
     font-size: 11px;
+  }
+
+  .hf-guide-feedback {
+    right: 4px;
+    bottom: 78px;
+    width: min(312px, calc(100vw - 20px));
+    border-radius: 17px 17px 5px 17px;
+  }
+
+  .hf-guide-feedback::after {
+    right: 20px;
+    bottom: -7px;
+    border-top: 0;
+    border-right: 1px solid rgba(255, 255, 255, .15);
+    border-bottom: 1px solid rgba(255, 255, 255, .15);
   }
 
   .hf-guide-shell {
