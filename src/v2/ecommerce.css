@@ -15,9 +15,6 @@
 .commerce-page a:focus-visible, .commerce-page button:focus-visible, .commerce-page summary:focus-visible { outline: 2px solid var(--commerce-blue); outline-offset: 4px; }
 
 .commerce-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(25rem, .9fr); min-height: 100svh; padding: clamp(9rem, 17vh, 12rem) max(1.5rem, calc((100vw - 1180px) / 2)) 3.25rem; overflow: hidden; background: var(--commerce-paper); }
-.commerce-hero__signal { position: absolute; top: 7.4rem; right: max(1.5rem, calc((100vw - 1180px) / 2)); display: flex; gap: .65rem; align-items: center; color: #5b5a55; font: 500 .62rem/1 var(--mono); letter-spacing: .07em; }
-.commerce-hero__signal i { display: block; width: .45rem; height: .45rem; border-radius: 50%; background: var(--commerce-blue); box-shadow: 0 0 0 .35rem rgba(25,72,255,.12); animation: commerce-signal 1.8s cubic-bezier(.4,0,.2,1) infinite; }
-@keyframes commerce-signal { 50% { box-shadow: 0 0 0 .7rem rgba(25,72,255,0); } }
 .commerce-hero__copy { position: relative; z-index: 2; align-self: center; max-width: 48rem; padding-bottom: 2rem; }
 .commerce-hero h1 { max-width: 48rem; margin-bottom: 1.6rem; font-size: clamp(4.2rem, 7vw, 7.7rem); font-weight: 700; line-height: .84; letter-spacing: -.065em; }
 .commerce-hero h1 em { color: var(--commerce-blue); font-family: var(--display); font-weight: 430; }
@@ -158,7 +155,6 @@
 @media (max-width: 700px) {
   .commerce-eyebrow { font-size: .61rem; }
   .commerce-hero { display: block; padding: 8.25rem 1.25rem 4.5rem; }
-  .commerce-hero__signal { top: 6.4rem; right: 1.25rem; }
   .commerce-hero h1 { margin-bottom: 1.35rem; font-size: clamp(3.35rem, 16.3vw, 4.65rem); line-height: .86; }
   .commerce-hero__copy > p { font-size: 1rem; }
   .commerce-actions { align-items: stretch; flex-direction: column; }

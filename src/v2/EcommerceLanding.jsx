@@ -139,8 +139,7 @@ function useCommerceMotion(rootRef) {
           .from(".commerce-hero__copy > small", { autoAlpha: 0, duration: 0.5 }, "-=.38")
           .from(".commerce-hero__index span", { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, "-=.42")
           .from(".commerce-hero__graphic", { scale: 0.88, rotate: -5, autoAlpha: 0, duration: 1.25 }, "-=1")
-          .from(".commerce-signal-card", { y: 38, scale: 0.9, autoAlpha: 0, duration: 0.75, stagger: 0.1 }, "-=.8")
-          .from(".commerce-hero__signal", { x: 18, autoAlpha: 0, duration: 0.55 }, "-=.75");
+          .from(".commerce-signal-card", { y: 38, scale: 0.9, autoAlpha: 0, duration: 0.75, stagger: 0.1 }, "-=.8");
 
         gsap.timeline({
           scrollTrigger: {
@@ -151,8 +150,7 @@ function useCommerceMotion(rootRef) {
           },
         })
           .to(".commerce-hero__copy", { y: -72, autoAlpha: 0.38, ease: "none" }, 0)
-          .to(".commerce-hero__graphic", { y: 92, rotate: 4, ease: "none" }, 0)
-          .to(".commerce-hero__signal", { y: -26, autoAlpha: 0, ease: "none" }, 0);
+          .to(".commerce-hero__graphic", { y: 92, rotate: 4, ease: "none" }, 0);
 
         gsap.from(".commerce-outcomes > header", {
           y: 70,
@@ -325,7 +323,6 @@ export default function EcommerceLanding() {
   return (
     <article className="commerce-page" ref={pageRef}>
       <section className="commerce-hero">
-        <div className="commerce-hero__signal" aria-hidden="true"><span>STORE SIGNAL / ACTIVE</span><i /></div>
         <div className="commerce-hero__copy">
           <h1>Your store should grow <em>without taking more</em> of your week.</h1>
           <p>I build practical AI and automation systems that recover missed revenue, remove repetitive work, and help your team act on the right store signals sooner.</p>
