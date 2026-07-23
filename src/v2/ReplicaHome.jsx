@@ -373,24 +373,8 @@ function useContactLauncher(rootRef, openContact) {
 }
 
 function RisingWordmark({ word }) {
-  const [visible, setVisible] = useState(false);
-  const wordmarkRef = useRef(null);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return undefined;
-    }
-    const observer = new IntersectionObserver(([entry]) => {
-      setVisible(entry.isIntersecting);
-    }, { threshold: 0.08 });
-
-    if (wordmarkRef.current) observer.observe(wordmarkRef.current);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <strong className={`replica-footer__wordmark${visible ? " is-visible" : ""}`} ref={wordmarkRef} aria-hidden="true">
+    <strong className="replica-footer__wordmark" aria-hidden="true">
       <span className="replica-footer__wordmark-text">{word}</span>
     </strong>
   );
@@ -422,6 +406,7 @@ export function EndingSequence() {
     if (!ending) return undefined;
     const cover = ending.querySelector(".replica-ending__cover");
     const under = ending.querySelector(".replica-ending__under");
+    const wordmark = ending.querySelector(".replica-footer__wordmark-text");
     let frame = 0;
     const updateEnding = () => {
       frame = 0;
@@ -431,16 +416,29 @@ export function EndingSequence() {
       const mobileOverlay = window.matchMedia("(max-width: 700px)").matches;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
-        ending.classList.remove("is-footer-visible");
         gsap.set([cover, under], { clearProps: "transform" });
+        gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
         return;
       }
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
+      const wordmarkProgress = Math.min(1, Math.max(0, (reveal - .55) / .45));
+      const riseProgress = Math.min(1, wordmarkProgress / .68);
+      const riseReveal = riseProgress * riseProgress * (3 - (2 * riseProgress));
+      const bounceProgress = Math.max(0, (wordmarkProgress - .68) / .32);
+      const bounceOffset = bounceProgress > 0
+        ? -8 * Math.sin(bounceProgress * Math.PI * 3) * (1 - bounceProgress)
+        : 0;
+      const opacityProgress = Math.min(1, wordmarkProgress / .5);
+      const wordmarkOpacity = opacityProgress * opacityProgress * (3 - (2 * opacityProgress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
-      ending.classList.toggle("is-footer-visible", reveal >= .86);
+      gsap.set(wordmark, {
+        y: bounceOffset,
+        yPercent: 112 * (1 - riseReveal),
+        autoAlpha: wordmarkOpacity,
+      });
     };
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(updateEnding);
@@ -452,8 +450,8 @@ export function EndingSequence() {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
-      ending.classList.remove("is-footer-visible");
       gsap.set([cover, under], { clearProps: "transform" });
+      gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
     };
   }, []);
 

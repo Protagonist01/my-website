@@ -137,7 +137,6 @@ function useCommerceMotion(rootRef) {
           .from(heroText, { y: 54, autoAlpha: 0, duration: 0.95, stagger: 0.09 })
           .from(".commerce-actions", { clipPath: "inset(0 100% 0 0)", autoAlpha: 0, duration: 0.75 }, "-=.58")
           .from(".commerce-hero__copy > small", { autoAlpha: 0, duration: 0.5 }, "-=.38")
-          .from(".commerce-hero__index span", { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, "-=.42")
           .from(".commerce-hero__graphic", { scale: 0.88, rotate: -5, autoAlpha: 0, duration: 1.25 }, "-=1")
           .from(".commerce-signal-card", { y: 38, scale: 0.9, autoAlpha: 0, duration: 0.75, stagger: 0.1 }, "-=.8");
 
@@ -244,16 +243,6 @@ function useCommerceMotion(rootRef) {
               scrub: 1.1,
             },
           });
-          gsap.to(".commerce-phone-orbit", {
-            rotate: conditions.mobile ? 10 : 18,
-            ease: "none",
-            scrollTrigger: {
-              trigger: ".commerce-offers",
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 1.25,
-            },
-          });
         });
       }, root);
 
@@ -289,7 +278,6 @@ function CommercePhone() {
   const offer = offers[active];
   return (
     <div className="commerce-phone-scene" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      <div className="commerce-phone-orbit" aria-hidden="true"><i /><i /><i /></div>
       <div className="commerce-phone" ref={phoneRef} tabIndex="-1" aria-live="polite">
         <div className="commerce-phone__hardware" aria-hidden="true"><span /><i /></div>
         <div className="commerce-phone__screen" key={offer.title}>
@@ -332,11 +320,7 @@ export default function EcommerceLanding() {
           </div>
           <small>Built around your store, stack, and approval rules. No forced platform migration.</small>
         </div>
-        <div className="commerce-hero__index" aria-label="Primary outcomes">
-          <span>Revenue</span><span>Time</span><span>Efficiency</span>
-        </div>
         <div className="commerce-hero__graphic" aria-hidden="true">
-          <div className="commerce-pulse commerce-pulse--one" /><div className="commerce-pulse commerce-pulse--two" />
           <div className="commerce-signal-card commerce-signal-card--revenue"><span>Recovered opportunity</span><strong>Revenue</strong><i>↗</i></div>
           <div className="commerce-signal-card commerce-signal-card--time"><span>Manual steps removed</span><strong>Time</strong><i>−</i></div>
           <div className="commerce-signal-card commerce-signal-card--ops"><span>Next action surfaced</span><strong>Clarity</strong><i>01</i></div>
@@ -365,11 +349,6 @@ export default function EcommerceLanding() {
           <span className="commerce-eyebrow">Seven ways to remove growth friction</span>
           <h2 id="commerce-offers-title">One system for the pressure you feel most.</h2>
           <p>You do not need automation everywhere. You need it where lost revenue or repeated work is already expensive. Start there, prove the value, then expand.</p>
-          <dl>
-            <div><dt>01</dt><dd>Start with evidence</dd></div>
-            <div><dt>02</dt><dd>Keep people in control</dd></div>
-            <div><dt>03</dt><dd>Measure the useful outcome</dd></div>
-          </dl>
         </div>
         <CommercePhone />
       </section>

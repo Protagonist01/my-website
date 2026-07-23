@@ -97,7 +97,7 @@
 
 /* Contact and footer */
 .replica-end-container { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
-.replica-ending { --ending-panel-height: var(--replica-vh); --footer-panel-height: clamp(28rem, 58svh, 36rem); position: relative; height: 212svh; background: #fffffd; }
+.replica-ending { --ending-panel-height: var(--replica-vh); --footer-panel-height: clamp(36rem, 75svh, 42rem); position: relative; height: 212svh; background: #fffffd; }
 .replica-ending__sticky { position: sticky; top: calc(var(--replica-vh) - var(--ending-panel-height)); height: var(--ending-panel-height); overflow: hidden; }
 
 .replica-ending__under { position: absolute; z-index: 1; inset: 0; background: var(--ink); }
@@ -161,15 +161,7 @@
 .replica-footer__contact a { color: var(--light-text); font-size: 16px; text-decoration: none; }
 .replica-footer__contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
 .replica-footer__wordmark { position: absolute; z-index: 1; bottom: -39px; left: 0; display: block; width: max-content; padding-right: .1em; overflow: hidden; color: var(--footer-watermark); font-size: clamp(180px, 25.5vw, 390px); font-weight: 700; line-height: .76; letter-spacing: -.072em; white-space: nowrap; pointer-events: none; user-select: none; }
-.replica-footer__wordmark-text { display: block; opacity: 0; transform: translateY(112%); transition: opacity .25s ease, transform .45s ease; will-change: opacity, transform; }
-.replica-ending.is-footer-visible .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { animation: replica-wordmark-rise 1.8s both; }
-@keyframes replica-wordmark-rise {
-  0% { opacity: 0; transform: translateY(112%); }
-  67% { opacity: 1; transform: translateY(-6px); }
-  82% { opacity: 1; transform: translateY(3px); }
-  93% { opacity: 1; transform: translateY(-1px); }
-  100% { opacity: 1; transform: translateY(0); }
-}
+.replica-footer__wordmark-text { display: block; opacity: 0; transform: translate3d(0, 112%, 0); will-change: opacity, transform; }
 @media (max-width: 900px) {
   .replica-hero__title { width: 86vw; }
   .replica-hero h1 { font-size: clamp(4rem, 9vw, 5rem); }
@@ -248,7 +240,6 @@
   .replica-footer__links h2, .replica-footer__contact h2 { margin-bottom: 14px; }
   .replica-footer__contact a { overflow-wrap: anywhere; }
   .replica-footer__wordmark { position: absolute; bottom: 0; left: 0; width: max-content; margin-top: 0; overflow: hidden; font-size: clamp(76px, 27.7vw, 118px); line-height: 1; }
-  .replica-ending.is-footer-visible .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { animation-name: replica-wordmark-rise; }
 }
 
 @media (max-width: 700px) and (max-height: 700px) {
@@ -297,7 +288,7 @@
 @media (prefers-reduced-motion: reduce) {
   .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__right a span, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
   .replica-nav__links a { animation: none !important; }
-  .replica-footer__wordmark.is-visible .replica-footer__wordmark-text { opacity: 1; transform: none; animation: none; transition: none; }
+  .replica-footer__wordmark-text { opacity: 1; transform: none; animation: none; transition: none; }
   .replica-intro { height: 200vh; }
   .replica-portrait-card { transform: rotateY(180deg); }
   .replica-hero__character { visibility: visible; }
