@@ -40,77 +40,112 @@ const commerceOffers = [
     id: "audit", number: "01", filter: "REVENUE", category: "REVENUE RECOVERY",
     valueLabel: "RANK THE FIRST LEAK", timingLabel: "START HERE", title: "Revenue Leak Audit",
     description: "Audit support, returns, retention, app stack, inventory, reporting, and founder tasks—then rank what to automate first.",
-    ctaLabel: "View case study", href: "/v2/offers/revenue-leak-audit/", year: "2026",
-    challenge: "Store revenue was being lost across disconnected operational signals, with no clear first move.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/revenue-leak-audit/", year: "2026",
+    challenge: "Revenue pressure appears across support, returns, retention, stock, reporting, and founder time—but the most valuable first move is still unclear.",
     approach: "A focused diagnostic brings support, returns, retention, inventory, and reporting pressure into one ranked leak map.",
     impact: "The founder gets one recoverable opportunity, the evidence behind it, and a practical first build path.",
     deliverables: ["Signal audit", "Leak scorecard", "Priority roadmap"],
+    benchmarkValue: "Baseline first",
+    benchmarkLabel: "No market average can identify which operating leak is most expensive in your store.",
+    benchmarkSource: "Measured during the audit",
+    benchmarkNote: "Convert each visible pressure into lost revenue, hours consumed, risk, and implementation effort before choosing a build.",
+    successMetrics: ["Leak value", "Hours consumed", "Payback window"],
     image: offerPortrait("revenue-leak-audit-portrait.webp"), hoverImage: offerAlternate("Revenue_Leak_Audit (1).webp"), imageAlt: "Commerce parcels, receipts, and a magnifying glass representing a revenue leak audit",
   },
   {
     id: "concierge", number: "02", filter: "CUSTOMER", category: "CUSTOMER EXPERIENCE",
     valueLabel: "24/7 GUIDANCE", timingLabel: "CONTROLLED AI", title: "AI Support Concierge",
     description: "Connect AI to policies, products, orders, and helpdesk workflows, with clear escalation whenever a person should take over.",
-    ctaLabel: "View case study", href: "/v2/offers/ai-support-concierge/", year: "2026",
-    challenge: "Repeat product and policy questions were consuming support time while uncertain shoppers still lacked useful guidance.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/ai-support-concierge/", year: "2026",
+    challenge: "Repeat product, order, and policy questions consume support capacity while uncertain shoppers still wait for useful guidance.",
     approach: "A store-aware concierge answers from approved knowledge, recommends within clear rules, and asks before taking action.",
     impact: "Customers move from question to confident next step while the team keeps control of sensitive or unusual cases.",
     deliverables: ["Knowledge layer", "Guided selling", "Action guardrails"],
+    benchmarkValue: "30–45%",
+    benchmarkLabel: "potential productivity value, measured against current customer-care function costs.",
+    benchmarkSource: "McKinsey generative AI research",
+    benchmarkNote: "Establish the current response time, routine-contact share, resolution rate, and escalation quality before automating one bounded request type.",
+    successMetrics: ["First response", "Automated resolution", "Human escalation"],
     image: offerPortrait("ai-support-concierge-portrait.webp"), hoverImage: offerAlternate("AI Support Concierge(1).webp"), imageAlt: "Laptop, phone, headset, and commerce parcels arranged as an AI support desk",
   },
   {
     id: "dashboard", number: "03", filter: "OPERATIONS", category: "FOUNDER OPERATIONS",
     valueLabel: "ONE DAILY VIEW", timingLabel: "LIVE SIGNALS", title: "AI Ops Dashboard",
     description: "Unify revenue, refunds, support backlog, inventory risk, fulfillment, retention, and AI summaries in one operating view.",
-    ctaLabel: "View case study", href: "/v2/offers/ai-ops-dashboard/", year: "2026",
-    challenge: "The founder was checking scattered tools every morning and still discovering urgent exceptions too late.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/ai-ops-dashboard/", year: "2026",
+    challenge: "The operating day starts across scattered tools, yet urgent exceptions can still arrive after they have become expensive.",
     approach: "A single operating view summarizes only what changed across revenue, support, returns, stock, and retention.",
     impact: "Daily decisions become faster because the system surfaces exceptions, context, and the next action together.",
     deliverables: ["Daily brief", "Exception feed", "Decision dashboard"],
+    benchmarkValue: "1 view",
+    benchmarkLabel: "for the exceptions, context, and next actions that currently require a morning tool hunt.",
+    benchmarkSource: "Measured from the current reporting routine",
+    benchmarkNote: "Time the current daily review, count the tools checked, and record how long material exceptions wait before a decision.",
+    successMetrics: ["Reporting time", "Exception response", "Decision lag"],
     image: offerPortrait("ai-ops-dashboard-portrait.webp"), hoverImage: offerAlternate("AI Ops Dashboard (1).webp"), imageAlt: "Miniature commerce operation under glass connected to operational signals",
   },
   {
     id: "retention", number: "04", filter: "REVENUE", category: "LIFECYCLE GROWTH",
     valueLabel: "RELEVANT REPEAT SALES", timingLabel: "POST-PURCHASE", title: "Retention Automation",
     description: "Automate segmentation, replenishment, win-back, VIP, personalized offers, and post-purchase journeys from store data.",
-    ctaLabel: "View case study", href: "/v2/offers/retention-automation/", year: "2026",
-    challenge: "First-time buyers entered generic follow-up flows that ignored what they bought and when they might need help again.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/retention-automation/", year: "2026",
+    challenge: "First-time buyers enter generic follow-up flows that ignore what they bought, why it matters, and when they may need it again.",
     approach: "Purchase events route each customer into education, replenishment, VIP, subscription, or win-back journeys.",
     impact: "Every message has a clear reason to arrive, creating more timely second-purchase opportunities without blanket discounting.",
     deliverables: ["Buyer segments", "Lifecycle routes", "Performance signals"],
+    benchmarkValue: "10–15%",
+    benchmarkLabel: "revenue lift is often associated with effective personalization.",
+    benchmarkSource: "McKinsey personalization research",
+    benchmarkNote: "Measure the current repeat-purchase window and use a holdout group so incremental revenue is separated from sales that would have happened anyway.",
+    successMetrics: ["Repeat purchase", "Revenue per recipient", "Discount reliance"],
     image: offerPortrait("retention-automation-portrait.webp"), hoverImage: offerAlternate("Retention Automation(1).webp"), imageAlt: "Premium packages and a phone connected in a circular customer retention journey",
   },
   {
     id: "inventory", number: "05", filter: "OPERATIONS", category: "INVENTORY CONTROL",
     valueLabel: "SEE STOCK RISK EARLY", timingLabel: "EARLY WARNING", title: "Inventory Intelligence",
     description: "Track SKU velocity, predict stockouts, flag supplier lead times and slow movers, and automate reorder decisions.",
-    ctaLabel: "View case study", href: "/v2/offers/inventory-intelligence/", year: "2026",
-    challenge: "Stockouts, slow movers, and supplier deadlines were being found manually after they had already affected margin.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/inventory-intelligence/", year: "2026",
+    challenge: "Stockouts, slow movers, and supplier deadlines are found manually—often after they have already affected sales or working capital.",
     approach: "Inventory velocity, lead times, campaign demand, and reorder thresholds are monitored as one decision system.",
     impact: "The team sees risk early enough to reorder, protect a campaign, or release cash tied up in slow stock.",
     deliverables: ["Risk monitor", "Reorder logic", "Stock alerts"],
+    benchmarkValue: "At-risk SKUs",
+    benchmarkLabel: "ranked by stockout exposure, weeks of cover, lead time, and cash tied up in slow stock.",
+    benchmarkSource: "Measured from store and supplier data",
+    benchmarkNote: "Start with historical velocity, current cover, supplier lead time, planned demand, and the cost of being wrong in either direction.",
+    successMetrics: ["Stockout exposure", "Weeks of cover", "Slow-stock value"],
     image: offerPortrait("inventory-intelligence-portrait.webp"), hoverImage: offerAlternate("Inventory Intelligience System(1).webp"), imageAlt: "Organized stockroom with parcels, folded goods, and an inventory tablet",
   },
   {
     id: "returns", number: "06", filter: "OPERATIONS", category: "RETURNS OPERATIONS",
     valueLabel: "FASTER CONTROLLED RETURNS", timingLabel: "EXCHANGE FIRST", title: "Returns Automation",
     description: "Guide returns with exchange-first routing, reason analysis, risk scoring, and alerts for suspicious patterns.",
-    ctaLabel: "View case study", href: "/v2/offers/returns-automation/", year: "2026",
-    challenge: "Returns defaulted to slow support threads and refunds, while reasons and exchange opportunities disappeared.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/returns-automation/", year: "2026",
+    challenge: "Returns default to slow support threads and refunds while exchange opportunities and useful reason data disappear.",
     approach: "A guided path identifies the order, checks policy, captures the reason, and offers a suitable exchange before refund.",
     impact: "Straightforward returns take minutes, risky cases reach a person, and more revenue stays with the store.",
     deliverables: ["Guided intake", "Policy checks", "Exchange routing"],
+    benchmarkValue: "19.3%",
+    benchmarkLabel: "of online sales were estimated to be returned in 2025.",
+    benchmarkSource: "NRF 2025 retail returns report",
+    benchmarkNote: "Replace the industry benchmark with your return rate, handling time, exchange rate, refund value, and most common return reasons.",
+    successMetrics: ["Exchange conversion", "Resolution time", "Refund value retained"],
     image: offerPortrait("returns-automation-portrait.webp"), hoverImage: offerAlternate("Returns Automation(1).webp"), imageAlt: "Returned clothing, packages, labels, and a checklist arranged for processing",
   },
   {
     id: "custom", number: "07", filter: "OPERATIONS", category: "CUSTOM SYSTEMS",
     valueLabel: "STORE-SPECIFIC", timingLabel: "BUILT TO FIT", title: "Custom Automation",
     description: "Connect Shopify webhooks, APIs, internal tools, reporting, and data sync where off-the-shelf apps stop short.",
-    ctaLabel: "View case study", href: "/v2/offers/custom-automation/", year: "2026",
-    challenge: "Important store work lived between tools, leaving the team to copy data and notice exceptions by hand.",
+    ctaLabel: "Explore outcome model", href: "/v2/offers/custom-automation/", year: "2026",
+    challenge: "Important store work lives between tools, leaving the team to copy data, repeat checks, and notice exceptions by hand.",
     approach: "The real bottleneck is mapped first, then a controlled workflow connects events, rules, approvals, and reporting.",
     impact: "A store-specific system removes repeated work without forcing the operation into another generic platform.",
     deliverables: ["Workflow map", "System integration", "Control layer"],
+    benchmarkValue: "Hours / week",
+    benchmarkLabel: "spent moving information between systems, checking status, and repairing preventable errors.",
+    benchmarkSource: "Measured during workflow discovery",
+    benchmarkNote: "Observe the complete handoff, including waiting, rework, approvals, exceptions, and the cost of a missed step.",
+    successMetrics: ["Hours removed", "Error rate", "Exception cycle time"],
     image: offerPortrait("custom-automations-portrait.webp"), hoverImage: offerAlternate("Custom Automations(1).webp"), imageAlt: "Commerce storefront model connected to a custom automation network",
   },
 ];
@@ -1449,9 +1484,9 @@ function OfferCaseStudy({ offer }) {
   const position = commerceOffers.findIndex((item) => item.id === offer.id);
   const next = commerceOffers[(position + 1) % commerceOffers.length];
   const phases = [
-    ["01", "Evidence", "Map the signals behind the operating pressure."],
-    ["02", "Control", offer.approach],
-    ["03", "Delivery", "Package the agreed system, handoff, and operating notes."],
+    ["01", "Baseline", "Measure the current signal, cost, and failure pattern before changing the workflow."],
+    ["02", "Intervention", offer.approach],
+    ["03", "Proof", "Compare the agreed success measures before and after, then expand only when the value is visible."],
   ];
 
   return (
@@ -1474,13 +1509,31 @@ function OfferCaseStudy({ offer }) {
       <ExperienceNav offer />
 
       <section className="v2-offer-case__overview" id="overview" data-reveal data-story-sequence="pin">
-        <span>01 / Operating problem</span>
+        <span>01 / Commercial pressure</span>
         <p>{offer.challenge}</p>
         <dl>
           <div><dt>Focus</dt><dd>{offer.category}</dd></div>
-          <div><dt>Signals</dt><dd>{offer.timingLabel}</dd></div>
+          <div><dt>Start</dt><dd>{offer.timingLabel}</dd></div>
           <div><dt>Deliverables</dt><dd>{offer.deliverables.join(" / ")}</dd></div>
         </dl>
+      </section>
+
+      <section className="v2-offer-case__commercial" data-reveal data-story-sequence aria-labelledby={`${offer.id}-commercial-title`}>
+        <article className="v2-offer-case__benchmark">
+          <span>Research signal</span>
+          <strong>{offer.benchmarkValue}</strong>
+          <p>{offer.benchmarkLabel}</p>
+          <small>{offer.benchmarkSource}</small>
+        </article>
+        <article className="v2-offer-case__baseline">
+          <span>Your baseline</span>
+          <h2 id={`${offer.id}-commercial-title`}>Replace the benchmark with store evidence.</h2>
+          <p>{offer.benchmarkNote}</p>
+        </article>
+        <article className="v2-offer-case__measures">
+          <span>Success measures</span>
+          <ol>{offer.successMetrics.map((metric, index) => <li key={metric}><small>0{index + 1}</small><strong>{metric}</strong></li>)}</ol>
+        </article>
       </section>
 
       <DecisionReplay />
@@ -1492,7 +1545,7 @@ function OfferCaseStudy({ offer }) {
       </section>
 
       <section className="v2-offer-case__result">
-        <span>Outcome</span><p>{offer.impact}</p><a href="/v2/contact/" data-contact-context={`I'm interested in ${offer.title}.`}>Discuss this system <Arrow /></a>
+        <span>Outcome to prove</span><p>{offer.impact}</p><a href="/v2/contact/" data-contact-context={`I'm interested in ${offer.title}.`}>Discuss this system <Arrow /></a>
       </section>
 
       <AnnotatedArtifactExplorer image={offer.hoverImage || offer.image} alt={`${offer.title} annotated system artifact`} />

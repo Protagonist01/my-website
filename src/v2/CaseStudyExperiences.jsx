@@ -125,43 +125,43 @@ const projectMeta = {
 
 const offerMeta = {
   audit: {
-    proof: "Interactive diagnostic preview",
+    proof: "Evidence-led diagnostic model",
     fit: ["Operational issues appear across several tools.", "The team knows time is being lost but not where to begin.", "You need a ranked first move before investing in a build."],
     deliverables: ["Signal audit", "Leak scorecard", "Priority roadmap"],
     cta: "Start a revenue leak audit",
   },
   concierge: {
-    proof: "Controlled AI scenario",
+    proof: "Research-backed support model",
     fit: ["Support repeats product and policy answers.", "Customers need guidance before they purchase.", "Sensitive cases must still reach a person."],
     deliverables: ["Knowledge layer", "Guided-selling flows", "Escalation rules"],
     cta: "Plan an AI support concierge",
   },
   dashboard: {
-    proof: "Interactive operations scenario",
+    proof: "Measured operations model",
     fit: ["Daily checks are spread across several tools.", "Urgent exceptions are discovered too late.", "The team needs decisions, not another wall of metrics."],
     deliverables: ["Daily brief", "Exception feed", "Decision dashboard"],
     cta: "Design my daily operations view",
   },
   retention: {
-    proof: "Interactive lifecycle scenario",
+    proof: "Research-backed retention model",
     fit: ["Every buyer receives the same follow-up.", "Replenishment timing is currently estimated manually.", "Discounts are used where relevance should do the work."],
     deliverables: ["Buyer segments", "Lifecycle routes", "Performance signals"],
     cta: "Map my retention system",
   },
   inventory: {
-    proof: "Modeled inventory scenario",
+    proof: "Measured inventory model",
     fit: ["Stock risk is found after it affects sales.", "Lead times and campaign demand are tracked separately.", "Slow stock is tying up cash."],
     deliverables: ["Risk monitor", "Reorder logic", "Stock alerts"],
     cta: "Build inventory intelligence",
   },
   returns: {
-    proof: "Interactive returns scenario",
+    proof: "Research-backed returns model",
     fit: ["Returns become long support threads.", "Refund is the default even when exchange is suitable.", "Return reasons are not becoming operational insight."],
     deliverables: ["Guided intake", "Policy checks", "Exchange routing"],
     cta: "Automate my returns path",
   },
   custom: {
-    proof: "Interactive workflow model",
+    proof: "Measured workflow model",
     fit: ["Important work happens between existing tools.", "People repeatedly copy data or monitor exceptions.", "Off-the-shelf apps stop before the real bottleneck."],
     deliverables: ["Workflow map", "System integration", "Control layer"],
     cta: "Map a custom automation",
@@ -313,9 +313,9 @@ export function CaseExperienceProvider({ id, title, offer = false, children }) {
   const [personalization, setPersonalization] = useState(validRestored?.personalization || {});
   const [scenario, setScenario] = useState(validRestored?.scenario || {});
   const [result, setResult] = useState({
-    headline: offer ? "A practical first route is ready to model." : "A practical product decision is ready to inspect.",
-    metric: "Interactive scenario",
-    summary: "Use the controls to create a case-specific result.",
+    headline: offer ? "A measurable first intervention is ready to model." : "A practical product decision is ready to inspect.",
+    metric: offer ? "Outcome model" : "Interactive scenario",
+    summary: offer ? "Use the controls to test how the operating model responds to your inputs." : "Use the controls to create a case-specific result.",
     formAnswers: [],
   });
 
@@ -338,22 +338,22 @@ export function CaseExperienceProvider({ id, title, offer = false, children }) {
   }, [blueprint, updateScenario]);
 
   const contextLabel = useMemo(() => {
-    if (!personalized) return "Illustrative case configuration";
+    if (!personalized) return offer ? "Research-backed starting model" : "Illustrative case configuration";
     const values = Object.values(personalization).filter(Boolean).slice(0, 2);
     return values.length ? values.join(" / ") : "Your configured scenario";
-  }, [personalization, personalized]);
+  }, [offer, personalization, personalized]);
 
   const brief = useMemo(() => {
     const lensCopy = blueprint?.lenses?.[lens];
     return [
       `${title} — ${experienceViews[lens].label}`,
-      personalized ? `Configured for: ${contextLabel}` : "Configuration: Illustrative case scenario",
+      personalized ? `Configured for: ${contextLabel}` : offer ? "Configuration: Research-backed outcome model" : "Configuration: Illustrative case scenario",
       `${result.metric}: ${result.headline}`,
       result.summary,
       lensCopy?.copy,
-      "This is an illustrative portfolio configuration, not a measured client forecast.",
+      offer ? "This model uses market research and configured inputs; it is not a measured client forecast." : "This is an illustrative portfolio configuration, not a measured client forecast.",
     ].filter(Boolean).join("\n\n");
-  }, [blueprint, contextLabel, lens, personalized, result, title]);
+  }, [blueprint, contextLabel, lens, offer, personalized, result, title]);
 
   const buildShareUrl = useCallback(() => {
     const url = new URL(window.location.href);
@@ -394,9 +394,9 @@ function ExperienceControlDeck() {
     <div className="v2-lens-switch">
       <div className="v2-lens-switch__intro">
         <span>Choose what you want to understand</span>
-        <p>The same case, explained from two useful angles.</p>
+        <p>{experience.offer ? "The same outcome model, explained from two useful angles." : "The same case, explained from two useful angles."}</p>
       </div>
-      <div className="v2-lens-switch__options" role="group" aria-label="Choose what this case study explains">
+      <div className="v2-lens-switch__options" role="group" aria-label={experience.offer ? "Choose what this outcome model explains" : "Choose what this case study explains"}>
         {Object.entries(experienceViews).map(([value, view]) => <button type="button" className={lens === value ? "is-active" : ""} aria-pressed={lens === value} onClick={() => setLens(value)} key={value}>
           <span>{view.label}</span><small>{view.description}</small>
         </button>)}
@@ -533,10 +533,10 @@ export function ProofCheckpoint() {
       <small>{experience.result.metric}</small>
       <h2 id={`${experience.id}-proof-title`}>{experience.result.headline}</h2>
       <p>{experience.result.summary}</p>
-      <strong>{experience.personalized ? `Based on ${experience.contextLabel}` : "This is an illustrative example. Add your details above to make it specific."}</strong>
+      <strong>{experience.personalized ? `Based on ${experience.contextLabel}` : experience.offer ? "Research-backed starting model. Add your store details above, then validate it against live operating data." : "This is an illustrative example. Add your details above to make it specific."}</strong>
     </div>
     <div className="v2-proof-checkpoint__actions">
-      <button type="button" className="v2-action v2-action--primary" onClick={discuss}>Discuss this exact scenario <span aria-hidden="true">↓</span></button>
+      <button type="button" className="v2-action v2-action--primary" onClick={discuss}>{experience.offer ? "Discuss this outcome model" : "Discuss this exact scenario"} <span aria-hidden="true">↓</span></button>
       <button type="button" className="v2-action v2-action--secondary" onClick={copyBrief}>Copy the summary</button>
       <a className="v2-action v2-action--text" href={emailHref}>Email it</a>
       <button type="button" className="v2-action v2-action--text" onClick={copyLink}>Copy a link to this result</button>
@@ -568,7 +568,7 @@ export function ExperienceNav({ offer = false, hasGallery = false }) {
   const [open, setOpen] = useState(false);
   const navRef = useRef(null);
   const items = useMemo(() => offer
-    ? [["overview", "The problem", "01"], ["decisions", "The reasoning", "02"], ["process", "The approach", "04"], ["artifact", "See the work", "06"], ["fit", "Is it a fit?", "08"], ["discuss", "Start a project", "09"]]
+    ? [["overview", "The pressure", "01"], ["decisions", "The reasoning", "02"], ["process", "The proof plan", "04"], ["artifact", "Inspect the system", "06"], ["fit", "Is it a fit?", "08"], ["discuss", "Start a project", "09"]]
     : [
         ["outcome", "The outcome"],
         ["problem", "The problem"],
@@ -647,7 +647,7 @@ export function ExperienceNav({ offer = false, hasGallery = false }) {
     setOpen(false);
   };
 
-  return <nav ref={navRef} className={`v2-case-nav${open ? " is-open" : ""}`} aria-label="Case study story">
+  return <nav ref={navRef} className={`v2-case-nav${open ? " is-open" : ""}`} aria-label={offer ? "Offer outcome model" : "Case study story"}>
     <div className="v2-case-nav__current">
       <span>{items[active][2]} / {items[items.length - 1][2]}</span>
       <strong>{items[active][1]}</strong>

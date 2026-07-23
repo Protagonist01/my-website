@@ -90,11 +90,65 @@ const outcomes = [
   },
 ];
 
+const outcomeModels = [
+  {
+    number: "01",
+    pressure: "Checkout friction",
+    benchmark: "17%",
+    benchmarkLabel: "of shoppers abandoned an order because checkout felt too long or complicated.",
+    source: "Baymard checkout research",
+    problem: "High-intent shoppers still hesitate when product, delivery, fit, or return questions remain unresolved at the point of purchase.",
+    system: "Test a guided buying and cart-recovery path that answers from approved store data, removes preventable friction, and returns qualified shoppers to checkout.",
+    measures: ["Checkout completion", "Assist-to-order conversion", "Recovered revenue"],
+  },
+  {
+    number: "02",
+    pressure: "Customer care",
+    benchmark: "30–45%",
+    benchmarkLabel: "potential productivity value, measured against current customer-care function costs.",
+    source: "McKinsey generative AI research",
+    problem: "Order status, policy, product, and delivery questions consume the queue while complex customers wait for human judgment.",
+    system: "Test a store-aware concierge that resolves approved routine requests, retrieves the right context, and escalates uncertainty with the full history attached.",
+    measures: ["First-response time", "Automated resolution", "Hours returned"],
+  },
+  {
+    number: "03",
+    pressure: "Online returns",
+    benchmark: "19.3%",
+    benchmarkLabel: "of online sales were estimated to be returned in 2025.",
+    source: "NRF 2025 retail returns report",
+    problem: "Slow, refund-first return paths lose revenue, create support work, and hide the reasons products keep coming back.",
+    system: "Test a guided, exchange-first return path with policy checks, reason capture, fraud signals, and a clear handoff for risky exceptions.",
+    measures: ["Exchange conversion", "Resolution time", "Refund value retained"],
+  },
+  {
+    number: "04",
+    pressure: "Repeat purchase",
+    benchmark: "10–15%",
+    benchmarkLabel: "revenue lift is often associated with effective personalization.",
+    source: "McKinsey personalization research",
+    problem: "Generic post-purchase and win-back flows ignore what the customer bought, when they may need it again, and why they might return.",
+    system: "Test purchase-triggered education, replenishment, VIP, and win-back journeys against a holdout so relevance—not blanket discounting—does the work.",
+    measures: ["Repeat-purchase rate", "Revenue per recipient", "Discount reliance"],
+  },
+];
+
+const auditTerms = [
+  ["Scope", "One operating pressure, the evidence behind it, and the first decision the system should improve."],
+  ["Outputs", "A signal audit, leak scorecard, and priority roadmap you can use before committing to a larger build."],
+  ["Commercial terms", "Fee, timeline, required access, and exclusions are agreed in writing before work begins."],
+  ["Store safety", "Diagnosis starts without changing live storefront behavior. Build access is added only when the agreed system needs it."],
+];
+
 const faqs = [
   ["Do I need to replace my current apps?", "Usually, no. The first goal is to make your current stack work together. I only recommend replacing a tool when it is clearly causing the bottleneck."],
   ["Is this only for Shopify stores?", "Shopify is the strongest fit, but the same approach can work for other commerce stacks when the required APIs, webhooks, and data are available."],
   ["Where do we start?", "With a focused conversation about the operational pressure you can already see. If the first move is unclear, the Revenue Leak Audit ranks the opportunities before anything is built."],
   ["Will AI make decisions without us?", "Not where judgment or risk matters. Approval steps, escalation rules, logs, and clear boundaries are designed into the system from the start."],
+  ["How are timeline and cost decided?", "After a focused discovery, you receive a written scope that names the deliverables, timeline, fee, required access, and what is not included. If the first build is still unclear, the Revenue Leak Audit is the smaller diagnostic step."],
+  ["What access do you need?", "The work starts with the least access needed. A diagnosis can use walkthroughs, screenshots, exports, and existing documentation. Live credentials are only introduced when an agreed integration requires them."],
+  ["How is customer data handled?", "The system is designed around least-privilege access, approved data sources, clear retention boundaries, and human approval where an action could affect a customer, order, refund, or account. The exact controls are documented for your stack before implementation."],
+  ["What happens after I contact you?", "Henry replies directly within one business day. You will get the next useful step: the first evidence to inspect, a small set of follow-up questions, or an honest note when the work is not a fit."],
 ];
 
 function Arrow() {
@@ -166,6 +220,21 @@ function useCommerceMotion(rootRef) {
           ease: "power3.out",
           scrollTrigger: { trigger: ".commerce-outcomes > div", start: "top 78%" },
         });
+        gsap.from(".commerce-proof > header", {
+          y: 64,
+          autoAlpha: 0,
+          duration: 1,
+          ease: "power4.out",
+          scrollTrigger: { trigger: ".commerce-proof > header", start: "top 76%" },
+        });
+        gsap.from(".commerce-proof__grid article", {
+          y: 82,
+          autoAlpha: 0,
+          duration: 0.95,
+          stagger: 0.12,
+          ease: "power3.out",
+          scrollTrigger: { trigger: ".commerce-proof__grid", start: "top 80%" },
+        });
         gsap.from(".commerce-offers__copy", {
           x: -58,
           autoAlpha: 0,
@@ -180,6 +249,14 @@ function useCommerceMotion(rootRef) {
           duration: 1.25,
           ease: "power4.out",
           scrollTrigger: { trigger: ".commerce-phone-scene", start: "top 84%" },
+        });
+        gsap.from(".commerce-entry__copy, .commerce-entry__terms", {
+          y: 78,
+          autoAlpha: 0,
+          duration: 1,
+          stagger: 0.13,
+          ease: "power4.out",
+          scrollTrigger: { trigger: ".commerce-entry", start: "top 74%" },
         });
         gsap.from(".commerce-path > header", {
           y: 70,
@@ -316,9 +393,9 @@ export default function EcommerceLanding() {
           <p>I build practical AI and automation systems that recover missed revenue, remove repetitive work, and help your team act on the right store signals sooner.</p>
           <div className="commerce-actions">
             <a className="commerce-button commerce-button--primary" href="/v2/contact/" data-contact-context="I'd like to find the highest-value automation opportunity in my e-commerce operation.">Find my first opportunity <Arrow /></a>
-            <a className="commerce-button commerce-button--text" href="#offers">See the systems <span aria-hidden="true">↓</span></a>
+            <a className="commerce-button commerce-button--text" href="#proof">See outcome models <span aria-hidden="true">↓</span></a>
           </div>
-          <small>Built around your store, stack, and approval rules. No forced platform migration.</small>
+          <small>Direct reply from Henry within one business day. No forced platform migration.</small>
         </div>
         <div className="commerce-hero__graphic" aria-hidden="true">
           <div className="commerce-signal-card commerce-signal-card--revenue"><span>Recovered opportunity</span><strong>Revenue</strong><i>↗</i></div>
@@ -344,6 +421,42 @@ export default function EcommerceLanding() {
         </div>
       </section>
 
+      <section className="commerce-proof" id="proof" aria-labelledby="commerce-proof-title">
+        <header data-reveal>
+          <div>
+            <span className="commerce-eyebrow">Research-backed outcome models</span>
+            <h2 id="commerce-proof-title">Four pressures worth measuring before you automate.</h2>
+          </div>
+          <p>These are market opportunity signals, not claims about past client results. The first job is to replace each benchmark with your store's baseline, then prove whether the system changes it.</p>
+        </header>
+        <div className="commerce-proof__grid">
+          {outcomeModels.map((model) => (
+            <article className="commerce-proof__model" data-reveal key={model.number}>
+              <header>
+                <span>{model.number} / {model.pressure}</span>
+                <small>{model.source}</small>
+              </header>
+              <div className="commerce-proof__benchmark">
+                <strong>{model.benchmark}</strong>
+                <p>{model.benchmarkLabel}</p>
+              </div>
+              <div className="commerce-proof__model-detail">
+                <span>Where the value leaks</span>
+                <p>{model.problem}</p>
+              </div>
+              <div className="commerce-proof__model-detail">
+                <span>System to test</span>
+                <p>{model.system}</p>
+              </div>
+              <footer>
+                <span>Prove it with</span>
+                <ul>{model.measures.map((measure) => <li key={measure}>{measure}</li>)}</ul>
+              </footer>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="commerce-offers" id="offers" aria-labelledby="commerce-offers-title">
         <div className="commerce-offers__copy" data-reveal>
           <span className="commerce-eyebrow">Seven ways to remove growth friction</span>
@@ -351,6 +464,25 @@ export default function EcommerceLanding() {
           <p>You do not need automation everywhere. You need it where lost revenue or repeated work is already expensive. Start there, prove the value, then expand.</p>
         </div>
         <CommercePhone />
+      </section>
+
+      <section className="commerce-entry" aria-labelledby="commerce-entry-title">
+        <div className="commerce-entry__copy" data-reveal>
+          <span className="commerce-eyebrow">Recommended when the first build is unclear</span>
+          <strong>Revenue Leak Audit</strong>
+          <h2 id="commerce-entry-title">Know what deserves investment before you automate it.</h2>
+          <p>The audit turns scattered pressure across support, returns, retention, inventory, reporting, and founder work into one ranked first move. You leave with the evidence, assumptions, and practical build path—not a list of fashionable AI ideas.</p>
+          <div className="commerce-entry__actions">
+            <a href="/v2/contact/" data-contact-context="I'd like a written scope for a Revenue Leak Audit for my e-commerce operation.">Request my audit scope <Arrow /></a>
+            <a href="/v2/offers/revenue-leak-audit/">Inspect the audit deliverables <span aria-hidden="true">→</span></a>
+          </div>
+          <small>If an audit is not the right first move, I will say so.</small>
+        </div>
+        <dl className="commerce-entry__terms" data-reveal>
+          {auditTerms.map(([term, description], index) => (
+            <div key={term}><dt>{String(index + 1).padStart(2, "0")} / {term}</dt><dd>{description}</dd></div>
+          ))}
+        </dl>
       </section>
 
       <section className="commerce-path" aria-labelledby="commerce-path-title">
@@ -395,10 +527,11 @@ export default function EcommerceLanding() {
       </section>
 
       <section className="commerce-final" data-reveal>
-        <span className="commerce-eyebrow">Your first move</span>
-        <h2>Find the system that gives your store the most leverage now.</h2>
-        <p>Tell me where revenue, time, or operational clarity is under pressure. I’ll help you identify the most practical place to begin.</p>
-        <a href="/v2/contact/" data-contact-context="I'd like to identify the best first e-commerce system to build.">Find my first opportunity <Arrow /></a>
+        <span className="commerce-eyebrow">A useful first reply, not a sales sequence</span>
+        <h2>Find the first commerce problem worth fixing.</h2>
+        <p>Tell me where revenue, time, or operational clarity is under pressure. Within one business day, I’ll reply with the first evidence I would inspect and the most practical next step.</p>
+        <a href="/v2/contact/" data-contact-context="I'd like to identify the best first e-commerce system to build.">Show me where to start <Arrow /></a>
+        <small>Direct reply from Henry. If there is no strong fit, you will know.</small>
       </section>
     </article>
   );
