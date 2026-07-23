@@ -169,7 +169,7 @@
   .referral-value, .referral-steps, .referral-rules, .referral-payouts, .referral-apply, .referral-dashboard-page { padding-right: 1.25rem; padding-left: 1.25rem; }
   .referral-value h2, .referral-steps h2, .referral-rules h2, .referral-payouts h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
   .referral-example { grid-template-columns: 1fr; }
-  .referral-example > i { transform: rotate(90deg); }
+  .referral-example > i { display: none; }
   .referral-steps ol, .referral-rules__grid, .referral-workspace-grid { grid-template-columns: 1fr; }
   .referral-steps li { min-height: 18rem; border-right: 0; }
   .referral-rules__grid article { min-height: 18rem; }
