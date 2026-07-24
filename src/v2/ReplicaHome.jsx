@@ -229,7 +229,35 @@ function SocialLinks() {
   );
 }
 
-function ContactForm({ initialProject = "", formId = "replica" }) {
+function getContactVariant(initialProject = "") {
+  const commerceIntent = /e-?commerce|shopify|store|revenue|returns|retention|inventory|commerce audit/i.test(initialProject);
+  if (!commerceIntent) {
+    return {
+      heading: replicaContent.contact.heading,
+      introduction: replicaContent.contact.introduction,
+      projectLabel: "Role or project",
+      projectPlaceholder: "Tell me about the opportunity",
+      submitLabel: "Send project brief",
+      successTitle: "Project brief received",
+      successSubtitle: "Thanks. I'll reply within one business day with a focused next step.",
+      source: "V2 primary contact form",
+    };
+  }
+  return {
+    eyebrow: "Commerce AI & automation",
+    heading: "Find your first commerce opportunity.",
+    introduction: "Share the store pressure you can already see. I’ll reply with the first evidence I would inspect and the smallest useful next step.",
+    projectLabel: "Where is the store under pressure?",
+    projectPlaceholder: "Support, returns, retention, inventory, reporting, margin, or repeated founder work…",
+    submitLabel: "Send commerce brief",
+    promise: "Direct reply from Henry within one business day. No generic discovery deck.",
+    successTitle: "Commerce brief received",
+    successSubtitle: "I’ll review the pressure point and reply with the first evidence to inspect and the most practical next step.",
+    source: "V2 commerce contact form",
+  };
+}
+
+function ContactForm({ initialProject = "", formId = "replica", variant }) {
   const [status, setStatus] = useState("idle");
   const [errors, setErrors] = useState({});
   const formRef = useRef(null);
@@ -267,7 +295,7 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
         name: formData.get("name"),
         email: formData.get("email"),
         description: formData.get("description"),
-        source: "V2 primary contact form",
+        source: variant.source,
       });
       form?.reset();
       setErrors({});
@@ -283,6 +311,7 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
     <>
       <form ref={formRef} className="replica-contact-form" onSubmit={submit} noValidate>
         <input type="hidden" name="inquiry_context" value={initialProject} />
+        {variant.promise && <p className="replica-contact-form__promise">{variant.promise}</p>}
         <div className="replica-field">
           <label htmlFor={`${formId}-name`}>Name</label>
           <input id={`${formId}-name`} name="name" placeholder="Enter your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-name-error` : undefined} />
@@ -294,27 +323,28 @@ function ContactForm({ initialProject = "", formId = "replica" }) {
           {errors.email && <span className="replica-field__error" id={`${formId}-email-error`}>{errors.email}</span>}
         </div>
         <div className="replica-field replica-field--project">
-          <label htmlFor={`${formId}-project`}>Role or project</label>
-          <textarea id={`${formId}-project`} name="description" placeholder="Tell me about the opportunity" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
+          <label htmlFor={`${formId}-project`}>{variant.projectLabel}</label>
+          <textarea id={`${formId}-project`} name="description" placeholder={variant.projectPlaceholder} aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
           {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
         </div>
-        <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : "Submit"}</button>
+        <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : variant.submitLabel}</button>
         <p className="replica-contact-form__status" aria-live="polite">{status === "error" ? `Unable to send. Email ${replicaContent.contact.email}.` : ""}</p>
       </form>
-      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Thanks. I'll get back to you soon." onClose={() => { formRef.current?.reset(); setErrors({}); setStatus("idle"); }} />}
+      {status === "sent" && <ConfettiSuccess title={variant.successTitle} subtitle={variant.successSubtitle} onClose={() => { formRef.current?.reset(); setErrors({}); setStatus("idle"); }} />}
     </>
   );
 }
 
 export function ContactSection({ sectionId = "contact", initialProject = "", formId = "contact" }) {
+  const variant = getContactVariant(initialProject);
   return (
-    <section className="replica-contact" id={sectionId || undefined}>
+    <section className={`replica-contact${variant.eyebrow ? " replica-contact--commerce" : ""}`} id={sectionId || undefined}>
       <div className="replica-end-container replica-contact__grid">
         <div className="replica-contact__copy">
-          <div><h2>{replicaContent.contact.heading}</h2><p>{replicaContent.contact.introduction}</p></div>
+          <div>{variant.eyebrow && <span className="replica-contact__eyebrow">{variant.eyebrow}</span>}<h2>{variant.heading}</h2><p>{variant.introduction}</p></div>
           <SocialLinks />
         </div>
-        <ContactForm initialProject={initialProject} formId={formId} />
+        <ContactForm initialProject={initialProject} formId={formId} variant={variant} />
       </div>
     </section>
   );
@@ -327,6 +357,7 @@ export function ContactOverlay({ open, onClose, initialProject = "" }) {
     if (!open) return undefined;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.classList.add("is-contact-modal-open");
     const closeOnEscape = (event) => {
       if (event.key === "Escape") onClose();
     };
@@ -334,6 +365,7 @@ export function ContactOverlay({ open, onClose, initialProject = "" }) {
     window.requestAnimationFrame(() => closeRef.current?.focus());
     return () => {
       document.body.style.overflow = previousOverflow;
+      document.body.classList.remove("is-contact-modal-open");
       document.removeEventListener("keydown", closeOnEscape);
     };
   }, [open, onClose]);
@@ -408,6 +440,29 @@ export function EndingSequence() {
     const under = ending.querySelector(".replica-ending__under");
     const wordmark = ending.querySelector(".replica-footer__wordmark-text");
     let frame = 0;
+    let floorReached = false;
+    let wordmarkMotion = null;
+    gsap.set(wordmark, { y: 0, yPercent: 112, autoAlpha: 0 });
+    const raiseWordmark = () => {
+      wordmarkMotion?.kill();
+      wordmarkMotion = gsap.timeline()
+        .set(wordmark, { y: 0 })
+        .to(wordmark, { yPercent: 0, autoAlpha: 1, duration: 1.8, ease: "power2.out" })
+        .to(wordmark, { y: -18, duration: .22, ease: "power2.out" })
+        .to(wordmark, { y: 0, duration: .24, ease: "power2.in" })
+        .to(wordmark, { y: -10, duration: .18, ease: "power2.out" })
+        .to(wordmark, { y: 0, duration: .2, ease: "power2.in" })
+        .to(wordmark, { y: -5, duration: .14, ease: "power2.out" })
+        .to(wordmark, { y: 0, duration: .17, ease: "power2.in" })
+        .to(wordmark, { y: -2, duration: .11, ease: "power2.out" })
+        .to(wordmark, { y: 0, duration: .14, ease: "power2.in" });
+    };
+    const lowerWordmark = () => {
+      wordmarkMotion?.kill();
+      wordmarkMotion = gsap.timeline()
+        .set(wordmark, { y: 0 })
+        .to(wordmark, { yPercent: 112, autoAlpha: 0, duration: 1, ease: "power2.in" });
+    };
     const updateEnding = () => {
       frame = 0;
       const rect = ending.getBoundingClientRect();
@@ -423,22 +478,15 @@ export function EndingSequence() {
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
-      const wordmarkProgress = Math.min(1, Math.max(0, (reveal - .55) / .45));
-      const riseProgress = Math.min(1, wordmarkProgress / .68);
-      const riseReveal = riseProgress * riseProgress * (3 - (2 * riseProgress));
-      const bounceProgress = Math.max(0, (wordmarkProgress - .68) / .32);
-      const bounceOffset = bounceProgress > 0
-        ? -8 * Math.sin(bounceProgress * Math.PI * 3) * (1 - bounceProgress)
-        : 0;
-      const opacityProgress = Math.min(1, wordmarkProgress / .5);
-      const wordmarkOpacity = opacityProgress * opacityProgress * (3 - (2 * opacityProgress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
-      gsap.set(wordmark, {
-        y: bounceOffset,
-        yPercent: 112 * (1 - riseReveal),
-        autoAlpha: wordmarkOpacity,
-      });
+      if (progress >= .995 && !floorReached) {
+        floorReached = true;
+        raiseWordmark();
+      } else if (progress < .985 && floorReached) {
+        floorReached = false;
+        lowerWordmark();
+      }
     };
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(updateEnding);
@@ -450,6 +498,7 @@ export function EndingSequence() {
       if (frame) window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
+      wordmarkMotion?.kill();
       gsap.set([cover, under], { clearProps: "transform" });
       gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
     };
