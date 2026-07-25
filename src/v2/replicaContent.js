@@ -7,10 +7,10 @@ export const replicaContent = {
   aboutHeading: "Hey!",
   shortIntro: "I’m Henry, a software and AI engineer working with teams worldwide.",
   biography: [
-    "I build dependable AI products and software systems.",
-    "I turn complex ideas into products teams can use and trust.",
+    "I build dependable AI products and software systems for real business needs.",
+    "I turn complex ideas into products teams can use, trust, and grow with.",
   ],
-  statement: "From idea to launch. AI and software engineering shaped into clean, scalable digital products that move fast, stay simple, and perform in real-world use.",
+  statement: "From idea to launch. I shape AI and software into clean, scalable products that move fast, stay simple, perform in real use, and support business growth.",
   services: [
     { title: "AI Engineering & Agent Systems", details: ["RAG & Agents", "Tool Use", "Evaluation & Guardrails"], href: "/v2/services/ai-engineering/" },
     { title: "Machine Learning & Data Products", details: ["Predictive ML", "Analytics", "Data Pipelines"], href: "/v2/services/machine-learning/" },
@@ -19,8 +19,8 @@ export const replicaContent = {
   ],
   navigation: [
     { label: "Home", href: "/" },
-    { label: "About Me", href: "/#about" },
-    { label: "Services", href: "/#services" },
+    { label: "About", href: "/#about" },
+    { label: "What I do", href: "/#services" },
     { label: "Featured Projects", href: "/#work" },
     { label: "E-Commerce", href: "/v2/ecommerce/" },
     { label: "Referral Programme", href: "/v2/referrals/" },
@@ -28,7 +28,7 @@ export const replicaContent = {
   ],
   contact: {
     heading: "Let’s talk.",
-    introduction: "Currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering.",
+    introduction: "Currently open to full time roles, contract opportunities, and selected freelance projects in AI and software engineering.",
     email: "hfadeni@gmail.com",
     endpoint: "https://formspree.io/f/mqevwkpl",
   },

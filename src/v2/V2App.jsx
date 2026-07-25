@@ -39,9 +39,9 @@ const commerceOffers = [
   {
     id: "audit", number: "01", filter: "REVENUE", category: "REVENUE RECOVERY",
     valueLabel: "RANK THE FIRST LEAK", timingLabel: "START HERE", title: "Revenue Leak Audit",
-    description: "Audit support, returns, retention, app stack, inventory, reporting, and founder tasks—then rank what to automate first.",
+    description: "Audit support, returns, retention, app stack, inventory, reporting, and founder tasks. Then rank what to automate first.",
     ctaLabel: "Explore outcome model", href: "/v2/offers/revenue-leak-audit/", year: "2026",
-    challenge: "Revenue pressure appears across support, returns, retention, stock, reporting, and founder time—but the most valuable first move is still unclear.",
+    challenge: "Revenue pressure appears across support, returns, retention, stock, reporting, and founder time, but the most valuable first move is still unclear.",
     approach: "A focused diagnostic brings support, returns, retention, inventory, and reporting pressure into one ranked leak map.",
     impact: "The founder gets one recoverable opportunity, the evidence behind it, and a practical first build path.",
     deliverables: ["Signal audit", "Leak scorecard", "Priority roadmap"],
@@ -801,8 +801,8 @@ function OpeningSequence() {
         </article>
 
         <article className="v2-opening-scene v2-opening-services" id="services">
-          <span className="v2-scene-label">03 / Services</span>
-          <h2>Services</h2>
+          <span className="v2-scene-label">03 / What I do</span>
+          <h2>What I do</h2>
           <div className="v2-service-index">
             {expertise.map(([number, title, detail]) => (
               <a href={paths.contact} key={title}>
@@ -1270,7 +1270,7 @@ function WorkSpecialisations({ home = false, items = projects }) {
   useWorkSpecialisationsMotion(sectionRef);
   return (
     <section className={home ? "v2-home-works" : undefined} aria-label={home ? "Featured Projects" : undefined}>
-      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span><h2>AI and software projects, from user problem to working system.</h2><p>See what each product does, why I built it that way, and the evidence or limitations behind the result.</p></header>}
+      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span><h2>AI and software projects, from user problem to working system.</h2><p>See what each product does, the business problem behind it, why I built it that way, and the evidence or limitations behind the result.</p></header>}
       <section ref={sectionRef} className="v2-works-scroll" id={home ? "work" : "selected-work"} data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">

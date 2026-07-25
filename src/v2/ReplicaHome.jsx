@@ -190,7 +190,7 @@ function ServicesSection() {
     <section className="replica-services" id="services">
       <div className="replica-services__sticky">
         <div className="replica-services__inner">
-          <h2>Services</h2>
+          <h2>What I do</h2>
           <div className="replica-services__list">
             {replicaContent.services.map((service) => (
               <a href={service.href} key={service.title}>
