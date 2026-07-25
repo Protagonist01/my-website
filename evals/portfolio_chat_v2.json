@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "name": "Henry portfolio guide evaluation set",
   "description": "Versioned regression cases for grounded answers, safe actions, retrieval, and unsupported claims.",
   "cases": [
@@ -157,6 +157,77 @@
           }
         ],
         "retrievalHeadings": ["Built Projects and Public Demos"]
+      }
+    },
+    {
+      "id": "commerce-brief",
+      "category": "action_accuracy",
+      "execution": "deterministic",
+      "prompt": "Open a commerce brief for my Shopify store.",
+      "page": "/v2/offers/revenue-leak-audit/",
+      "expect": {
+        "requiredAll": ["commerce brief", "before anything is sent"],
+        "actions": [
+          {
+            "type": "show_inquiry",
+            "service": "Commerce AI & Automation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "commerce-proof-labels",
+      "category": "groundedness",
+      "execution": "live",
+      "prompt": "What e-commerce proof does Henry have? Are these measured client results?",
+      "page": "/v2/ecommerce/",
+      "expect": {
+        "requiredAll": ["Clear Skin", "CartPilot", "MarginGuard"],
+        "requiredAny": ["built product", "public repository"],
+        "forbiddenPatterns": [
+          "Henry (?:increased|grew|improved).{0,40}(?:revenue|conversion|profit|retention)"
+        ],
+        "retrievalHeadings": ["E-commerce Offers", "Project Evidence Rules"]
+      }
+    },
+    {
+      "id": "commerce-starting-point",
+      "category": "relevance",
+      "execution": "live",
+      "prompt": "My Shopify store has support, returns, inventory, and margin pressure. Where should we start?",
+      "page": "/v2/offers/revenue-leak-audit/",
+      "expect": {
+        "requiredAll": ["Revenue Leak Audit"],
+        "requiredAny": ["signal audit", "leak scorecard", "priority roadmap", "first"],
+        "retrievalHeadings": ["E-commerce Offers"]
+      }
+    },
+    {
+      "id": "commerce-brief-follow-up",
+      "category": "groundedness",
+      "execution": "live",
+      "prompt": "What happens after I send the commerce brief?",
+      "page": "/v2/contact/",
+      "expect": {
+        "requiredAll": ["one business day"],
+        "requiredAny": ["first evidence", "practical next step"],
+        "retrievalHeadings": ["Project Inquiry Form"]
+      }
+    },
+    {
+      "id": "footer-floor-animation",
+      "category": "groundedness",
+      "execution": "live",
+      "prompt": "How does the HENRY footer animation work?",
+      "page": "/v2/",
+      "expect": {
+        "requiredAll": ["floor"],
+        "requiredAny": ["diminishing", "smaller", "several"],
+        "forbiddenPatterns": [
+          "(?:is|stays|remains) scroll-scrubbed",
+          "tracks? scroll progress continuously"
+        ],
+        "retrievalHeadings": ["Portfolio Interaction Notes"]
       }
     }
   ]

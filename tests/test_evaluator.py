@@ -6,8 +6,8 @@ from scripts.run_chat_evals import DEFAULT_DATASET, evaluate_response, load_data
 class EvaluatorTests(unittest.TestCase):
     def test_dataset_is_valid_and_versioned(self):
         dataset = load_dataset(DEFAULT_DATASET)
-        self.assertEqual(dataset["version"], 1)
-        self.assertGreaterEqual(len(dataset["cases"]), 10)
+        self.assertEqual(dataset["version"], 2)
+        self.assertGreaterEqual(len(dataset["cases"]), 15)
 
     def test_response_rules_detect_a_good_action(self):
         case = {

@@ -28,6 +28,14 @@ const SECTION_PROMPT_SETTLE_MAX_MS = 5_000;
 const PROMPT_VISIBLE_MS = 5_000;
 const CHAT_HISTORY_KEY = "hf-guide-chat-history-v1";
 const CHAT_TRANSITION_MS = 800;
+const COMMERCE_CONTEXT_PATTERN = /\b(e-?commerce|shopify|online store|store pressure|revenue leak|cart|checkout|returns?|retention|inventory|margin|commerce brief)\b/i;
+const COMMERCE_ROUTE_PATTERN = /\/(?:offers|ecommerce)(?:\/|%20|$)|\/work\/(?:cartpilot|marginguard|clear-skin)(?:\/|$)/i;
+
+function hasCommerceInquiryContext(route, section, context = "") {
+  return section === "offers"
+    || COMMERCE_ROUTE_PATTERN.test(route)
+    || COMMERCE_CONTEXT_PATTERN.test(context);
+}
 
 function icon(name) {
   const paths = {
@@ -837,7 +845,20 @@ export default function PortfolioGuide({ page }) {
       return;
     }
     if (action.type === "show_inquiry") {
-      setActiveCard({ type: "inquiry", service: action.service || null });
+      const recentUserContext = messages
+        .filter((message) => message.role === "user")
+        .slice(-3)
+        .map((message) => message.content)
+        .join(" / ");
+      setActiveCard({
+        type: "inquiry",
+        service: action.service || null,
+        commerce: hasCommerceInquiryContext(
+          route,
+          activeSection,
+          `${action.service || ""} ${recentUserContext}`,
+        ),
+      });
     }
   };
 
@@ -987,12 +1008,15 @@ export default function PortfolioGuide({ page }) {
                   <GuideInquiry
                     initialService={activeCard.service}
                     conversationContext={conversationContext}
+                    commerceContext={activeCard.commerce}
                     onClose={() => setActiveCard(null)}
                     onSubmitted={() => {
                       setMessages((current) => [...current, {
                         id: uid(),
                         role: "assistant",
-                        content: "Your project inquiry was sent. Henry now has the details you reviewed and confirmed.",
+                        content: activeCard.commerce
+                          ? "Your commerce brief was sent. Henry now has the store context you reviewed and confirmed, and will reply within one business day with the first evidence to inspect and the most practical next step."
+                          : "Your project inquiry was sent. Henry now has the details you reviewed and confirmed, and will reply within one business day with a focused next step.",
                         suggestions: ["Show me related work", "Book a discovery call"],
                         actions: [],
                         outcome: "success",

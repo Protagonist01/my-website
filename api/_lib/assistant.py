@@ -21,6 +21,11 @@ from api._lib.config import (
 KNOWLEDGE_PATH = Path(__file__).resolve().parents[2] / "knowledge" / "henry-context.md"
 KNOWLEDGE = KNOWLEDGE_PATH.read_text(encoding="utf-8")
 RAA_CASE_URL = "/v2/work/retrieval-analytics/"
+COMMERCE_SERVICE = "Commerce AI & Automation"
+COMMERCE_INTENT_PATTERN = re.compile(
+    r"\b(e-?commerce|shopify|online store|store pressure|revenue leak|cart|checkout|returns?|retention|inventory|margin|commerce brief)\b",
+    flags=re.IGNORECASE,
+)
 ALWAYS_GROUNDED_HEADINGS = {
     "Knowledge base overview",
     "Source and Truth Policy",
@@ -31,6 +36,12 @@ ALWAYS_GROUNDED_HEADINGS = {
     "Engagement Options",
     "Project Evidence Rules",
     "Case Study Editorial Plan",
+    "Unsupported or Dynamic Questions",
+}
+FOUNDATIONAL_GROUNDED_HEADINGS = {
+    "Source and Truth Policy",
+    "Assistant Identity and Disclosure",
+    "Privacy and Safety Rules",
     "Unsupported or Dynamic Questions",
 }
 STOP_WORDS = {
@@ -94,22 +105,32 @@ def _clean_text(value: Any, max_length: int) -> str:
 
 
 def _retrieve_knowledge(query: str, page: str) -> dict[str, Any]:
+    retrieval_text = f"{query} {page}".lower()
     tokens = [
         token for token in re.findall(r"[a-z0-9-]{3,}", f"{query} {page}".lower())
         if token not in STOP_WORDS
     ]
     scored = []
     for section in KNOWLEDGE_SECTIONS:
-        if section["heading"] in ALWAYS_GROUNDED_HEADINGS:
-            continue
         heading = section["heading"].lower()
         content = section["content"].lower()
         score = sum((8 if token in heading else 0) + min(content.count(token), 6) for token in tokens)
+        if section["heading"] == "Project Inquiry Form" and re.search(r"\b(brief|inquiry|proposal|quote|contact)\b", retrieval_text):
+            score += 32
+        if section["heading"] == "Portfolio Interaction Notes" and re.search(r"\b(footer|wordmark|floor|bounce|animation)\b", retrieval_text):
+            score += 32
+        if section["heading"] == "E-commerce Offers" and COMMERCE_INTENT_PATTERN.search(retrieval_text):
+            score += 16
+        if section["heading"] == "Engagement Options" and re.search(r"\b(cost|fee|price|pricing|rate|budget|scope)\b", retrieval_text):
+            score += 32
+        if section["heading"] == "Project Evidence Rules" and re.search(r"\b(proof|evidence|shipped|client result|case stud|concept|modeled|measured)\b", retrieval_text):
+            score += 32
         scored.append({**section, "score": score})
     scored.sort(key=lambda item: (-item["score"], len(item["content"])))
 
-    selected = [s for s in KNOWLEDGE_SECTIONS if s["heading"] in ALWAYS_GROUNDED_HEADINGS]
+    selected = [s for s in KNOWLEDGE_SECTIONS if s["heading"] in FOUNDATIONAL_GROUNDED_HEADINGS]
     selected.extend([s for s in scored if s["score"] > 0][:8])
+    selected.extend([s for s in KNOWLEDGE_SECTIONS if s["heading"] in ALWAYS_GROUNDED_HEADINGS])
     if len(selected) < 9:
         selected.extend([s for s in scored if s not in selected][: 9 - len(selected)])
 
@@ -150,6 +171,7 @@ Response rules:
 - Return 2-3 short, useful follow-up suggestions. Avoid repeating the visitor's exact question.
 - Use show_booking when the visitor asks about availability, calls, meetings, or scheduling.
 - Use show_inquiry when the visitor wants a quote, proposal, service request, or to discuss a project.
+- Set show_inquiry.service to "Commerce AI & Automation" when the request concerns an e-commerce or Shopify store.
 - Use navigate/show_projects only when a specific approved route materially helps.
 - An action is a proposed button, not an executed operation.
 - For navigation, target must be copied exactly from the approved route registry.
@@ -217,6 +239,7 @@ def _align_actions_with_intent(result: dict[str, Any], query: str) -> dict[str, 
     normalized = query.lower()
     scheduling = re.search(r"\b(availability|available|book|booking|call|calendar|meet|meeting|schedule|session)\b", normalized)
     inquiry = re.search(r"\b(contact|estimate|inquiry|proposal|quote|start a project|work with|hire)\b", normalized)
+    commerce = COMMERCE_INTENT_PATTERN.search(normalized)
     raa = re.search(r"\b(?:raa|retrieval[- ]augmented analytics|retrieval analytics|text[- ]to[- ]sql|generated sql)\b", normalized)
     actions = list(result["actions"])
     if raa:
@@ -242,7 +265,18 @@ def _align_actions_with_intent(result: dict[str, Any], query: str) -> dict[str, 
             slug = "30-minute-ai-project-discovery"
         actions.insert(0, {"type": "show_booking", "label": "Check live availability", "target": None, "service": None, "eventTypeSlug": slug})
     if inquiry and not any(action["type"] == "show_inquiry" for action in actions):
-        actions.insert(0, {"type": "show_inquiry", "label": "Start a project inquiry", "target": None, "service": None, "eventTypeSlug": None})
+        actions.insert(0, {
+            "type": "show_inquiry",
+            "label": "Start a commerce brief" if commerce else "Start a project inquiry",
+            "target": None,
+            "service": COMMERCE_SERVICE if commerce else None,
+            "eventTypeSlug": None,
+        })
+    elif commerce:
+        for action in actions:
+            if action["type"] == "show_inquiry" and not action.get("service"):
+                action["service"] = COMMERCE_SERVICE
+                action["label"] = "Start a commerce brief"
     return {**result, "actions": actions[:2]}
 
 
@@ -266,12 +300,28 @@ def _deterministic_action_response(message: str) -> dict[str, Any] | None:
             "actions": [{"type": "show_booking", "label": f"Check {title} times" if slug else "Check live availability", "target": None, "service": None, "eventTypeSlug": slug}],
             "meta": {"provider": "action-router", "model": "deterministic", "latencyMs": 0, "fallback": False, "retrievedSections": 0},
         }
-    explicit_inquiry = re.search(r"\b(start|open|send|submit|fill|create)\b.{0,45}\b(inquiry|project brief|project request|inquiry form)\b", normalized) or re.search(r"\b(i want to|i'd like to|ready to)\b.{0,40}\b(hire henry|work with henry|start a project)\b", normalized)
+    asks_about_inquiry_process = re.search(
+        r"\b(what happens|what should i expect|response time|after (?:i|we) (?:send|submit))\b",
+        normalized,
+    )
+    explicit_inquiry = (
+        re.search(r"\b(start|open|send|submit|fill|create)\b.{0,45}\b(inquiry|project brief|commerce brief|project request|inquiry form)\b", normalized)
+        or re.search(r"\b(i want to|i'd like to|ready to)\b.{0,40}\b(hire henry|work with henry|start a project)\b", normalized)
+    )
+    if asks_about_inquiry_process:
+        explicit_inquiry = None
     if explicit_inquiry:
+        commerce = COMMERCE_INTENT_PATTERN.search(normalized)
         return {
-            "message": "I can open the project inquiry here. Review the details before anything is sent.",
+            "message": "I can open the commerce brief here. Review the store context before anything is sent." if commerce else "I can open the project inquiry here. Review the details before anything is sent.",
             "suggestions": [],
-            "actions": [{"type": "show_inquiry", "label": "Open project inquiry", "target": None, "service": None, "eventTypeSlug": None}],
+            "actions": [{
+                "type": "show_inquiry",
+                "label": "Open commerce brief" if commerce else "Open project inquiry",
+                "target": None,
+                "service": COMMERCE_SERVICE if commerce else None,
+                "eventTypeSlug": None,
+            }],
             "meta": {"provider": "action-router", "model": "deterministic", "latencyMs": 0, "fallback": False, "retrievedSections": 0},
         }
     return None

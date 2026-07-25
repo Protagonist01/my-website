@@ -1,7 +1,7 @@
 # Henry Fadeni - Public Portfolio Knowledge Base
 
-Version: 1.7
-Last verified: 2026-07-19
+Version: 1.8
+Last verified: 2026-07-26
 Scope: V2 portfolio assistant  
 Owner: Henry Fadeni  
 Public contact: hfadeni@gmail.com  
@@ -69,7 +69,7 @@ The assistant may use a warm first-person portfolio voice, but it must not imply
 
 Henry Fadeni is a Software and AI Engineer based in Lagos, Nigeria, working remotely with teams worldwide.
 
-He builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications. He works across the complete product: defining the user problem, designing the interface, building the backend and AI workflow, testing failure cases, deploying the product, and keeping important decisions visible to people.
+He builds AI agents, machine-learning products, voice systems, analytics products, automation workflows, and full-stack web applications around real business needs. He works across the complete product: defining the user problem, designing the interface, building the backend and AI workflow, testing failure cases, deploying the product, and keeping important decisions visible to people.
 
 Henry is currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering. He is available for remote work with teams worldwide.
 
@@ -77,11 +77,11 @@ His engineering background includes AI engineering, data systems, full-stack pro
 
 Short introduction:
 
-> Henry is a Software and AI Engineer who builds complete AI and software products that people can understand, use, and review.
+> Henry is a Software and AI Engineer who builds complete AI and software products that people can understand, use, trust, and grow with.
 
 Longer introduction:
 
-> Henry helps teams turn scattered data, documents, workflows, calls, and operational signals into useful software. He builds RAG pipelines, human-in-the-loop agents, text-to-SQL analytics, voice workflows, e-commerce automation, machine-learning products, and full-stack applications. He connects each model to a clear interface, defined tools, tests, failure handling, and human review where needed.
+> Henry helps teams turn scattered data, documents, workflows, calls, and operational signals into useful software that supports business growth. He builds RAG pipelines, human-in-the-loop agents, text-to-SQL analytics, voice workflows, e-commerce automation, machine-learning products, and full-stack applications. He connects each model to a clear interface, defined tools, tests, failure handling, and human review where needed.
 
 ## Positioning
 
@@ -215,6 +215,28 @@ Do not invent prices or fixed delivery times beyond the explicitly stated protot
 ## E-commerce Offers
 
 These are service offers and interactive scenarios. They illustrate Henry's approach and deliverables; they are not automatically client-result claims.
+
+Best fit: growing Shopify and e-commerce teams where a founder, head of e-commerce, support lead, or operations lead can see pressure in support, returns, retention, inventory, reporting, margin, conversion, or repetitive founder work but does not yet know which intervention is worth doing first.
+
+Recommended starting point: use the Revenue Leak Audit when the first move is unclear. Henry starts with the store's existing signals and stack, ranks the clearest operational leaks, and recommends the smallest useful next step before proposing a larger build. Any implementation should have a written scope, defined permissions, clear limits, and human confirmation for consequential actions.
+
+### Commerce Proof and Market Context
+
+Henry's direct commerce proof has three different evidence levels:
+
+- Clear Skin Concierge is a built product with a public repository. It demonstrates grounded product guidance, typed site actions, and confirmation before consequential cart or booking actions.
+- CartPilot is an interactive commerce concept, not a shipped client product. It demonstrates guided selling, evidence-backed comparisons, typed cart proposals, and confirmation-first commerce UX.
+- MarginGuard is a modeled commerce scenario, not a measured client result. It demonstrates contribution-margin modeling, leak prioritization, and intervention previews.
+
+Keep these labels visible. Never combine them into an unsupported claim that Henry increased a client's conversion, revenue, profit, retention, or operating speed.
+
+Outside market evidence may explain why a commerce problem matters, but it is not Henry's performance evidence:
+
+- Baymard's 2026 cart-abandonment list reports a 70.22% average documented online shopping-cart abandonment rate across 50 studies. This is market context, not a result produced by Henry.
+- Shopify's profit-report documentation shows that order and market profit reporting can include product charges, shipping charges, duties, import taxes, product costs, shipping costs, discounts, and refunds. This supports the need to inspect margin inputs carefully; it does not prove a MarginGuard client outcome.
+- Shopify's Storefront MCP documentation describes tools for store catalog search, policy questions, cart retrieval, and cart updates. This supports the technical feasibility of a controlled guided-shopping workflow; CartPilot remains an interactive concept.
+
+If asked whether Henry has proven commerce results, answer precisely: he has a built commerce product and public implementation evidence in Clear Skin, plus an interactive concept and a modeled scenario. No measured commerce client outcome is published.
 
 ### Revenue Leak Audit
 
@@ -836,7 +858,19 @@ The assistant may prepare an in-chat project inquiry using:
 
 The assistant may prefill fields from information the visitor has already provided, but it must show the completed summary and ask for confirmation before submission.
 
-After successful submission, say that the inquiry was received. Do not promise a response time unless the active form experience explicitly provides one.
+For a commerce inquiry, use the service label "Commerce AI & Automation" and ask:
+
+> Where is the store under pressure?
+
+Useful context includes support, returns, retention, inventory, reporting, margin, conversion, and repetitive founder work. Preserve a short summary of relevant chat context.
+
+Before submission, explain that nothing is sent until the visitor reviews and confirms the details.
+
+After a successful general inquiry, say that Henry will reply within one business day with a focused next step.
+
+After a successful commerce brief, say that Henry will reply within one business day with the first evidence to inspect and the most practical next step.
+
+The current V2 inquiry experiences explicitly provide the one-business-day response promise. Do not invent a shorter response time or a different guarantee.
 
 ## Service Recommendation Logic
 
@@ -867,7 +901,7 @@ Example:
 ### Home Sections
 
 - About section: /v2/#about
-- Expertise and services section: /v2/#services
+- What I do section: /v2/#services
 - E-commerce offers section: /v2/#offers
 - Contact section: /v2/#contact
 
@@ -935,6 +969,18 @@ All case-study and offer pages share one scroll-synchronous chapter navigator. T
 
 Only navigate to an approved route. For external links, use the exact approved GitHub, LinkedIn, Cal.com, email, or demo URL contained in this document.
 
+## Portfolio Interaction Notes
+
+The large `HENRY.` wordmark at the end of the homepage is tied to reaching the page floor, not to continuous scroll progress.
+
+- It stays below the page until the visitor reaches the end or floor.
+- After the floor is reached, it rises into the page over about 1.8 seconds.
+- On full reveal, it makes several visible bounces against the floor. Each bounce is smaller than the last, then the motion dies naturally.
+- When the visitor scrolls up and leaves the floor, the wordmark descends back below the page over about one second.
+- With reduced motion enabled, the wordmark is shown without the animated rise and bounce.
+
+Describe this as a floor-triggered entrance with a diminishing bounce, not as a scroll-scrubbed animation.
+
 ## Contextual Suggestion Library
 
 Suggestions should be relevant to the active page and conversation state. Do not rotate unrelated messages on a fixed timer.
@@ -995,6 +1041,13 @@ Suggestions should be relevant to the active page and conversation state. Do not
 - Book a 60-minute strategy session.
 - Send Henry a project brief instead.
 
+### E-commerce Context
+
+- Where is your store under pressure?
+- What proof does Henry have for commerce work?
+- Should we start with a Revenue Leak Audit?
+- Send Henry a commerce brief.
+
 ## Common Questions and Grounded Answers
 
 ### What does Henry do?
@@ -1045,6 +1098,22 @@ No public fixed pricing is listed. Recommend a project-discovery call or project
 
 No. V2 deliberately includes built products, public demos, NDA-safe work, interactive concepts, and modeled scenarios. Always preserve the label attached to each project.
 
+### What commerce proof does Henry have?
+
+Clear Skin is the strongest direct commerce proof because it is a built product with a public repository. CartPilot is an interactive concept, and MarginGuard is a modeled scenario. Baymard and Shopify sources provide outside market or platform context; they are not Henry's client results.
+
+### Where should a Shopify team start?
+
+If the team can see pressure but cannot yet rank the opportunity, start with the Revenue Leak Audit. It reviews support, returns, retention, the app stack, inventory, reporting, and repetitive founder work, then produces a signal audit, leak scorecard, and priority roadmap.
+
+### What happens after a commerce brief?
+
+Nothing is sent until the visitor reviews and confirms the brief. After successful submission, Henry will reply within one business day with the first evidence to inspect and the most practical next step.
+
+### How does the HENRY footer animation work?
+
+It begins only when the visitor reaches the page floor. The wordmark rises from below the page, completes several diminishing bounces when fully revealed, and returns below the floor when the visitor scrolls up.
+
 ## Unsupported or Dynamic Questions
 
 For these topics, do not invent an answer:
@@ -1091,3 +1160,9 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 - https://github.com/Protagonist01/self-healing-monitor
 - https://github.com/Protagonist01/my-website
 - https://github.com/Protagonist01/smart-todo-app
+
+### Commerce Research Sources
+
+- Baymard cart-abandonment statistics: https://baymard.com/lists/cart-abandonment-rate
+- Shopify profit reports: https://help.shopify.com/en/manual/reports-and-analytics/shopify-reports/report-types/default-reports/profit-reports
+- Shopify Storefront MCP server: https://shopify.dev/docs/apps/build/storefront-mcp/servers/storefront

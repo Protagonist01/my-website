@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-DEFAULT_DATASET = ROOT / "evals" / "portfolio_chat_v1.json"
+DEFAULT_DATASET = ROOT / "evals" / "portfolio_chat_v2.json"
 
 
 def load_local_env(path: Path = ROOT / ".env") -> None:
@@ -42,8 +42,8 @@ from api._lib import assistant  # noqa: E402
 
 def load_dataset(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
-    if payload.get("version") != 1 or not isinstance(payload.get("cases"), list):
-        raise ValueError("The evaluation dataset must use version 1 and contain a cases array.")
+    if payload.get("version") != 2 or not isinstance(payload.get("cases"), list):
+        raise ValueError("The evaluation dataset must use version 2 and contain a cases array.")
     identifiers = [case.get("id") for case in payload["cases"]]
     if any(not isinstance(identifier, str) or not identifier for identifier in identifiers):
         raise ValueError("Every evaluation case needs a non-empty string id.")
