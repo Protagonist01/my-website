@@ -83,12 +83,23 @@ export const paths = {
   fruitQuality: "/v2/work/archive/fruit-quality/",
 };
 
-export const navigation = [
-  { label: "Featured Projects", href: paths.work },
-  { label: "Expertise", href: `${paths.home}#expertise` },
+export const RESUME_PATH = "/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf";
+
+// __RESUME_AVAILABLE__ is replaced at build time by vite.config.js, which checks
+// whether the PDF is actually present. Resume links stay out of the DOM until it is.
+// Outside the bundler (node tests) the token is undeclared, so treat it as absent.
+export const resumeAvailable = typeof __RESUME_AVAILABLE__ === "undefined" ? false : __RESUME_AVAILABLE__;
+
+const allNavigation = [
+  { label: "Work", href: "/#work" },
+  { label: "Capabilities", href: "/#services" },
   { label: "About", href: paths.about },
-  { label: "Evidence", href: paths.proof },
+  { label: "Commerce AI", href: paths.ecommerce },
+  { label: "Resume", href: RESUME_PATH, target: "_blank", gated: true },
+  { label: "Contact", href: "/#contact" },
 ];
+
+export const navigation = allNavigation.filter((item) => !item.gated || resumeAvailable);
 
 export const projects = [
   {

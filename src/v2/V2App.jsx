@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { allWork, caseStudies, homeFeaturedProjects, paths, projectNotes, projects, services } from "./data.js";
+import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects, services } from "./data.js";
 import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
@@ -26,13 +26,6 @@ const offerAlternate = (name) => new URL(`../../ecommerce demo gallery/e-commerc
 const OFFERS_DEBUG = false;
 const OFFER_FILTERS = ["ALL SYSTEMS", "REVENUE", "CUSTOMER", "OPERATIONS"];
 const OFFERS_STATEMENT = "I help growing Shopify brands automate the operations behind the store: support, returns, inventory, reporting, retention, and customer experience with AI agents, workflow automation, and custom software.";
-const PROJECT_PAGE_NAVIGATION = [
-  { label: "Featured Projects", href: paths.work },
-  { label: "E-commerce", href: paths.ecommerce },
-  { label: "Referral Programme", href: paths.referrals },
-  { label: "About", href: paths.about },
-  { label: "Start a project", href: `${paths.home}#contact`, arrow: "↗" },
-];
 const commerceOffers = [
   {
     id: "audit", number: "01", filter: "REVENUE", category: "REVENUE RECOVERY",
@@ -647,7 +640,7 @@ function Header({ onContact }) {
       {open && createPortal(
         <div className="v2-mobile-nav">
           <button type="button" aria-label="Close navigation" onClick={() => setOpen(false)}>{"\u00d7"}</button>
-          {PROJECT_PAGE_NAVIGATION.slice(0, -1).map((item) => <a href={item.href} key={item.label} onClick={() => setOpen(false)}>{item.label}</a>)}
+          {navigation.filter((item) => item.href !== "/#contact").map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined} onClick={() => setOpen(false)}>{item.label}</a>)}
           <button type="button" onClick={() => { setOpen(false); onContact(); }}>Start a project <Arrow /></button>
         </div>,
         document.body,
@@ -1398,5 +1391,5 @@ export function V2App({ page }) {
   const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
   const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
   const usesProjectNavigation = page === "about" || page === "work" || page === "ecommerce" || page === "referrals" || page === "referral-dashboard" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
-  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={PROJECT_PAGE_NAVIGATION} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={navigation} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

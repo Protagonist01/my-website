@@ -1,3 +1,5 @@
+import { navigation } from "./data.js";
+
 export const replicaContent = {
   name: "Henry",
   wordmark: "HENRY.",
@@ -17,15 +19,7 @@ export const replicaContent = {
     { title: "Conversational AI & Voice Systems", details: ["Voice Agents", "Grounded Chat", "Controlled Actions"], href: "/v2/services/conversational-ai/" },
     { title: "Full-Stack Product Engineering", details: ["Product UX", "Frontend & APIs", "Production Delivery"], href: "/v2/services/product-engineering/" },
   ],
-  navigation: [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/#about" },
-    { label: "What I do", href: "/#services" },
-    { label: "Featured Projects", href: "/#work" },
-    { label: "E-Commerce", href: "/v2/ecommerce/" },
-    { label: "Referral Programme", href: "/v2/referrals/" },
-    { label: "Contact", href: "/#contact" },
-  ],
+  navigation,
   contact: {
     heading: "Let’s talk.",
     introduction: "Currently open to full time roles, contract opportunities, and selected freelance projects in AI and software engineering.",

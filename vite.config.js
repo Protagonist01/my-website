@@ -56,9 +56,16 @@ function localApiRoutes() {
 
 export default defineConfig(({ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
+  const resumeAvailable = existsSync(resolve(__dirname, "assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf"));
+  if (!resumeAvailable) {
+    console.warn("\n[resume] assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf not found - resume links are omitted from this build.\n");
+  }
   return {
     base: "./",
     appType: "mpa",
+    define: {
+      __RESUME_AVAILABLE__: JSON.stringify(resumeAvailable),
+    },
     plugins: [react(), localApiRoutes(), copyStaticDirs(["web demos"])],
     build: {
       rollupOptions: {

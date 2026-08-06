@@ -33,7 +33,7 @@ function GlossIcon({ bolt = false, className = "" }) {
   );
 }
 
-export function FloatingNavigation({ items = replicaContent.navigation.slice(1) }) {
+export function FloatingNavigation({ items = replicaContent.navigation }) {
   const [open, setOpen] = useState(false);
   const navRef = useRef(null);
 
@@ -67,6 +67,8 @@ export function FloatingNavigation({ items = replicaContent.navigation.slice(1) 
               href={item.href}
               key={item.label}
               tabIndex={open ? 0 : -1}
+              target={item.target}
+              rel={item.target === "_blank" ? "noopener" : undefined}
               data-header-contact={item.href.includes("#contact") ? "" : undefined}
               onClick={() => setOpen(false)}
               style={{ "--replica-nav-index": index }}
@@ -411,7 +413,7 @@ export function SiteFooter() {
           <p className="replica-footer__statement">{replicaContent.footerStatement.map((line) => <span key={line}>{line}</span>)}</p>
           <nav className="replica-footer__links" aria-label="Footer navigation">
             <h2>/Quick links</h2>
-            <div>{replicaContent.navigation.map((item) => <a href={item.href} key={item.label}>{item.label}</a>)}</div>
+            <div>{replicaContent.navigation.map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined}>{item.label}</a>)}</div>
           </nav>
           <div className="replica-footer__contact"><h2>/Contact</h2><a href={`mailto:${replicaContent.contact.email}`}>{replicaContent.contact.email}</a></div>
         </div>

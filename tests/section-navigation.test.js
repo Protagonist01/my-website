@@ -61,12 +61,10 @@ test("visible homepage navigation points to its matching page sections", () => {
   assert.deepEqual(
     replicaContent.navigation.map(({ label, href }) => [label, href]),
     [
-      ["Home", "/"],
-      ["About Me", "/#about"],
-      ["Services", "/#services"],
-      ["Featured Projects", "/#work"],
-      ["E-Commerce", "/v2/ecommerce/"],
-      ["Referral Programme", "/v2/referrals/"],
+      ["Work", "/#work"],
+      ["Capabilities", "/#services"],
+      ["About", "/v2/about/"],
+      ["Commerce AI", "/v2/ecommerce/"],
       ["Contact", "/#contact"],
     ],
   );
