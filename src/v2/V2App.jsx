@@ -21,8 +21,6 @@ import {
   OfferDeliverablePreview,
 } from "./CaseStudyExperiences.jsx";
 
-const heroBw = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
-const heroBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
 const offerPortrait = (name) => new URL(`../../assets/images/v2-offers/${name}`, import.meta.url).href;
 const offerAlternate = (name) => new URL(`../../ecommerce demo gallery/e-commerce demo media assets/${name}`, import.meta.url).href;
 const OFFERS_DEBUG = false;
@@ -508,117 +506,6 @@ function useInitialHashScroll(page) {
   }, [page]);
 }
 
-function useHomeMotion(rootRef, page) {
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root || page !== "home") return undefined;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-
-    let context;
-    let typeTimer = 0;
-    let typingStarted = false;
-    let disposed = false;
-
-    const setup = async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
-      if (disposed) return;
-      gsap.registerPlugin(ScrollTrigger);
-
-      context = gsap.context(() => {
-        const opening = root.querySelector(".v2-opening");
-        const typed = root.querySelector("[data-manifesto-type]");
-        const heroScene = root.querySelector(".v2-opening-hero");
-        const aboutScene = root.querySelector(".v2-opening-about");
-        const manifestoScene = root.querySelector(".v2-opening-manifesto");
-        const servicesScene = root.querySelector(".v2-opening-services");
-        const phrase = "From idea to launch. Clear, capable products built to move fast, stay simple, and perform in real use.";
-
-        const resetType = () => {
-          window.clearInterval(typeTimer);
-          typingStarted = false;
-          if (typed) typed.textContent = "";
-        };
-        const startType = () => {
-          if (!typed || typingStarted) return;
-          typingStarted = true;
-          let index = 0;
-          typed.textContent = "";
-          typeTimer = window.setInterval(() => {
-            index += 1;
-            typed.textContent = phrase.slice(0, index);
-            if (index >= phrase.length) window.clearInterval(typeTimer);
-          }, 48);
-        };
-
-        gsap.set([aboutScene, manifestoScene, servicesScene], { autoAlpha: 0 });
-        const openingTimeline = gsap.timeline({
-          scrollTrigger: {
-            trigger: opening,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.05,
-            onUpdate: (self) => {
-              if (self.progress > 0.55) startType();
-              if (self.progress < 0.5 && self.direction < 0) resetType();
-            },
-          },
-        });
-
-        openingTimeline
-          .to(heroScene, { yPercent: -118, autoAlpha: 0, ease: "power2.in" }, 1.05)
-          .fromTo(aboutScene, { yPercent: 52, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, ease: "power3.out" }, 1.3)
-          .to(aboutScene, { yPercent: -105, autoAlpha: 0, ease: "power2.in" }, 3.2)
-          .fromTo(manifestoScene, { yPercent: 58, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, ease: "power3.out" }, 3.3)
-          .fromTo(".v2-manifesto__ghost", { y: 54, opacity: 0 }, { y: 0, opacity: 0.12, stagger: 0.08 }, 3.7)
-          .to(manifestoScene, { yPercent: -105, autoAlpha: 0, ease: "power2.in" }, 4.9)
-          .fromTo(servicesScene, { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, ease: "power3.out" }, 5.0)
-          .to(servicesScene, { autoAlpha: 1, duration: 1.35 });
-
-        const work = root.querySelector(".v2-work-showcase");
-        const workSlides = [...root.querySelectorAll("[data-work-slide]")];
-        const workDetails = [...root.querySelectorAll("[data-work-detail]")];
-        const numberRail = root.querySelector(".v2-work-number__rail");
-        let workIndex = -1;
-        const activateWork = (index) => {
-          if (index === workIndex) return;
-          workIndex = index;
-          workSlides.forEach((slide, slideIndex) => slide.classList.toggle("is-active", slideIndex === index));
-          workDetails.forEach((detail, detailIndex) => detail.classList.toggle("is-active", detailIndex === index));
-          if (numberRail) numberRail.style.transform = `translate3d(0, -${index * 100}%, 0)`;
-        };
-        activateWork(0);
-        ScrollTrigger.create({
-          trigger: work,
-          start: "top top",
-          end: "bottom bottom",
-          onUpdate: (self) => activateWork(Math.min(workSlides.length - 1, Math.round(self.progress * (workSlides.length - 1)))),
-        });
-
-        const closing = root.querySelector(".v2-closing");
-        if (closing) {
-          ScrollTrigger.create({
-            trigger: closing,
-            start: "top 42%",
-            onEnter: () => root.classList.add("is-ending"),
-            onLeaveBack: () => root.classList.remove("is-ending"),
-          });
-        }
-      }, root);
-    };
-
-    setup();
-    return () => {
-      disposed = true;
-      window.clearInterval(typeTimer);
-      context?.revert();
-      root.classList.remove("is-ending");
-    };
-  }, [page, rootRef]);
-}
-
 function useWorkSpecialisationsMotion(sectionRef) {
   useEffect(() => {
     const section = sectionRef.current;
@@ -766,91 +653,6 @@ function Header({ onContact }) {
         document.body,
       )}
     </>
-  );
-}
-
-function OpeningSequence() {
-  return (
-    <section className="v2-opening">
-      <div className="v2-opening__sticky">
-        <article className="v2-opening-scene v2-opening-hero">
-          <span className="v2-spark v2-spark--left" aria-hidden="true" />
-          <span className="v2-spark v2-spark--right" aria-hidden="true" />
-          <h1>AI &amp; Software Engineer</h1>
-          <figure><img src={heroBw} alt="Henry Fadeni in a black and white studio portrait" /></figure>
-          <strong>{"\u00a9"}2026</strong>
-          <p>Creating useful systems<br />since 2022</p>
-        </article>
-
-        <article className="v2-opening-scene v2-opening-about">
-          <span className="v2-scene-label">01 / About</span>
-          <h2>Hey!</h2>
-          <figure><img src={heroBlue} alt="Henry Fadeni in a blue studio portrait" /></figure>
-          <p>I am Henry, an AI and software engineer working worldwide.</p>
-          <p>I help product teams turn difficult ideas and operational pressure into software people can trust.</p>
-        </article>
-
-        <article className="v2-opening-scene v2-opening-manifesto">
-          <span className="v2-scene-label">02 / Approach</span>
-          <div className="v2-manifesto__stack" aria-hidden="true">
-            <span className="v2-manifesto__ghost">From idea to launch.</span>
-            <span className="v2-manifesto__ghost">From idea to launch.</span>
-            <span className="v2-manifesto__ghost">From idea to launch.</span>
-          </div>
-          <h2><span data-manifesto-type /></h2>
-        </article>
-
-        <article className="v2-opening-scene v2-opening-services" id="services">
-          <span className="v2-scene-label">03 / What I do</span>
-          <h2>What I do</h2>
-          <div className="v2-service-index">
-            {expertise.map(([number, title, detail]) => (
-              <a href={paths.contact} key={title}>
-                <span>{number}</span><strong>{title}</strong><small>{detail}</small><Arrow />
-              </a>
-            ))}
-          </div>
-        </article>
-      </div>
-    </section>
-  );
-}
-
-function WorkShowcase() {
-  return (
-    <section className="v2-work-showcase" id="work" style={{ height: `${100 + (projects.length - 1) * 72}vh` }}>
-      <div className="v2-work-showcase__sticky">
-        <div className="v2-work-metrics">
-          <div><strong>5</strong><span>Featured Projects</span></div>
-          <div><strong>4</strong><span>Concept studies</span></div>
-          <div><strong>1</strong><span>Shipped product</span></div>
-          <div><strong>3</strong><span>Audience groups</span></div>
-        </div>
-        <header>
-          <span>04 / Featured Projects</span>
-          <h2>AI and software products shaped for useful outcomes.</h2>
-          <small>Selected cases</small>
-        </header>
-        <div className="v2-work-media">
-          {projects.map((project, index) => (
-            <a className={index === 0 ? "is-active" : ""} data-work-slide href={project.href} key={project.id}>
-              <img src={project.image} alt={project.imageAlt} loading="eager" fetchPriority={index === 0 ? "high" : "auto"} />
-            </a>
-          ))}
-        </div>
-        <div className="v2-work-copy">
-          <div className="v2-work-number" aria-hidden="true"><div className="v2-work-number__rail">{projects.map((project) => <span key={project.id}>{project.index}</span>)}</div></div>
-          {projects.map((project, index) => (
-            <article className={index === 0 ? "is-active" : ""} data-work-detail key={project.id}>
-              <span>{project.sector}</span>
-              <h3>{project.title}</h3>
-              <p>{project.outcome}</p>
-              <a href={project.href}>View case study <Arrow /></a>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
   );
 }
 
@@ -1220,29 +1022,6 @@ function InlineContactForm() {
   );
 }
 
-function ClosingCta() {
-  return (
-    <section className="v2-closing" id="contact">
-      <div className="v2-closing__top"><strong>Henry Fadeni</strong><span>Contact / Menu</span></div>
-      <div className="v2-closing__statement"><span>Roles, contracts & projects</span><h2>Great products<br />begin with a<br />conversation</h2><p>Currently open to full-time roles, contract opportunities, and selected freelance projects in AI and software engineering.</p></div>
-      <InlineContactForm />
-    </section>
-  );
-}
-
-function Home() {
-  return <><OpeningSequence /><WorkShowcase /><OffersShowcase /><ClosingCta /></>;
-}
-
-function ProjectRow({ project, index }) {
-  return (
-    <article className={`v2-project-row v2-project-row--${index % 2 ? "reverse" : ""}`} data-reveal>
-      <a href={project.href}><img src={project.image} alt={project.imageAlt} loading="lazy" /></a>
-      <div><span>{project.index} / {project.sector}</span><h2>{project.title}</h2><strong>{project.outcome}</strong><a href={project.href}>View case study <Arrow /></a></div>
-    </article>
-  );
-}
-
 function ProjectMedia({ project, compact = false, artifact = false, loading = "lazy" }) {
   if (project.coverImage && (compact || project.coverInHero)) {
     return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground }} />;
@@ -1568,7 +1347,6 @@ function ContactDialog({ open, onClose }) {
 }
 
 function Renderer({ page }) {
-  if (page === "home") return <Home />;
   if (page === "ecommerce") return <EcommerceLanding />;
   if (page === "referrals") return <ReferralCampaign />;
   if (page === "referral-dashboard") return <ReferralDashboard />;
@@ -1594,7 +1372,6 @@ export function V2App({ page }) {
   useReveal(root, page);
   useAnimationVisibility(root, page);
   useInitialHashScroll(page);
-  useHomeMotion(root, page);
   useCaseStudyMotion(root, page);
   useEffect(() => {
     void captureReferralAttribution();
