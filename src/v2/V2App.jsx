@@ -7,7 +7,8 @@ import { handleSectionNavigationClick, revealSectionById } from "./sectionNaviga
 import { ConfettiSuccess } from "./FormSuccess.jsx";
 import EcommerceLanding from "./EcommerceLanding.jsx";
 import { ReferralCampaign, ReferralDashboard } from "./ReferralCampaign.jsx";
-import { captureReferralAttribution, enrichReferralFormData, recordReferralLead } from "./referralClient.js";
+import { captureReferralAttribution } from "./referralClient.js";
+import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 import {
   AnnotatedArtifactExplorer,
   CaseHeroActions,
@@ -20,7 +21,6 @@ import {
   OfferDeliverablePreview,
 } from "./CaseStudyExperiences.jsx";
 
-const CONTACT_ENDPOINT = "https://formspree.io/f/mqevwkpl";
 const heroBw = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
 const heroBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
 const offerPortrait = (name) => new URL(`../../assets/images/v2-offers/${name}`, import.meta.url).href;
@@ -1187,14 +1187,10 @@ function InlineContactForm() {
     event.preventDefault();
     const form = formRef.current;
     setStatus("sending");
+    const formData = new FormData(form);
     try {
-      const formData = enrichReferralFormData(new FormData(form));
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: formData, redirect: "manual" });
-      if (response.status === 422 || response.status === 400) {
-        setStatus("error");
-        return;
-      }
-      void recordReferralLead({
+      await submitContactForm(formData);
+      recordContactReferral({
         name: formData.get("name"),
         email: formData.get("email"),
         description: formData.get("description"),
@@ -1202,9 +1198,10 @@ function InlineContactForm() {
       });
       form?.reset();
       setStatus("sent");
-    } catch {
-      form?.reset();
-      setStatus("sent");
+    } catch (submissionError) {
+      console.error(submissionError);
+      // Keep the visitor's message on screen so the lead is recoverable.
+      setStatus("error");
     }
   };
   return (
@@ -1216,7 +1213,7 @@ function InlineContactForm() {
         <label>Company<input name="company" /></label>
         <label className="v2-inline-form__brief">Tell me about the role or project<textarea name="description" rows="2" required /></label>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
-        <p aria-live="polite">{status === "error" ? "Unable to send. Email hfadeni@gmail.com." : ""}</p>
+        <p role={status === "error" ? "alert" : undefined} aria-live="polite">{status === "error" ? CONTACT_ERROR_MESSAGE : ""}</p>
       </form>
       {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." onClose={() => { formRef.current?.reset(); setStatus("idle"); }} />}
     </>

@@ -6,7 +6,7 @@ import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { replicaContent } from "./replicaContent.js";
 import { handleSectionNavigationClick } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
-import { enrichReferralFormData, recordReferralLead } from "./referralClient.js";
+import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 
 const portrait = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
 const portraitBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
@@ -279,19 +279,10 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
     const form = formRef.current;
     if (status === "sending" || !validate(form)) return;
     setStatus("sending");
+    const formData = new FormData(form);
     try {
-      const formData = enrichReferralFormData(new FormData(form));
-      const response = await fetch(replicaContent.contact.endpoint, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
-        redirect: "manual",
-      });
-      if (response.status === 422 || response.status === 400) {
-        setStatus("error");
-        return;
-      }
-      void recordReferralLead({
+      await submitContactForm(formData, { endpoint: replicaContent.contact.endpoint });
+      recordContactReferral({
         name: formData.get("name"),
         email: formData.get("email"),
         description: formData.get("description"),
@@ -300,10 +291,10 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
       form?.reset();
       setErrors({});
       setStatus("sent");
-    } catch {
-      form?.reset();
-      setErrors({});
-      setStatus("sent");
+    } catch (submissionError) {
+      console.error(submissionError);
+      // Keep the visitor's message on screen so the lead is recoverable.
+      setStatus("error");
     }
   };
 
@@ -328,7 +319,7 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
           {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
         </div>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : variant.submitLabel}</button>
-        <p className="replica-contact-form__status" aria-live="polite">{status === "error" ? `Unable to send. Email ${replicaContent.contact.email}.` : ""}</p>
+        <p className="replica-contact-form__status" role={status === "error" ? "alert" : undefined} aria-live="polite">{status === "error" ? CONTACT_ERROR_MESSAGE : ""}</p>
       </form>
       {status === "sent" && <ConfettiSuccess title={variant.successTitle} subtitle={variant.successSubtitle} onClose={() => { formRef.current?.reset(); setErrors({}); setStatus("idle"); }} />}
     </>

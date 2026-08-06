@@ -3,6 +3,7 @@ import { getCaseExperienceBlueprint } from "./caseStudyExperienceData.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { revealSectionById } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
+import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 
 const projectMeta = {
   "retrieval-analytics": {
@@ -168,7 +169,6 @@ const offerMeta = {
   },
 };
 
-const CONTACT_ENDPOINT = "https://formspree.io/f/mqevwkpl";
 
 const inquiryProfiles = {
   "retrieval-analytics": { intro: "Tell me the decisions your team waits on and where the data lives. I will reply with the first safe query path worth prototyping.", questions: [
@@ -745,14 +745,18 @@ function CaseInquiryForm({ id, title, profile }) {
     if (Object.keys(nextErrors).length) return;
     setStatus("sending");
     try {
-      const response = await fetch(CONTACT_ENDPOINT, { method: "POST", headers: { Accept: "application/json" }, body: values, redirect: "manual" });
-      if (response.status === 422 || response.status === 400) {
-        setStatus("error");
-        return;
-      }
+      await submitContactForm(values);
+      recordContactReferral({
+        name: values.get("name"),
+        email: values.get("email"),
+        description: values.get(profile.questions[0]?.name) || `${title} / ${id}`,
+        source: `V2 case inquiry / ${id}`,
+      });
       setStatus("sent");
-    } catch {
-      setStatus("sent");
+    } catch (submissionError) {
+      console.error(submissionError);
+      // Keep the visitor's answers on screen so the lead is recoverable.
+      setStatus("error");
     }
   };
 
@@ -776,7 +780,7 @@ function CaseInquiryForm({ id, title, profile }) {
       <div className="v2-case-field"><label htmlFor={`${id}-email`}>Work email</label><input id={`${id}-email`} name="email" value={values.email} onChange={change} type="email" autoComplete="email" placeholder="you@company.com" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${id}-email-error` : undefined} />{errors.email && <span className="v2-case-field__error" id={`${id}-email-error`}>{errors.email}</span>}</div>
       {profile.questions.map(renderField)}
       <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : `Send ${offerCtaLabel(id)}`} <span aria-hidden="true">↗</span></button>
-      <p className="v2-case-form__status" aria-live="polite">{status === "error" ? "The form could not send. Please try again." : ""}</p>
+      <p className="v2-case-form__status" role={status === "error" ? "alert" : undefined} aria-live="polite">{status === "error" ? CONTACT_ERROR_MESSAGE : ""}</p>
     </form>
     {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Your context is on its way. I'll review it and reply with a focused next step—not a generic sales sequence." onClose={() => { setValues(initialValues); setErrors({}); setStatus("idle"); }} />}
   </>;
