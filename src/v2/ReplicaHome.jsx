@@ -579,19 +579,53 @@ function useReplicaMotion(rootRef) {
       });
 
       mm.add("(max-width: 700px)", () => {
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true } });
+        // invalidateOnRefresh so the tweens re-read viewportHeight() whenever the scene is
+        // re-measured. Without it a rotate or a collapsing URL bar leaves the portrait's rise
+        // fixed at the old height while the hole reserved for it moves, which is the desync this
+        // scene is built to avoid.
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true, invalidateOnRefresh: true } });
         const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
+        const portraitWrap = root.querySelector(".replica-portrait-wrap");
         const viewportHeight = () => sticky?.clientHeight || window.innerHeight;
-        const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
+        // Only a real spill earns the lift. Adding the breathing room unconditionally moved the
+        // copy up on every viewport, which slid "Hey!" under the fixed nav on short screens.
+        const aboutOverflow = () => {
+          const spill = (about?.scrollHeight || 0) - viewportHeight();
+          return spill > 0 ? spill + 18 : 0;
+        };
         const portraitLift = () => -Math.min(220, viewportHeight() * .22);
+        // The portrait is absolutely positioned and rises during the scene, while the copy is
+        // static flow that has to leave a hole for where the portrait comes to rest. Sizing that
+        // hole in CSS meant guessing the rise, and the guess was short, so the portrait sat on
+        // the intro line. Measure the landing from the same function the tween uses instead.
+        // offsetTop and offsetHeight are layout values, so the tweened transforms don't skew them.
+        const reserveAboutGap = () => {
+          const heading = about?.querySelector("h2");
+          if (!about || !sticky || !portraitWrap || !heading) return;
+          const landing = portraitWrap.offsetTop + portraitWrap.offsetHeight + portraitLift();
+          const headingBottom = heading.offsetTop + heading.offsetHeight;
+          const gap = Math.max(0, Math.round(landing - headingBottom + replicaAnimation.mobilePortraitClearance));
+          sticky.style.setProperty("--mobile-about-gap", `${gap}px`);
+        };
+        reserveAboutGap();
+        // Re-measure before ScrollTrigger takes its own, so a resize cannot leave the two disagreeing.
+        ScrollTrigger.addEventListener("refreshInit", reserveAboutGap);
         timeline
           .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
           .to(".replica-hero__since", { y: () => viewportHeight() * .08, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
           .to(".replica-portrait-card", { rotateY: 180, duration: .52, ease: "none" }, 0.08)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .48, ease: "none" }, 0.08)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.42)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52);
+          // Copy and portrait take this last step together — the hole is sized for where the
+          // portrait landed, so moving one without the other closes it again. It starts where the
+          // portrait's own rise ends, so nothing tweens the portrait's y in two places at once.
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.56)
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .06, ease: "none" }, 0.56);
+        return () => {
+          ScrollTrigger.removeEventListener("refreshInit", reserveAboutGap);
+          sticky?.style.removeProperty("--mobile-about-gap");
+        };
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");

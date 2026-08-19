@@ -279,7 +279,7 @@
 }
 
 @media (max-width: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 62%; --mobile-portrait-height: 150px; }
+  .replica-intro__sticky { --mobile-portrait-top: 62%; --mobile-portrait-height: 150px; --mobile-about-gap: 270px; }
   .replica-nav { top: 30px; width: calc(100vw - 30px); max-width: 360px; height: 60px; }
   .replica-nav.is-open { height: min(var(--replica-nav-open-height), calc(100svh - 60px)); height: min(var(--replica-nav-open-height), calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
@@ -300,7 +300,11 @@
   .replica-portrait-wrap { top: var(--mobile-portrait-top); width: 155px; height: var(--mobile-portrait-height); }
   .replica-about { display: block; padding: 178px 20px 0; }
   .replica-about__left { display: block; padding: 0; }
-  .replica-about h2 { margin-bottom: 270px; font-size: 45px; line-height: 1; }
+  /* The gap under the heading is the hole the portrait rises into, so its size follows from how
+     far the portrait travels — a distance only the timeline knows. useReplicaMotion measures
+     where the portrait lands and overwrites --mobile-about-gap on the sticky; the value declared
+     with the other portrait constants is the fallback used before its first refresh. */
+  .replica-about h2 { margin-bottom: var(--mobile-about-gap); font-size: 45px; line-height: 1; }
   .replica-about__left strong { display: block; width: 100%; margin-bottom: 14px; font-size: 15px; line-height: 1.35; }
   .replica-about__right { padding: 0; }
   .replica-about__right p { width: 100%; margin-bottom: 10px; font-size: 14px; line-height: 1.35; }
@@ -360,10 +364,10 @@
 }
 
 @media (max-width: 700px) and (max-height: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 60%; --mobile-portrait-height: 125px; }
+  .replica-intro__sticky { --mobile-portrait-top: 60%; --mobile-portrait-height: 125px; --mobile-about-gap: 220px; }
   .replica-hero__title { top: 15%; }
   .replica-about { padding-top: 90px; }
-  .replica-about h2 { margin-bottom: 220px; font-size: 40px; }
+  .replica-about h2 { font-size: 40px; }
   .replica-services__inner { padding-top: 118px; }
   .replica-services__inner > h2 { margin-bottom: 8px; font-size: 32px; }
   .replica-services article { padding: 8px 0; }
