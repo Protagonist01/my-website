@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import { APPROVED_ROUTES } from "../api/_lib/config.js";
 import { replicaContent } from "../src/v2/replicaContent.js";
+import { storecraftContent } from "../src/v2/storecraftContent.js";
 
 function installNavigationDom() {
   const target = {
@@ -52,7 +53,7 @@ test("chat home-section aliases navigate to the matching section without reloadi
 });
 
 test("assistant routes use the canonical homepage and section destinations", () => {
-  for (const route of ["/", "/#about", "/#services", "/#work", "/#offers", "/#contact"]) {
+  for (const route of ["/", "/#about", "/#services", "/#work", "/#stack", "/#contact"]) {
     assert.equal(APPROVED_ROUTES.has(route), true, `${route} should be an approved navigation target`);
   }
 });
@@ -63,10 +64,27 @@ test("visible homepage navigation points to its matching page sections", () => {
     [
       ["Work", "/#work"],
       ["Capabilities", "/#services"],
-      ["About", "/v2/about/"],
-      ["Commerce AI", "/v2/ecommerce/"],
+      ["About", "/#about"],
       ["Contact", "/#contact"],
     ],
+  );
+});
+
+test("StoreCraft navigation stays inside its own namespace", () => {
+  const inPage = storecraftContent.navigation.filter(({ href }) => href !== "/");
+  for (const { label, href } of inPage) {
+    assert.ok(href.startsWith("/v2/storecraft/#"), `${label} should anchor inside /v2/storecraft/`);
+    // FloatingNavigation opens Henry's contact overlay for any href containing
+    // "#contact", so StoreCraft's closing anchor must not use that id.
+    assert.equal(href.includes("#contact"), false, `${label} must not open the portfolio contact overlay`);
+  }
+  assert.equal(storecraftContent.navigation.at(-1).href, "/");
+  assert.equal(APPROVED_ROUTES.has(storecraftContent.home), true);
+  // The ending section carries the anchor "Send an inquiry" scrolls to.
+  assert.equal(
+    inPage.some(({ href }) => href.endsWith(`#${storecraftContent.endingId}`)),
+    true,
+    "one nav item should target the ending section id",
   );
 });
 

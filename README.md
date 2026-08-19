@@ -29,7 +29,7 @@ the decisions behind them, how the systems work, the evidence available, and the
 | **Machine Learning & Data Products** | Predictive models, text-to-SQL analytics, retrieval, data pipelines, APIs |
 | **Conversational AI & Voice Systems** | Grounded chat, voice workflows, booking tools, handoff with context |
 | **Full-Stack Product Engineering** | Product framing, interface design, frontend + backend, testing, deployment |
-| **E-Commerce Operations** | Automation concepts, guided-shopping experiences, margin intelligence |
+| **E-Commerce Operations** | Support and returns automation, guided-shopping experiences, margin intelligence |
 
 ---
 
@@ -37,24 +37,22 @@ the decisions behind them, how the systems work, the evidence available, and the
 
 ### Featured Case Studies
 
-| Project | Type | Route |
-|:--|:--|:--|
-| **Framewise** | Interactive creative-AI concept | `/v2/work/framewise/` |
-| **Threadmark** | Interactive research-product concept | `/v2/work/threadmark/` |
-| **Retrieval-Augmented Analytics** | Built text-to-SQL product · [public repo](https://github.com/Protagonist01) | `/v2/work/retrieval-analytics/` |
-| **CartPilot** | Interactive guided-shopping concept | `/v2/work/cartpilot/` |
-| **Clear Skin Concierge** | Built clinic-commerce & AI concierge product | `/v2/work/clear-skin/` |
-| **Fruit Quality Prediction** | Built applied-ML system · [public archive](https://github.com/Protagonist01) | `/v2/work/archive/fruit-quality/` |
+| Project | Category | Type | Route |
+|:--|:--|:--|:--|
+| **Retrieval-Augmented Analytics** | AI Engineering | Built text-to-SQL product · [public repo](https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard) | `/v2/work/retrieval-analytics/` |
+| **Self-Healing Monitor** | Automation | Controlled SRE-agent demonstration · [public repo](https://github.com/Protagonist01/self-healing-monitor) | `/v2/work/self-healing-monitor/` |
+| **AI Voice Receptionist** | AI Engineering | Public voice demo with simulated booking · [public repo](https://github.com/Protagonist01/ai-voice-receptionist) | `/v2/work/ai-voice-receptionist/` |
+| **AI Code Review Agent** | Automation | Built GitHub review agent · [public repo](https://github.com/Protagonist01/code-review-agent) | `/v2/work/code-review-agent/` |
+| **Clear Skin Concierge** | Full-Stack Product Engineering | Built clinic-commerce & AI concierge product · [public repo](https://github.com/Protagonist01/clear-skin-concierge-site) | `/v2/work/clear-skin/` |
 
-### Additional Projects
+Every project on the site has either a public repository or a delivered client system behind it.
 
-| Project | Type | Route |
-|:--|:--|:--|
-| **MarginGuard** | Modeled commerce-intelligence scenario | `/v2/work/marginguard/` |
-| **Self-Healing Monitor** | Controlled SRE-agent demonstration | `/v2/work/self-healing-monitor/` |
-| **AI Voice Receptionist** | Public voice demo with simulated booking | `/v2/work/ai-voice-receptionist/` |
-| **AI Code Review Agent** | Built GitHub review agent · [public repo](https://github.com/Protagonist01) | `/v2/work/code-review-agent/` |
-| **Automated Testimony Ops** | NDA-safe client workflow archive | `/v2/work/archive/testimony-operations/` |
+### Client Work and Archive
+
+| Project | Category | Type | Route |
+|:--|:--|:--|:--|
+| **Automated Testimony Ops** | Automation | NDA-safe client workflow archive | `/v2/work/archive/testimony-operations/` |
+| **Fruit Quality Prediction** | AI Engineering | Built applied-ML system · [public repo](https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction) | `/v2/work/archive/fruit-quality/` |
 
 ### Hobby Projects
 
@@ -332,10 +330,9 @@ This portfolio deliberately includes several kinds of work. Their labels matter:
 |:--|:--|
 | **Built product / public repository** | Implementation has public source evidence |
 | **Controlled demonstration** | System is implemented; environment or operational claims are intentionally limited |
-| **Public demo with simulated integration** | Experience works while a named external system is mocked or ephemeral |
+| **Public demo with simulated integration** | Experience works while a named external system is mocked |
 | **NDA-safe archive** | Implementation described without restricted client details |
-| **Interactive product concept** | Product and interaction are designed; not presented as shipped client work |
-| **Modeled scenario** | Displayed impact is illustrative, not measured production performance |
+| **Targets, not results** | Figures are repository targets or CI gates, never observed outcomes |
 
 > Targets, thresholds, modeled benefits, and synthetic evaluation results are never presented as observed client outcomes.
 

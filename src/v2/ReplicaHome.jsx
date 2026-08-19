@@ -4,8 +4,10 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { replicaContent } from "./replicaContent.js";
+import { stackLogos } from "./stackLogos.js";
 import { handleSectionNavigationClick } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
+import BrandMark from "./BrandMark.jsx";
 import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 
 const portrait = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
@@ -33,7 +35,8 @@ function GlossIcon({ bolt = false, className = "" }) {
   );
 }
 
-export function FloatingNavigation({ items = replicaContent.navigation }) {
+export function FloatingNavigation({ items, brand = replicaContent }) {
+  const links = items || brand.navigation;
   const [open, setOpen] = useState(false);
   const navRef = useRef(null);
 
@@ -53,16 +56,16 @@ export function FloatingNavigation({ items = replicaContent.navigation }) {
   }, [open]);
 
   return (
-    <nav className={`replica-nav${open ? " is-open" : ""}`} ref={navRef} aria-label="Primary navigation" style={{ "--replica-nav-open-height": `${74 + (items.length * 44)}px` }}>
+    <nav className={`replica-nav${open ? " is-open" : ""}`} ref={navRef} aria-label="Primary navigation" style={{ "--replica-nav-open-height": `${74 + (links.length * 44)}px` }}>
       <div className="replica-nav__top">
-        <a href="/" onClick={() => setOpen(false)}>{replicaContent.name}</a>
+        <a href={brand.home || "/"} onClick={() => setOpen(false)}><BrandMark name={brand.markName} className="replica-nav__mark" />{brand.name}</a>
         <button type="button" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} aria-controls="replica-menu" onClick={() => setOpen((value) => !value)}>
           {open ? <span className="replica-nav__close" aria-hidden="true" /> : <span className="replica-nav__dots" aria-hidden="true"><i /><i /><i /></span>}
         </button>
       </div>
       <div className="replica-nav__menu" id="replica-menu" aria-hidden={!open}>
         <div className="replica-nav__links">
-          {items.map((item, index) => (
+          {links.map((item, index) => (
             <a
               href={item.href}
               key={item.label}
@@ -168,7 +171,15 @@ function IntroSequence() {
           </div>
           <div className="replica-about__right">
             {replicaContent.biography.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            <a href="#contact">Get Started <span aria-hidden="true">↗</span></a>
+            <div className="replica-about__actions">
+              {replicaContent.aboutActions.map((action) => (
+                <a
+                  href={action.href}
+                  key={action.label}
+                  download={action.download ? "" : undefined}
+                ><span>{action.label}</span><span className="replica-about__arrow" aria-hidden="true">{action.download ? "↓" : "↗"}</span></a>
+              ))}
+            </div>
           </div>
         </article>
       </div>
@@ -192,14 +203,13 @@ function ServicesSection() {
     <section className="replica-services" id="services">
       <div className="replica-services__sticky">
         <div className="replica-services__inner">
-          <h2>What I do</h2>
+          <h2>{replicaContent.servicesHeading}</h2>
           <div className="replica-services__list">
             {replicaContent.services.map((service) => (
-              <a href={service.href} key={service.title}>
+              <article key={service.title}>
                 <h3>{service.title}</h3>
                 <p>{service.details.map((detail, index) => <React.Fragment key={detail}><span>{detail}</span>{index < service.details.length - 1 && <i aria-hidden="true">•</i>}</React.Fragment>)}</p>
-                <span className="replica-services__arrow" aria-hidden="true">↗</span>
-              </a>
+              </article>
             ))}
           </div>
         </div>
@@ -243,6 +253,7 @@ function getContactVariant(initialProject = "") {
       successTitle: "Project brief received",
       successSubtitle: "Thanks. I'll reply within one business day with a focused next step.",
       source: "V2 primary contact form",
+      collectRoleIntent: true,
     };
   }
   return {
@@ -271,6 +282,7 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
     const email = String(values.get("email") || "").trim();
     if (!email) next.email = "Please enter your email.";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) next.email = "Please enter a valid email.";
+    if (variant.collectRoleIntent && !String(values.get("inquiry_intent") || "").trim()) next.intent = "Please select what you are reaching out about.";
     if (!String(values.get("description") || "").trim()) next.description = "Please tell me about your project.";
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -304,20 +316,30 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
     <>
       <form ref={formRef} className="replica-contact-form" onSubmit={submit} noValidate>
         <input type="hidden" name="inquiry_context" value={initialProject} />
-        {variant.promise && <p className="replica-contact-form__promise">{variant.promise}</p>}
         <div className="replica-field">
           <label htmlFor={`${formId}-name`}>Name</label>
-          <input id={`${formId}-name`} name="name" placeholder="Enter your name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-name-error` : undefined} />
+          <input id={`${formId}-name`} name="name" aria-invalid={Boolean(errors.name)} aria-describedby={errors.name ? `${formId}-name-error` : undefined} />
           {errors.name && <span className="replica-field__error" id={`${formId}-name-error`}>{errors.name}</span>}
         </div>
         <div className="replica-field">
           <label htmlFor={`${formId}-email`}>Email</label>
-          <input id={`${formId}-email`} name="email" type="email" placeholder="Enter your email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${formId}-email-error` : undefined} />
+          <input id={`${formId}-email`} name="email" type="email" aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? `${formId}-email-error` : undefined} />
           {errors.email && <span className="replica-field__error" id={`${formId}-email-error`}>{errors.email}</span>}
         </div>
+        {variant.collectRoleIntent && <>
+          <div className="replica-field">
+            <label htmlFor={`${formId}-intent`}>What are you reaching out about?</label>
+            <select id={`${formId}-intent`} name="inquiry_intent" defaultValue="" aria-invalid={Boolean(errors.intent)} aria-describedby={errors.intent ? `${formId}-intent-error` : undefined}><option value="" disabled>Select intent</option><option>Full-time role</option><option>Contract role</option><option>Freelance project</option><option>Technical collaboration</option><option>General inquiry</option></select>
+            {errors.intent && <span className="replica-field__error" id={`${formId}-intent-error`}>{errors.intent}</span>}
+          </div>
+          <div className="replica-field">
+            <label htmlFor={`${formId}-arrangement`}>Work arrangement</label>
+            <select id={`${formId}-arrangement`} name="work_arrangement" defaultValue=""><option value="">Not applicable</option><option>Remote</option><option>Hybrid in Lagos</option><option>On-site in Lagos</option><option>Relocation discussion</option></select>
+          </div>
+        </>}
         <div className="replica-field replica-field--project">
           <label htmlFor={`${formId}-project`}>{variant.projectLabel}</label>
-          <textarea id={`${formId}-project`} name="description" placeholder={variant.projectPlaceholder} aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
+          <textarea id={`${formId}-project`} name="description" aria-invalid={Boolean(errors.description)} aria-describedby={errors.description ? `${formId}-project-error` : undefined} />
           {errors.description && <span className="replica-field__error" id={`${formId}-project-error`}>{errors.description}</span>}
         </div>
         <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending…" : variant.submitLabel}</button>
@@ -390,40 +412,53 @@ function useContactLauncher(rootRef, openContact) {
       const isContactLink = href === "#contact" || href.includes("/#contact") || href.includes("/v2/#contact") || href.includes("/v2/contact/") || href.startsWith("mailto:");
       if (!isContactLink) return;
       event.preventDefault();
-      openContact();
+      openContact(link.dataset.contactContext || "");
     };
     root.addEventListener("click", launch);
     return () => root.removeEventListener("click", launch);
   }, [openContact, rootRef]);
 }
 
+// The wordmark fills the footer edge to edge, tuned for HENRY. at six characters.
+// STORECRAFT. is eleven, so at that size it runs off the viewport. Scaling by character
+// count fixes the overflow and keeps the six-character case pixel-identical, but on its
+// own it lands a long wordmark at HENRY.'s width and well short of its cap height, which
+// reads as a caption rather than a wordmark. So this emits the ratio and nothing else,
+// and replica.css decides per breakpoint how much of the space the ratio gave up to take
+// back as size and as tracking. Both of those terms are multiplied by the shortfall, so
+// at a ratio of 1 they vanish and no amount of that tuning can move HENRY.
+const WORDMARK_REFERENCE_LENGTH = 6;
+
 function RisingWordmark({ word }) {
+  const fit = Math.min(1, WORDMARK_REFERENCE_LENGTH / Math.max(1, word.length));
   return (
-    <strong className="replica-footer__wordmark" aria-hidden="true">
+    <strong className="replica-footer__wordmark" aria-hidden="true" style={{ "--wordmark-fit": fit }}>
       <span className="replica-footer__wordmark-text">{word}</span>
     </strong>
   );
 }
 
-export function SiteFooter() {
+export function SiteFooter({ brand = replicaContent }) {
   return (
     <footer className="replica-footer">
       <div className="replica-end-container replica-footer__shell">
         <div className="replica-footer__grid">
-          <p className="replica-footer__statement">{replicaContent.footerStatement.map((line) => <span key={line}>{line}</span>)}</p>
+          <p className="replica-footer__statement">{brand.footerStatement.map((line) => <span key={line}>{line}</span>)}</p>
           <nav className="replica-footer__links" aria-label="Footer navigation">
             <h2>/Quick links</h2>
-            <div>{replicaContent.navigation.map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined}>{item.label}</a>)}</div>
+            <div>{brand.navigation.map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined}>{item.label}</a>)}</div>
           </nav>
-          <div className="replica-footer__contact"><h2>/Contact</h2><a href={`mailto:${replicaContent.contact.email}`}>{replicaContent.contact.email}</a></div>
+          <div className="replica-footer__contact"><h2>/Contact</h2><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></div>
         </div>
-        <RisingWordmark word={replicaContent.wordmark} />
+        <RisingWordmark word={brand.wordmark} />
       </div>
     </footer>
   );
 }
 
-export function EndingSequence() {
+// `cover` is the panel that slides up to reveal the footer. It defaults to Henry's
+// contact section; StoreCraft passes its own inquiry form instead.
+export function EndingSequence({ brand = replicaContent, cover }) {
   const endingRef = useRef(null);
 
   useEffect(() => {
@@ -438,17 +473,25 @@ export function EndingSequence() {
     gsap.set(wordmark, { y: 0, yPercent: 112, autoAlpha: 0 });
     const raiseWordmark = () => {
       wordmarkMotion?.kill();
+      // Hops are a fraction of the cap height rather than a pixel count, so the same
+      // settle reads at 390px on a wide screen and at 76px on a phone. Read at call
+      // time because the font size is a clamp on the viewport.
+      const cap = parseFloat(getComputedStyle(wordmark).fontSize) || 240;
+      const hop = (fraction) => -Math.max(1, cap * fraction);
+      // The rise (yPercent) and the hops (y) are separate properties, so the first
+      // hop can start while the wordmark is still travelling up. Without that
+      // overlap the eased rise settles to zero velocity and the bounce reads as a
+      // second, disconnected animation.
       wordmarkMotion = gsap.timeline()
         .set(wordmark, { y: 0 })
-        .to(wordmark, { yPercent: 0, autoAlpha: 1, duration: 1.8, ease: "power2.out" })
-        .to(wordmark, { y: -18, duration: .22, ease: "power2.out" })
-        .to(wordmark, { y: 0, duration: .24, ease: "power2.in" })
-        .to(wordmark, { y: -10, duration: .18, ease: "power2.out" })
-        .to(wordmark, { y: 0, duration: .2, ease: "power2.in" })
-        .to(wordmark, { y: -5, duration: .14, ease: "power2.out" })
-        .to(wordmark, { y: 0, duration: .17, ease: "power2.in" })
-        .to(wordmark, { y: -2, duration: .11, ease: "power2.out" })
-        .to(wordmark, { y: 0, duration: .14, ease: "power2.in" });
+        .to(wordmark, { autoAlpha: 1, duration: .34, ease: "none" }, 0)
+        .to(wordmark, { yPercent: 0, duration: 1.12, ease: "power1.out" }, 0)
+        .to(wordmark, { y: hop(.024), duration: .34, ease: "sine.out" }, .8)
+        .to(wordmark, { y: 0, duration: .32, ease: "sine.in" })
+        .to(wordmark, { y: hop(.0105), duration: .25, ease: "sine.out" })
+        .to(wordmark, { y: 0, duration: .24, ease: "sine.in" })
+        .to(wordmark, { y: hop(.0042), duration: .18, ease: "sine.out" })
+        .to(wordmark, { y: 0, duration: .17, ease: "sine.in" });
     };
     const lowerWordmark = () => {
       wordmarkMotion?.kill();
@@ -498,10 +541,10 @@ export function EndingSequence() {
   }, []);
 
   return (
-    <section ref={endingRef} className="replica-ending" id="contact" aria-label="Contact and page footer">
+    <section ref={endingRef} className="replica-ending" id={brand.endingId || "contact"} aria-label="Contact and page footer">
       <div className="replica-ending__sticky">
-        <div className="replica-ending__under"><SiteFooter /></div>
-        <div className="replica-ending__cover"><ContactSection sectionId="" /></div>
+        <div className="replica-ending__under"><SiteFooter brand={brand} /></div>
+        <div className="replica-ending__cover">{cover || <ContactSection sectionId="" />}</div>
       </div>
     </section>
   );
@@ -571,7 +614,7 @@ function useReplicaMotion(rootRef) {
 
       const services = root.querySelector(".replica-services");
       const servicesHeading = services?.querySelector(".replica-services__inner > h2");
-      const serviceItems = gsap.utils.toArray(".replica-services__list > a", services);
+      const serviceItems = gsap.utils.toArray(".replica-services__list > article", services);
       const servicesTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: services,
@@ -603,6 +646,38 @@ function useReplicaMotion(rootRef) {
           duration: 1.4,
           ease: "none",
         }, ">-.35");
+      }
+
+      const stack = root.querySelector(".replica-stack");
+      const stackLayers = gsap.utils.toArray(".replica-stack__layer", stack);
+      const stackSets = gsap.utils.toArray(".replica-stack__logo-set", stack);
+      if (stack && stackLayers.length) {
+        const activateLayer = (index) => {
+          const active = Math.min(stackLayers.length - 1, Math.max(0, index));
+          stack.style.setProperty("--replica-stack-active", active);
+          stackLayers.forEach((layer, position) => layer.classList.toggle("is-active", position === active));
+          stackSets.forEach((set, position) => set.classList.toggle("is-active", position === active));
+        };
+
+        if (mobileScroll) {
+          // Mobile shows every layer's logos inline, so the highlight only tracks
+          // whichever layer the reader has reached.
+          stackLayers.forEach((layer, index) => ScrollTrigger.create({
+            trigger: layer,
+            start: "top 68%",
+            onEnter: () => activateLayer(index),
+            onEnterBack: () => activateLayer(index),
+          }));
+        } else {
+          ScrollTrigger.create({
+            trigger: stack,
+            start: "top top",
+            end: "bottom bottom",
+            invalidateOnRefresh: true,
+            onUpdate: (self) => activateLayer(Math.floor(self.progress * stackLayers.length)),
+          });
+        }
+        activateLayer(0);
       }
 
     }, root);
@@ -674,12 +749,74 @@ function useMobileVisualViewport(rootRef) {
   }, [rootRef]);
 }
 
-export default function ReplicaHome({ works, offers }) {
+// AWS is the one mark here that is a wordmark lockup rather than a square glyph: the official
+// artwork is "aws" set under the smile, so it is roughly 5:3 and its top and bottom thirds of
+// the 24x24 box are empty. Cropping the viewBox to the ink and letting the width follow from
+// the height renders it at the same 20px height as the square marks, where the lettering still
+// resolves — squeezing the whole lockup into a 20px square instead turns it to mush. The mark
+// column in replica.css is sized for the width this produces, so every label still lines up.
+const MARK_VIEWBOXES = { aws: "0 4.8 24 14.4" };
+
+function StackLogo({ slug }) {
+  const mark = stackLogos[slug];
+  if (!mark) return null;
+  const viewBox = MARK_VIEWBOXES[slug];
+  return (
+    <span className="replica-stack__logo">
+      <svg viewBox={viewBox ?? "0 0 24 24"} data-wide={viewBox ? "" : undefined} aria-hidden="true" focusable="false"><path d={mark.path} /></svg>
+      <span className="replica-stack__logo-name">{mark.title}</span>
+    </span>
+  );
+}
+
+function WorkingStackSection() {
+  const layers = replicaContent.workingStack;
+  return (
+    <section className="replica-stack" id="stack" aria-labelledby="replica-stack-heading">
+      <div className="replica-stack__sticky">
+        <div className="replica-stack__inner">
+          <header className="replica-stack__header">
+            <h2 className="replica-stack__eyebrow" id="replica-stack-heading">/{replicaContent.stackHeading}</h2>
+          </header>
+          <div className="replica-stack__scene">
+            <ol className="replica-stack__rack">
+              {layers.map((layer) => (
+                <li className="replica-stack__layer" key={layer.id} data-layer={layer.id}>
+                  <span className="replica-stack__vents" aria-hidden="true"><i /><i /><i /></span>
+                  <span className="replica-stack__index">{layer.index}</span>
+                  <span className="replica-stack__label">{layer.label}</span>
+                  <span className="replica-stack__note">{layer.note}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="replica-stack__logos">
+              {layers.map((layer) => (
+                <div className="replica-stack__logo-set" key={layer.id} data-layer={layer.id}>
+                  <span className="replica-stack__logo-set-label">{layer.label}</span>
+                  <div className="replica-stack__logo-grid">
+                    {layer.logos.map((slug) => <StackLogo slug={slug} key={slug} />)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+export default function ReplicaHome({ works }) {
   const root = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
+  const [contactContext, setContactContext] = useState("");
   useMobileVisualViewport(root);
   useReplicaMotion(root);
-  useContactLauncher(root, () => setContactOpen(true));
+  const openContact = useCallback((context = "") => {
+    setContactContext(context);
+    setContactOpen(true);
+  }, []);
+  useContactLauncher(root, openContact);
   return (
     <div className="replica-page" id="top" ref={root} onClick={(event) => {
       const link = event.target.closest("a[href]");
@@ -693,10 +830,10 @@ export default function ReplicaHome({ works, offers }) {
         <StatementSection />
         <ServicesSection />
         {works}
-        {offers}
+        <WorkingStackSection />
         <EndingSequence />
       </main>
-      <ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} />
+      <ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} />
     </div>
   );
 }

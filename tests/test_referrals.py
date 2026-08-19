@@ -124,7 +124,7 @@ class ReferralApiTests(unittest.TestCase):
             "GET",
             "visit",
             code="partner-person-a1b2c3",
-            landing_page="/v2/ecommerce/?ref=partner-person-a1b2c3",
+            landing_page="/v2/storecraft/?ref=partner-person-a1b2c3",
         )
         self.assertEqual(status, 200)
         self.assertTrue(payload["active"])
@@ -165,7 +165,7 @@ class ReferralApiTests(unittest.TestCase):
                 "user-agent": "Referral test",
             },
             code=second["referral_code"],
-            landing_page="/v2/ecommerce/",
+            landing_page="/v2/storecraft/",
         )
         self.assertEqual(status, 200)
         self.assertEqual(payload["code"], first["referral_code"])
@@ -189,7 +189,7 @@ class ReferralApiTests(unittest.TestCase):
             headers={"authorization": "Bearer valid-token"},
         )
         self.assertEqual(status, 200)
-        self.assertEqual(payload["profile"]["referral_link"], "https://example.com/v2/ecommerce/?ref=partner-person-a1b2c3")
+        self.assertEqual(payload["profile"]["referral_link"], "https://example.com/v2/storecraft/?ref=partner-person-a1b2c3")
         self.assertEqual(self.gateway.tables["referral_profiles"][0]["auth_user_id"], "auth-1")
         self.assertNotIn("details", payload["payout_method"])
 

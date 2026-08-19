@@ -8,10 +8,12 @@ import "@fontsource/ibm-plex-mono/latin-500.css";
 import { V2App } from "./V2App.jsx";
 import PortfolioGuide from "./PortfolioGuide.jsx";
 import "./styles.css";
+import "./case.css";
 import "./replica.css";
 import "./guide.css";
 import "./ecommerce.css";
 import "./referrals.css";
+import { initialisePostHog } from "./posthog.js";
 
 const root = document.getElementById("v2-root");
 
@@ -20,5 +22,6 @@ if (!root) {
 }
 
 const page = document.body.dataset.v2Page || "home";
+void initialisePostHog();
 
 createRoot(root).render(<><V2App page={page} /><PortfolioGuide page={page} /></>);

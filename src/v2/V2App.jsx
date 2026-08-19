@@ -1,145 +1,19 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects, services } from "./data.js";
+import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects } from "./data.js";
 import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
+import { replicaContent } from "./replicaContent.js";
+import { storecraftContent } from "./storecraftContent.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
-import EcommerceLanding from "./EcommerceLanding.jsx";
+import EcommerceLanding, { CommerceInquiry } from "./EcommerceLanding.jsx";
+import OffersShowcase from "./OffersShowcase.jsx";
+import { commerceOffers } from "./offersData.js";
 import { ReferralCampaign, ReferralDashboard } from "./ReferralCampaign.jsx";
 import { captureReferralAttribution } from "./referralClient.js";
 import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
-import {
-  AnnotatedArtifactExplorer,
-  CaseHeroActions,
-  CaseExperienceProvider,
-  ClientFitSection,
-  ConversionPanel,
-  DecisionReplay,
-  EvidenceLabel,
-  ExperienceNav,
-  OfferDeliverablePreview,
-} from "./CaseStudyExperiences.jsx";
-
-const offerPortrait = (name) => new URL(`../../assets/images/v2-offers/${name}`, import.meta.url).href;
-const offerAlternate = (name) => new URL(`../../ecommerce demo gallery/e-commerce demo media assets/${name}`, import.meta.url).href;
-const OFFERS_DEBUG = false;
-const OFFER_FILTERS = ["ALL SYSTEMS", "REVENUE", "CUSTOMER", "OPERATIONS"];
-const OFFERS_STATEMENT = "I help growing Shopify brands automate the operations behind the store: support, returns, inventory, reporting, retention, and customer experience with AI agents, workflow automation, and custom software.";
-const commerceOffers = [
-  {
-    id: "audit", number: "01", filter: "REVENUE", category: "REVENUE RECOVERY",
-    valueLabel: "RANK THE FIRST LEAK", timingLabel: "START HERE", title: "Revenue Leak Audit",
-    description: "Audit support, returns, retention, app stack, inventory, reporting, and founder tasks. Then rank what to automate first.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/revenue-leak-audit/", year: "2026",
-    challenge: "Revenue pressure appears across support, returns, retention, stock, reporting, and founder time, but the most valuable first move is still unclear.",
-    approach: "A focused diagnostic brings support, returns, retention, inventory, and reporting pressure into one ranked leak map.",
-    impact: "The founder gets one recoverable opportunity, the evidence behind it, and a practical first build path.",
-    deliverables: ["Signal audit", "Leak scorecard", "Priority roadmap"],
-    benchmarkValue: "Baseline first",
-    benchmarkLabel: "No market average can identify which operating leak is most expensive in your store.",
-    benchmarkSource: "Measured during the audit",
-    benchmarkNote: "Convert each visible pressure into lost revenue, hours consumed, risk, and implementation effort before choosing a build.",
-    successMetrics: ["Leak value", "Hours consumed", "Payback window"],
-    image: offerPortrait("revenue-leak-audit-portrait.webp"), hoverImage: offerAlternate("Revenue_Leak_Audit (1).webp"), imageAlt: "Commerce parcels, receipts, and a magnifying glass representing a revenue leak audit",
-  },
-  {
-    id: "concierge", number: "02", filter: "CUSTOMER", category: "CUSTOMER EXPERIENCE",
-    valueLabel: "24/7 GUIDANCE", timingLabel: "CONTROLLED AI", title: "AI Support Concierge",
-    description: "Connect AI to policies, products, orders, and helpdesk workflows, with clear escalation whenever a person should take over.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/ai-support-concierge/", year: "2026",
-    challenge: "Repeat product, order, and policy questions consume support capacity while uncertain shoppers still wait for useful guidance.",
-    approach: "A store-aware concierge answers from approved knowledge, recommends within clear rules, and asks before taking action.",
-    impact: "Customers move from question to confident next step while the team keeps control of sensitive or unusual cases.",
-    deliverables: ["Knowledge layer", "Guided selling", "Action guardrails"],
-    benchmarkValue: "30–45%",
-    benchmarkLabel: "potential productivity value, measured against current customer-care function costs.",
-    benchmarkSource: "McKinsey generative AI research",
-    benchmarkNote: "Establish the current response time, routine-contact share, resolution rate, and escalation quality before automating one bounded request type.",
-    successMetrics: ["First response", "Automated resolution", "Human escalation"],
-    image: offerPortrait("ai-support-concierge-portrait.webp"), hoverImage: offerAlternate("AI Support Concierge(1).webp"), imageAlt: "Laptop, phone, headset, and commerce parcels arranged as an AI support desk",
-  },
-  {
-    id: "dashboard", number: "03", filter: "OPERATIONS", category: "FOUNDER OPERATIONS",
-    valueLabel: "ONE DAILY VIEW", timingLabel: "LIVE SIGNALS", title: "AI Ops Dashboard",
-    description: "Unify revenue, refunds, support backlog, inventory risk, fulfillment, retention, and AI summaries in one operating view.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/ai-ops-dashboard/", year: "2026",
-    challenge: "The operating day starts across scattered tools, yet urgent exceptions can still arrive after they have become expensive.",
-    approach: "A single operating view summarizes only what changed across revenue, support, returns, stock, and retention.",
-    impact: "Daily decisions become faster because the system surfaces exceptions, context, and the next action together.",
-    deliverables: ["Daily brief", "Exception feed", "Decision dashboard"],
-    benchmarkValue: "1 view",
-    benchmarkLabel: "for the exceptions, context, and next actions that currently require a morning tool hunt.",
-    benchmarkSource: "Measured from the current reporting routine",
-    benchmarkNote: "Time the current daily review, count the tools checked, and record how long material exceptions wait before a decision.",
-    successMetrics: ["Reporting time", "Exception response", "Decision lag"],
-    image: offerPortrait("ai-ops-dashboard-portrait.webp"), hoverImage: offerAlternate("AI Ops Dashboard (1).webp"), imageAlt: "Miniature commerce operation under glass connected to operational signals",
-  },
-  {
-    id: "retention", number: "04", filter: "REVENUE", category: "LIFECYCLE GROWTH",
-    valueLabel: "RELEVANT REPEAT SALES", timingLabel: "POST-PURCHASE", title: "Retention Automation",
-    description: "Automate segmentation, replenishment, win-back, VIP, personalized offers, and post-purchase journeys from store data.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/retention-automation/", year: "2026",
-    challenge: "First-time buyers enter generic follow-up flows that ignore what they bought, why it matters, and when they may need it again.",
-    approach: "Purchase events route each customer into education, replenishment, VIP, subscription, or win-back journeys.",
-    impact: "Every message has a clear reason to arrive, creating more timely second-purchase opportunities without blanket discounting.",
-    deliverables: ["Buyer segments", "Lifecycle routes", "Performance signals"],
-    benchmarkValue: "10–15%",
-    benchmarkLabel: "revenue lift is often associated with effective personalization.",
-    benchmarkSource: "McKinsey personalization research",
-    benchmarkNote: "Measure the current repeat-purchase window and use a holdout group so incremental revenue is separated from sales that would have happened anyway.",
-    successMetrics: ["Repeat purchase", "Revenue per recipient", "Discount reliance"],
-    image: offerPortrait("retention-automation-portrait.webp"), hoverImage: offerAlternate("Retention Automation(1).webp"), imageAlt: "Premium packages and a phone connected in a circular customer retention journey",
-  },
-  {
-    id: "inventory", number: "05", filter: "OPERATIONS", category: "INVENTORY CONTROL",
-    valueLabel: "SEE STOCK RISK EARLY", timingLabel: "EARLY WARNING", title: "Inventory Intelligence",
-    description: "Track SKU velocity, predict stockouts, flag supplier lead times and slow movers, and automate reorder decisions.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/inventory-intelligence/", year: "2026",
-    challenge: "Stockouts, slow movers, and supplier deadlines are found manually—often after they have already affected sales or working capital.",
-    approach: "Inventory velocity, lead times, campaign demand, and reorder thresholds are monitored as one decision system.",
-    impact: "The team sees risk early enough to reorder, protect a campaign, or release cash tied up in slow stock.",
-    deliverables: ["Risk monitor", "Reorder logic", "Stock alerts"],
-    benchmarkValue: "At-risk SKUs",
-    benchmarkLabel: "ranked by stockout exposure, weeks of cover, lead time, and cash tied up in slow stock.",
-    benchmarkSource: "Measured from store and supplier data",
-    benchmarkNote: "Start with historical velocity, current cover, supplier lead time, planned demand, and the cost of being wrong in either direction.",
-    successMetrics: ["Stockout exposure", "Weeks of cover", "Slow-stock value"],
-    image: offerPortrait("inventory-intelligence-portrait.webp"), hoverImage: offerAlternate("Inventory Intelligience System(1).webp"), imageAlt: "Organized stockroom with parcels, folded goods, and an inventory tablet",
-  },
-  {
-    id: "returns", number: "06", filter: "OPERATIONS", category: "RETURNS OPERATIONS",
-    valueLabel: "FASTER CONTROLLED RETURNS", timingLabel: "EXCHANGE FIRST", title: "Returns Automation",
-    description: "Guide returns with exchange-first routing, reason analysis, risk scoring, and alerts for suspicious patterns.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/returns-automation/", year: "2026",
-    challenge: "Returns default to slow support threads and refunds while exchange opportunities and useful reason data disappear.",
-    approach: "A guided path identifies the order, checks policy, captures the reason, and offers a suitable exchange before refund.",
-    impact: "Straightforward returns take minutes, risky cases reach a person, and more revenue stays with the store.",
-    deliverables: ["Guided intake", "Policy checks", "Exchange routing"],
-    benchmarkValue: "19.3%",
-    benchmarkLabel: "of online sales were estimated to be returned in 2025.",
-    benchmarkSource: "NRF 2025 retail returns report",
-    benchmarkNote: "Replace the industry benchmark with your return rate, handling time, exchange rate, refund value, and most common return reasons.",
-    successMetrics: ["Exchange conversion", "Resolution time", "Refund value retained"],
-    image: offerPortrait("returns-automation-portrait.webp"), hoverImage: offerAlternate("Returns Automation(1).webp"), imageAlt: "Returned clothing, packages, labels, and a checklist arranged for processing",
-  },
-  {
-    id: "custom", number: "07", filter: "OPERATIONS", category: "CUSTOM SYSTEMS",
-    valueLabel: "STORE-SPECIFIC", timingLabel: "BUILT TO FIT", title: "Custom Automation",
-    description: "Connect Shopify webhooks, APIs, internal tools, reporting, and data sync where off-the-shelf apps stop short.",
-    ctaLabel: "Explore outcome model", href: "/v2/offers/custom-automation/", year: "2026",
-    challenge: "Important store work lives between tools, leaving the team to copy data, repeat checks, and notice exceptions by hand.",
-    approach: "The real bottleneck is mapped first, then a controlled workflow connects events, rules, approvals, and reporting.",
-    impact: "A store-specific system removes repeated work without forcing the operation into another generic platform.",
-    deliverables: ["Workflow map", "System integration", "Control layer"],
-    benchmarkValue: "Hours / week",
-    benchmarkLabel: "spent moving information between systems, checking status, and repairing preventable errors.",
-    benchmarkSource: "Measured during workflow discovery",
-    benchmarkNote: "Observe the complete handoff, including waiting, rework, approvals, exceptions, and the cost of a missed step.",
-    successMetrics: ["Hours removed", "Error rate", "Exception cycle time"],
-    image: offerPortrait("custom-automations-portrait.webp"), hoverImage: offerAlternate("Custom Automations(1).webp"), imageAlt: "Commerce storefront model connected to a custom automation network",
-  },
-];
+import { OfferCasePage, ProjectCasePage } from "./CasePage.jsx";
 
 const expertise = [
   ["01", "AI products", "Agents, retrieval, and generative experiences"],
@@ -152,20 +26,11 @@ function Arrow() {
   return <span className="v2-direction-arrow" aria-hidden="true">{"\u2197"}</span>;
 }
 
-function OfferNumber({ value }) {
-  const digit = String(Number.parseInt(value, 10) || 1);
-  return (
-    <div className="v2-offer-info__number" aria-hidden="true">
-      <span className="v2-offer-info__number-digit">{digit}</span>
-    </div>
-  );
-}
-
 function useReveal(rootRef, page) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
-    if (page === "ecommerce" || page.startsWith("case-") || page.startsWith("offer-")) return undefined;
+    if (page === "storecraft") return undefined;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -175,280 +40,6 @@ function useReveal(rootRef, page) {
     }, { threshold: 0.08, rootMargin: "0px 0px -8%" });
     root.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [page, rootRef]);
-}
-
-function useCaseStudyMotion(rootRef, page) {
-  useEffect(() => {
-    if (!page.startsWith("case-") && !page.startsWith("offer-")) return undefined;
-    const root = rootRef.current;
-    const article = root?.querySelector(".v2-case, .v2-offer-case");
-    if (!article) return undefined;
-
-    const revealNodes = [...article.querySelectorAll("[data-reveal]")];
-    const showContent = () => revealNodes.forEach((node) => node.classList.add("is-visible"));
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reducedMotion) {
-      showContent();
-      return undefined;
-    }
-
-    let cancelled = false;
-    let context;
-    let matchMedia;
-    article.classList.add("has-case-motion");
-
-    const setup = async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
-      if (cancelled) return;
-      const heroAsset = article.querySelector(".v2-case-head > figure img, .v2-case-head > figure video, .v2-offer-case__media img, .v2-offer-case__media video");
-      const heroVideoReady = heroAsset?.tagName === "VIDEO" && heroAsset.readyState < 1
-        ? new Promise((resolve) => {
-            const finish = () => {
-              window.clearTimeout(timeout);
-              heroAsset.removeEventListener("loadedmetadata", finish);
-              heroAsset.removeEventListener("error", finish);
-              resolve();
-            };
-            const timeout = window.setTimeout(finish, 2_000);
-            heroAsset.addEventListener("loadedmetadata", finish, { once: true });
-            heroAsset.addEventListener("error", finish, { once: true });
-          })
-        : Promise.resolve();
-      await Promise.allSettled([
-        document.fonts?.ready || Promise.resolve(),
-        heroAsset?.tagName === "IMG" ? heroAsset.decode?.() || Promise.resolve() : Promise.resolve(),
-        heroVideoReady,
-      ]);
-      if (cancelled) return;
-      gsap.registerPlugin(ScrollTrigger);
-      showContent();
-
-      context = gsap.context(() => {
-        const isOffer = article.classList.contains("v2-offer-case");
-        const hero = article.querySelector(isOffer ? ".v2-offer-case__hero" : ".v2-case-head");
-        const heroMedia = article.querySelector(isOffer ? ".v2-offer-case__media" : ".v2-case-head > figure");
-        const heroCopy = isOffer
-          ? [
-              article.querySelector(".v2-offer-case__back"),
-              article.querySelector(".v2-offer-case__meta"),
-              article.querySelector(".v2-offer-case__heading > span"),
-              article.querySelector(".v2-offer-case__heading h1"),
-              article.querySelector(".v2-offer-case__heading p"),
-            ]
-          : [
-              article.querySelector(".v2-case-head > a"),
-              article.querySelector(".v2-case-head__title > span"),
-              article.querySelector(".v2-case-head h1"),
-              article.querySelector(".v2-case-head__title > p"),
-              ...article.querySelectorAll(".v2-case-head__title > div > span, .v2-case-actions > a"),
-            ];
-
-        const intro = gsap.timeline({ defaults: { ease: "power3.out" } });
-        intro
-          .from(heroCopy.filter(Boolean), { autoAlpha: 0, y: 34, duration: 1, stagger: .075, clearProps: "opacity,visibility,transform" })
-          .fromTo(heroMedia, { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 1.25, ease: "power4.inOut", clearProps: "clipPath" }, "-=.42");
-
-        matchMedia = gsap.matchMedia();
-        matchMedia.add({
-          mobile: "(max-width: 720px)",
-          desktop: "(min-width: 721px)",
-        }, ({ conditions }) => {
-          if (!hero || !heroMedia) return undefined;
-          const mobile = conditions.mobile;
-          const parallax = gsap.fromTo(heroMedia, { yPercent: mobile ? -1 : -1.5 }, {
-            yPercent: mobile ? 2.5 : 4.5,
-            ease: "none",
-            scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: mobile ? true : .65 },
-          });
-          return () => parallax.revert();
-        });
-
-        const heroRevealNodes = new Set([
-          article.querySelector(".v2-case-head__title"),
-          article.querySelector(".v2-case-head > figure"),
-          article.querySelector(".v2-offer-case__heading"),
-          article.querySelector(".v2-offer-case__media"),
-        ].filter(Boolean));
-        const storySections = [...article.querySelectorAll("[data-story-sequence]")];
-        const storyTargets = (section) => {
-          if (section.matches(".v2-decision-replay")) return [
-            ...section.querySelectorAll(":scope > header > *"),
-            section.querySelector(".v2-decision-replay__sticky"),
-            ...section.querySelectorAll(".v2-decision-replay li > button"),
-          ].filter(Boolean);
-          if (section.matches(".v2-artifact-explorer")) return [
-            ...section.querySelectorAll(":scope > header > *"),
-            section.querySelector(".v2-artifact-explorer__surface"),
-            ...section.querySelectorAll(":scope > nav > button"),
-          ].filter(Boolean);
-          let selector = ":scope > *";
-          if (section.matches(".v2-case-outcome")) selector = ":scope > span, :scope > h2, :scope > dl, :scope > .v2-case-outcome__proof, :scope > .v2-case-outcome__qualifier";
-          if (section.matches(".v2-case-challenge")) selector = ":scope > span, :scope > h2, :scope > p";
-          if (section.matches(".v2-case-system")) selector = ":scope > header > *, .v2-case-system__grid > article";
-          if (section.matches(".v2-case-process")) selector = ":scope > header > *, :scope > div > article";
-          if (section.matches(".v2-case-gallery")) selector = ":scope > header > *, :scope > div > figure";
-          if (section.matches(".v2-offer-case__overview")) selector = ":scope > span, :scope > p, :scope > dl";
-          if (section.matches(".v2-offer-case__process")) selector = ":scope > article";
-          if (section.matches(".v2-offer-case__result")) selector = ":scope > span, :scope > p, :scope > a";
-          if (section.matches(".v2-client-fit")) selector = ".v2-client-fit__intro > *, :scope > ul > li, .v2-client-fit__deliverables > *";
-          if (section.matches(".v2-conversion")) selector = ".v2-conversion__copy > *, :scope > .v2-conversion__form-wrap";
-          if (section.matches(".v2-deliverable-preview")) selector = ":scope > header > *, :scope > div > nav > button, :scope > div > article";
-          return [...section.querySelectorAll(selector)];
-        };
-
-        matchMedia.add({
-          mobile: "(max-width: 720px)",
-          desktop: "(min-width: 721px)",
-        }, ({ conditions }) => {
-          const mobile = conditions.mobile;
-          const naturalFlowSections = new Set();
-          const timelines = storySections.map((section) => {
-            const targets = storyTargets(section);
-            if (!targets.length) return null;
-            const wantsPin = section.dataset.storySequence === "pin";
-            const pinOffset = mobile
-              ? Number.parseFloat(getComputedStyle(article).getPropertyValue("--case-pin-offset")) || 152
-              : 176;
-            const viewportHeight = () => window.visualViewport?.height || window.innerHeight;
-            const canPin = wantsPin && (!mobile || (() => {
-              gsap.set(targets, { autoAlpha: 1, y: 0, clipPath: "inset(0 0 0% 0)" });
-              const sectionHeight = section.scrollHeight;
-              const available = viewportHeight() - pinOffset;
-              gsap.set(targets, { autoAlpha: 0, y: mobile ? 24 : 40, clipPath: "inset(0 0 100% 0)" });
-              return sectionHeight <= available;
-            })());
-            if (mobile && wantsPin && !canPin) {
-              section.classList.add("uses-natural-mobile-flow");
-              naturalFlowSections.add(section);
-            }
-            const distance = canPin ? () => Math.max(
-              mobile ? 160 : viewportHeight() * 1.05,
-              targets.length * (mobile ? 64 : 168),
-            ) : undefined;
-            const timeline = gsap.timeline({
-              scrollTrigger: {
-                trigger: section,
-                start: canPin ? `top top+=${pinOffset}` : "top 88%",
-                end: canPin ? () => `+=${Math.round(distance())}` : "bottom 34%",
-                pin: canPin,
-                pinSpacing: canPin,
-                anticipatePin: canPin ? 1 : 0,
-                scrub: mobile ? true : .6,
-                invalidateOnRefresh: true,
-              },
-            });
-
-            if (canPin && !mobile) timeline.to({}, { duration: .2 });
-
-            timeline.fromTo(targets, {
-              autoAlpha: 0,
-              y: mobile ? 24 : 40,
-              clipPath: "inset(0 0 100% 0)",
-            }, {
-              autoAlpha: 1,
-              y: 0,
-              clipPath: "inset(0 0 0% 0)",
-              duration: 1,
-              stagger: mobile ? .75 : .52,
-              ease: "none",
-            });
-
-            if (canPin && !mobile) timeline.to({}, { duration: .26 });
-            return timeline;
-          }).filter(Boolean);
-          return () => {
-            timelines.forEach((timeline) => timeline.revert());
-            naturalFlowSections.forEach((section) => section.classList.remove("uses-natural-mobile-flow"));
-          };
-        });
-
-        revealNodes.forEach((node) => {
-          if (heroRevealNodes.has(node) || node.closest("[data-story-sequence]")) return;
-          gsap.from(node, {
-            autoAlpha: 0,
-            y: 38,
-            duration: 1.05,
-            ease: "power3.out",
-            clearProps: "opacity,visibility,transform",
-            scrollTrigger: { trigger: node, start: "top 84%", once: true },
-          });
-        });
-
-        article.querySelectorAll(".v2-case-system__proof, .v2-case-gallery figure, .v2-artifact-explorer__surface").forEach((media) => {
-          if (media.closest("[data-story-sequence]") && !media.matches(".v2-case-system__proof")) return;
-          gsap.from(media, {
-            clipPath: "inset(0 0 18% 0)",
-            y: 24,
-            duration: 1.2,
-            ease: "power4.out",
-            clearProps: "clipPath,transform",
-            scrollTrigger: { trigger: media, start: "top 86%", once: true },
-          });
-        });
-
-        const nextLink = article.querySelector(".v2-next, .v2-offer-case__next");
-        if (nextLink) {
-          const nextTargets = [...nextLink.querySelectorAll("span, strong, [aria-hidden='true']")];
-          matchMedia.add({
-            mobile: "(max-width: 720px)",
-            desktop: "(min-width: 721px)",
-          }, ({ conditions }) => {
-            const mobile = conditions.mobile;
-            const revealTargets = mobile ? [nextLink] : nextTargets;
-            const reveal = gsap.timeline({
-              scrollTrigger: mobile
-                ? { trigger: nextLink, start: "top 94%", end: "top 62%", scrub: true }
-                : { trigger: nextLink, start: "top 88%", once: true },
-            });
-            reveal.fromTo(revealTargets, {
-              autoAlpha: 0,
-              x: -28,
-            }, {
-              autoAlpha: 1,
-              x: 0,
-              duration: 1,
-              stagger: mobile ? 0 : .1,
-              ease: mobile ? "none" : "power3.out",
-              clearProps: mobile ? undefined : "opacity,visibility,transform",
-            });
-            return () => reveal.revert();
-          });
-        }
-
-      }, article);
-
-      let refreshFrame = window.requestAnimationFrame(() => ScrollTrigger.refresh());
-      let refreshTimer = 0;
-      let viewportWidth = window.visualViewport?.width || window.innerWidth;
-      const refresh = () => {
-        const nextWidth = window.visualViewport?.width || window.innerWidth;
-        if (Math.abs(nextWidth - viewportWidth) < 2) return;
-        viewportWidth = nextWidth;
-        window.clearTimeout(refreshTimer);
-        refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 140);
-      };
-      window.visualViewport?.addEventListener("resize", refresh, { passive: true });
-      window.addEventListener("orientationchange", refresh, { passive: true });
-      context.add(() => {
-        window.cancelAnimationFrame(refreshFrame);
-        window.clearTimeout(refreshTimer);
-        window.visualViewport?.removeEventListener("resize", refresh);
-        window.removeEventListener("orientationchange", refresh);
-      });
-    };
-
-    setup();
-    return () => {
-      cancelled = true;
-      matchMedia?.revert();
-      context?.revert();
-      article.classList.remove("has-case-motion");
-      showContent();
-    };
   }, [page, rootRef]);
 }
 
@@ -649,332 +240,6 @@ function Header({ onContact }) {
   );
 }
 
-function OffersShowcase() {
-  const [filter, setFilter] = useState("ALL SYSTEMS");
-  const [isMobile, setIsMobile] = useState(false);
-  const sectionRef = useRef(null);
-  const viewportRef = useRef(null);
-  const trackRef = useRef(null);
-  const mobileStageRef = useRef(null);
-  const mobileStageViewports = commerceOffers.length * .68 + 1.15;
-  const filteredOffers = useMemo(
-    () => filter === "ALL SYSTEMS" ? commerceOffers : commerceOffers.filter((offer) => offer.filter === filter),
-    [filter],
-  );
-
-  useEffect(() => {
-    const query = window.matchMedia("(max-width: 760px)");
-    const update = () => setIsMobile(query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    const viewport = viewportRef.current;
-    const track = trackRef.current;
-    if (!section || !viewport || !track || isMobile) return undefined;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-
-    let context;
-    let observer;
-    let resizeTimer = 0;
-    let disposed = false;
-
-    const setup = async () => {
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([import("gsap"), import("gsap/ScrollTrigger")]);
-      const firstImage = track.querySelector("img");
-      await Promise.allSettled([
-        document.fonts?.ready || Promise.resolve(),
-        firstImage?.decode?.() || Promise.resolve(),
-      ]);
-      if (disposed) return;
-      gsap.registerPlugin(ScrollTrigger);
-        let updateOfferMedia = () => {};
-
-      context = gsap.context(() => {
-        const distance = () => Math.max(0, track.scrollWidth - viewport.clientWidth);
-        const headlineWords = gsap.utils.toArray(".v2-offers-intro__word", track);
-        const horizontalTween = gsap.timeline({
-          defaults: { ease: "none" },
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: () => `+=${Math.round(distance() * 1.04 + viewport.clientWidth * 1.55)}`,
-            pin: viewport,
-            scrub: 0.8,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-            markers: OFFERS_DEBUG,
-          },
-        });
-        if (headlineWords.length) {
-          horizontalTween.to(headlineWords, {
-            color: "var(--offers-ink)",
-            stagger: { amount: 1.25, from: "start" },
-            ease: "none",
-            duration: 0.1,
-          }, 0);
-        }
-        horizontalTween.to(track, { x: () => -distance(), duration: 7.2 }, 1.5);
-
-        const offerMedia = [...track.querySelectorAll(".v2-offer-media")].map((panel) => {
-          const frame = panel.querySelector(".v2-offer-media__frame");
-          const image = panel.querySelector("img");
-          return { panel, frame, image };
-        });
-        updateOfferMedia = () => {
-          const width = viewport.clientWidth;
-          offerMedia.forEach(({ panel, frame, image }) => {
-            const left = panel.getBoundingClientRect().left;
-            const progress = Math.min(1, Math.max(0, ((width * .57) - left) / (width * .47)));
-            const containedRadius = Math.min(frame.clientWidth, frame.clientHeight) / 2;
-            const cornerRadius = Math.hypot(frame.clientWidth, frame.clientHeight) / 2 + 2;
-            const radius = containedRadius + ((cornerRadius - containedRadius) * progress);
-            gsap.set(frame, { clipPath: `circle(${radius}px at 50% 50%)` });
-            gsap.set(image, { scale: 1.025 - (.025 * progress) });
-          });
-        };
-        horizontalTween.eventCallback("onUpdate", updateOfferMedia);
-        updateOfferMedia();
-      }, section);
-
-      const refresh = () => {
-        window.clearTimeout(resizeTimer);
-        resizeTimer = window.setTimeout(() => {
-          ScrollTrigger.refresh();
-          updateOfferMedia();
-        }, 120);
-      };
-      observer = new ResizeObserver(refresh);
-      observer.observe(viewport);
-      observer.observe(track);
-      ScrollTrigger.refresh();
-    };
-
-    setup();
-    return () => {
-      disposed = true;
-      window.clearTimeout(resizeTimer);
-      observer?.disconnect();
-      context?.revert();
-    };
-  }, [filter, filteredOffers.length, isMobile]);
-
-  useEffect(() => {
-    const stage = mobileStageRef.current;
-    if (!stage || !isMobile || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
-
-    const cards = [...stage.querySelectorAll("[data-mobile-offer-card]")];
-    const numbers = [...stage.querySelectorAll("[data-mobile-offer-number]")];
-    const pin = stage.querySelector(".v2-offers-mobile-sticky");
-    const intro = stage.querySelector(".v2-offers-intro");
-    const introContent = intro?.querySelector(".v2-offers-intro__content");
-    const words = [...(intro?.querySelectorAll(".v2-offers-intro__word") || [])];
-    const offerWorld = stage.querySelector(".v2-offers-mobile-world");
-    let frame = 0;
-    let displayedProgress = null;
-
-    const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
-    const smoothstep = (edge0, edge1, value) => {
-      const t = clamp((value - edge0) / Math.max(.0001, edge1 - edge0));
-      return t * t * (3 - 2 * t);
-    };
-
-    const render = () => {
-      const rect = stage.getBoundingClientRect();
-      const stageLengthInViewports = mobileStageViewports;
-      const viewportHeight = stage.offsetHeight / stageLengthInViewports;
-      const travel = Math.max(1, stage.offsetHeight - viewportHeight);
-      const targetProgress = clamp(-rect.top / travel);
-      if (displayedProgress === null) displayedProgress = targetProgress;
-      displayedProgress = targetProgress;
-      const progress = displayedProgress;
-      const chapterStart = .31;
-      const chapterEnd = .995;
-      const textTravel = smoothstep(.1, .22, progress);
-      const worldReveal = smoothstep(.2, .28, progress);
-      const entryReveal = smoothstep(.2, .3, progress);
-      const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
-      const exact = chapterProgress * Math.max(0, cards.length - 1);
-      const numberExact = chapterProgress * Math.max(0, numbers.length - 1);
-      const numberReveal = smoothstep(.22, .29, progress);
-      const followingCardsReveal = smoothstep(.3, .345, progress);
-      const currentEntryY = 42 * (1 - entryReveal);
-
-      words.forEach((word, index) => {
-        const wordStart = .015 + (index / Math.max(1, words.length - 1)) * .06;
-        const revealAmount = smoothstep(wordStart, wordStart + .04, progress);
-        const channel = (from, to) => Math.round(from + (to - from) * revealAmount);
-        word.style.color = `rgb(${channel(168, 53)}, ${channel(172, 64)}, ${channel(166, 51)})`;
-      });
-      if (introContent) {
-        introContent.style.transform = `translate3d(${(-textTravel * (pin.clientWidth + introContent.offsetWidth * .18)).toFixed(2)}px, 0, 0)`;
-        introContent.style.opacity = (1 - smoothstep(.18, .24, progress)).toFixed(4);
-      }
-      if (intro) {
-        intro.style.opacity = (1 - smoothstep(.2, .27, progress)).toFixed(4);
-        intro.style.pointerEvents = textTravel > .15 ? "none" : "auto";
-      }
-      if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
-
-      if (pin) {
-        pin.style.transform = "translate3d(0, 0, 0)";
-        pin.style.pointerEvents = "auto";
-      }
-
-      const number = stage.querySelector(".v2-offers-mobile-number");
-      if (number) {
-        number.style.opacity = numberReveal.toFixed(4);
-        number.style.transform = `translate3d(0, ${((1 - numberReveal) * viewportHeight * .22).toFixed(2)}px, 0)`;
-      }
-
-      stage.style.setProperty("--v2-auto-flow-x", `${(-44 + progress * 72 + (.76 - .5) * 92).toFixed(2)}px`);
-      stage.style.setProperty("--v2-auto-flow-y", `${(32 - progress * 36 + (.72 - .5) * 70).toFixed(2)}px`);
-      stage.style.setProperty("--v2-auto-grid-x", `${(progress * -54 + (.76 - .5) * 18).toFixed(2)}px`);
-      stage.style.setProperty("--v2-auto-grid-y", `${(progress * 34 + (.72 - .5) * 14).toFixed(2)}px`);
-
-      cards.forEach((card, index) => {
-        const relative = index - exact;
-        const distance = Math.abs(relative);
-        const activeStrength = clamp(1 - distance);
-        const near = clamp(1 - distance / 1.65);
-        const farFade = clamp(2.2 - distance);
-        const x = relative * pin.clientWidth * .6 + (index === 0 ? (1 - entryReveal) * pin.clientWidth * .35 : 0);
-        const y = relative * viewportHeight * .5 + currentEntryY;
-        const opacity = (.08 + near * .92) * farFade * entryReveal * (index === 0 ? 1 : followingCardsReveal);
-
-        card.style.opacity = opacity.toFixed(4);
-        card.style.transform = `translate3d(-50%, -50%, 0) translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
-        card.style.zIndex = `${10 + Math.round(activeStrength * 30)}`;
-        card.classList.toggle("is-scroll-active", activeStrength > .62);
-      });
-
-      numbers.forEach((number, index) => {
-        number.style.opacity = "1";
-        number.style.transform = `translate3d(0, ${((index - numberExact) * 100).toFixed(2)}%, 0)`;
-      });
-
-      if (Math.abs(targetProgress - displayedProgress) > .0005) frame = window.requestAnimationFrame(render);
-      else {
-        displayedProgress = targetProgress;
-        frame = 0;
-      }
-    };
-
-    const schedule = () => {
-      if (!frame) frame = window.requestAnimationFrame(render);
-    };
-    render();
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule);
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-    };
-  }, [filteredOffers.length, isMobile, mobileStageViewports]);
-
-  const offersIntro = (
-    <article className="v2-offers-intro">
-      <div className="v2-offers-intro__content">
-        <span className="v2-offers-intro__eyebrow">// E-commerce</span>
-        <div className="v2-offers-intro__headlines">
-          <h2 id="v2-offers-heading" className="v2-offers-intro__headline">
-            {OFFERS_STATEMENT.split(" ").map((word, index) => <React.Fragment key={`${word}-${index}`}><span className="v2-offers-intro__word">{word}</span>{index < OFFERS_STATEMENT.split(" ").length - 1 ? " " : ""}</React.Fragment>)}
-          </h2>
-        </div>
-        <div className="v2-offers-filters" aria-label="Filter commerce systems">
-          {OFFER_FILTERS.map((label) => (
-            <button key={label} type="button" className={label === filter ? "is-active" : ""} aria-pressed={label === filter} onClick={() => setFilter(label)}>
-              {label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </article>
-  );
-
-  return (
-    <section ref={sectionRef} className={`v2-offer-rail${OFFERS_DEBUG ? " is-debug" : ""}`} id="offers" aria-labelledby="v2-offers-heading">
-      <div ref={viewportRef} className="v2-offer-rail__viewport">
-        <div ref={trackRef} className="v2-offer-track">
-          {isMobile ? (
-            <section ref={mobileStageRef} className="v2-offers-mobile-stage" style={{ "--v2-offers-mobile-stage-height-svh": `${mobileStageViewports * 100}svh` }} aria-label="E-commerce offers">
-              <div className="v2-offers-mobile-sticky">
-                {offersIntro}
-                <div className="v2-offers-mobile-world" aria-hidden="false">
-                  <div className="v2-offers-mobile-ambient" aria-hidden="true" />
-                  <div className="v2-offers-mobile-grid" aria-hidden="true" />
-                  <div className="v2-offers-mobile-cards" aria-label="Shopify automation offers">
-                    {commerceOffers.map((offer, index) => (
-                      <figure
-                        className="v2-offers-mobile-card"
-                        data-mobile-offer-card
-                        role="button"
-                        tabIndex="0"
-                        aria-label={`Open ${offer.title}`}
-                        key={offer.id}
-                        onClick={() => window.location.assign(offer.href)}
-                        onKeyDown={(event) => {
-                          if (event.key !== "Enter" && event.key !== " ") return;
-                          event.preventDefault();
-                          window.location.assign(offer.href);
-                        }}
-                      >
-                        <div className="v2-offers-mobile-card__media" aria-hidden="true">
-                          <img src={offer.image} alt="" width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
-                          <img src={offer.hoverImage} alt="" width="1086" height="1448" loading="lazy" />
-                        </div>
-                        <figcaption><strong>{offer.title}</strong></figcaption>
-                      </figure>
-                    ))}
-                  </div>
-                  <div className="v2-offers-mobile-number" aria-hidden="true">
-                    <span className="v2-offers-mobile-number__prefix">0</span>
-                    <span className="v2-offers-mobile-number__wheel">
-                      {commerceOffers.map((offer, index) => <span className="v2-offers-mobile-number__value" data-mobile-offer-number key={offer.id}>{index + 1}</span>)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </section>
-          ) : (
-            <>
-              {offersIntro}
-              {filteredOffers.map((offer, index) => (
-                <React.Fragment key={offer.id}>
-                  <article className="v2-offer-info">
-                    <OfferNumber value={offer.number} />
-                    <div className="v2-offer-info__copy">
-                      <span>{offer.category}</span>
-                      <h3>{offer.title}</h3>
-                      <p>{offer.description}</p>
-                      <a href={offer.href}>{offer.ctaLabel} <Arrow /></a>
-                    </div>
-                  </article>
-                  <figure className="v2-offer-media">
-                    <figcaption>
-                      <span>{offer.category}</span><strong>{offer.valueLabel}</strong><span>{offer.timingLabel}</span>
-                    </figcaption>
-                    <div className="v2-offer-media__frame">
-                      <img src={offer.image} alt={offer.imageAlt} width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
-                      <img className="v2-offer-media__alternate" src={offer.hoverImage} alt="" aria-hidden="true" width="1086" height="1448" loading="lazy" />
-                    </div>
-                  </figure>
-                </React.Fragment>
-              ))}
-              <div className="v2-offers-end" aria-hidden="true"><span /></div>
-            </>
-          )}
-        </div>
-        <span className="v2-offers-debug-center" aria-hidden="true" />
-      </div>
-    </section>
-  );
-}
-
 function InlineContactForm() {
   const [status, setStatus] = useState("idle");
   const formRef = useRef(null);
@@ -1039,7 +304,7 @@ function WorkSpecialisations({ home = false, items = projects }) {
   useWorkSpecialisationsMotion(sectionRef);
   return (
     <section className={home ? "v2-home-works" : undefined} aria-label={home ? "Featured Projects" : undefined}>
-      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span><h2>AI and software projects, from user problem to working system.</h2><p>See what each product does, the business problem behind it, why I built it that way, and the evidence or limitations behind the result.</p></header>}
+      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span></header>}
       <section ref={sectionRef} className="v2-works-scroll" id={home ? "work" : "selected-work"} data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">
@@ -1054,13 +319,12 @@ function WorkSpecialisations({ home = false, items = projects }) {
               <div className="v2-works-panel__track" data-work-copy-track>
                 {items.map((project, index) => (
                   <article className="v2-works-entry" data-work-copy-entry aria-hidden={index === 0 ? "false" : "true"} key={project.id}>
-                    <span>{project.sector}</span>
+                    <span>{project.sector}<CategoryTag category={project.category} /></span>
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
-                    <blockquote>{project.lead}</blockquote>
                     <nav className="v2-works-entry__actions" aria-label={`${project.title} actions`}>
                       <a href={project.href} tabIndex={index === 0 ? 0 : -1}>View case study <Arrow /></a>
-                      {home && project.id === "fruit-quality" && <a href="/v2/work/#more-work" tabIndex={index === 0 ? 0 : -1}>See more <Arrow /></a>}
+                      {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>GitHub <Arrow /></a>}
                     </nav>
                   </article>
                 ))}
@@ -1073,12 +337,12 @@ function WorkSpecialisations({ home = false, items = projects }) {
         {items.map((project, index) => (
           <article key={project.id}>
             <a href={project.href}><ProjectMedia project={project} compact loading={index === 0 ? "eager" : "lazy"} /></a>
-            <span>{project.index} / {project.sector}</span>
+            <span>{project.index} / {project.sector}<CategoryTag category={project.category} /></span>
             <h2>{project.title}</h2>
             <p>{project.summary}</p>
             <nav className="v2-works-mobile__actions" aria-label={`${project.title} actions`}>
               <a href={project.href}>View case study <Arrow /></a>
-              {home && project.id === "fruit-quality" && <a href="/v2/work/#more-work">See more <Arrow /></a>}
+              {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">GitHub <Arrow /></a>}
             </nav>
           </article>
         ))}
@@ -1091,6 +355,12 @@ function PageTitle({ kicker, title }) {
   return <section className="v2-page-title" data-reveal><span>{kicker}</span><h1>{title}</h1></section>;
 }
 
+// One category per project: AI Engineering, Full-Stack Product Engineering, or
+// Automation. Rendered inside the eyebrow label so it inherits that context.
+function CategoryTag({ category }) {
+  return category ? <i className="v2-tag">{category}</i> : null;
+}
+
 function WorkLibraryCard({ project, index }) {
   const hasCover = Boolean(project.coverImage);
   const hasVisual = hasProjectVisual(project.id);
@@ -1099,7 +369,7 @@ function WorkLibraryCard({ project, index }) {
       <div className={`v2-work-library__media${hasCover || hasVisual ? "" : " v2-work-library__media--signal"}`}>
         {hasCover ? <ProjectMedia project={project} compact /> : hasVisual ? <ProjectVisual id={project.id} compact /> : <><span>{String(index + 1).padStart(2, "0")}</span><div>{project.stack?.slice(0, 3).map((item) => <i key={item}>{item}</i>)}</div></>}
       </div>
-      <span>{project.sector}</span>
+      <span>{project.sector}<CategoryTag category={project.category} /></span>
       <h3>{project.title}</h3>
       <p>{project.summary}</p>
       <strong>Open the case study <Arrow /></strong>
@@ -1108,55 +378,27 @@ function WorkLibraryCard({ project, index }) {
 }
 
 function WorkPage() {
-  const moreSystemOrder = ["marginguard", "self-healing-monitor", "ai-voice-receptionist", "code-review-agent", "testimony-operations"];
-  const additionalCases = moreSystemOrder.map((id) => caseStudies.find((project) => project.id === id)).filter(Boolean);
+  const supportingOrder = ["clear-skin", "testimony-operations", "fruit-quality"];
+  const supporting = supportingOrder.map((id) => caseStudies.find((project) => project.id === id)).filter(Boolean);
   return <>
     <section className="v2-work-index-hero">
-      <span>Selected work / AI, ML & software</span>
-      <h1>AI and software products, explained through the problems they solve.</h1>
+      <span>Work / Source, proof, and scope</span>
+      <h1>Every project here has a repository you can read or a client system I delivered.</h1>
       <div>
-        <p>Start with six featured case studies covering creative AI, research, analytics, commerce, skincare, and machine learning. Each story explains the user, problem, key decisions, system, result, and project limits.</p>
-        <nav aria-label="Work page actions"><a className="v2-action v2-action--primary" href="#selected-work">Read the featured stories <Arrow /></a><a className="v2-action v2-action--text" href={paths.contact}>Discuss your project <Arrow /></a></nav>
+        <nav aria-label="Work page actions"><a className="v2-action v2-action--primary" href="#selected-work">Inspect built systems <Arrow /></a><a className="v2-action v2-action--text" href={paths.contact}>Discuss your project <Arrow /></a></nav>
       </div>
-      <dl><div><dt>01</dt><dd>Featured stories</dd></div><div><dt>02</dt><dd>Additional projects</dd></div><div><dt>03</dt><dd>Hobby projects</dd></div></dl>
+      <dl><div><dt>01</dt><dd>Featured and inspectable</dd></div><div><dt>02</dt><dd>Client work and archive</dd></div><div><dt>03</dt><dd>Hobby projects</dd></div></dl>
     </section>
     <WorkSpecialisations items={homeFeaturedProjects} />
     <section className="v2-work-library" id="more-work" aria-labelledby="work-library-title">
-      <header data-reveal><span>More projects</span><h2 id="work-library-title">Five more AI and software systems.</h2><p>Explore incident response, voice booking, code review, commerce intelligence, and a client publishing workflow.</p></header>
-      <div>{additionalCases.map((project, index) => <WorkLibraryCard project={project} index={index} key={project.id} />)}</div>
+      <header data-reveal><span>Client work and archive</span><h2 id="work-library-title">Delivered systems and earlier applied work.</h2></header>
+      <div>{supporting.map((project, index) => <WorkLibraryCard project={project} index={index} key={project.id} />)}</div>
     </section>
     <section className="v2-project-notes" aria-labelledby="project-notes-title">
-      <header><span>Hobby Projects</span><h2 id="project-notes-title">Smaller products built to test a focused idea.</h2><p>Explore a grounded skincare chatbot, a deterministic task manager, and the design and engineering behind this portfolio.</p></header>
-      <div>{projectNotes.map((project) => <a href={project.href} key={project.id}><ProjectMedia project={project} compact /><span>{project.index} / {project.type}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Explore the hobby project <Arrow /></strong></a>)}</div>
+      <header><span>Hobby Projects</span><h2 id="project-notes-title">Smaller products built to test a focused idea.</h2></header>
+      <div>{projectNotes.map((project) => <a href={project.href} key={project.id}><ProjectMedia project={project} compact /><span>{project.index} / {project.type}<CategoryTag category={project.category} /></span><h3>{project.title}</h3><p>{project.summary}</p><strong>Explore the hobby project <Arrow /></strong></a>)}</div>
     </section>
   </>;
-}
-
-function ServicePage({ service }) {
-  const related = (service.relatedProjects || []).map((id) => allWork.find((project) => project.id === id)).filter(Boolean);
-  return <article className={`v2-service-page v2-service-page--${service.accent}`}>
-    <section className="v2-service-hero" data-reveal>
-      <a href={`${paths.home}#services`}>← All services</a>
-      <span>{service.eyebrow}</span>
-      <h1>{service.title}</h1>
-      <p>{service.intro}</p>
-      <div>{service.signals.map((signal) => <strong key={signal}>{signal}</strong>)}</div>
-      <a className="v2-action v2-action--primary" href="/v2/contact/" data-contact-context={`I'm interested in ${service.navLabel}.`}>Discuss this service <Arrow /></a>
-    </section>
-    <section className="v2-service-pressure" data-reveal>
-      <span>When this service is useful</span><h2>{service.promise}</h2>
-      <ol>{service.problems.map((problem, index) => <li key={problem}><span>0{index + 1}</span><p>{problem}</p></li>)}</ol>
-    </section>
-    <section className="v2-service-method">
-      <header data-reveal><span>How the work moves</span><h2>From a defined problem to a tested product.</h2></header>
-      <div>{service.system.map((step) => <article data-reveal key={step.num}><span>{step.num}</span><h3>{step.title}</h3><p>{step.copy}</p></article>)}</div>
-    </section>
-    <section className="v2-service-proof">
-      <header data-reveal><span>Relevant projects</span><h2>See how I applied this work in practice.</h2></header>
-      <div>{related.map((project) => <a href={project.href} key={project.id}><div className="v2-service-proof__media"><ProjectMedia project={project} compact /></div><span>{project.status}</span><h3>{project.title}</h3><p>{project.summary}</p><strong>Open the story <Arrow /></strong></a>)}</div>
-    </section>
-    <section className="v2-service-cta" data-reveal><span>Have a related problem?</span><h2>Tell me what is not working. I will identify the first practical system to build.</h2><a href="/v2/contact/" data-contact-context={`I'd like to discuss ${service.navLabel}.`}>Discuss your project <Arrow /></a></section>
-  </article>;
 }
 
 function ProjectNote({ project }) {
@@ -1164,7 +406,7 @@ function ProjectNote({ project }) {
   return <article className="v2-project-note">
     <section className="v2-project-note__hero">
       <a href={paths.work}>← All work</a>
-      <div data-reveal><span>{project.index} / {project.type}</span><h1>{project.title}</h1><p>{project.summary}</p><strong>{project.status}</strong></div>
+      <div data-reveal><span>{project.index} / {project.type}<CategoryTag category={project.category} /></span><h1>{project.title}</h1><p>{project.summary}</p><strong>{project.status}</strong></div>
       <ProjectMedia project={project} loading="eager" />
     </section>
     <section className="v2-project-note__context" data-reveal><span>The useful part of this story</span><h2>{project.outcome}</h2><dl><div><dt>Problem</dt><dd>{project.challenge}</dd></div><div><dt>Role</dt><dd>{project.role}</dd></div></dl></section>
@@ -1173,188 +415,23 @@ function ProjectNote({ project }) {
   </article>;
 }
 
-function CaseStudy({ project }) {
-  const position = caseStudies.findIndex((item) => item.id === project.id);
-  const next = caseStudies[(position + 1) % caseStudies.length];
-  const hasGallery = project.gallery?.length > 0;
-  const chapterNumbers = {
-    outcome: "01",
-    problem: "02",
-    decisions: "03",
-    system: "04",
-    artifact: "05",
-    process: "06",
-    gallery: "07",
-    fit: hasGallery ? "08" : "07",
-    discuss: hasGallery ? "09" : "08",
-  };
-  return (
-    <CaseExperienceProvider id={project.id} title={project.title}>
-    <article className="v2-case">
-      <section className="v2-case-head">
-        <a href={`${paths.home}#work`}>{"\u2190"} Featured Projects</a>
-        <div className="v2-case-head__title" data-reveal>
-          <span>{project.index} / {project.sector}<EvidenceLabel id={project.id} /></span>
-          <h1>{project.title}</h1>
-          <p>{project.lead || project.outcome}</p>
-          <div>{project.stack?.map((item) => <span key={item}>{item}</span>)}</div>
-          <CaseHeroActions project={project} />
-        </div>
-        <figure data-reveal><ProjectMedia project={project} loading="eager" /></figure>
-      </section>
-
-      <ExperienceNav hasGallery={hasGallery} />
-
-      <section className="v2-case-outcome" id="outcome">
-        <span>{chapterNumbers.outcome} / Outcome</span>
-        <h2>{project.outcome}</h2>
-        <dl>
-          <div><dt>Status</dt><dd>{project.status}</dd></div>
-          <div><dt>Role</dt><dd>{project.role}</dd></div>
-          <div><dt>Focus</dt><dd>{project.stack?.join(" / ")}</dd></div>
-          {project.repository && <div><dt>Source code</dt><dd><a className="v2-case-outcome__repo" href={project.repository} target="_blank" rel="noopener noreferrer">Open on GitHub <Arrow /></a></dd></div>}
-        </dl>
-        {project.proof?.length > 0 && <div className="v2-case-outcome__proof">{project.proof.map((item) => <strong key={item}>{item}</strong>)}</div>}
-        {project.qualifier && <p className="v2-case-outcome__qualifier">Scope note / {project.qualifier}</p>}
-      </section>
-
-      <section className="v2-case-challenge" id="problem" data-story-sequence="pin">
-        <span>{chapterNumbers.problem} / Problem</span>
-        <h2>{project.lead || project.outcome}</h2>
-        <p>{project.challenge}</p>
-      </section>
-
-      <DecisionReplay chapterNumber={chapterNumbers.decisions} />
-
-      <section className="v2-case-system" id="system" data-story-sequence="pin">
-        <header data-reveal><span>{chapterNumbers.system} / System</span><h2>{project.story?.systemTitle || "See how the parts work together."}</h2></header>
-        <div className="v2-case-system__grid">
-          {project.architecture?.map((item, index) => <article data-reveal key={item}><span>0{index + 1}</span><small>{["Input", "Decision", "Control", "Result"][index] || "System step"}</small><p>{item}</p>{index < project.architecture.length - 1 && <i aria-hidden="true">→</i>}</article>)}
-        </div>
-      </section>
-
-      <AnnotatedArtifactExplorer image={project.sourceImage || project.image} alt={`${project.title} annotated system artifact`} projectId={project.id} chapterNumber={chapterNumbers.artifact} />
-
-      <section className="v2-case-process" id="process" data-story-sequence="pin">
-        <header data-reveal><span>{chapterNumbers.process} / User flow</span><h2>{project.story?.processTitle || "From the first input to a useful next action."}</h2></header>
-        <div>{project.phases?.map((phase) => <article data-reveal key={phase.num}><span>{phase.num}</span><h3>{phase.title}</h3><p>{phase.copy}</p></article>)}</div>
-      </section>
-
-      {hasGallery && <section className="v2-case-gallery" id="gallery"><header><span>{chapterNumbers.gallery} / Product moments</span><h2>{project.story?.galleryTitle || "The product in use."}</h2></header><div>{project.gallery.map((item) => <figure key={`${item.image || item.video}-${item.caption}`}>{item.video ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" /> : <img src={item.image} alt={item.alt} loading="lazy" />}<figcaption>{item.caption}</figcaption></figure>)}</div></section>}
-      <ClientFitSection id={project.id} title={project.title} chapterNumber={chapterNumbers.fit} />
-      <ConversionPanel id={project.id} title={project.title} chapterNumber={chapterNumbers.discuss} />
-      <a className="v2-next" href={next.href}><span>Next case</span><strong>{next.title}</strong><Arrow /></a>
-    </article>
-    </CaseExperienceProvider>
-  );
-}
-
-function OfferCaseStudy({ offer }) {
-  const position = commerceOffers.findIndex((item) => item.id === offer.id);
-  const next = commerceOffers[(position + 1) % commerceOffers.length];
-  const phases = [
-    ["01", "Baseline", "Measure the current signal, cost, and failure pattern before changing the workflow."],
-    ["02", "Intervention", offer.approach],
-    ["03", "Proof", "Compare the agreed success measures before and after, then expand only when the value is visible."],
-  ];
-
-  return (
-    <CaseExperienceProvider id={offer.id} title={offer.title} offer>
-    <article className="v2-offer-case">
-      <section className="v2-offer-case__hero">
-        <a className="v2-offer-case__back" href="/v2/ecommerce/#offers">{"\u2190"} All offers</a>
-        <div className="v2-offer-case__meta"><span>{offer.number} / {offer.category}</span><span>{offer.year}</span></div>
-        <div className="v2-offer-case__heading" data-reveal>
-          <span>{offer.valueLabel}<EvidenceLabel id={offer.id} offer /></span>
-          <h1>{offer.title}</h1>
-          <p>{offer.description}</p>
-        </div>
-        <figure className="v2-offer-case__media" data-reveal>
-          <img src={offer.image} alt={offer.imageAlt} width="1024" height="1280" />
-          <img className="v2-offer-case__alternate" src={offer.hoverImage} alt="" aria-hidden="true" width="1086" height="1448" />
-        </figure>
-      </section>
-
-      <ExperienceNav offer />
-
-      <section className="v2-offer-case__overview" id="overview" data-reveal data-story-sequence="pin">
-        <span>01 / Commercial pressure</span>
-        <p>{offer.challenge}</p>
-        <dl>
-          <div><dt>Focus</dt><dd>{offer.category}</dd></div>
-          <div><dt>Start</dt><dd>{offer.timingLabel}</dd></div>
-          <div><dt>Deliverables</dt><dd>{offer.deliverables.join(" / ")}</dd></div>
-        </dl>
-      </section>
-
-      <section className="v2-offer-case__commercial" data-reveal data-story-sequence aria-labelledby={`${offer.id}-commercial-title`}>
-        <article className="v2-offer-case__benchmark">
-          <span>Research signal</span>
-          <strong>{offer.benchmarkValue}</strong>
-          <p>{offer.benchmarkLabel}</p>
-          <small>{offer.benchmarkSource}</small>
-        </article>
-        <article className="v2-offer-case__baseline">
-          <span>Your baseline</span>
-          <h2 id={`${offer.id}-commercial-title`}>Replace the benchmark with store evidence.</h2>
-          <p>{offer.benchmarkNote}</p>
-        </article>
-        <article className="v2-offer-case__measures">
-          <span>Success measures</span>
-          <ol>{offer.successMetrics.map((metric, index) => <li key={metric}><small>0{index + 1}</small><strong>{metric}</strong></li>)}</ol>
-        </article>
-      </section>
-
-      <DecisionReplay />
-
-      <section className="v2-offer-case__process" id="process" data-story-sequence="pin">
-        {phases.map(([number, title, copy]) => (
-          <article data-reveal key={number}><span>{number}</span><h2>{title}</h2><p>{copy}</p></article>
-        ))}
-      </section>
-
-      <section className="v2-offer-case__result">
-        <span>Outcome to prove</span><p>{offer.impact}</p><a href="/v2/contact/" data-contact-context={`I'm interested in ${offer.title}.`}>Discuss this system <Arrow /></a>
-      </section>
-
-      <AnnotatedArtifactExplorer image={offer.hoverImage || offer.image} alt={`${offer.title} annotated system artifact`} />
-      <OfferDeliverablePreview offer={offer} />
-      <ClientFitSection id={offer.id} offer title={offer.title} />
-      <ConversionPanel id={offer.id} offer title={offer.title} />
-
-      <a className="v2-offer-case__next" href={next.href}>
-        <span>Next offer / {next.number}</span><strong>{next.title}</strong><Arrow />
-      </a>
-    </article>
-    </CaseExperienceProvider>
-  );
-}
-
-function AboutPage() {
-  return <><PageTitle kicker="About Henry" title="I build AI and software products people can understand and use." /><section className="v2-about" data-reveal><p>I am Henry, a software and AI engineer based in Lagos and working with teams worldwide. I build AI agents, machine-learning products, voice systems, and full-stack web applications.</p><p>I work across the complete product: define the user problem, design the interface, build the backend and AI workflow, test failure cases, deploy it, and keep important decisions visible to people.</p></section><section className="v2-about-availability" data-reveal><span>Availability</span><h2>Open to roles, contracts, and selected freelance projects.</h2><div><p>I am currently available for full-time employment, contract engagements, and focused AI or software project work with teams worldwide.</p><a href="/v2/contact/" data-contact-context="I'd like to discuss a role or project.">Discuss a role or project <Arrow /></a></div></section></>;
-}
-
 function ContactDialog({ open, onClose }) {
   if (!open) return null;
   return createPortal(<div className="v2-dialog" role="dialog" aria-modal="true" aria-label="Start a project"><button className="v2-dialog__close" type="button" onClick={onClose} aria-label="Close">{"\u00d7"}</button><div><span>Start a project</span><h2>What are we building?</h2></div><InlineContactForm /></div>, document.body);
 }
 
 function Renderer({ page }) {
-  if (page === "ecommerce") return <EcommerceLanding />;
+  if (page === "storecraft") return <EcommerceLanding offerRail={<OffersShowcase />} />;
   if (page === "referrals") return <ReferralCampaign />;
   if (page === "referral-dashboard") return <ReferralDashboard />;
   if (page === "work") return <WorkPage />;
-  if (page === "about") return <AboutPage />;
   if (page === "contact") return <PageTitle kicker="Contact" title="Tell me what should change." />;
   const offer = commerceOffers.find((item) => page === `offer-${item.id}`);
-  if (offer) return <OfferCaseStudy offer={offer} />;
-  const serviceAliases = { "ai-agents": "ai-engineering", "ai-workflows": "ai-engineering", "ecommerce-automation": "conversational-ai" };
-  const serviceId = serviceAliases[page] || page;
-  if (services[serviceId]) return <ServicePage service={services[serviceId]} />;
+  if (offer) return <OfferCasePage offer={offer} />;
   const note = projectNotes.find((item) => page === `note-${item.id}`);
   if (note) return <ProjectNote project={note} />;
   const project = caseStudies.find((item) => page === `case-${item.id}`);
-  if (project) return <CaseStudy project={project} />;
+  if (project) return <ProjectCasePage project={project} />;
   return <><PageTitle kicker="Expertise" title="A focused route from problem to product." /><section className="v2-about"><p>AI products, software systems, commerce automation, and product direction.</p></section></>;
 }
 
@@ -1365,7 +442,6 @@ export function V2App({ page }) {
   useReveal(root, page);
   useAnimationVisibility(root, page);
   useInitialHashScroll(page);
-  useCaseStudyMotion(root, page);
   useEffect(() => {
     void captureReferralAttribution();
   }, []);
@@ -1387,9 +463,12 @@ export function V2App({ page }) {
     if (handleSectionNavigationClick(event)) return;
     openContactFromLink(event);
   };
-  if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} offers={<OffersShowcase />} />;
-  const hasTailoredCaseForm = page.startsWith("case-") || page.startsWith("offer-");
-  const usesServiceNavigation = Boolean(services[page]) || ["ai-agents", "ai-workflows", "ecommerce-automation"].includes(page);
-  const usesProjectNavigation = page === "about" || page === "work" || page === "ecommerce" || page === "referrals" || page === "referral-dashboard" || usesServiceNavigation || page.startsWith("case-") || page.startsWith("offer-");
-  return <div className={`v2-site${hasTailoredCaseForm ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation items={navigation} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!hasTailoredCaseForm && <div className="replica-end"><EndingSequence /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} />;
+  const isCasePage = page.startsWith("case-") || page.startsWith("offer-");
+  const usesProjectNavigation = page === "work" || page === "storecraft" || page === "referrals" || page === "referral-dashboard" || page.startsWith("case-") || page.startsWith("offer-");
+  // StoreCraft is its own brand: its own nav wordmark, its own footer, and its own
+  // inquiry form as the ending cover instead of Henry's "Let's talk." section.
+  const isStorecraft = page === "storecraft" || page.startsWith("offer-");
+  const brand = isStorecraft ? storecraftContent : replicaContent;
+  return <div className={`v2-site${isCasePage ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation brand={brand} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!isCasePage && <div className="replica-end"><EndingSequence brand={brand} cover={isStorecraft ? <CommerceInquiry sectionId="" /> : undefined} /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

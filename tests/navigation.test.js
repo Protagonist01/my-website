@@ -16,7 +16,7 @@ test("navigation is declared in exactly one place", () => {
 });
 
 test("replicaContent and V2App consume the shared navigation", () => {
-  assert.match(replicaSource, /import \{ navigation \} from "\.\/data\.js"/);
+  assert.match(replicaSource, /import \{[^}]*\bnavigation\b[^}]*\} from "\.\/data\.js"/);
   assert.match(replicaSource, /^\s*navigation,$/m);
   assert.match(appSource, /import \{[^}]*\bnavigation\b[^}]*\} from "\.\/data\.js"/);
   assert.doesNotMatch(appSource, /PROJECT_PAGE_NAVIGATION/);
@@ -24,7 +24,7 @@ test("replicaContent and V2App consume the shared navigation", () => {
 
 test("primary navigation is ordered for a recruiter", () => {
   const labels = [...dataSource.matchAll(/\{ label: "([^"]+)", href:/g)].map((match) => match[1]);
-  assert.deepEqual(labels, ["Work", "Capabilities", "About", "Commerce AI", "Resume", "Contact"]);
+  assert.deepEqual(labels, ["Work", "Capabilities", "About", "Resume", "Contact"]);
 });
 
 test("the referral programme is not in the primary navigation", () => {

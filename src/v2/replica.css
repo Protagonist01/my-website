@@ -12,7 +12,10 @@
 .replica-nav { --replica-nav-open-height: 294px; position: fixed; z-index: 50; top: 29px; left: 50%; width: 320px; height: 60px; overflow: hidden; border-radius: 19px; background: #111; color: #fff; scale: 1; transform: translateX(-50%); transform-origin: top center; transition: height .72s cubic-bezier(.16, 1, .3, 1), scale .42s cubic-bezier(.34, 1.56,.64,1); }
 .replica-nav.is-open { height: var(--replica-nav-open-height); }
 .replica-nav__top { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 15px 0 17px; }
-.replica-nav__top > a { color: inherit; font-size: 21px; font-weight: 600; text-decoration: none; }
+.replica-nav__top > a { display: inline-flex; gap: .42em; align-items: center; color: inherit; font-size: 21px; font-weight: 600; text-decoration: none; }
+/* Lime, not blue: the nav pill is near-black, where the blue loose cell would read as
+   a dark gap rather than as the one element in colour. */
+.replica-nav__mark { width: .96em; height: .96em; --storecraft-mark-accent: var(--commerce-lime, #d8ff57); }
 .replica-nav button { display: grid; width: 44px; height: 36px; padding: 0; border: 0; border-radius: 8px; background: #f5f4ef; color: #111; cursor: pointer; place-items: center; }
 .replica-nav__dots { display: flex; gap: 4px; }
 .replica-nav__dots i { width: 4px; height: 4px; border-radius: 50%; background: #111; }
@@ -37,9 +40,15 @@
   100% { scale: 1.025; }
 }
 
-.replica-intro { position: relative; height: 335vh; }
+.replica-intro { position: relative; height: 190vh; }
 .replica-intro__sticky { position: sticky; top: 0; height: var(--replica-vh); min-height: 0; overflow: hidden; perspective: 1200px; }
 .replica-hero, .replica-about { position: absolute; inset: 0; }
+.replica-hero__lede { position: absolute; z-index: 3; top: 24px; left: max(calc((100vw - 1200px) / 2), 7vw); display: grid; gap: 10px; max-width: 310px; }
+.replica-hero__subline, .replica-hero__availability { margin: 0; font-size: 12px; line-height: 1.35; }
+.replica-hero__availability { color: var(--muted); }
+.replica-hero__actions { display: flex; flex-wrap: wrap; gap: 7px; }
+.replica-hero__cta { display: inline-flex; min-height: 32px; align-items: center; padding: 0 12px; border: 1px solid rgba(17,17,17,.2); border-radius: 999px; color: inherit; font-size: 11px; text-decoration: none; }
+.replica-hero__cta.is-primary { border-color: var(--ink); background: var(--ink); color: var(--light-text); }
 .replica-hero__title { position: absolute; top: 34.8%; left: 50%; width: 1060px; transform: translateX(-50%); }
 .replica-hero h1 { margin: 0; font-size: clamp(130px, 9vw, 173px); font-weight: 700; line-height: .82; letter-spacing: -.065em; text-align: center; transform: scaleX(1.08); }
 .replica-hero__line { display: block; text-align: center; white-space: nowrap; }
@@ -76,35 +85,101 @@
 .replica-about__right { grid-column: 3; align-self: center; padding-top: 185px; }
 .replica-about__right p { width: 345px; margin: 0 0 22px; font-size: 18px; line-height: 1.38; }
 .replica-about__right a { display: inline-flex; align-items: center; gap: 10px; color: inherit; font-size: 18px; text-decoration: none; pointer-events: auto; }
-.replica-about__right a span { display: grid; width: 29px; height: 29px; border: 1px solid #111; border-radius: 7px; font-size: 17px; transition: transform .2s; place-items: center; }
-.replica-about__right a:hover span { transform: translate(2px, -2px); }
+.replica-about__actions { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; }
+.replica-about__arrow { display: grid; width: 29px; height: 29px; border: 1px solid #111; border-radius: 7px; font-size: 17px; transition: transform .2s; place-items: center; }
+.replica-about__right a:hover .replica-about__arrow { transform: translate(2px, -2px); }
 
-.replica-statement-scene { position: relative; height: 280vh; }
+.replica-statement-scene { position: relative; height: 150vh; }
 .replica-statement { position: sticky; top: 0; display: grid; height: var(--replica-vh); padding: 0 20px; place-items: center; }
 .replica-statement p { width: 810px; margin: 0; font-size: 36px; font-weight: 500; line-height: 1.18; letter-spacing: -.025em; text-align: center; }
 .replica-statement span { color: #85847f; }
 
-.replica-services { position: relative; height: 220svh; }
+.replica-services { position: relative; height: 140svh; }
 .replica-services__sticky { position: sticky; top: 0; display: grid; height: var(--replica-vh); overflow: hidden; align-items: center; }
 .replica-services__inner { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: clamp(90px, 12vh, 130px) 0 12px; }
 .replica-services__inner > h2 { margin: 0 0 clamp(48px, 8vh, 76px); font-size: 70px; font-weight: 500; line-height: 1; letter-spacing: -.045em; }
-.replica-services article, .replica-services__list > a { display: grid; grid-template-columns: minmax(0, 1fr) auto 2rem; gap: 1.25rem; align-items: center; min-height: 136px; border-bottom: 1px solid rgba(17,17,17,.11); color: inherit; text-decoration: none; }
+.replica-services article { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.25rem; align-items: center; min-height: 136px; border-bottom: 1px solid rgba(17,17,17,.11); color: inherit; }
 .replica-services h3 { margin: 0; font-size: 31px; font-weight: 500; letter-spacing: -.025em; }
 .replica-services p { display: flex; align-items: center; gap: 11px; margin: 0; color: var(--muted); font-size: 17px; }
 .replica-services p i { color: #111; font-style: normal; }
-.replica-services__arrow { font-size: 1.2rem; transition: transform .3s ease; }
-.replica-services__list > a:hover .replica-services__arrow, .replica-services__list > a:focus-visible .replica-services__arrow { transform: rotate(45deg); }
+
+/* Working stack: a rack of layers, with the active layer's logos set off to the side. */
+.replica-stack { --replica-stack-active: 0; --replica-stack-layers: 5; position: relative; height: 300svh; background: var(--paper); }
+.replica-stack__sticky { position: sticky; top: 0; display: grid; height: var(--replica-vh); overflow: hidden; align-items: center; }
+.replica-stack__inner { width: min(1180px, calc(100% - 48px)); margin: 0 auto; padding: clamp(84px, 11vh, 120px) 0 clamp(28px, 5vh, 48px); }
+/* The eyebrow is the section's only heading now, so it also carries the gap the removed
+   statement used to hold open between the header and the rack. */
+.replica-stack__eyebrow { display: block; margin: 0 0 clamp(34px, 6vh, 62px); color: var(--muted); font: 500 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+/* The logos track has to hold the widest mark column plus the longest label ("Hugging Face")
+   without wrapping, which is what sets the 248px floor. */
+.replica-stack__scene { display: grid; grid-template-columns: minmax(0, 1fr) clamp(248px, 27vw, 348px); column-gap: clamp(56px, 8vw, 132px); align-items: stretch; }
+.replica-stack__rack, .replica-stack__logos { display: grid; grid-template-rows: repeat(var(--replica-stack-layers), minmax(0, 1fr)); row-gap: 10px; }
+.replica-stack__rack { margin: 0; padding: 0; list-style: none; }
+/* The wash is measured against --paper: it has to stay a shade lighter than the
+   section behind it so an idle layer still reads as a card. */
+.replica-stack__layer { position: relative; display: grid; grid-template-columns: 42px 44px minmax(0, 1fr); gap: 0 18px; align-items: center; min-height: 62px; padding: 14px 22px 14px 16px; border: 1px solid rgba(17, 17, 17, .16); border-radius: 4px; background: rgba(255, 255, 255, .55); box-shadow: 0 1px 0 rgba(17, 17, 17, .1); transition: background-color .45s ease, border-color .45s ease, color .45s ease, transform .45s cubic-bezier(.16, 1, .3, 1), box-shadow .45s ease; }
+.replica-stack__vents { display: grid; gap: 4px; }
+.replica-stack__vents i { display: block; height: 2px; border-radius: 2px; background: currentColor; opacity: .3; transition: opacity .45s ease; }
+.replica-stack__index { color: var(--muted); font: 500 12px var(--mono); transition: color .45s ease; }
+.replica-stack__label { font-size: clamp(17px, 1.5vw, 21px); font-weight: 500; letter-spacing: -.02em; }
+.replica-stack__note { grid-column: 3; color: var(--muted); font-size: 13.5px; line-height: 1.35; transition: color .45s ease; }
+.replica-stack__layer.is-active { border-color: var(--ink); background: var(--ink); color: var(--light-text); transform: translateX(clamp(10px, 1.4vw, 22px)); box-shadow: 0 14px 30px -18px rgba(17, 17, 17, .55); }
+.replica-stack__layer.is-active .replica-stack__index, .replica-stack__layer.is-active .replica-stack__note { color: rgba(244, 243, 237, .68); }
+.replica-stack__layer.is-active .replica-stack__vents i { opacity: .7; }
+.replica-stack__logos { position: relative; }
+.replica-stack__logo-set { display: grid; align-content: center; gap: 12px; opacity: 0; transform: translateX(14px); transition: opacity .5s ease, transform .5s cubic-bezier(.16, 1, .3, 1); pointer-events: none; }
+.replica-stack__logo-set.is-active { opacity: 1; transform: none; }
+.replica-stack__logo-set-label { color: var(--muted); font: 500 10px var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+.replica-stack__logo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+/* One logo sets the width of the mark column: AWS is a wordmark lockup rather than a square
+   glyph, and it needs about 33px before the lettering resolves at the 20px height the other
+   marks render at (MARK_VIEWBOXES in ReplicaHome.jsx crops it to its ink). The square marks
+   stay 20px and centre themselves in the column, so every label starts at the same x whatever
+   mark sits beside it. */
+.replica-stack__logo { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 8px; align-items: center; }
+.replica-stack__logo svg { justify-self: center; width: 20px; height: 20px; fill: var(--ink); }
+/* Matching the square marks on height, not width: the cropped viewBox supplies the rest. */
+.replica-stack__logo svg[data-wide] { width: auto; }
+.replica-stack__logo-name { font-size: 12.5px; line-height: 1.2; }
+.replica-proof-strip { padding: 34px 0; border-block: 1px solid rgba(17,17,17,.12); background: #f4f1ea; }
+.replica-proof-strip > div { display: grid; grid-template-columns: 220px 1fr; gap: 32px; }
+.replica-proof-strip > div > span, .replica-recruiter header > span { color: var(--muted); font: 500 11px/1.3 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.replica-proof-strip > div > div { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+.replica-proof-strip p { display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin: 0; padding: 18px; border: 1px solid rgba(17,17,17,.1); font-size: 15px; line-height: 1.4; }
+.replica-proof-strip b { font: 500 10px/1.5 var(--mono); }
+.replica-qualification header { display: grid; grid-template-columns: 220px 1fr; gap: 32px; margin-bottom: 64px; }
+.replica-qualification header span { color: var(--muted); font: 500 11px var(--mono); text-transform: uppercase; }
+.replica-qualification h2 { max-width: 17ch; margin: 0; font-size: clamp(42px,5vw,70px); font-weight: 500; line-height: .95; letter-spacing: -.05em; }
+.replica-qualification__rows article { display: grid; grid-template-columns: 70px minmax(180px,.45fr) 1fr; gap: 24px; align-items: baseline; padding: 28px 0; border-top: 1px solid rgba(17,17,17,.14); }
+.replica-qualification__rows article:last-child { border-bottom: 1px solid rgba(17,17,17,.14); }
+.replica-qualification__rows span { font: 500 11px var(--mono); }
+.replica-qualification__rows h3 { margin: 0; font-size: 24px; font-weight: 500; }
+.replica-qualification__rows p { max-width: 60ch; margin: 0; color: var(--muted); line-height: 1.5; }
+.replica-qualification > div > a { display: inline-flex; gap: 10px; margin-top: 32px; color: inherit; text-decoration: none; }
+.replica-recruiter header { display: grid; grid-template-columns: 180px minmax(0,1fr) minmax(260px,.55fr); gap: 36px; align-items: start; }
+.replica-recruiter h2 { max-width: 18ch; margin: 0; font-size: clamp(38px,5vw,68px); font-weight: 500; line-height: .98; letter-spacing: -.045em; }
+.replica-recruiter header p { margin: 0; color: #aaa; font-size: 16px; line-height: 1.55; }
+.replica-recruiter__stack { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: 70px; border-top: 1px solid #3a3a3a; border-left: 1px solid #3a3a3a; }
+.replica-recruiter__stack article { min-height: 160px; padding: 24px; border-right: 1px solid #3a3a3a; border-bottom: 1px solid #3a3a3a; }
+.replica-recruiter__stack h3 { margin: 0 0 34px; font-size: 20px; font-weight: 500; }
+.replica-recruiter__stack p, .replica-recruiter__background p { margin: 0; color: #aaa; line-height: 1.5; }
+.replica-recruiter__background { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1px; margin-top: 48px; background: #3a3a3a; }
+.replica-recruiter__background > div { min-height: 150px; padding: 22px; background: #111; }
+.replica-recruiter__background span { display: block; margin-bottom: 36px; font: 500 11px/1.3 var(--mono); text-transform: uppercase; }
+.replica-recruiter__resume { display: inline-flex; margin-top: 34px; color: #f7f3ea; font-size: 15px; text-underline-offset: 5px; }
+.replica-contact-form select { width: 100%; min-height: 48px; padding: 0 12px; border: 0; border-bottom: 1px solid rgba(17,17,17,.24); border-radius: 0; background: transparent; color: inherit; font: inherit; }
+.replica-contact-form select:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
 
 /* Contact and footer */
 .replica-end-container { width: min(1180px, calc(100% - 48px)); margin-inline: auto; }
-.replica-ending { --ending-panel-height: var(--replica-vh); --footer-panel-height: clamp(36rem, 75svh, 42rem); position: relative; height: 212svh; background: #fffffd; }
+.replica-ending { --ending-panel-height: var(--replica-vh); --footer-panel-height: clamp(36rem, 75svh, 42rem); position: relative; height: 212svh; background: var(--paper); }
 .replica-ending__sticky { position: sticky; top: calc(var(--replica-vh) - var(--ending-panel-height)); height: var(--ending-panel-height); overflow: hidden; }
 
 .replica-ending__under { position: absolute; z-index: 1; inset: 0; background: var(--ink); }
-.replica-ending__cover { position: relative; z-index: 2; width: 100%; height: 100%; background: #fffffd; will-change: transform; }
+.replica-ending__cover { position: relative; z-index: 2; width: 100%; height: 100%; background: var(--paper); will-change: transform; }
 .replica-ending__under .replica-footer, .replica-ending__cover .replica-contact { width: 100%; min-height: 100%; height: 100%; }
 .replica-ending__under .replica-footer__shell { min-height: 100%; height: 100%; }
-.replica-ending__cover .replica-contact { display: grid; align-items: center; padding-block: clamp(38px, 6vh, 58px); background: #fffffd; }
+.replica-ending__cover .replica-contact { display: grid; align-items: center; padding-block: clamp(38px, 6vh, 58px); background: var(--paper); }
 @media (min-width: 701px) {
   .replica-ending__under { top: auto; height: var(--footer-panel-height); }
 }
@@ -129,10 +204,14 @@
 .replica-field--project { margin-top: 26px !important; }
 .replica-field label { display: block; margin: 0 0 7px; font-size: 14px; font-weight: 500; line-height: 18px; }
 .replica-field input, .replica-field textarea { display: block; width: 100%; border: 1px solid var(--field-border); border-radius: 11px; outline: 0; background: transparent; color: var(--light-text); font: inherit; font-size: 14px; transition: border-color .18s ease; }
+.replica-field select { display: block; width: 100%; min-height: 44px; padding: 0 38px 0 12px; border: 1px solid var(--field-border); border-radius: 11px; outline: 0; background-color: #191918; color: var(--light-text); color-scheme: dark; font: inherit; font-size: 14px; transition: border-color .18s ease, background-color .18s ease; }
+.replica-field select option { background: #191918; color: var(--light-text); }
 .replica-field input { height: 44px; padding: 0 12px; }
 .replica-field textarea { height: 140px; padding: 11px 12px; resize: none; }
 .replica-field input::placeholder, .replica-field textarea::placeholder { color: var(--muted); opacity: 1; }
 .replica-field input:focus, .replica-field textarea:focus { border-color: #b5b4ae; }
+.replica-field select:focus { border-color: #f4f3ed; background-color: #20201f; }
+.replica-field select[aria-invalid="true"] { border-color: #dca8a2; }
 .replica-field input[aria-invalid="true"], .replica-field textarea[aria-invalid="true"] { border-color: #dca8a2; }
 .replica-field__error { position: absolute; right: 8px; bottom: -10px; color: #e7b6b0; font-size: 10px; line-height: 1; }
 .replica-contact-form > button { width: 100%; height: 44px; margin-top: 20px; padding: 0; border: 0; border-radius: 9px; background: var(--light-text); color: var(--ink); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: background-color .18s ease, transform .18s ease; }
@@ -158,13 +237,34 @@
 .replica-footer__statement span { display: block; }
 .replica-footer__links, .replica-footer__contact { padding-top: 42px; }
 .replica-footer__links h2, .replica-footer__contact h2 { margin: 0 0 22px; font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -.03em; }
-.replica-footer__links > div { display: flex; max-width: 280px; flex-wrap: wrap; gap: 8px; }
-.replica-footer__links a { display: inline-flex; align-items: center; height: 35px; padding: 0 15px; border: 1px solid var(--light-text); border-radius: 7px; background: var(--light-text); color: var(--ink); font-size: 14px; line-height: 1; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
+.replica-footer__links > div { display: grid; max-width: 280px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.replica-footer__links a { display: inline-flex; align-items: center; justify-content: center; height: 35px; padding: 0 15px; border: 1px solid var(--light-text); border-radius: 7px; background: var(--light-text); color: var(--ink); font-size: 14px; line-height: 1; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
 .replica-footer__links a:hover { background: transparent; color: var(--light-text); }
 .replica-footer__links a:focus-visible, .replica-footer__contact a:focus-visible { outline: 2px solid var(--light-text); outline-offset: 3px; }
 .replica-footer__contact a { color: var(--light-text); font-size: 16px; text-decoration: none; }
 .replica-footer__contact a:hover { text-decoration: underline; text-underline-offset: 4px; }
-.replica-footer__wordmark { position: absolute; z-index: 1; bottom: -39px; left: 0; display: block; width: max-content; padding-right: .1em; overflow: hidden; color: var(--footer-watermark); font-size: clamp(180px, 25.5vw, 390px); font-weight: 700; line-height: .76; letter-spacing: -.072em; white-space: nowrap; pointer-events: none; user-select: none; }
+/* --wordmark-fit comes from RisingWordmark: 1 at six characters, less when the wordmark
+   is longer. A line-height of .76 trims the leading under the caps, so the baseline sits
+   on this box's bottom edge, and a bottom of zero therefore rests the letters on the floor
+   of the end section instead of standing them above it. Nothing in either wordmark drops
+   below the baseline, so the overflow that masks the rise has nothing to clip down there.
+
+   The overflow is what masks the rise, so the box clips at the top edge too, and the caps
+   sit almost flush against it at this line height. padding-top opens the headroom the
+   settle needs: the hops in RisingWordmark peak at .024em, so .05em keeps the letter tops
+   inside the mask through the whole bounce instead of shaving them at the apex. It adds to
+   the top of the box only, which is why it buys that headroom without lifting the seat.
+
+   Four properties then compensate for a wordmark longer than the reference. --reclaim and
+   --stretch buy back size the fit ratio gave up, the first in both axes and the second in
+   height alone, which is the only axis still free once the width runs to the edge of the
+   line. --track-back adds air between letters at that larger size, and --bleed pulls the
+   box left, because a wordmark wider than the container already passes its right edge and
+   a left shift balances the overhang instead of doubling it. All four are multiplied by
+   the shortfall, which is exactly zero at a fit of 1, so none of this tuning can move a
+   six-character wordmark by so much as a pixel. The stretch scales from the bottom-left,
+   so the letters grow upward out of the seat rather than lifting off it. */
+.replica-footer__wordmark { --wordmark-shortfall: calc(1 - var(--wordmark-fit, 1)); --wordmark-scale: calc(var(--wordmark-fit, 1) + var(--wordmark-shortfall) * var(--wordmark-reclaim, .14)); position: absolute; z-index: 1; bottom: 0; left: calc(-1em * var(--wordmark-bleed, .2) * var(--wordmark-shortfall)); display: block; width: max-content; padding-top: .05em; padding-right: .1em; overflow: hidden; color: var(--footer-watermark); font-size: calc(clamp(180px, 25.5vw, 390px) * var(--wordmark-scale)); font-weight: 700; line-height: .76; letter-spacing: calc(-.072em + var(--wordmark-track-back, .0264em) * var(--wordmark-shortfall)); white-space: nowrap; pointer-events: none; user-select: none; transform: scaleY(calc(1 + var(--wordmark-stretch, .66) * var(--wordmark-shortfall))); transform-origin: 0 100%; }
 .replica-footer__wordmark-text { display: block; opacity: 0; transform: translate3d(0, 112%, 0); will-change: opacity, transform; }
 @media (max-width: 900px) {
   .replica-hero__title { width: 86vw; }
@@ -179,7 +279,7 @@
 }
 
 @media (max-width: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 55%; --mobile-portrait-height: 170px; }
+  .replica-intro__sticky { --mobile-portrait-top: 62%; --mobile-portrait-height: 150px; }
   .replica-nav { top: 30px; width: calc(100vw - 30px); max-width: 360px; height: 60px; }
   .replica-nav.is-open { height: min(var(--replica-nav-open-height), calc(100svh - 60px)); height: min(var(--replica-nav-open-height), calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
@@ -188,7 +288,10 @@
   .replica-nav__menu::-webkit-scrollbar { display: none; }
   .replica-intro { height: 150svh; }
   .replica-intro__sticky { min-height: 0; }
-  .replica-hero__title { top: 37%; width: 265px; }
+  .replica-hero__lede { top: 108px; right: 20px; left: 20px; max-width: none; gap: 7px; }
+  .replica-hero__subline { max-width: 30ch; font-size: 12px; }
+  .replica-hero__availability { font-size: 11px; }
+  .replica-hero__title { top: 28%; width: 265px; }
   .replica-hero h1 { font-size: 47px; line-height: .86; letter-spacing: -.052em; text-align: center; transform: none; }
   .replica-hero__spark { top: -48px; left: -12px; width: 56px; height: 56px; }
   .replica-hero__bolt { right: -8px; bottom: -32px; width: 59px; height: 59px; }
@@ -209,10 +312,14 @@
   .replica-services__sticky { align-items: start; }
   .replica-services__inner { width: calc(100% - 36px); padding: 132px 0 16px; }
   .replica-services__inner > h2 { margin-bottom: 12px; font-size: 38px; }
-  .replica-services article, .replica-services__list > a { grid-template-columns: 1fr auto; min-height: 0; padding: 12px 0; }
+  .replica-services article { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 12px 0; }
   .replica-services h3 { max-width: 16ch; margin-bottom: 8px; font-size: 22px; line-height: 1.02; }
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
-  .replica-services__arrow { grid-column: 2; grid-row: 1 / span 2; }
+  .replica-stack__inner { width: calc(100% - 36px); padding: 0; }
+  .replica-stack__eyebrow { margin-bottom: 30px; }
+  .replica-stack__layer { grid-template-columns: 30px 34px minmax(0, 1fr); gap: 0 12px; min-height: 0; }
+  .replica-stack__logo-set { padding-left: 16px; }
+  .replica-stack__logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; }
   .replica-end-container { width: calc(100% - 48px); }
   .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: calc(var(--mobile-visual-height, 100dvh) + var(--footer-panel-height)); }
   .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--mobile-visual-height, 100dvh); min-height: 0; overflow: hidden; }
@@ -245,17 +352,21 @@
   .replica-footer__links, .replica-footer__contact { padding-top: 26px; }
   .replica-footer__links h2, .replica-footer__contact h2 { margin-bottom: 14px; }
   .replica-footer__contact a { overflow-wrap: anywhere; }
-  .replica-footer__wordmark { position: absolute; bottom: 0; left: 0; width: max-content; margin-top: 0; overflow: hidden; font-size: clamp(76px, 27.7vw, 118px); line-height: 1; }
+  /* Less room to reclaim here, and at this size the letters do not need the extra air, so
+     the tracking stays as drawn. Only the two tuning constants and the size differ: the
+     seating, the bleed, and the stretch all come from the base rule, and repeating the
+     positioning here is what previously cancelled them. */
+  .replica-footer__wordmark { --wordmark-reclaim: .06; --wordmark-track-back: 0em; font-size: calc(clamp(76px, 27.7vw, 118px) * var(--wordmark-scale)); }
 }
 
 @media (max-width: 700px) and (max-height: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 48%; --mobile-portrait-height: 145px; }
+  .replica-intro__sticky { --mobile-portrait-top: 60%; --mobile-portrait-height: 125px; }
+  .replica-hero__title { top: 15%; }
   .replica-about { padding-top: 90px; }
   .replica-about h2 { margin-bottom: 220px; font-size: 40px; }
   .replica-services__inner { padding-top: 118px; }
   .replica-services__inner > h2 { margin-bottom: 8px; font-size: 32px; }
-  .replica-services article,
-  .replica-services__list > a { padding: 8px 0; }
+  .replica-services article { padding: 8px 0; }
   .replica-services h3 { margin-bottom: 5px; font-size: 18px; }
   .replica-services p { gap: 2px 6px; font-size: 10.5px; line-height: 1.25; }
   .replica-contact { padding: 48px 0 36px; }
@@ -288,11 +399,10 @@
   .replica-contact__copy h2 { font-size: clamp(40px, 12vw, 50px); overflow-wrap: anywhere; }
   .replica-footer__statement { font-size: clamp(38px, 11.5vw, 48px); }
   .replica-footer__links, .replica-footer__contact { padding-top: 42px; }
-  .replica-footer__wordmark { width: max-content; font-size: clamp(76px, 27.7vw, 118px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__right a span, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
+  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__arrow, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
   .replica-nav__links a { animation: none !important; }
   .replica-footer__wordmark-text { opacity: 1; transform: none; animation: none; transition: none; }
   .replica-intro { height: 200vh; }
@@ -303,4 +413,30 @@
   .replica-ending__under, .replica-ending__cover { position: relative; inset: auto; }
   .replica-ending__under { order: 2; }
   .replica-ending__cover { order: 1; transform: none !important; }
+}
+
+/* Unpinned working stack: narrow screens, and reduced motion where the scroll
+   wiring never runs so no layer would ever receive .is-active. Both containers
+   go display: contents to become rows of one column, but that promotes the rack
+   first and the logo sets second, so each pair needs an explicit row to sit
+   together. Keep these in step with --replica-stack-layers. */
+@media (max-width: 700px), (prefers-reduced-motion: reduce) {
+  .replica-stack { height: auto; padding: 84px 0 92px; }
+  .replica-stack__sticky { position: static; height: auto; overflow: visible; }
+  .replica-stack__scene { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .replica-stack__rack, .replica-stack__logos { display: contents; }
+  .replica-stack__layer { margin-top: 20px; }
+  .replica-stack__layer.is-active { transform: none; }
+  .replica-stack__logo-set { margin-top: 12px; padding-left: 18px; opacity: 1; transform: none; transition: none; }
+  .replica-stack__logo-set-label { display: none; }
+  .replica-stack__layer:nth-child(1) { grid-row: 1; }
+  .replica-stack__logo-set:nth-child(1) { grid-row: 2; }
+  .replica-stack__layer:nth-child(2) { grid-row: 3; }
+  .replica-stack__logo-set:nth-child(2) { grid-row: 4; }
+  .replica-stack__layer:nth-child(3) { grid-row: 5; }
+  .replica-stack__logo-set:nth-child(3) { grid-row: 6; }
+  .replica-stack__layer:nth-child(4) { grid-row: 7; }
+  .replica-stack__logo-set:nth-child(4) { grid-row: 8; }
+  .replica-stack__layer:nth-child(5) { grid-row: 9; }
+  .replica-stack__logo-set:nth-child(5) { grid-row: 10; }
 }

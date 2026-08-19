@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { GuideBooking } from "./GuideBooking.jsx";
+import BrandMark from "./BrandMark.jsx";
 import { GuideInquiry } from "./GuideInquiry.jsx";
 import {
   buildChatFeedbackPayload,
@@ -10,29 +11,21 @@ import {
   saveChatFeedbackSession,
   withFeedbackStatus,
 } from "./chatFeedback.js";
+import { guideBrandForPage } from "./guideBrands.js";
 import { navigateToTarget } from "./sectionNavigation.js";
 
-const avatar = new URL(
-  "../../assets/images/v2-chat/henry-guide-avatar.webp",
-  import.meta.url,
-).href;
-
-const PROMPT_KEY = "hf-guide-prompt-count-v5";
-const PROMPT_MUTED_KEY = "hf-guide-prompts-muted-v5";
-const PROMPT_CONTEXT_KEY = "hf-guide-prompt-context-v1";
 const INITIAL_PROMPT_DELAY_MS = 600;
 const FOLLOW_UP_PROMPT_DELAY_MIN_MS = 15_000;
 const FOLLOW_UP_PROMPT_DELAY_MAX_MS = 20_000;
 const SECTION_PROMPT_SETTLE_MIN_MS = 3_000;
 const SECTION_PROMPT_SETTLE_MAX_MS = 5_000;
 const PROMPT_VISIBLE_MS = 5_000;
-const CHAT_HISTORY_KEY = "hf-guide-chat-history-v1";
 const CHAT_TRANSITION_MS = 800;
 const COMMERCE_CONTEXT_PATTERN = /\b(e-?commerce|shopify|online store|store pressure|revenue leak|cart|checkout|returns?|retention|inventory|margin|commerce brief)\b/i;
-const COMMERCE_ROUTE_PATTERN = /\/(?:offers|ecommerce)(?:\/|%20|$)|\/work\/(?:cartpilot|marginguard|clear-skin)(?:\/|$)/i;
+const COMMERCE_ROUTE_PATTERN = /\/storecraft(?:\/|%20|$)|\/work\/clear-skin(?:\/|$)/i;
 
-function hasCommerceInquiryContext(route, section, context = "") {
-  return section === "offers"
+function hasCommerceInquiryContext(brand, route, context = "") {
+  return brand.alwaysCommerceInquiry
     || COMMERCE_ROUTE_PATTERN.test(route)
     || COMMERCE_CONTEXT_PATTERN.test(context);
 }
@@ -92,21 +85,21 @@ function randomDelay(minimum, maximum) {
   return Math.round(minimum + (Math.random() * (maximum - minimum)));
 }
 
-function createWelcomeMessage(page, section = "") {
+function createWelcomeMessage(brand, page, section = "") {
   return {
     id: uid(),
     role: "assistant",
-    content: "Hi — ask me about Henry’s work, services, skills, or availability.",
-    suggestions: pageSuggestions(page, section),
+    content: brand.welcome,
+    suggestions: brand.suggestions(page, section),
     actions: [],
     outcome: "welcome",
   };
 }
 
-function readSessionMessages(page) {
+function readSessionMessages(brand, page) {
   try {
-    const stored = JSON.parse(sessionStorage.getItem(CHAT_HISTORY_KEY) || "null");
-    if (!Array.isArray(stored) || !stored.length) return [createWelcomeMessage(page)];
+    const stored = JSON.parse(sessionStorage.getItem(brand.storage.history) || "null");
+    if (!Array.isArray(stored) || !stored.length) return [createWelcomeMessage(brand, page)];
 
     const messages = stored.map((message, index) => {
       if (!message || !["assistant", "user"].includes(message.role)) return null;
@@ -127,151 +120,20 @@ function readSessionMessages(page) {
       };
     }).filter(Boolean);
 
-    return messages.length ? messages : [createWelcomeMessage(page)];
+    return messages.length ? messages : [createWelcomeMessage(brand, page)];
   } catch {
-    return [createWelcomeMessage(page)];
+    return [createWelcomeMessage(brand, page)];
   }
 }
 
-function pageSuggestions(page, section) {
-  if (section === "services" || page.includes("/services/")) {
-    return [
-      "Which service fits my problem?",
-      "How does Henry build reliable AI systems?",
-      "Start a project inquiry",
-    ];
-  }
-  if (section === "offers" || page.includes("/offers/")) {
-    return [
-      "Which offer should I start with?",
-      "Show me proof of relevant work",
-      "Check discovery-call availability",
-    ];
-  }
-  if (section === "work" || page.includes("/work/")) {
-    return [
-      "Show me Henry’s strongest AI project",
-      "Which projects use guardrails?",
-      "What did Henry personally build?",
-    ];
-  }
-  if (section === "about" || page.includes("/about/")) {
-    return [
-      "Summarize Henry’s background",
-      "What is his technical stack?",
-      "Is Henry open to roles?",
-    ];
-  }
-  return [
-    "What can Henry build for my team?",
-    "Show me his strongest AI project",
-    "Is Henry available for a call?",
-  ];
-}
-
-function promptQuestions(page, section) {
-  if (section === "services" || page.includes("/services/")) {
-    return [
-      {
-        label: "Got a bottleneck? Let’s find the right system.",
-        query: "Which service fits my problem?",
-      },
-      {
-        label: "I can match your problem to a service.",
-        query: "Help me choose the best service for my needs.",
-      },
-      {
-        label: "Ready to turn the idea into a project brief?",
-        query: "Start a project inquiry",
-      },
-    ];
-  }
-  if (section === "offers" || page.includes("/offers/")) {
-    return [
-      {
-        label: "Not sure where to start? I can compare these.",
-        query: "Compare Henry’s offers in plain language.",
-      },
-      {
-        label: "Let’s find the offer that fits your stage.",
-        query: "Which offer should I start with?",
-      },
-      {
-        label: "Want to talk it through with Henry?",
-        query: "Check discovery-call availability",
-      },
-    ];
-  }
-  if (section === "work" || page.includes("/work/")) {
-    return [
-      {
-        label: "This is where ideas become working systems.",
-        query: "Show me Henry’s strongest AI project",
-      },
-      {
-        label: "Want the story behind this project?",
-        query: "What did Henry personally build in this project?",
-      },
-      {
-        label: "Looking for proof of a particular skill?",
-        query: "Show me work that proves Henry’s technical skills.",
-      },
-    ];
-  }
-  if (section === "about" || page.includes("/about/")) {
-    return [
-      {
-        label: "Here’s the person behind the systems.",
-        query: "Summarize Henry’s background in 30 seconds.",
-      },
-      {
-        label: "Looking for a particular skill or role fit?",
-        query: "What roles and technical skills fit Henry best?",
-      },
-      {
-        label: "Want the work behind the résumé?",
-        query: "Show me the projects that support Henry’s experience.",
-      },
-    ];
-  }
-  if (section === "contact" || page.includes("/contact/")) {
-    return [
-      {
-        label: "Ready when you are—project or quick intro?",
-        query: "Help me choose between an inquiry and a quick intro call.",
-      },
-      {
-        label: "Tell me what you’re building. I’ll route you.",
-        query: "Start a project inquiry",
-      },
-      {
-        label: "Prefer a conversation? Let’s find a time.",
-        query: "Is Henry available for a call?",
-      },
-    ];
-  }
-  return [
-    {
-      label: "Welcome to my corner!",
-      query: null,
-    },
-    {
-      label: "Curious what I can build with AI?",
-      query: "What can Henry build for my team?",
-    },
-    {
-      label: "Want the quickest tour of my best work?",
-      query: "Show me Henry’s strongest AI project",
-    },
-  ];
-}
-
-function Avatar({ large = false }) {
+function Avatar({ brand, large = false }) {
   return (
     <span className={`hf-guide-avatar${large ? " is-large" : ""}`} aria-hidden="true">
       <span className="hf-guide-avatar__glow" />
       <span className="hf-guide-avatar__figure">
-        <img src={avatar} alt="" />
+        {brand.avatar
+          ? <img src={brand.avatar} alt="" />
+          : <span className="hf-guide-avatar__monogram">{brand.markName ? <BrandMark name={brand.markName} /> : brand.monogram}</span>}
       </span>
     </span>
   );
@@ -355,6 +217,9 @@ function FeedbackPrompt({ feedback, onDismiss, onRate, onCommentChange, onSendNo
 export default function PortfolioGuide({ page }) {
   const route = `${window.location.pathname}${window.location.hash}`;
   const isCasePage = page?.startsWith("case-") || page?.startsWith("offer-");
+  // The brand is fixed for the life of the page: every visitor-facing string, the
+  // session keys, and the `brand` sent to /api/chat all come from this one record.
+  const brand = useMemo(() => guideBrandForPage(page || ""), [page]);
   const [open, setOpen] = useState(false);
   const [panelPhase, setPanelPhase] = useState("idle");
   const [maximized, setMaximized] = useState(false);
@@ -364,8 +229,7 @@ export default function PortfolioGuide({ page }) {
   const [busy, setBusy] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
   const [mobileCase, setMobileCase] = useState(false);
-  const [storyActive, setStoryActive] = useState(false);
-  const [messages, setMessages] = useState(() => readSessionMessages(route));
+  const [messages, setMessages] = useState(() => readSessionMessages(brand, route));
   const [feedbackSession, setFeedbackSession] = useState(() => readChatFeedbackSession(sessionStorage));
   const [feedback, setFeedback] = useState(null);
   const promptContextKey = `${route}:${activeSection || "hero"}`;
@@ -378,10 +242,10 @@ export default function PortfolioGuide({ page }) {
   const requestAbortRef = useRef(null);
   const feedbackTriggerRef = useRef("chat_close");
   const promptIndexRef = useRef(
-    Number.parseInt(sessionStorage.getItem(PROMPT_KEY) || "0", 10) || 0,
+    Number.parseInt(sessionStorage.getItem(brand.storage.promptCount) || "0", 10) || 0,
   );
   const lastPromptContextRef = useRef(
-    sessionStorage.getItem(PROMPT_CONTEXT_KEY) || "",
+    sessionStorage.getItem(brand.storage.promptContext) || "",
   );
   const observedPromptContextRef = useRef(promptContextKey);
   const hasShownPromptOnPageRef = useRef(false);
@@ -394,36 +258,6 @@ export default function PortfolioGuide({ page }) {
     query.addEventListener("change", sync);
     return () => query.removeEventListener("change", sync);
   }, [isCasePage]);
-
-  useEffect(() => {
-    if (!mobileCase) {
-      setStoryActive(false);
-      return undefined;
-    }
-    const sections = [...document.querySelectorAll('[data-story-sequence="pin"], .v2-decision-replay')];
-    if (!sections.length) return undefined;
-    let frame = 0;
-    const sync = () => {
-      frame = 0;
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-      const active = sections.some((section) => {
-        const bounds = section.getBoundingClientRect();
-        return bounds.top < viewportHeight * .72 && bounds.bottom > viewportHeight * .2;
-      });
-      setStoryActive((current) => current === active ? current : active);
-    };
-    const requestSync = () => {
-      if (!frame) frame = window.requestAnimationFrame(sync);
-    };
-    requestSync();
-    window.addEventListener("scroll", requestSync, { passive: true });
-    window.visualViewport?.addEventListener("resize", requestSync, { passive: true });
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", requestSync);
-      window.visualViewport?.removeEventListener("resize", requestSync);
-    };
-  }, [mobileCase, page]);
 
   const syncHeadOrigin = useCallback(() => {
     const launcher = launcherRef.current;
@@ -488,12 +322,12 @@ export default function PortfolioGuide({ page }) {
   }, [open, panelPhase, maximized, syncHeadOrigin]);
 
   const suggestions = useMemo(
-    () => pageSuggestions(route, activeSection),
-    [route, activeSection],
+    () => brand.suggestions(route, activeSection),
+    [brand, route, activeSection],
   );
   const contextualPrompts = useMemo(
-    () => promptQuestions(route, activeSection),
-    [route, activeSection],
+    () => brand.prompts(route, activeSection),
+    [brand, route, activeSection],
   );
   const contextualPromptsRef = useRef(contextualPrompts);
 
@@ -509,11 +343,11 @@ export default function PortfolioGuide({ page }) {
 
   useEffect(() => {
     try {
-      sessionStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+      sessionStorage.setItem(brand.storage.history, JSON.stringify(messages));
     } catch {
       // The assistant remains usable when session storage is unavailable.
     }
-  }, [messages]);
+  }, [brand, messages]);
 
   useEffect(() => {
     saveChatFeedbackSession(sessionStorage, feedbackSession);
@@ -538,7 +372,8 @@ export default function PortfolioGuide({ page }) {
   }, []);
 
   useEffect(() => {
-    const targets = [...document.querySelectorAll("#about, #services, #work, #offers, #contact")];
+    const selector = brand.sectionIds.map((id) => `#${id}`).join(", ");
+    const targets = [...document.querySelectorAll(selector)];
     if (!targets.length) return undefined;
 
     const isHomeHero = () => (
@@ -566,14 +401,14 @@ export default function PortfolioGuide({ page }) {
       observer.disconnect();
       window.removeEventListener("scroll", keepHeroContextAccurate);
     };
-  }, [page]);
+  }, [brand, page]);
 
   useEffect(() => {
     if (
       open
       || mobileCase
       || document.visibilityState === "hidden"
-      || sessionStorage.getItem(PROMPT_MUTED_KEY) === "1"
+      || sessionStorage.getItem(brand.storage.promptMuted) === "1"
       || prompt
       || feedback
     ) return undefined;
@@ -596,13 +431,13 @@ export default function PortfolioGuide({ page }) {
       promptIndexRef.current += 1;
       lastPromptContextRef.current = promptContextKey;
       hasShownPromptOnPageRef.current = true;
-      sessionStorage.setItem(PROMPT_KEY, String(promptIndexRef.current));
-      sessionStorage.setItem(PROMPT_CONTEXT_KEY, promptContextKey);
+      sessionStorage.setItem(brand.storage.promptCount, String(promptIndexRef.current));
+      sessionStorage.setItem(brand.storage.promptContext, promptContextKey);
       setPrompt(nextPrompt);
     }, delay);
 
     return () => window.clearTimeout(showTimer);
-  }, [mobileCase, open, prompt, promptContextKey, feedback]);
+  }, [brand, mobileCase, open, prompt, promptContextKey, feedback]);
 
   useEffect(() => {
     if (!prompt) return undefined;
@@ -731,6 +566,7 @@ export default function PortfolioGuide({ page }) {
           message: content,
           history,
           page: `${window.location.pathname}${window.location.hash}`,
+          brand: brand.id,
         }),
       });
       const payload = await response.json();
@@ -751,11 +587,7 @@ export default function PortfolioGuide({ page }) {
         role: "assistant",
         content: error.message,
         suggestions,
-        actions: [{
-          type: "show_inquiry",
-          label: "Send a project inquiry",
-          service: null,
-        }],
+        actions: [brand.errorAction],
         outcome: "error",
       }]);
     } finally {
@@ -825,14 +657,14 @@ export default function PortfolioGuide({ page }) {
     setDraft("");
     setActiveCard(null);
     try {
-      sessionStorage.removeItem(CHAT_HISTORY_KEY);
+      sessionStorage.removeItem(brand.storage.history);
     } catch {
       // State still clears when session storage is unavailable.
     }
     setFeedback(null);
     setFeedbackSession(createChatFeedbackSession());
     feedbackTriggerRef.current = "chat_close";
-    setMessages([createWelcomeMessage(route, activeSection)]);
+    setMessages([createWelcomeMessage(brand, route, activeSection)]);
   };
 
   const runAction = (action) => {
@@ -854,8 +686,8 @@ export default function PortfolioGuide({ page }) {
         type: "inquiry",
         service: action.service || null,
         commerce: hasCommerceInquiryContext(
+          brand,
           route,
-          activeSection,
           `${action.service || ""} ${recentUserContext}`,
         ),
       });
@@ -870,7 +702,7 @@ export default function PortfolioGuide({ page }) {
 
   const mutePrompts = () => {
     setPrompt(null);
-    sessionStorage.setItem(PROMPT_MUTED_KEY, "1");
+    sessionStorage.setItem(brand.storage.promptMuted, "1");
   };
 
   const conversationContext = messages
@@ -883,7 +715,7 @@ export default function PortfolioGuide({ page }) {
     .find((message) => message.role === "assistant")?.id;
 
   return createPortal(
-    <div className={`hf-guide${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}${storyActive ? " is-story-active" : ""}`}>
+    <div className={`hf-guide${brand.className ? ` ${brand.className}` : ""}${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}`}>
       {!open && feedback && (
         <FeedbackPrompt
           feedback={feedback}
@@ -929,13 +761,13 @@ export default function PortfolioGuide({ page }) {
           className="hf-guide-launcher"
           ref={launcherRef}
           type="button"
-          aria-label="Open Henry’s AI portfolio assistant"
+          aria-label={brand.launcherLabel}
           aria-expanded={open}
           aria-hidden={open ? "true" : undefined}
           disabled={open}
           onClick={openChat}
         >
-          <Avatar large />
+          <Avatar brand={brand} large />
           <span className="hf-guide-launcher__status" aria-hidden="true" />
         </button>
       )}
@@ -946,16 +778,16 @@ export default function PortfolioGuide({ page }) {
           ref={shellRef}
           role="dialog"
           aria-modal={maximized ? "true" : undefined}
-          aria-label="Henry AI portfolio assistant"
+          aria-label={brand.dialogLabel}
           aria-hidden={panelPhase === "closing" ? "true" : undefined}
         >
           <div className="hf-guide-panel">
             <header className="hf-guide-header">
               <div className="hf-guide-header__identity">
-                <Avatar />
+                <Avatar brand={brand} />
                 <span>
-                  <strong>Henry AI</strong>
-                  <small><i /> Portfolio assistant</small>
+                  <strong>{brand.panelName}</strong>
+                  <small><i /> {brand.panelRole}</small>
                 </span>
               </div>
               <div className="hf-guide-header__actions">
@@ -995,7 +827,7 @@ export default function PortfolioGuide({ page }) {
                         id: uid(),
                         role: "assistant",
                         content: `Your ${booking.title || "meeting"} is confirmed. Cal.com sent the details to your email.`,
-                        suggestions: ["What should I review before the call?", "Show me relevant projects"],
+                        suggestions: brand.bookingSuggestions,
                         actions: [],
                         outcome: "success",
                       }]);
@@ -1015,9 +847,9 @@ export default function PortfolioGuide({ page }) {
                         id: uid(),
                         role: "assistant",
                         content: activeCard.commerce
-                          ? "Your commerce brief was sent. Henry now has the store context you reviewed and confirmed, and will reply within one business day with the first evidence to inspect and the most practical next step."
-                          : "Your project inquiry was sent. Henry now has the details you reviewed and confirmed, and will reply within one business day with a focused next step.",
-                        suggestions: ["Show me related work", "Book a discovery call"],
+                          ? brand.inquirySuccess.commerce
+                          : brand.inquirySuccess.project,
+                        suggestions: brand.inquirySuggestions,
                         actions: [],
                         outcome: "success",
                       }]);
@@ -1034,7 +866,7 @@ export default function PortfolioGuide({ page }) {
                     <article
                       className={`hf-guide-message is-${message.role}`}
                       key={message.id}
-                      aria-label={message.role === "assistant" ? "Henry AI" : "You"}
+                      aria-label={message.role === "assistant" ? brand.panelName : "You"}
                     >
                       <div className="hf-guide-message__content">
                         {message.content
@@ -1091,7 +923,7 @@ export default function PortfolioGuide({ page }) {
                     send();
                   }}
                 >
-                  <label htmlFor="hf-guide-input">Ask about Henry</label>
+                  <label htmlFor="hf-guide-input">{brand.composerLabel}</label>
                   <div>
                     <textarea
                       id="hf-guide-input"
@@ -1105,7 +937,7 @@ export default function PortfolioGuide({ page }) {
                           send();
                         }
                       }}
-                      placeholder="Ask about Henry…"
+                      placeholder={brand.placeholder}
                       disabled={busy}
                     />
                     <button

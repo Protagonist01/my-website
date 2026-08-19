@@ -82,7 +82,7 @@ export function ReferralCampaign() {
         </div>
         <div className="referral-hero__card" aria-label="Referral link preview">
           <span>YOUR APPROVED LINK</span>
-          <div><strong>henryfadeni.vercel.app</strong><small>/v2/ecommerce/?ref=your-name-7k4m9</small></div>
+          <div><strong>henryfadeni.vercel.app</strong><small>/v2/storecraft/?ref=your-name-7k4m9</small></div>
           <dl><div><dt>Gig / contract</dt><dd>10%</dd></div><div><dt>Employment</dt><dd>5%</dd></div><div><dt>Attribution</dt><dd>60 days</dd></div></dl>
           <i>LINK / 01</i>
         </div>

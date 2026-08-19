@@ -29,7 +29,7 @@ Use sources in this order when claims conflict:
 4. Resume supplied by Henry.
 5. Original public GitHub repositories and their documentation.
 
-Do not treat a GitHub fork, tutorial repository, experiment, modeled scenario, or interactive concept as client work.
+Do not treat a GitHub fork, tutorial repository, or experiment as client work.
 
 Current source resolutions:
 
@@ -61,7 +61,7 @@ The assistant may use a warm first-person portfolio voice, but it must not imply
 - Henry's stated work availability is current as of the verification date above. Calendar slots remain dynamic and require a live Cal.com check.
 - Do not submit a form or create a booking without an explicit user confirmation.
 - Do not execute a generated URL, route, or action outside the approved action registry.
-- Do not describe interactive concepts or offer scenarios as completed client engagements.
+- Do not describe an offer scenario as a completed client engagement.
 - Do not give regulated medical, legal, or financial advice on Henry's behalf.
 - If the knowledge base does not support a claim, say that the information is not available and offer email, contact-form, or booking options.
 
@@ -102,8 +102,6 @@ What differentiates Henry's work:
 
 ### AI Engineering & Agent Systems
 
-Route: /v2/services/ai-engineering/
-
 Henry helps teams turn an AI demo into a working product that uses approved knowledge, calls defined tools, records what happened, and sends uncertain or high-risk cases to a person. This service covers RAG systems, agent workflows, text-to-SQL products, developer agents, and operations agents.
 
 Typical capabilities:
@@ -122,8 +120,6 @@ Good fit:
 - Important actions require confirmation, permission rules, or human review.
 
 ### Machine Learning & Data Products
-
-Route: /v2/services/machine-learning/
 
 Henry builds text-to-SQL analytics, predictive models, retrieval systems, evaluation pipelines, APIs, and interfaces that turn data into a result a user can inspect and act on.
 
@@ -144,8 +140,6 @@ Good fit:
 
 ### Conversational AI & Voice Systems
 
-Route: /v2/services/conversational-ai/
-
 Henry builds support, guided-selling, booking, internal-assistant, and voice workflows that answer from approved information, use defined tools, confirm important details, and transfer the full context to a person when needed.
 
 Typical capabilities:
@@ -165,8 +159,6 @@ Good fit:
 
 ### Full-Stack Product Engineering
 
-Route: /v2/services/product-engineering/
-
 Henry helps founders and teams define a product, design the interaction, build the frontend and backend, connect data and AI, handle failure states, test it, and prepare it for deployment.
 
 Typical capabilities:
@@ -183,6 +175,24 @@ Good fit:
 - The main demo works, but mobile layouts, loading, errors, permissions, recovery, and edge cases remain fragile.
 - A model or automation exists, but users still need a clear interface and the team needs an operational handoff.
 - One technical partner needs to carry the product from scope through delivery.
+
+### Automation
+
+Henry moves recurring manual work onto systems that trigger on their own: integrations between tools a team already pays for, scheduled jobs, document and data handling, alerting, and an audit trail a person can read afterwards.
+
+Typical capabilities:
+
+- Workflow automation with defined triggers, retries, validation, and idempotency.
+- Integrations between existing tools, APIs, spreadsheets, storage, and internal services.
+- Scheduled and event-driven jobs for reporting, syncing, and document or data handling.
+- Run logs covering inputs, outputs, skipped steps, and errors, with alerts to the owner.
+- Explicit boundaries for what the automation may do alone and what needs human confirmation.
+
+Good fit:
+
+- A person copies the same data between tools every week because nothing connects them.
+- The work happens, but no one can tell afterwards what ran, what it changed, or what it skipped.
+- One silent failure goes unnoticed until a customer, a report, or a deadline exposes it.
 
 ## Engagement Options
 
@@ -222,25 +232,23 @@ Recommended starting point: use the Revenue Leak Audit when the first move is un
 
 ### Commerce Proof and Market Context
 
-Henry's direct commerce proof has three different evidence levels:
+Henry's direct commerce proof:
 
 - Clear Skin Concierge is a built product with a public repository. It demonstrates grounded product guidance, typed site actions, and confirmation before consequential cart or booking actions.
-- CartPilot is an interactive commerce concept, not a shipped client product. It demonstrates guided selling, evidence-backed comparisons, typed cart proposals, and confirmation-first commerce UX.
-- MarginGuard is a modeled commerce scenario, not a measured client result. It demonstrates contribution-margin modeling, leak prioritization, and intervention previews.
 
-Keep these labels visible. Never combine them into an unsupported claim that Henry increased a client's conversion, revenue, profit, retention, or operating speed.
+Keep that label visible. Never turn it into an unsupported claim that Henry increased a client's conversion, revenue, profit, retention, or operating speed.
 
 Outside market evidence may explain why a commerce problem matters, but it is not Henry's performance evidence:
 
 - Baymard's 2026 cart-abandonment list reports a 70.22% average documented online shopping-cart abandonment rate across 50 studies. This is market context, not a result produced by Henry.
-- Shopify's profit-report documentation shows that order and market profit reporting can include product charges, shipping charges, duties, import taxes, product costs, shipping costs, discounts, and refunds. This supports the need to inspect margin inputs carefully; it does not prove a MarginGuard client outcome.
-- Shopify's Storefront MCP documentation describes tools for store catalog search, policy questions, cart retrieval, and cart updates. This supports the technical feasibility of a controlled guided-shopping workflow; CartPilot remains an interactive concept.
+- Shopify's profit-report documentation shows that order and market profit reporting can include product charges, shipping charges, duties, import taxes, product costs, shipping costs, discounts, and refunds. This supports the need to inspect margin inputs carefully; it is not a client outcome.
+- Shopify's Storefront MCP documentation describes tools for store catalog search, policy questions, cart retrieval, and cart updates. This supports the technical feasibility of a controlled guided-shopping workflow; it is not evidence that Henry has shipped one.
 
-If asked whether Henry has proven commerce results, answer precisely: he has a built commerce product and public implementation evidence in Clear Skin, plus an interactive concept and a modeled scenario. No measured commerce client outcome is published.
+If asked whether Henry has proven commerce results, answer precisely: he has a built commerce product and public implementation evidence in Clear Skin. No measured commerce client outcome is published.
 
 ### Revenue Leak Audit
 
-Route: /v2/offers/revenue-leak-audit/
+Route: /v2/storecraft/revenue-leak-audit/
 
 Purpose: audit support, returns, retention, app stack, inventory, reporting, and founder tasks, then rank the first operational leak worth addressing.
 
@@ -248,7 +256,7 @@ Deliverables: signal audit, leak scorecard, and priority roadmap.
 
 ### AI Support Concierge
 
-Route: /v2/offers/ai-support-concierge/
+Route: /v2/storecraft/ai-support-concierge/
 
 Purpose: connect approved knowledge, products, policies, orders, and helpdesk workflows to an AI concierge with clear human escalation and confirmation gates.
 
@@ -256,7 +264,7 @@ Deliverables: knowledge layer, guided-selling flows, and action guardrails.
 
 ### AI Ops Dashboard
 
-Route: /v2/offers/ai-ops-dashboard/
+Route: /v2/storecraft/ai-ops-dashboard/
 
 Purpose: combine revenue, refunds, support backlog, inventory risk, fulfilment, retention, and summaries in one exception-focused operating view.
 
@@ -264,7 +272,7 @@ Deliverables: daily brief, exception feed, and decision dashboard.
 
 ### Retention Automation
 
-Route: /v2/offers/retention-automation/
+Route: /v2/storecraft/retention-automation/
 
 Purpose: use purchase events to route customers into relevant education, replenishment, VIP, subscription, or win-back journeys.
 
@@ -272,7 +280,7 @@ Deliverables: buyer segments, lifecycle routes, and performance signals.
 
 ### Inventory Intelligence
 
-Route: /v2/offers/inventory-intelligence/
+Route: /v2/storecraft/inventory-intelligence/
 
 Purpose: monitor inventory velocity, supplier lead times, campaign demand, slow movers, and reorder thresholds as one decision system.
 
@@ -280,7 +288,7 @@ Deliverables: risk monitor, reorder logic, and stock alerts.
 
 ### Returns Automation
 
-Route: /v2/offers/returns-automation/
+Route: /v2/storecraft/returns-automation/
 
 Purpose: identify an order, check policy, capture the return reason, route straightforward exchanges, and send unusual or risky cases to a person.
 
@@ -288,7 +296,7 @@ Deliverables: guided intake, policy checks, and exchange routing.
 
 ### Custom Automation
 
-Route: /v2/offers/custom-automation/
+Route: /v2/storecraft/custom-automation/
 
 Purpose: connect Shopify webhooks, APIs, internal tools, reporting, approvals, and data synchronization where generic apps stop short.
 
@@ -433,15 +441,21 @@ Use the current project label from this list and preserve its meaning:
 - Public demo / mocked calendar integration: implemented demonstration whose availability and booking records are simulated.
 - Built client system / NDA-safe archive: implementation is documented without exposing restricted client material.
 - Built applied-ML system / public archive: implemented machine-learning product with public source evidence and documented model results.
-- Interactive product concept: a designed and interactive concept, not a shipped client system.
-- Modeled commerce scenario: a demonstrative commerce model, not observed client performance.
 - Hobby project: a smaller working product or supporting build story, not client work.
 
-Never convert a target, threshold, modeled benefit, or scenario into a measured production outcome.
+Every project in the work collection has either a public repository or a delivered client system behind it. Never convert a target, threshold, or projection into a measured production outcome.
+
+Every project also carries exactly one category tag, shown on its card and case-study page:
+
+- AI Engineering: Retrieval-Augmented Analytics, AI Voice Receptionist, Fruit Quality Prediction, AboutFace Chatbot.
+- Automation: Self-Healing Monitor, AI Code Review Agent, Automated Testimony Operations.
+- Full-Stack Product Engineering: Clear Skin Concierge, Smart Todo App, Portfolio Website.
+
+The category describes the kind of engineering work, and the evidence label above describes what can be verified. They are separate and should never be substituted for each other.
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 and verified on 2026-07-18. The work collection is organized into six featured stories, five additional projects, and three hobby projects.
+Decision status: implemented in V2 and verified on 2026-08-18. The work collection is organized into five featured stories, two archive projects, and three hobby projects.
 
 Publication rules:
 
@@ -451,17 +465,13 @@ Publication rules:
 
 Published full case studies:
 
-1. Framewise: /v2/work/framewise/. Core story: how an approved campaign direction becomes reusable visual rules across formats. This is an interactive concept.
-2. Threadmark: /v2/work/threadmark/. Core story: how mixed research sources become a short brief while every claim stays connected to supporting or conflicting evidence. This is an interactive concept.
-3. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
-4. CartPilot: /v2/work/cartpilot/. Core story: how a shopper's request becomes a transparent comparison and a cart action that waits for confirmation. This is an interactive concept.
+1. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
+2. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
+3. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
+4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
 5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
-6. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
-7. MarginGuard: /v2/work/marginguard/. Core story: how order revenue and variable costs become a ranked list of recoverable margin leaks and a modeled rule preview. This is a modeled commerce scenario.
-8. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
-9. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
-10. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
-11. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
+6. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
+7. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
 
 Hobby project treatments:
 
@@ -579,7 +589,7 @@ Dedicated V2 case study: /v2/work/ai-voice-receptionist/
 
 Summary:
 
-> A voice receptionist demonstration that answers clinic questions, checks simulated appointment availability, confirms booking details, creates an ephemeral simulated booking, and sends an SMS summary.
+> A voice receptionist demonstration that answers clinic questions, checks simulated appointment availability, confirms booking details, creates a simulated booking record, and sends an SMS summary.
 
 Key implementation evidence:
 
@@ -593,7 +603,7 @@ Key implementation evidence:
 Important qualifiers:
 
 - The Acuity Scheduling calendar integration is mocked.
-- Demo bookings are ephemeral and not production calendar records.
+- Demo bookings are simulated records and are never written to a production calendar.
 - Cancellation and rescheduling do not trigger a real calendar action.
 
 Relevant questions:
@@ -700,7 +710,7 @@ Repository: https://github.com/Protagonist01/smart-todo-app
 
 Summary:
 
-> A keyboard-focused Python task manager that turns one compact command into dates, times, tags, priorities, assignments, and durations without using an AI model or a long form.
+> A keyboard-focused Python task manager that turns one compact command into dates, times, tags, priorities, assignments, and durations through deterministic parsing rules.
 
 Key implementation evidence:
 
@@ -742,46 +752,6 @@ Documented V2 outcome:
 - A recurring ten-person loop was reduced to one focused operator queue.
 
 Important qualifier: do not invent the client identity, organization, dates, volume, or additional commercial results.
-
-## Interactive Product Concepts
-
-These are intentionally labeled concepts and must not be described as shipped client products.
-
-### Framewise
-
-Status: Interactive product concept.  
-Route: /v2/work/framewise/
-
-A creative-AI product concept that saves an approved campaign's palette, lighting, composition, typography, and references so teams can create consistent variants across formats.
-
-Demonstrates: generation workflows, visual style memory, visible creative locks, and campaign adaptation.
-
-### Threadmark
-
-Status: Interactive product concept.  
-Route: /v2/work/threadmark/
-
-A research-workspace concept that turns websites, PDFs, recordings, and images into a concise brief with a source attached to every claim and conflicting evidence shown for review.
-
-Demonstrates: mixed-source retrieval, citation interaction design, evidence architecture, and verifiable synthesis.
-
-### CartPilot
-
-Status: Interactive commerce concept.  
-Route: /v2/work/cartpilot/
-
-A guided-shopping concept that turns a customer's natural-language needs into product filters, evidence-backed comparisons, and a cart action the customer must confirm.
-
-Demonstrates: guided selling, typed actions, safe cart proposals, and confirmation-first commerce UX.
-
-### MarginGuard
-
-Status: Modeled commerce scenario.  
-Route: /v2/work/marginguard/
-
-A commerce-intelligence concept that calculates contribution margin per order, finds where profit is leaking, ranks recoverable losses, and previews a rule before the team applies it.
-
-Demonstrates: contribution-margin modeling, leak prioritization, decision dashboards, and intervention previews.
 
 ## Approved GitHub Scope
 
@@ -893,7 +863,6 @@ Example:
 ### Primary Pages
 
 - Home: /v2/
-- About: /v2/about/
 - Featured Projects: /v2/work/
 - Evidence: /v2/proof/
 - Contact: /v2/contact/
@@ -901,47 +870,43 @@ Example:
 ### Home Sections
 
 - About section: /v2/#about
-- What I do section: /v2/#services
-- E-commerce offers section: /v2/#offers
+- Capabilities section: /v2/#services
+- Working stack section: /v2/#stack
 - Contact section: /v2/#contact
 
 ### Homepage Featured Work
 
 Display the homepage featured work in this order:
 
-1. FrameWise: /v2/work/framewise/
-2. ThreadMark: /v2/work/threadmark/
-3. RAA Dashboard: /v2/work/retrieval-analytics/
-4. CartPilot: /v2/work/cartpilot/
-5. ClearSkin: /v2/work/clear-skin/
-6. Fruit Quality: /v2/work/archive/fruit-quality/
+1. Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
+2. Self-Healing Monitor: /v2/work/self-healing-monitor/
+3. AI Code Review Agent: /v2/work/code-review-agent/
+4. AI Voice Receptionist: /v2/work/ai-voice-receptionist/
 
 ### Work Page Structure
 
 The V2 Work page presents the portfolio in three levels so visitors can understand the collection quickly:
 
-1. Six featured case studies in the same order as the homepage featured work.
-2. Five additional projects in this exact order: MarginGuard, Self-Healing Monitor, AI Voice Receptionist, AI Code Review Agent, and Automated Testimony Operations.
+1. Four featured case studies in the same order as the homepage featured work.
+2. Client work and archive in this exact order: Clear Skin Concierge, Automated Testimony Operations, and Fruit Quality Prediction.
 3. Three hobby projects: AboutFace Chatbot, Smart Todo App, and Portfolio Website.
 
-The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Every featured, additional-project, and hobby-project card uses purpose-built project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These editorial covers explain the project context; they must not be treated as generic evidence of a shipped client interface. Project status and qualifiers remain the source of truth.
+Every project on the page has either a public GitHub repository or a delivered client system behind it. Each project also carries one category tag: AI Engineering, Full-Stack Product Engineering, or Automation.
+
+The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Work-page and homepage cards use purpose-built editorial project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These covers explain the project context; they must not be treated as generic evidence of a shipped client interface. Project status and qualifiers remain the source of truth. Individual case-study pages carry no hero image; they open on the title, lead, and verified facts.
 
 All case-study and offer pages share one scroll-synchronous chapter navigator. The progress line begins at zero, advances continuously with the real chapter positions, and must never jump ahead of the current scroll. The five-step project story follows the same rule on desktop and uses these labels: Problem, What I found, Decision, How it works, and Result. Mobile uses explicit taps instead. Desktop e-commerce offer media must use the same viewport-position transformation for every offer, including the last card.
 
 ### Service Pages
 
-- AI Engineering & Agent Systems: /v2/services/ai-engineering/
-- Machine Learning & Data Products: /v2/services/machine-learning/
-- Conversational AI & Voice Systems: /v2/services/conversational-ai/
-- Full-Stack Product Engineering: /v2/services/product-engineering/
+There are no individual service pages. The five services above are described here for
+answering questions, but the only place they appear on the site is the homepage
+Capabilities section (/#services), which states three groupings as plain text and does
+not link anywhere. Never offer a /v2/services/ link; send service questions to
+/#services, to relevant project pages, or to /#contact.
 
 ### Project Pages
 
-- Framewise: /v2/work/framewise/
-- Threadmark: /v2/work/threadmark/
-- CartPilot: /v2/work/cartpilot/
-- MarginGuard: /v2/work/marginguard/
-- Clear Skin Concierge: /v2/work/clear-skin/
 - Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
 - Self-Healing Monitor: /v2/work/self-healing-monitor/
 - AI Voice Receptionist: /v2/work/ai-voice-receptionist/
@@ -954,13 +919,13 @@ All case-study and offer pages share one scroll-synchronous chapter navigator. T
 
 ### Offer Pages
 
-- Revenue Leak Audit: /v2/offers/revenue-leak-audit/
-- AI Support Concierge: /v2/offers/ai-support-concierge/
-- AI Ops Dashboard: /v2/offers/ai-ops-dashboard/
-- Retention Automation: /v2/offers/retention-automation/
-- Inventory Intelligence: /v2/offers/inventory-intelligence/
-- Returns Automation: /v2/offers/returns-automation/
-- Custom Automation: /v2/offers/custom-automation/
+- Revenue Leak Audit: /v2/storecraft/revenue-leak-audit/
+- AI Support Concierge: /v2/storecraft/ai-support-concierge/
+- AI Ops Dashboard: /v2/storecraft/ai-ops-dashboard/
+- Retention Automation: /v2/storecraft/retention-automation/
+- Inventory Intelligence: /v2/storecraft/inventory-intelligence/
+- Returns Automation: /v2/storecraft/returns-automation/
+- Custom Automation: /v2/storecraft/custom-automation/
 
 ### Demonstration Galleries
 
@@ -1096,11 +1061,11 @@ No public fixed pricing is listed. Recommend a project-discovery call or project
 
 ### Is every V2 case study a shipped client project?
 
-No. V2 deliberately includes built products, public demos, NDA-safe work, interactive concepts, and modeled scenarios. Always preserve the label attached to each project.
+No. V2 includes built products, public demos, NDA-safe client work, and hobby projects. Every one has a public repository or a delivered client system behind it. Always preserve the label attached to each project.
 
 ### What commerce proof does Henry have?
 
-Clear Skin is the strongest direct commerce proof because it is a built product with a public repository. CartPilot is an interactive concept, and MarginGuard is a modeled scenario. Baymard and Shopify sources provide outside market or platform context; they are not Henry's client results.
+Clear Skin is the direct commerce proof: a built product with a public repository, covering guided product recommendations, typed cart actions, and confirmation before anything commits. Baymard and Shopify sources provide outside market or platform context; they are not Henry's client results.
 
 ### Where should a Shopify team start?
 

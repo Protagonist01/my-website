@@ -1,28 +1,111 @@
+/* Two palettes share one panel. Every colour below is a token, including the translucent
+   washes, which are split into an RGB triple plus a per-rule alpha so a theme can repoint
+   the hue without touching the fifty-odd places that tint with it.
+
+   --tint is the neutral used for hairlines and hover washes, --invert is the surface that
+   reverses the panel's ground (the visitor's own turn, and the one filled button that is
+   not the accent), and --accent-rgb is the accent's hue for the same washes.
+
+   Henry's default: the site's dark half. --ink for the ground, --light-text on it, and the
+   one lime accent the ink sections already use on the contact form. There is no second
+   accent because the site has none on ink; blue only ever appears on paper. */
 .hf-guide {
-  --hf-bg: #0b0d10;
-  --hf-surface: #13161b;
-  --hf-surface-raised: #1a1e25;
-  --hf-surface-soft: #20252d;
-  --hf-text: #f8f6f0;
-  --hf-muted: #c3c7d0;
-  --hf-subtle: #969daa;
-  --hf-line: rgba(255, 255, 255, .16);
-  --hf-blue: #7594ff;
-  --hf-blue-deep: #234fe0;
-  --hf-warm: #ecd38e;
-  --hf-success: #72dda0;
+  --hf-bg: #121212;
+  --hf-surface: #191918;
+  --hf-surface-raised: #1f1f1d;
+  --hf-surface-soft: #262623;
+  --hf-text: #f4f3ed;
+  --hf-muted: #cdcbc2;
+  --hf-subtle: #99968c;
+  --hf-line: rgba(var(--hf-tint), .16);
+  --hf-accent: #d8ff57;
+  --hf-accent-deep: #bfe93f;
+  --hf-on-accent: #121212;
+  --hf-tint: 244, 243, 237;
+  --hf-accent-rgb: 216, 255, 87;
+  --hf-bg-rgb: 18, 18, 18;
+  --hf-invert: #f4f3ed;
+  --hf-on-invert: #121212;
+  --hf-invert-hover: #d8d7d0;
+  --hf-well: rgba(0, 0, 0, .22);
+  --hf-danger: #ff9a9a;
+  --hf-danger-strong: #ffb2b2;
+  --hf-scheme: dark;
+  --hf-shadow-panel: 0 32px 100px rgba(0, 0, 0, .52);
+  --hf-shadow-float: 0 24px 60px rgba(0, 0, 0, .42), 0 1px 0 rgba(var(--hf-tint), .05) inset;
+  --hf-shadow-tile: 0 10px 18px rgba(0, 0, 0, .34);
+  --hf-shadow-cloud: drop-shadow(0 14px 20px rgba(0, 0, 0, .36));
+  --hf-shadow-cloud-mobile: drop-shadow(0 8px 12px rgba(0, 0, 0, .28));
+  --hf-shadow-bubble: 0 8px 18px rgba(0, 0, 0, .3);
   position: fixed;
   z-index: 12000;
   right: 22px;
   bottom: 18px;
   color: var(--hf-text);
-  font-family: "Instrument Sans Variable", "Instrument Sans", sans-serif;
+  font-family: "Neue Montreal", "Helvetica Neue", sans-serif;
   font-size: 16px;
   line-height: 1.5;
 }
 
 @media (min-width: 761px) {
   .hf-guide { bottom: max(18px, env(safe-area-inset-bottom)); }
+}
+
+@media (max-width: 760px) {
+  body[data-v2-page="storecraft"] .hf-guide-prompt { display: none; }
+}
+
+/* StoreCraft's panel takes the light half instead, because that is the half its page is
+   printed on: paper for the ground, the commerce ink for type, sage and off-white for the
+   raised surfaces, and blue for the accent. Lime is not the accent here even though it is
+   StoreCraft's other colour, because lime on paper is the one pairing the site never makes.
+   --invert holds the ink, so the visitor's own turn and the filled buttons come out dark on
+   a light panel, exactly reversed from Henry's. The shadows are re-cut rather than reused:
+   the dark theme's heavy blacks turn to smudge on paper, so these are about a third the
+   alpha and tinted with the ink instead of neutral black.
+
+   Both classes land on the same element, so this block only wins by sitting after the one
+   above it. Everything it does not name is inherited from there, including --hf-line, which
+   is written in terms of --tint and so repoints with it. */
+.hf-guide--storecraft {
+  --hf-bg: #f0efe8;
+  --hf-surface: #f7f6f1;
+  --hf-surface-raised: #fffffd;
+  --hf-surface-soft: #e7eee7;
+  --hf-text: #263027;
+  --hf-muted: #545c55;
+  --hf-subtle: #666d67;
+  --hf-accent: #1948ff;
+  --hf-accent-deep: #0b1f72;
+  --hf-on-accent: #f0efe8;
+  --hf-tint: 38, 48, 39;
+  --hf-accent-rgb: 25, 72, 255;
+  --hf-bg-rgb: 240, 239, 232;
+  --hf-invert: #263027;
+  --hf-on-invert: #f0efe8;
+  --hf-invert-hover: #354136;
+  --hf-well: #e7eee7;
+  --hf-danger: #a3251d;
+  --hf-danger-strong: #8f1f18;
+  --hf-scheme: light;
+  --hf-shadow-panel: 0 32px 80px rgba(38, 48, 39, .16), 0 2px 6px rgba(38, 48, 39, .06);
+  --hf-shadow-float: 0 18px 44px rgba(38, 48, 39, .14);
+  --hf-shadow-tile: 0 8px 16px rgba(38, 48, 39, .18);
+  --hf-shadow-cloud: drop-shadow(0 12px 18px rgba(38, 48, 39, .16));
+  --hf-shadow-cloud-mobile: drop-shadow(0 7px 11px rgba(38, 48, 39, .13));
+  --hf-shadow-bubble: 0 6px 14px rgba(38, 48, 39, .14);
+}
+
+/* The launcher tile prints the mark the way the page's own lockup does, ink body on paper
+   with the loose cell in blue, rather than inventing a treatment for it. The tile is a
+   shade lighter than the panel's paper so it reads as a chip resting on the page instead of
+   a hole cut into it, and the blue status dot pinned to its corner is what catches the eye.
+   The literals are fallbacks for the system pages, where data-v2-page is the offer slug and
+   --commerce-* is out of scope. */
+.hf-guide--storecraft .hf-guide-avatar__monogram {
+  border-color: rgba(38, 48, 39, .18);
+  background: linear-gradient(160deg, #fffffd, var(--commerce-paper, #f0efe8) 74%);
+  color: var(--commerce-ink, #263027);
 }
 
 .hf-guide *,
@@ -48,7 +131,7 @@
 .hf-guide input:focus-visible,
 .hf-guide textarea:focus-visible,
 .hf-guide select:focus-visible {
-  outline: 3px solid var(--hf-warm);
+  outline: 3px solid var(--hf-accent);
   outline-offset: 3px;
 }
 
@@ -87,6 +170,8 @@
   pointer-events: none;
 }
 
+/* The launcher stands on paper, not on the panel's ink, so it casts a shadow rather than
+   glowing: lime on paper is the one pairing the site never makes. */
 .hf-guide-launcher::before {
   position: absolute;
   z-index: -1;
@@ -95,7 +180,7 @@
   left: 4px;
   height: 54px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(40, 80, 245, .5), rgba(40, 80, 245, .12) 52%, transparent 72%);
+  background: radial-gradient(ellipse, rgba(18, 18, 18, .34), rgba(18, 18, 18, .1) 52%, transparent 72%);
   content: "";
   filter: blur(8px);
   transform: perspective(120px) rotateX(66deg);
@@ -127,10 +212,10 @@
   right: 5px;
   width: 13px;
   height: 13px;
-  border: 3px solid #0e1116;
+  border: 3px solid var(--hf-bg);
   border-radius: 50%;
-  background: var(--hf-success);
-  box-shadow: 0 0 16px rgba(114, 221, 160, .7);
+  background: var(--hf-accent);
+  box-shadow: 0 0 16px rgba(var(--hf-accent-rgb), .7);
 }
 
 .hf-guide-avatar {
@@ -151,7 +236,7 @@
   left: 8%;
   height: 54%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(50, 91, 255, .45), transparent 70%);
+  background: radial-gradient(circle, rgba(18, 18, 18, .2), transparent 70%);
   filter: blur(8px);
 }
 
@@ -186,6 +271,47 @@
   animation: hf-guide-pet-idle 5.6s cubic-bezier(.45, .05, .55, .95) infinite;
 }
 
+/* Monogram stand-in for a brand with no avatar illustration. It sits on the same
+   bottom-aligned baseline as the image so the launcher's idle bob still reads. */
+.hf-guide-avatar__monogram {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  height: 84%;
+  align-content: center;
+  justify-content: center;
+  border: 1px solid rgba(var(--hf-tint), .2);
+  border-radius: 30%;
+  background: linear-gradient(160deg, var(--hf-surface-soft), var(--hf-bg) 68%);
+  box-shadow: var(--hf-shadow-tile);
+  color: var(--hf-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+.hf-guide-launcher .hf-guide-avatar__monogram {
+  font-size: 19px;
+  animation: hf-guide-pet-idle 5.6s cubic-bezier(.45, .05, .55, .95) infinite;
+}
+
+/* A brand mark replaces the letters inside the same tile. Its body takes the tile's ink from
+   `color`, and the loose cell needs nothing set here: the mark's own default accent is the
+   commerce blue, which is what the page already prints on paper. */
+.hf-guide-avatar__monogram .storecraft-mark {
+  width: 17px;
+  height: 17px;
+}
+
+.hf-guide-launcher .hf-guide-avatar__monogram .storecraft-mark {
+  width: 21px;
+  height: 21px;
+}
+
 /* Timed, contextual question */
 .hf-guide-prompt {
   position: absolute;
@@ -201,7 +327,8 @@
   will-change: opacity, transform;
 }
 
-.hf-guide.has-prompt .hf-guide-launcher .hf-guide-avatar img {
+.hf-guide.has-prompt .hf-guide-launcher .hf-guide-avatar img,
+.hf-guide.has-prompt .hf-guide-launcher .hf-guide-avatar__monogram {
   animation-play-state: paused;
 }
 
@@ -210,8 +337,8 @@
   z-index: -1;
   inset: 3px 6px;
   border-radius: 46% 51% 48% 44% / 52% 48% 54% 46%;
-  background: #14171c;
-  filter: drop-shadow(0 14px 20px rgba(0, 0, 0, .36));
+  background: var(--hf-surface-raised);
+  filter: var(--hf-shadow-cloud);
   pointer-events: none;
 }
 
@@ -219,7 +346,7 @@
   position: absolute;
   display: block;
   border-radius: 50%;
-  background: #14171c;
+  background: var(--hf-surface-raised);
 }
 
 .hf-guide-prompt__cloud i:nth-child(1) {
@@ -289,8 +416,8 @@
   position: absolute;
   display: block;
   border-radius: 50%;
-  background: #14171c;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, .3);
+  background: var(--hf-surface-raised);
+  box-shadow: var(--hf-shadow-bubble);
 }
 
 .hf-guide-prompt__trail i:first-child {
@@ -349,7 +476,7 @@
 }
 
 .hf-guide-prompt__dismiss:hover {
-  background: rgba(255, 255, 255, .08);
+  background: rgba(var(--hf-tint), .08);
   color: var(--hf-text);
 }
 
@@ -367,12 +494,12 @@
   width: min(322px, calc(100vw - 112px));
   padding: 19px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .15);
+  border: 1px solid rgba(var(--hf-tint), .15);
   border-radius: 18px 18px 5px 18px;
   background:
-    linear-gradient(135deg, rgba(117, 148, 255, .11), transparent 43%),
-    #111419;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, .42), 0 1px 0 rgba(255, 255, 255, .05) inset;
+    linear-gradient(135deg, rgba(var(--hf-accent-rgb), .11), transparent 43%),
+    var(--hf-surface-raised);
+  box-shadow: var(--hf-shadow-float);
   animation: hf-guide-feedback-in 420ms cubic-bezier(.16, 1, .3, 1) both;
   isolation: isolate;
 }
@@ -383,9 +510,9 @@
   bottom: 15px;
   width: 16px;
   height: 16px;
-  border-top: 1px solid rgba(255, 255, 255, .15);
-  border-right: 1px solid rgba(255, 255, 255, .15);
-  background: #111419;
+  border-top: 1px solid rgba(var(--hf-tint), .15);
+  border-right: 1px solid rgba(var(--hf-tint), .15);
+  background: var(--hf-surface-raised);
   content: "";
   transform: rotate(45deg);
 }
@@ -396,7 +523,7 @@
   right: 42px;
   left: 0;
   height: 2px;
-  background: linear-gradient(90deg, var(--hf-blue), rgba(117, 148, 255, 0));
+  background: linear-gradient(90deg, var(--hf-accent), rgba(var(--hf-accent-rgb), 0));
 }
 
 .hf-guide-feedback__close {
@@ -417,7 +544,7 @@
 }
 
 .hf-guide-feedback__close:hover {
-  background: rgba(255, 255, 255, .08);
+  background: rgba(var(--hf-tint), .08);
   color: var(--hf-text);
 }
 
@@ -429,7 +556,7 @@
 .hf-guide-feedback__eyebrow {
   display: block;
   padding-right: 28px;
-  color: var(--hf-blue);
+  color: var(--hf-accent);
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
   font-weight: 600;
@@ -469,7 +596,7 @@
   gap: 8px;
   border: 1px solid var(--hf-line);
   border-radius: 10px;
-  background: rgba(255, 255, 255, .035);
+  background: rgba(var(--hf-tint), .035);
   color: var(--hf-text);
   font-size: 11px;
   font-weight: 650;
@@ -480,8 +607,8 @@
 }
 
 .hf-guide-feedback__ratings button:hover:not(:disabled) {
-  border-color: rgba(117, 148, 255, .72);
-  background: rgba(117, 148, 255, .12);
+  border-color: rgba(var(--hf-accent-rgb), .72);
+  background: rgba(var(--hf-accent-rgb), .12);
   transform: translateY(-2px);
 }
 
@@ -495,7 +622,7 @@
   width: 17px;
   height: 17px;
   flex: 0 0 auto;
-  color: var(--hf-blue);
+  color: var(--hf-accent);
 }
 
 .hf-guide-feedback__status,
@@ -507,7 +634,7 @@
 }
 
 .hf-guide-feedback__status { color: var(--hf-subtle); }
-.hf-guide-feedback__error { color: #ff9a9a; }
+.hf-guide-feedback__error { color: var(--hf-danger); }
 
 .hf-guide-feedback__note {
   display: grid;
@@ -530,7 +657,7 @@
   resize: vertical;
   border: 1px solid var(--hf-line);
   border-radius: 10px;
-  background: rgba(0, 0, 0, .22);
+  background: var(--hf-well);
   color: var(--hf-text);
   font-size: 12px;
   line-height: 1.45;
@@ -557,9 +684,9 @@
 }
 
 .hf-guide-feedback__note-actions button.is-primary {
-  border-color: var(--hf-blue);
-  background: var(--hf-blue);
-  color: #0b1020;
+  border-color: var(--hf-accent);
+  background: var(--hf-accent);
+  color: var(--hf-on-accent);
 }
 
 .hf-guide-feedback__thanks {
@@ -577,8 +704,8 @@
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: rgba(114, 221, 160, .12);
-  color: var(--hf-success);
+  background: rgba(var(--hf-accent-rgb), .12);
+  color: var(--hf-accent);
   font-size: 17px;
 }
 
@@ -586,7 +713,8 @@
 .hf-guide-feedback__thanks strong { font-family: "Newsreader Variable", "Newsreader", serif; font-size: 22px; font-weight: 500; }
 .hf-guide-feedback__thanks small { color: var(--hf-muted); font-size: 11px; }
 
-.hf-guide.has-feedback .hf-guide-launcher .hf-guide-avatar img {
+.hf-guide.has-feedback .hf-guide-launcher .hf-guide-avatar img,
+.hf-guide.has-feedback .hf-guide-launcher .hf-guide-avatar__monogram {
   animation-play-state: paused;
 }
 
@@ -638,12 +766,12 @@
   min-height: 0;
   flex-direction: column;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, .18);
+  border: 1px solid rgba(var(--hf-tint), .18);
   border-radius: inherit;
   background:
-    radial-gradient(circle at 100% 0%, rgba(43, 79, 218, .13), transparent 30%),
+    radial-gradient(circle at 100% 0%, rgba(var(--hf-accent-rgb), .07), transparent 30%),
     var(--hf-bg);
-  box-shadow: 0 32px 100px rgba(0, 0, 0, .52);
+  box-shadow: var(--hf-shadow-panel);
 }
 
 .hf-guide-header {
@@ -654,7 +782,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--hf-line);
-  background: rgba(11, 13, 16, .9);
+  background: rgba(var(--hf-bg-rgb), .9);
   backdrop-filter: blur(18px);
 }
 
@@ -690,8 +818,8 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--hf-success);
-  box-shadow: 0 0 10px rgba(114, 221, 160, .6);
+  background: var(--hf-accent);
+  box-shadow: 0 0 10px rgba(var(--hf-accent-rgb), .6);
 }
 
 .hf-guide-header__actions {
@@ -714,7 +842,7 @@
 }
 
 .hf-guide-header__actions button:hover {
-  background: rgba(255, 255, 255, .08);
+  background: rgba(var(--hf-tint), .08);
   color: var(--hf-text);
   transform: translateY(-1px);
 }
@@ -735,7 +863,7 @@
   flex: 1 1 auto;
   overflow-x: hidden;
   overflow-y: auto;
-  scrollbar-color: rgba(255, 255, 255, .28) transparent;
+  scrollbar-color: rgba(var(--hf-tint), .28) transparent;
   scroll-behavior: smooth;
 }
 
@@ -775,13 +903,16 @@
   margin-bottom: 24px;
 }
 
+/* The assistant answers on the panel's own ground; the visitor's own turn is a card that
+   reverses it, the same inversion the homepage uses for an active stack layer. --invert is
+   what makes that hold in both themes: paper on Henry's ink, ink on StoreCraft's paper. */
 .hf-guide-message.is-user .hf-guide-message__content {
   width: fit-content;
   max-width: 86%;
   padding: 10px 14px;
   border-radius: 18px 6px 18px 18px;
-  background: var(--hf-blue-deep);
-  color: #fff;
+  background: var(--hf-invert);
+  color: var(--hf-on-invert);
 }
 
 .hf-guide-message.is-user .hf-guide-message__content p {
@@ -805,8 +936,8 @@
   justify-content: space-between;
   border: 0;
   border-radius: 12px;
-  background: var(--hf-text);
-  color: #101216;
+  background: var(--hf-invert);
+  color: var(--hf-on-invert);
   font-size: 14px;
   font-weight: 650;
   line-height: 1.35;
@@ -816,7 +947,7 @@
 }
 
 .hf-guide-message__actions button:hover {
-  background: var(--hf-warm);
+  background: var(--hf-invert-hover);
   transform: translateY(-2px);
 }
 
@@ -855,7 +986,7 @@
   justify-content: space-between;
   border: 1px solid var(--hf-line);
   border-radius: 11px;
-  background: rgba(255, 255, 255, .025);
+  background: rgba(var(--hf-tint), .025);
   color: var(--hf-muted);
   font-size: 13px;
   font-weight: 500;
@@ -867,13 +998,13 @@
 }
 
 .hf-guide-suggestions button:hover {
-  border-color: rgba(117, 148, 255, .6);
-  background: rgba(117, 148, 255, .08);
+  border-color: rgba(var(--hf-accent-rgb), .6);
+  background: rgba(var(--hf-accent-rgb), .08);
   color: var(--hf-text);
 }
 
 .hf-guide-suggestions i {
-  color: var(--hf-blue);
+  color: var(--hf-accent);
 }
 
 .hf-guide-thinking {
@@ -895,7 +1026,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: var(--hf-blue);
+  background: var(--hf-accent);
   animation: hf-guide-dot 1.1s ease-in-out infinite;
 }
 
@@ -911,7 +1042,7 @@
   padding: 10px 12px 12px;
   flex: 0 0 auto;
   border-top: 1px solid var(--hf-line);
-  background: rgba(11, 13, 16, .96);
+  background: rgba(var(--hf-bg-rgb), .96);
 }
 
 .hf-guide.is-maximized .hf-guide-composer {
@@ -936,15 +1067,15 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 10px;
   align-items: end;
-  border: 1px solid rgba(255, 255, 255, .2);
+  border: 1px solid rgba(var(--hf-tint), .2);
   border-radius: 17px;
   background: var(--hf-surface-raised);
   transition: border-color 180ms ease, box-shadow 180ms ease;
 }
 
 .hf-guide-composer > div:focus-within {
-  border-color: var(--hf-blue);
-  box-shadow: 0 0 0 4px rgba(117, 148, 255, .13);
+  border-color: var(--hf-accent);
+  box-shadow: 0 0 0 4px rgba(var(--hf-accent-rgb), .13);
 }
 
 .hf-guide-composer textarea {
@@ -973,6 +1104,8 @@
   opacity: 1;
 }
 
+/* Send is the one filled action in the panel, so it takes the accent while the wider
+   paper buttons follow the contact form's paper-to-paper-muted pattern. */
 .hf-guide-composer > div > button {
   display: grid;
   width: 40px;
@@ -981,14 +1114,14 @@
   place-items: center;
   border: 0;
   border-radius: 13px;
-  background: var(--hf-text);
-  color: #101216;
+  background: var(--hf-accent);
+  color: var(--hf-on-accent);
   cursor: pointer;
   transition: background 180ms ease, transform 260ms cubic-bezier(.16, 1, .3, 1);
 }
 
 .hf-guide-composer > div > button:hover:not(:disabled) {
-  background: var(--hf-warm);
+  background: var(--hf-accent-deep);
   transform: translateY(-2px) rotate(-2deg);
 }
 
@@ -1022,7 +1155,7 @@
   padding: 14px 14px 12px 16px;
   align-items: flex-start;
   justify-content: space-between;
-  background: linear-gradient(120deg, rgba(49, 87, 235, .16), transparent 58%);
+  background: linear-gradient(120deg, rgba(var(--hf-accent-rgb), .16), transparent 58%);
 }
 
 .hf-guide-card__header > div {
@@ -1030,9 +1163,10 @@
 }
 
 .hf-guide-card__header span {
-  color: var(--hf-warm);
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--hf-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -1053,14 +1187,14 @@
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, .08);
+  background: rgba(var(--hf-tint), .08);
   color: var(--hf-muted);
   font-size: 23px;
   cursor: pointer;
 }
 
 .hf-guide-card__header > button:hover {
-  background: rgba(255, 255, 255, .13);
+  background: rgba(var(--hf-tint), .13);
   color: var(--hf-text);
 }
 
@@ -1086,12 +1220,12 @@
 }
 
 .hf-booking__events > button:hover {
-  background: rgba(255, 255, 255, .055);
+  background: rgba(var(--hf-tint), .055);
 }
 
 .hf-booking__events > button > span {
   grid-row: 1 / span 2;
-  color: var(--hf-blue);
+  color: var(--hf-accent);
   font-size: 13px;
   font-weight: 650;
 }
@@ -1111,7 +1245,7 @@
 .hf-booking__events i {
   grid-column: 3;
   grid-row: 1 / span 2;
-  color: var(--hf-blue);
+  color: var(--hf-accent);
   font-size: 19px;
   font-style: normal;
 }
@@ -1173,9 +1307,9 @@
 }
 
 .hf-booking__date-nav > button:hover:not(:disabled) {
-  border-color: var(--hf-blue);
-  background: rgba(58, 92, 225, .16);
-  color: var(--hf-blue);
+  border-color: var(--hf-accent);
+  background: rgba(var(--hf-accent-rgb), .16);
+  color: var(--hf-accent);
 }
 
 .hf-booking__date-nav > button:disabled {
@@ -1238,12 +1372,12 @@
 }
 
 .hf-booking__slot-grid button:hover {
-  border-color: var(--hf-blue);
-  background: rgba(58, 92, 225, .16);
+  border-color: var(--hf-accent);
+  background: rgba(var(--hf-accent-rgb), .16);
 }
 
 .hf-booking__slot-grid i {
-  color: var(--hf-blue);
+  color: var(--hf-accent);
   font-style: normal;
 }
 
@@ -1263,7 +1397,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--hf-blue);
+  background: var(--hf-accent);
   animation: hf-guide-dot 1.1s ease-in-out infinite;
 }
 
@@ -1328,7 +1462,7 @@
   border: 1px solid var(--hf-line);
   border-radius: 10px;
   outline: 0;
-  background: #0d1014;
+  background: var(--hf-surface);
   color: var(--hf-text);
   font-size: 16px;
   line-height: 1.4;
@@ -1340,14 +1474,14 @@
 }
 
 .hf-guide-form select {
-  color-scheme: dark;
+  color-scheme: var(--hf-scheme);
 }
 
 .hf-guide-form input:focus,
 .hf-guide-form textarea:focus,
 .hf-guide-form select:focus {
-  border-color: var(--hf-blue);
-  box-shadow: 0 0 0 4px rgba(117, 148, 255, .1);
+  border-color: var(--hf-accent);
+  box-shadow: 0 0 0 4px rgba(var(--hf-accent-rgb), .1);
 }
 
 .hf-guide-form__back {
@@ -1369,11 +1503,11 @@
   margin: 0;
   padding: 14px;
   border-radius: 10px;
-  background: rgba(48, 82, 221, .14);
+  background: rgba(var(--hf-accent-rgb), .14);
 }
 
 .hf-guide-form__selection span {
-  color: var(--hf-blue);
+  color: var(--hf-accent);
   font-size: 12px;
   font-weight: 650;
   text-transform: uppercase;
@@ -1385,9 +1519,10 @@
 }
 
 .hf-booking__verify > span {
-  color: var(--hf-warm);
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--hf-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -1439,8 +1574,8 @@
   justify-content: space-between;
   border: 0;
   border-radius: 11px;
-  background: var(--hf-text);
-  color: #101216;
+  background: var(--hf-invert);
+  color: var(--hf-on-invert);
   font-size: 14px;
   font-weight: 680;
   cursor: pointer;
@@ -1448,7 +1583,7 @@
 }
 
 .hf-guide-primary:hover:not(:disabled) {
-  background: var(--hf-warm);
+  background: var(--hf-invert-hover);
   transform: translateY(-2px);
 }
 
@@ -1459,7 +1594,7 @@
 
 .hf-guide-error {
   margin: 0;
-  color: #ffb2b2;
+  color: var(--hf-danger-strong);
   font-size: 14px;
   line-height: 1.45;
 }
@@ -1470,9 +1605,10 @@
 }
 
 .hf-guide-review > span {
-  color: var(--hf-warm);
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--hf-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -1549,19 +1685,20 @@
   width: 52px;
   height: 52px;
   place-items: center;
-  border: 1px solid rgba(114, 221, 160, .5);
+  border: 1px solid rgba(var(--hf-accent-rgb), .5);
   border-radius: 50%;
-  background: rgba(114, 221, 160, .1);
-  color: var(--hf-success);
+  background: rgba(var(--hf-accent-rgb), .1);
+  color: var(--hf-accent);
   font-size: 21px;
   font-style: normal;
 }
 
 .hf-guide-success > span {
   margin-top: 14px;
-  color: var(--hf-success);
-  font-size: 12px;
-  font-weight: 650;
+  color: var(--hf-accent);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: 500;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -1683,13 +1820,6 @@ body.hf-guide-max-open {
     height: 52px;
   }
 
-  .hf-guide.is-mobile-case.is-story-active:not(.is-open) {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(1rem);
-    transition: opacity .22s ease, transform .3s cubic-bezier(.16, 1, .3, 1);
-  }
-
   .hf-guide-launcher__status {
     top: 10px;
     right: 1px;
@@ -1705,7 +1835,7 @@ body.hf-guide-max-open {
   }
 
   .hf-guide-prompt__cloud {
-    filter: drop-shadow(0 8px 12px rgba(0, 0, 0, .28));
+    filter: var(--hf-shadow-cloud-mobile);
   }
 
   .hf-guide-prompt__question {
@@ -1725,8 +1855,8 @@ body.hf-guide-max-open {
     right: 20px;
     bottom: -7px;
     border-top: 0;
-    border-right: 1px solid rgba(255, 255, 255, .15);
-    border-bottom: 1px solid rgba(255, 255, 255, .15);
+    border-right: 1px solid rgba(var(--hf-tint), .15);
+    border-bottom: 1px solid rgba(var(--hf-tint), .15);
   }
 
   .hf-guide-shell {

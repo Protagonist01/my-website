@@ -377,7 +377,7 @@ def _dashboard(headers: dict[str, str], gateway: SupabaseGateway) -> dict[str, A
     configured_url = os.environ.get("PUBLIC_SITE_URL", "https://henryfadeni.vercel.app").strip()
     parsed_url = urlsplit(configured_url)
     site_origin = f"{parsed_url.scheme}://{parsed_url.netloc}" if parsed_url.scheme and parsed_url.netloc else configured_url.rstrip("/")
-    referral_link = f"{site_origin}/v2/ecommerce/?ref={profile['referral_code']}" if approved else None
+    referral_link = f"{site_origin}/v2/storecraft/?ref={profile['referral_code']}" if approved else None
     return {
         "profile": {
             "full_name": profile.get("full_name"),

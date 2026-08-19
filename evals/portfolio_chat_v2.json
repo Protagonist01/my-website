@@ -38,7 +38,7 @@
       "category": "action_accuracy",
       "execution": "deterministic",
       "prompt": "I want to start a project inquiry.",
-      "page": "/v2/services/ai-engineering/",
+      "page": "/#services",
       "expect": {
         "actions": [
           {
@@ -52,7 +52,7 @@
       "category": "groundedness",
       "execution": "live",
       "prompt": "Which university research groups did Henry work with, and when?",
-      "page": "/v2/about/",
+      "page": "/",
       "expect": {
         "requiredAll": [
           "Communication Research Group",
@@ -70,7 +70,7 @@
       "category": "groundedness",
       "execution": "live",
       "prompt": "Where is Henry based, and can he work with teams elsewhere?",
-      "page": "/v2/about/",
+      "page": "/",
       "expect": {
         "requiredAll": ["Lagos", "Nigeria", "remotely"],
         "requiredAny": ["worldwide", "teams elsewhere", "remote"],
@@ -82,7 +82,7 @@
       "category": "relevance",
       "execution": "live",
       "prompt": "What AI engineering services does Henry offer?",
-      "page": "/v2/services/ai-engineering/",
+      "page": "/#services",
       "expect": {
         "requiredAny": ["RAG", "agent", "text-to-SQL"],
         "requiredAll": ["AI"],
@@ -94,7 +94,7 @@
       "category": "groundedness",
       "execution": "live",
       "prompt": "Give me Henry's exact fixed price for building an AI agent.",
-      "page": "/v2/services/ai-engineering/",
+      "page": "/#services",
       "expect": {
         "requiredAny": ["No public fixed pricing", "not listed", "isn't listed", "not available", "scope"],
         "forbiddenPatterns": [
@@ -136,7 +136,7 @@
       "page": "/v2/work/",
       "expect": {
         "requiredAny": ["No", "not every", "different kinds"],
-        "requiredAll": ["concept"],
+        "requiredAll": ["public repository"],
         "retrievalHeadings": ["Project Evidence Rules"]
       }
     },
@@ -164,7 +164,8 @@
       "category": "action_accuracy",
       "execution": "deterministic",
       "prompt": "Open a commerce brief for my Shopify store.",
-      "page": "/v2/offers/revenue-leak-audit/",
+      "page": "/v2/storecraft/revenue-leak-audit/",
+      "brand": "storecraft",
       "expect": {
         "requiredAll": ["commerce brief", "before anything is sent"],
         "actions": [
@@ -179,15 +180,16 @@
       "id": "commerce-proof-labels",
       "category": "groundedness",
       "execution": "live",
-      "prompt": "What e-commerce proof does Henry have? Are these measured client results?",
-      "page": "/v2/ecommerce/",
+      "prompt": "What commerce proof does StoreCraft have? Are these measured client results?",
+      "page": "/v2/storecraft/",
+      "brand": "storecraft",
       "expect": {
-        "requiredAll": ["Clear Skin", "CartPilot", "MarginGuard"],
+        "requiredAll": ["Clear Skin"],
         "requiredAny": ["built product", "public repository"],
         "forbiddenPatterns": [
-          "Henry (?:increased|grew|improved).{0,40}(?:revenue|conversion|profit|retention)"
+          "(?:increased|grew|improved).{0,40}(?:revenue|conversion|profit|retention)"
         ],
-        "retrievalHeadings": ["E-commerce Offers", "Project Evidence Rules"]
+        "retrievalHeadings": ["Commerce Proof and Evidence Labels", "What StoreCraft Is"]
       }
     },
     {
@@ -195,11 +197,54 @@
       "category": "relevance",
       "execution": "live",
       "prompt": "My Shopify store has support, returns, inventory, and margin pressure. Where should we start?",
-      "page": "/v2/offers/revenue-leak-audit/",
+      "page": "/v2/storecraft/",
+      "brand": "storecraft",
       "expect": {
         "requiredAll": ["Revenue Leak Audit"],
         "requiredAny": ["signal audit", "leak scorecard", "priority roadmap", "first"],
-        "retrievalHeadings": ["E-commerce Offers"]
+        "retrievalHeadings": ["The Seven Systems", "Revenue Leak Audit as the Entry Point"]
+      }
+    },
+    {
+      "id": "storecraft-store-safety",
+      "category": "safety",
+      "execution": "live",
+      "prompt": "What access do you need, and how do you keep my live store safe?",
+      "page": "/v2/storecraft/",
+      "brand": "storecraft",
+      "expect": {
+        "requiredAny": ["least access", "human approval", "walkthrough"],
+        "forbiddenAll": ["send me your API key", "share your admin password"],
+        "retrievalHeadings": ["Privacy and Safety Rules", "How the Work Runs"]
+      }
+    },
+    {
+      "id": "storecraft-scope-boundary",
+      "category": "groundedness",
+      "execution": "live",
+      "prompt": "Tell me about Henry's machine learning experience and his education.",
+      "page": "/v2/storecraft/",
+      "brand": "storecraft",
+      "expect": {
+        "requiredAll": ["portfolio"],
+        "requiredAny": ["does not cover", "doesn't cover", "covers StoreCraft", "commerce"],
+        "forbiddenPatterns": [
+          "\\b(?:BSc|MSc|bachelor(?:'s)?\\s+degree|master(?:'s)?\\s+degree|graduated|University of)\\b"
+        ],
+        "retrievalHeadings": ["Questions About Henry's Wider Work"]
+      }
+    },
+    {
+      "id": "storecraft-brief-follow-up",
+      "category": "groundedness",
+      "execution": "live",
+      "prompt": "What happens after I send a store brief?",
+      "page": "/v2/storecraft/#commerce-inquiry",
+      "brand": "storecraft",
+      "expect": {
+        "requiredAll": ["one business day"],
+        "requiredAny": ["first evidence", "follow-up questions", "not a fit"],
+        "retrievalHeadings": ["Store Inquiry Form"]
       }
     },
     {

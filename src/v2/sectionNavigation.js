@@ -3,6 +3,7 @@ const HOME_PROGRESS = Object.freeze({
   services: { mobile: 1, desktop: .32 },
   work: .06,
   offers: .08,
+  stack: 0,
 });
 
 const HOME_SECTION_IDS = new Set(Object.keys(HOME_PROGRESS).concat("contact"));
@@ -37,7 +38,6 @@ function navigationUrl(href) {
 }
 
 function navigationOffset() {
-  if (document.querySelector(".v2-case-nav")) return window.innerWidth <= 720 ? 152 : 176;
   if (document.querySelector(".replica-nav")) return window.innerWidth <= 720 ? 84 : 104;
   if (document.querySelector(".v2-header")) return window.innerWidth <= 720 ? 84 : 112;
   return 24;
@@ -59,7 +59,6 @@ function triggerForTarget(ScrollTrigger, target) {
 function triggerProgress(target, trigger) {
   const configured = homeProgress(target.id);
   if (configured !== undefined) return configured;
-  if (target.matches("[data-story-sequence='pin']")) return .82;
   if (trigger?.vars?.pin) return .18;
   return 0;
 }
