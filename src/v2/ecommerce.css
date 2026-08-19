@@ -1,25 +1,43 @@
-.commerce-page {
+/* On the palette, not on .commerce-page: the inquiry form renders inside the
+   StoreCraft ending sequence, which sits outside the landing article.
+
+   The ink is a green-black rather than a neutral one, taken from the type in the
+   relevant-proof section. It reads softer against the warm paper, and it puts the
+   page's text, its dark surfaces, and that sage section in one ink family instead
+   of two blacks that sit next to each other and look like a mistake. */
+body[data-v2-page="storecraft"], .commerce-page {
   --commerce-blue: #1948ff;
   --commerce-blue-dark: #0b1f72;
   --commerce-lime: #d8ff57;
   --commerce-paper: #f0efe8;
-  --commerce-ink: #11110f;
+  --commerce-ink: #263027;
+}
+.commerce-page {
   overflow: clip;
   background: var(--commerce-paper);
   color: var(--commerce-ink);
   font-family: "Neue Montreal", var(--sans);
 }
-.commerce-page *, .commerce-page *::before, .commerce-page *::after { box-sizing: border-box; }
+/* .commerce-inquiry is listed alongside .commerce-page in the three rules below
+   because it renders outside the landing article, as the ending-sequence cover. */
+.commerce-page *, .commerce-page *::before, .commerce-page *::after,
+.commerce-inquiry *, .commerce-inquiry *::before, .commerce-inquiry *::after { box-sizing: border-box; }
 .commerce-eyebrow { font-family: var(--mono); font-size: .67rem; font-weight: 500; letter-spacing: .08em; line-height: 1.2; text-transform: uppercase; }
-.commerce-page h1, .commerce-page h2, .commerce-page h3, .commerce-page p { margin-top: 0; }
-.commerce-page a:focus-visible, .commerce-page button:focus-visible, .commerce-page summary:focus-visible { outline: 2px solid var(--commerce-blue); outline-offset: 4px; }
+.commerce-page :is(h1, h2, h3, p), .commerce-inquiry :is(h1, h2, h3, p) { margin-top: 0; }
+.commerce-page :is(a, button, summary):focus-visible, .commerce-inquiry :is(a, button, summary):focus-visible { outline: 2px solid var(--commerce-blue); outline-offset: 4px; }
+
+/* The StoreCraft mark. It sizes off the type around it, so a lockup stays aligned
+   when the wordmark scales, and the loose cell takes an overridable accent so the
+   same component works on paper, on ink, and inside the blue audit panel. */
+.storecraft-mark { display: block; flex: none; width: 1em; height: 1em; }
+.storecraft-mark__loose { fill: var(--storecraft-mark-accent, var(--commerce-blue, #1948ff)); }
 
 .commerce-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(25rem, .9fr); min-height: 100svh; padding: clamp(9rem, 17vh, 12rem) max(1.5rem, calc((100vw - 1180px) / 2)) 3.25rem; overflow: hidden; background: var(--commerce-paper); }
 .commerce-hero__copy { position: relative; z-index: 2; align-self: center; max-width: 48rem; padding-bottom: 2rem; }
 .commerce-hero h1 { max-width: 48rem; margin-bottom: 1.6rem; font-size: clamp(4.2rem, 7vw, 7.7rem); font-weight: 700; line-height: .84; letter-spacing: -.065em; }
 .commerce-hero h1 em { color: var(--commerce-blue); font-family: var(--display); font-weight: 430; }
 .commerce-hero__copy > p { max-width: 38rem; margin-bottom: 2rem; font-size: clamp(1.08rem, 1.45vw, 1.32rem); line-height: 1.42; letter-spacing: -.015em; }
-.commerce-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; margin-bottom: 1.1rem; }
+.commerce-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-items: center; }
 .commerce-button { display: inline-flex; gap: .7rem; align-items: center; justify-content: center; min-height: 3.4rem; padding: 0 1.2rem; border-radius: .68rem; font-size: .9rem; font-weight: 650; text-decoration: none; transition: transform .35s cubic-bezier(.34,1.56,.64,1), background-color .25s, color .25s; }
 .commerce-button--primary { background: var(--commerce-ink); color: #fff; }
 .commerce-button--primary span { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
@@ -27,57 +45,59 @@
 .commerce-button--primary:hover span { transform: rotate(45deg); }
 .commerce-button--text:hover { color: var(--commerce-blue); transform: translateX(3px); }
 .commerce-hero__copy > small { color: #65645e; font-size: .72rem; }
-.commerce-hero__graphic { position: relative; z-index: 1; align-self: center; width: min(37vw, 33rem); aspect-ratio: 1; margin-left: auto; }
-.commerce-signal-card { position: absolute; display: grid; min-width: 10.5rem; min-height: 7.2rem; padding: 1rem; border: 1px solid rgba(255,255,255,.2); border-radius: 1rem; background: rgba(17,17,15,.94); color: #fff; box-shadow: 0 1.5rem 4rem rgba(17,17,15,.14); backdrop-filter: blur(14px); animation: commerce-card-float 6s cubic-bezier(.37,0,.63,1) infinite; }
-.commerce-signal-card span { color: rgba(255,255,255,.56); font: .58rem/1.2 var(--mono); text-transform: uppercase; }
-.commerce-signal-card strong { align-self: end; font-size: 1.45rem; font-weight: 600; letter-spacing: -.035em; }
-.commerce-signal-card i { position: absolute; top: .85rem; right: .85rem; display: grid; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--commerce-lime); color: #111; font: normal 600 .65rem/1 var(--mono); place-items: center; }
-.commerce-signal-card--revenue { top: 20%; left: 2%; transform: rotate(-5deg); }
-.commerce-signal-card--time { top: 8%; right: 2%; background: var(--commerce-blue); transform: rotate(4deg); animation-delay: -2s; }
-.commerce-signal-card--ops { right: 12%; bottom: 10%; transform: rotate(-2deg); animation-delay: -4s; }
-@keyframes commerce-card-float { 50% { translate: 0 -10px; } }
+.commerce-hero__graphic { position: relative; z-index: 1; align-self: center; width: min(34vw, 24rem); margin-left: auto; }
+/* Height-capped instead of scaled down: scaling shrank the screen type below legibility. */
+.commerce-hero__graphic .commerce-phone-scene { min-height: 0; --commerce-phone-width: min(19rem, 100%, 34svh); }
 
-.commerce-outcomes { padding: clamp(7rem, 12vw, 11rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: #11110f; color: #f4f3ed; }
-.commerce-outcomes > header { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; margin-bottom: clamp(5rem, 8vw, 8rem); }
-.commerce-outcomes h2 { max-width: 52rem; margin-bottom: 0; font-size: clamp(3.2rem, 6.5vw, 6.8rem); font-weight: 650; line-height: .9; letter-spacing: -.06em; }
-.commerce-outcomes > div { display: grid; grid-template-columns: repeat(3, 1fr); }
-.commerce-outcomes article { display: flex; min-height: 27rem; padding: 1.25rem 1.5rem 1.5rem; border-top: 1px solid rgba(255,255,255,.24); border-right: 1px solid rgba(255,255,255,.16); flex-direction: column; }
-.commerce-outcomes article:last-child { border-right: 0; }
-.commerce-outcomes article > span { color: var(--commerce-lime); font: .68rem/1 var(--mono); }
-.commerce-outcomes h3 { margin: auto 0 1rem; font-size: clamp(2rem, 3vw, 3.3rem); font-weight: 520; line-height: .95; letter-spacing: -.045em; }
-.commerce-outcomes article p { min-height: 5.6rem; margin-bottom: 2.2rem; color: rgba(244,243,237,.66); font-size: .98rem; line-height: 1.55; }
-.commerce-outcomes article strong { display: flex; gap: .5rem; align-items: center; font-size: .72rem; font-weight: 500; text-transform: uppercase; }
+/* Mark and wordmark on one baseline. width: max-content keeps the block behaviour
+   the old display: block had, so the h1 beneath it is unaffected. */
+.commerce-brand { display: flex; gap: .44em; align-items: center; width: max-content; margin-bottom: 1.5rem; font: 700 clamp(1.1rem,2vw,1.55rem)/1 var(--sans); letter-spacing: -.035em; }
+.commerce-brand__mark { width: .92em; height: .92em; }
 
-.commerce-proof { padding: clamp(7rem, 11vw, 10rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: #f7f6f1; }
-.commerce-proof > header { display: grid; grid-template-columns: 1.35fr .65fr; gap: clamp(3rem, 8vw, 8rem); align-items: end; margin-bottom: clamp(4rem, 7vw, 6.5rem); }
-.commerce-proof h2 { max-width: 50rem; margin: 1.35rem 0 0; font-size: clamp(3.3rem, 6.2vw, 6.6rem); font-weight: 650; line-height: .88; letter-spacing: -.06em; }
-.commerce-proof > header > p { max-width: 28rem; margin: 0 0 .25rem; color: #5f5e59; font-size: .98rem; line-height: 1.58; }
-.commerce-proof__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid rgba(17,17,15,.2); border-left: 1px solid rgba(17,17,15,.2); }
-.commerce-proof__model { display: grid; min-width: 0; min-height: 42rem; padding: clamp(1.25rem, 2.4vw, 2rem); border-right: 1px solid rgba(17,17,15,.2); border-bottom: 1px solid rgba(17,17,15,.2); background: #fff; grid-template-rows: auto auto 1fr auto auto; }
-.commerce-proof__model:nth-child(2) { background: var(--commerce-blue); color: #fff; }
-.commerce-proof__model:nth-child(3) { background: var(--commerce-ink); color: #fff; }
-.commerce-proof__model:nth-child(4) { background: var(--commerce-lime); }
-.commerce-proof__model > header { display: flex; gap: 2rem; align-items: flex-start; justify-content: space-between; min-height: 4.5rem; padding-bottom: 1.2rem; border-bottom: 1px solid currentColor; }
-.commerce-proof__model > header span { font: 650 .63rem/1.25 var(--mono); letter-spacing: .035em; text-transform: uppercase; }
-.commerce-proof__model > header small { max-width: 14rem; color: inherit; font: .56rem/1.35 var(--mono); opacity: .62; text-align: right; text-transform: uppercase; }
-.commerce-proof__benchmark { display: grid; grid-template-columns: minmax(8rem, .55fr) 1fr; gap: 1.5rem; align-items: end; padding: clamp(2.4rem, 4vw, 4.25rem) 0; }
-.commerce-proof__benchmark strong { font-size: clamp(4.8rem, 8vw, 8.8rem); font-weight: 650; line-height: .72; letter-spacing: -.075em; }
-.commerce-proof__benchmark p { max-width: 18rem; margin: 0; font-size: .88rem; line-height: 1.45; opacity: .72; }
-.commerce-proof__model-detail { display: grid; grid-template-columns: minmax(8rem, .55fr) 1fr; gap: 1.5rem; padding: 1.35rem 0 1.6rem; border-top: 1px solid currentColor; }
-.commerce-proof__model-detail > span, .commerce-proof__model footer > span { font: .57rem/1.3 var(--mono); letter-spacing: .04em; opacity: .56; text-transform: uppercase; }
-.commerce-proof__model-detail p { max-width: 23rem; margin: 0; font-size: .84rem; line-height: 1.52; }
-.commerce-proof__model footer { display: grid; grid-template-columns: minmax(8rem, .55fr) 1fr; gap: 1.5rem; align-items: start; padding-top: 1.35rem; border-top: 1px solid currentColor; }
-.commerce-proof__model footer ul { display: grid; gap: .55rem; margin: 0; padding: 0; list-style: none; }
-.commerce-proof__model footer li { display: grid; grid-template-columns: .8rem 1fr; gap: .55rem; align-items: center; font-size: .72rem; font-weight: 650; text-transform: uppercase; }
-.commerce-proof__model footer li::before { width: .45rem; height: 1px; background: currentColor; content: ""; }
+.commerce-pressure-index, .commerce-relevant-proof, .commerce-inquiry { padding: clamp(6rem,10vw,9rem) max(1.5rem,calc((100vw - 1180px) / 2)); }
+.commerce-pressure-index { background: var(--commerce-ink); color: #fff; }
+.commerce-pressure-index header, .commerce-relevant-proof header { display: grid; grid-template-columns: minmax(0, .4fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.commerce-pressure-index h2, .commerce-relevant-proof h2, .commerce-inquiry h2 { max-width: 18ch; margin: 0; font-size: clamp(3rem,5.5vw,6rem); line-height: .92; letter-spacing: -.055em; }
+.commerce-pressure-index ul { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); margin: clamp(3rem,6vw,5rem) 0 0; padding: 0; border-top: 1px solid #555; border-bottom: 1px solid #555; list-style: none; }
+/* Seven named pressures, not a ranked sequence: the cells carry the label and nothing else. */
+.commerce-pressure-index li { display: grid; align-content: end; min-height: 6.5rem; padding: 1rem 1rem 1.1rem; border-right: 1px solid #555; font-size: .8rem; line-height: 1.25; text-transform: uppercase; }
+.commerce-pressure-index li:last-child { border-right: 0; }
+/* Sage ground, page ink on it: --commerce-ink is this section's colour, promoted. */
+.commerce-relevant-proof { background: #e7eee7; }
+/* Two cards: the built commerce product and the concierge prototype. */
+.commerce-relevant-proof > div { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); margin-top: clamp(3rem,6vw,5rem); border-top: 1px solid #687268; border-left: 1px solid #687268; }
+.commerce-relevant-proof a { display: flex; min-height: 22rem; padding: 1.75rem; border-right: 1px solid #687268; border-bottom: 1px solid #687268; color: inherit; flex-direction: column; text-decoration: none; transition: background-color .3s; }
+.commerce-relevant-proof a:hover { background: rgba(38,48,39,.07); }
+.commerce-relevant-proof a > span { font: .58rem/1 var(--mono); text-transform: uppercase; }
+.commerce-relevant-proof h3 { margin: auto 0 .75rem; font-size: clamp(1.9rem, 3vw, 2.3rem); line-height: 1; letter-spacing: -.03em; }
+.commerce-relevant-proof a p { max-width: 30rem; margin: 0; font-size: .92rem; line-height: 1.55; }
+.commerce-relevant-proof a strong { display: inline-flex; gap: .45rem; align-items: center; margin-top: 1.1rem; font: 600 .62rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.commerce-relevant-proof a strong span { transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
+.commerce-relevant-proof a:hover strong span { transform: translate(2px, -2px); }
+.commerce-relevant-proof > p { max-width: 38rem; margin: 1.6rem 0 0; font-size: .88rem; line-height: 1.55; opacity: .8; }
+.commerce-inquiry { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); gap: clamp(3rem,8vw,8rem); background: #f7f6f1; color: var(--commerce-ink); font-family: "Neue Montreal", var(--sans); }
+.commerce-inquiry > div { position: sticky; top: clamp(4rem, 12vh, 7rem); align-self: start; }
+.commerce-inquiry > div > .commerce-eyebrow { display: block; margin-bottom: 1.1rem; }
+.commerce-inquiry > div > p { max-width: 34rem; margin: 1.5rem 0 0; color: #666; font-size: .92rem; line-height: 1.55; }
+.commerce-inquiry form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.2rem; align-content: start; }
+.commerce-inquiry label { display: grid; gap: .5rem; color: #4b4a45; font: .68rem/1.2 var(--mono); text-transform: uppercase; }
+.commerce-inquiry input, .commerce-inquiry select, .commerce-inquiry textarea { width: 100%; min-height: 3.2rem; padding: .85rem; border: 1px solid #bbb; border-radius: 0; background: #fff; color: #111; font: .9rem var(--sans); transition: border-color .25s, box-shadow .25s; }
+.commerce-inquiry select { appearance: none; padding-right: 2.5rem; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5l5-5' fill='none' stroke='%2311110f' stroke-width='1.5'/></svg>"); background-repeat: no-repeat; background-position: right .9rem center; background-size: .7rem; cursor: pointer; }
+.commerce-inquiry textarea { min-height: 8.5rem; line-height: 1.5; resize: vertical; }
+.commerce-inquiry :is(input, select, textarea):hover { border-color: #8a8a84; }
+.commerce-inquiry :is(input, select, textarea):focus-visible { border-color: var(--commerce-blue); outline: 0; box-shadow: 0 0 0 2px rgba(25,72,255,.25); }
+.commerce-inquiry :is(input, textarea):user-invalid { border-color: #a3231d; }
+.commerce-inquiry__wide, .commerce-inquiry__brief, .commerce-inquiry button, .commerce-inquiry__status { grid-column: 1 / -1; }
+.commerce-inquiry button { display: inline-flex; gap: .7rem; align-items: center; justify-content: center; min-height: 3.5rem; border: 0; background: var(--commerce-ink); color: #fff; cursor: pointer; font-size: .85rem; font-weight: 700; transition: background-color .25s, transform .3s cubic-bezier(.34,1.56,.64,1); }
+.commerce-inquiry button:hover { background: var(--commerce-blue); }
+.commerce-inquiry button:active { transform: translateY(1px); }
+.commerce-inquiry button:disabled { background: #6d6c66; cursor: progress; }
+.commerce-inquiry__status { min-height: 1.3rem; margin: 0; color: #666; font-size: .78rem; line-height: 1.45; }
+.commerce-inquiry__status[data-status="sent"] { color: #1c6b3c; font-weight: 600; }
+.commerce-inquiry__status[data-status="error"] { color: #a3231d; font-weight: 600; }
 
-.commerce-offers { display: grid; grid-template-columns: .84fr 1.16fr; min-height: 110svh; padding: clamp(7rem, 11vw, 10rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: #dfe5ff; }
-.commerce-offers__copy { align-self: center; max-width: 31rem; }
-.commerce-offers__copy .commerce-eyebrow { color: var(--commerce-blue); }
-.commerce-offers__copy h2 { margin: 1.5rem 0 1.4rem; font-size: clamp(3.4rem, 5vw, 5.8rem); font-weight: 650; line-height: .9; letter-spacing: -.06em; }
-.commerce-offers__copy > p { color: #4e5160; font-size: 1.02rem; line-height: 1.52; }
-.commerce-phone-scene { position: relative; display: grid; align-content: center; justify-items: center; min-height: 48rem; }
-.commerce-phone { position: relative; z-index: 2; width: 19rem; aspect-ratio: 19 / 39; height: auto; padding: .48rem; border: 1px solid rgba(255,255,255,.3); border-radius: 3rem; outline: 0; background: #090908; box-shadow: 0 3rem 6rem rgba(20,31,75,.24), inset 0 0 0 1px #333; transition: box-shadow .55s cubic-bezier(.16,1,.3,1); }
+.commerce-phone-scene { position: relative; display: grid; align-content: center; justify-items: center; min-height: 48rem; --commerce-phone-width: min(19rem, 100%); }
+.commerce-phone { position: relative; z-index: 2; width: var(--commerce-phone-width); aspect-ratio: 19 / 39; height: auto; padding: .48rem; border: 1px solid rgba(255,255,255,.3); border-radius: 3rem; outline: 0; background: #090908; box-shadow: 0 3rem 6rem rgba(20,31,75,.24), inset 0 0 0 1px #333; transition: box-shadow .55s cubic-bezier(.16,1,.3,1); }
 .commerce-phone-scene:hover .commerce-phone { box-shadow: 0 3.3rem 6.5rem rgba(20,31,75,.3), inset 0 0 0 1px #3a3a3a; }
 .commerce-phone__hardware { position: absolute; z-index: 5; top: .85rem; left: 50%; display: flex; gap: .35rem; align-items: center; justify-content: center; width: 6.2rem; height: 1.6rem; border-radius: 2rem; background: #080807; transform: translateX(-50%); }
 .commerce-phone__hardware span { width: 2.2rem; height: .25rem; border-radius: 1rem; background: #242424; }
@@ -86,137 +106,114 @@
 @keyframes commerce-screen-in { from { opacity: .35; transform: scale(.97); } }
 .commerce-phone__screen video { position: absolute; inset: 0 0 auto; display: block; width: 100%; height: 62%; object-fit: cover; object-position: 50% 50%; image-rendering: auto; }
 .commerce-phone__shade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 25%, rgba(0,0,0,.08) 43%, rgba(12,12,11,.88) 61%, #0c0c0b 70%); }
-.commerce-phone__status { position: absolute; top: 2.9rem; left: 1.1rem; right: 1.1rem; display: flex; justify-content: space-between; color: #fff; font: 500 .47rem/1 var(--mono); letter-spacing: .05em; }
-.commerce-phone__status span:last-child { color: var(--commerce-lime); }
-.commerce-phone__copy { position: absolute; right: 1.1rem; bottom: 1.3rem; left: 1.1rem; color: #fff; }
-.commerce-phone__copy > span { display: block; margin-bottom: .6rem; color: var(--commerce-lime); font: 500 .48rem/1.2 var(--mono); text-transform: uppercase; }
-.commerce-phone__copy h3 { margin-bottom: .55rem; font-size: 1.85rem; font-weight: 600; line-height: .9; letter-spacing: -.05em; }
-.commerce-phone__copy p { margin-bottom: 1rem; color: rgba(255,255,255,.72); font-size: .7rem; line-height: 1.42; }
-.commerce-phone__copy a { display: flex; align-items: center; justify-content: space-between; padding: .75rem .85rem; border-radius: .62rem; background: #fff; color: #111; font-size: .67rem; font-weight: 600; text-decoration: none; }
-.commerce-phone-controls { position: relative; z-index: 3; display: flex; gap: .35rem; margin-top: 1.6rem; }
-.commerce-phone-controls button { display: grid; gap: .32rem; width: 2.5rem; padding: .35rem .25rem; border: 0; background: none; color: #777a89; cursor: pointer; font: .56rem/1 var(--mono); place-items: center; }
-.commerce-phone-controls button i { display: block; width: 100%; height: 2px; overflow: hidden; background: rgba(17,17,15,.15); }
+.commerce-phone__copy { position: absolute; right: 1.1rem; bottom: 1.3rem; left: 1.1rem; color: #fff; animation: commerce-screen-in .55s cubic-bezier(.16,1,.3,1) both; }
+/* No eyebrow on the screen: the position bar beneath the phone already says which
+   system is showing, so the space goes to the copy that has to be read at this size. */
+.commerce-phone__copy h3 { margin-bottom: .6rem; font-size: 1.85rem; font-weight: 600; line-height: .9; letter-spacing: -.05em; }
+.commerce-phone__copy p { margin-bottom: 1rem; color: rgba(255,255,255,.84); font-size: .78rem; line-height: 1.45; }
+.commerce-phone__copy a { display: flex; align-items: center; justify-content: space-between; min-height: 2.7rem; padding: .75rem .85rem; border-radius: .62rem; background: #fff; color: #111; font-size: .72rem; font-weight: 600; text-decoration: none; transition: background-color .25s; }
+.commerce-phone__copy a:hover { background: var(--commerce-lime); }
+.commerce-phone-controls { position: relative; z-index: 3; display: grid; gap: .3rem; width: var(--commerce-phone-width); margin-top: 1.1rem; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; }
+.commerce-phone-controls button { display: grid; gap: .5rem; min-height: 2.75rem; padding: .5rem .2rem; border: 0; background: none; color: #777a89; cursor: pointer; font: .58rem/1 var(--mono); align-content: center; justify-items: center; transition: color .25s; }
+.commerce-phone-controls button:hover { color: var(--commerce-ink); }
+.commerce-phone-controls button i { display: block; width: 100%; height: 2px; overflow: hidden; background: rgba(38,48,39,.15); }
 .commerce-phone-controls button i::after { display: block; width: 100%; height: 100%; content: ""; background: var(--commerce-blue); transform: scaleX(0); transform-origin: left; }
 .commerce-phone-controls button.is-active { color: var(--commerce-blue); }
 .commerce-phone-controls button.is-active i::after { animation: commerce-progress 4.6s linear forwards; }
+/* The rotation timer stops while the scene is hovered, focused, or offscreen, so the bar must too. */
+.commerce-phone-scene.is-paused .commerce-phone-controls button.is-active i::after { animation-play-state: paused; }
 @keyframes commerce-progress { to { transform: scaleX(1); } }
-.commerce-phone-caption { position: relative; z-index: 2; display: none; width: 100%; margin: 1rem 0 0; color: #656878; font-size: .68rem; }
-.commerce-phone-caption span { float: right; font-family: var(--mono); }
 
-.commerce-entry { display: grid; grid-template-columns: 1fr .9fr; gap: clamp(5rem, 10vw, 10rem); padding: clamp(7rem, 12vw, 11rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: var(--commerce-lime); }
-.commerce-entry__copy { align-self: center; }
-.commerce-entry__copy > strong { display: inline-flex; margin-top: 2.1rem; padding: .45rem .65rem; border: 1px solid rgba(17,17,15,.28); border-radius: 999px; font: 600 .62rem/1 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
-.commerce-entry h2 { max-width: 45rem; margin: 1.35rem 0 1.4rem; font-size: clamp(3.3rem, 5.6vw, 6rem); font-weight: 650; line-height: .88; letter-spacing: -.06em; }
-.commerce-entry__copy > p { max-width: 38rem; margin-bottom: 2rem; color: #3e451e; font-size: 1rem; line-height: 1.56; }
+/* The page's primary commercial moment, so it takes the deep blue rather than a
+   highlighter panel. One statement, then the terms as a strip beneath it.
+   White-on-blue loses apparent weight, so type here runs a step larger and a step
+   more opaque than the same roles on paper. */
+.commerce-entry { padding: clamp(7rem, 12vw, 11rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: var(--commerce-blue-dark); color: #fff; }
+.commerce-entry .commerce-eyebrow { color: var(--commerce-lime); font-size: .72rem; letter-spacing: .1em; }
+.commerce-entry h2 { max-width: 34ch; margin: 1.4rem 0 1.5rem; font-size: clamp(3.3rem, 5.6vw, 6rem); font-weight: 650; line-height: .92; letter-spacing: -.05em; }
+.commerce-entry__copy > p { max-width: 40rem; margin-bottom: 2rem; color: rgba(255,255,255,.9); font-size: clamp(1.12rem, 1.35vw, 1.28rem); line-height: 1.62; }
 .commerce-entry__actions { display: flex; gap: .65rem; flex-wrap: wrap; }
-.commerce-entry__actions a { display: inline-flex; gap: .7rem; align-items: center; justify-content: center; min-height: 3.25rem; padding: 0 1rem; border-radius: .65rem; font-size: .76rem; font-weight: 650; text-decoration: none; }
-.commerce-entry__actions a:first-child { background: var(--commerce-ink); color: #fff; }
-.commerce-entry__actions a:last-child { border: 1px solid rgba(17,17,15,.35); color: var(--commerce-ink); }
-.commerce-entry__copy > small { display: block; margin-top: 1rem; color: #4d5528; font-size: .7rem; }
-.commerce-entry__terms { align-self: center; margin: 0; border-top: 1px solid rgba(17,17,15,.3); }
-.commerce-entry__terms div { display: grid; grid-template-columns: minmax(8rem, .7fr) 1.3fr; gap: 2rem; padding: 1.6rem 0 1.8rem; border-bottom: 1px solid rgba(17,17,15,.3); }
-.commerce-entry__terms dt { color: #404719; font: .6rem/1.4 var(--mono); text-transform: uppercase; }
-.commerce-entry__terms dd { margin: 0; font-size: .9rem; font-weight: 520; line-height: 1.48; }
+.commerce-entry__actions a { display: inline-flex; gap: .7rem; align-items: center; justify-content: center; min-height: 3.25rem; padding: 0 1.15rem; border-radius: .65rem; font-size: .78rem; font-weight: 650; text-decoration: none; transition: transform .3s cubic-bezier(.34,1.56,.64,1), background-color .25s, color .25s; }
+.commerce-entry__actions a:hover { transform: translateY(-3px); }
+.commerce-entry__actions a:first-child { background: #fff; color: var(--commerce-ink); }
+.commerce-entry__actions a:first-child:hover { background: var(--commerce-lime); }
+.commerce-entry__actions a:last-child { border: 1px solid rgba(255,255,255,.4); color: #fff; }
+.commerce-entry__actions a:last-child:hover { background: rgba(255,255,255,.12); }
+.commerce-entry__copy > small { display: block; max-width: 34rem; margin-top: 1.2rem; color: rgba(255,255,255,.74); font-size: .8rem; line-height: 1.5; }
+/* Four terms across, echoing the pressure-index grid. A set, so no numbering. */
+.commerce-entry__terms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: clamp(4rem, 7vw, 6rem) 0 0; border-top: 1px solid rgba(255,255,255,.3); border-bottom: 1px solid rgba(255,255,255,.3); }
+.commerce-entry__terms div { display: grid; gap: .9rem; align-content: start; padding: 1.7rem 1.15rem 2rem; border-right: 1px solid rgba(255,255,255,.3); }
+.commerce-entry__terms div:first-child { padding-left: 0; }
+.commerce-entry__terms div:last-child { padding-right: 0; border-right: 0; }
+.commerce-entry__terms dt { color: var(--commerce-lime); font: .68rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+.commerce-entry__terms dd { margin: 0; color: rgba(255,255,255,.94); font-size: .95rem; line-height: 1.55; }
 
 .commerce-path { padding: clamp(7rem, 12vw, 11rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: #f7f6f1; }
-.commerce-path > header { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; margin-bottom: 6rem; }
+.commerce-path > header { display: grid; grid-template-columns: minmax(0, .4fr) minmax(0, 1fr); gap: clamp(2rem, 5vw, 4rem); margin-bottom: clamp(4rem, 7vw, 6rem); }
 .commerce-path h2 { max-width: 55rem; font-size: clamp(3.3rem, 6vw, 6.5rem); font-weight: 650; line-height: .9; letter-spacing: -.06em; }
 .commerce-path ol { margin: 0; padding: 0; list-style: none; }
-.commerce-path li { display: grid; grid-template-columns: .7fr 1.35fr 1fr; gap: 2.5rem; align-items: start; padding: 2rem 0 3.2rem; border-top: 1px solid rgba(17,17,15,.22); }
+.commerce-path li { display: grid; grid-template-columns: .7fr 1.35fr 1fr; gap: 2.5rem; align-items: start; padding: 2rem 0 3.2rem; border-top: 1px solid rgba(38,48,39,.22); }
+.commerce-path li:last-child { border-bottom: 1px solid rgba(38,48,39,.22); }
 .commerce-path li > span { color: var(--commerce-blue); font: .63rem/1.2 var(--mono); text-transform: uppercase; }
 .commerce-path li h3 { margin-bottom: 0; font-size: clamp(2rem, 3vw, 3.6rem); font-weight: 560; line-height: .96; letter-spacing: -.045em; }
 .commerce-path li p { margin-bottom: 0; color: #5e5d58; font-size: .96rem; line-height: 1.55; }
 
-.commerce-fit { display: grid; grid-template-columns: 1.2fr .8fr; gap: clamp(4rem, 10vw, 10rem); padding: clamp(7rem, 12vw, 11rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: var(--commerce-blue); color: #fff; }
-.commerce-fit h2 { max-width: 48rem; margin: 1.5rem 0 0; font-size: clamp(3rem, 5.2vw, 5.8rem); font-weight: 600; line-height: .92; letter-spacing: -.055em; }
-.commerce-fit > div:last-child { align-self: end; }
-.commerce-fit > div:last-child > p { color: rgba(255,255,255,.68); font-size: .8rem; text-transform: uppercase; }
-.commerce-fit ul { margin: 1.5rem 0 2.8rem; padding: 0; list-style: none; }
-.commerce-fit li { position: relative; padding: 1.05rem 0 1.05rem 1.6rem; border-top: 1px solid rgba(255,255,255,.25); font-size: .95rem; line-height: 1.4; }
-.commerce-fit li::before { position: absolute; top: 1.25rem; left: 0; width: .55rem; height: .55rem; border-radius: 50%; background: var(--commerce-lime); content: ""; }
-.commerce-fit a { display: inline-flex; gap: .8rem; align-items: center; padding: 1rem 1.15rem; border-radius: .65rem; background: #fff; color: #111; font-size: .78rem; font-weight: 650; text-decoration: none; transition: transform .3s cubic-bezier(.34,1.56,.64,1); }
-.commerce-fit a:hover { transform: translateY(-3px); }
-
 .commerce-faq { display: grid; grid-template-columns: .7fr 1.3fr; gap: 6rem; padding: clamp(7rem, 12vw, 10rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: var(--commerce-paper); }
 .commerce-faq h2 { margin: 1.25rem 0 0; font-size: clamp(3.2rem, 5vw, 5rem); font-weight: 650; line-height: .92; letter-spacing: -.055em; }
-.commerce-faq details { border-top: 1px solid rgba(17,17,15,.25); }
-.commerce-faq details:last-child { border-bottom: 1px solid rgba(17,17,15,.25); }
-.commerce-faq summary { display: grid; grid-template-columns: 2.5rem 1fr auto; gap: 1rem; align-items: center; padding: 1.45rem 0; cursor: pointer; font-size: 1.08rem; font-weight: 600; list-style: none; }
+.commerce-faq details { border-top: 1px solid rgba(38,48,39,.25); }
+.commerce-faq details:last-child { border-bottom: 1px solid rgba(38,48,39,.25); }
+.commerce-faq summary { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; padding: 1.45rem 0; cursor: pointer; font-size: 1.08rem; font-weight: 600; list-style: none; transition: color .25s; }
+.commerce-faq summary:hover { color: var(--commerce-blue); }
 .commerce-faq summary::-webkit-details-marker { display: none; }
-.commerce-faq summary span { color: var(--commerce-blue); font: .62rem/1 var(--mono); }
 .commerce-faq summary i { font: normal 1.3rem/1 var(--sans); transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
 .commerce-faq details[open] summary i { transform: rotate(45deg); }
-.commerce-faq details p { max-width: 37rem; margin: 0 0 1.6rem 3.5rem; color: #5e5d58; font-size: .92rem; line-height: 1.55; }
-
-.commerce-final { padding: clamp(7rem, 11vw, 10rem) max(1.5rem, calc((100vw - 1180px) / 2)); background: #11110f; color: #f4f3ed; text-align: center; }
-.commerce-final .commerce-eyebrow { color: var(--commerce-lime); }
-.commerce-final h2 { max-width: 65rem; margin: 1.6rem auto 1.4rem; font-size: clamp(3.7rem, 7.4vw, 8rem); font-weight: 650; line-height: .86; letter-spacing: -.065em; }
-.commerce-final p { max-width: 36rem; margin: 0 auto 2.3rem; color: rgba(244,243,237,.65); font-size: 1rem; line-height: 1.5; }
-.commerce-final a { display: inline-flex; gap: .8rem; align-items: center; padding: 1rem 1.2rem; border-radius: .65rem; background: var(--commerce-lime); color: #111; font-size: .8rem; font-weight: 700; text-decoration: none; transition: transform .35s cubic-bezier(.34,1.56,.64,1); }
-.commerce-final a:hover { transform: scale(1.04); }
-.commerce-final small { display: block; margin-top: 1.1rem; color: rgba(244,243,237,.48); font-size: .69rem; }
+.commerce-faq details p { max-width: 37rem; margin: 0 0 1.6rem; color: #5e5d58; font-size: .92rem; line-height: 1.55; }
 
 @media (max-width: 900px) {
   .commerce-hero { grid-template-columns: 1fr; min-height: auto; padding-top: 9.5rem; padding-bottom: 7rem; }
   .commerce-hero__copy { max-width: 45rem; }
   .commerce-hero__graphic { position: absolute; right: -8rem; bottom: -5rem; width: 28rem; opacity: .25; }
-  .commerce-outcomes > div { grid-template-columns: 1fr; }
-  .commerce-outcomes article { min-height: 20rem; border-right: 0; }
-  .commerce-proof > header { grid-template-columns: 1fr; gap: 2rem; }
-  .commerce-proof__grid { grid-template-columns: 1fr; }
-  .commerce-proof__model { min-height: 38rem; }
-  .commerce-offers { grid-template-columns: 1fr; }
-  .commerce-offers__copy { max-width: 42rem; }
-  .commerce-entry { grid-template-columns: 1fr; gap: 5rem; }
-  .commerce-path > header, .commerce-outcomes > header { grid-template-columns: 1fr; gap: 1.5rem; }
-  .commerce-fit { grid-template-columns: 1fr; }
+  .commerce-pressure-index li { min-height: 5.5rem; padding: .85rem .6rem 1rem; font-size: .72rem; }
+  .commerce-entry__terms { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .commerce-entry__terms div:nth-child(2n) { padding-right: 0; border-right: 0; }
+  .commerce-entry__terms div:nth-child(2n+1) { padding-left: 0; }
+  .commerce-entry__terms div:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,.3); }
+  .commerce-path > header { grid-template-columns: 1fr; gap: 1.5rem; }
   .commerce-faq { grid-template-columns: 1fr; gap: 4rem; }
 }
 
 @media (max-width: 700px) {
+  .commerce-pressure-index header, .commerce-relevant-proof header, .commerce-inquiry { grid-template-columns: 1fr; }
+  .commerce-pressure-index ul, .commerce-relevant-proof > div, .commerce-inquiry form { grid-template-columns: 1fr; }
+  .commerce-pressure-index, .commerce-relevant-proof, .commerce-inquiry { padding-right: 1.25rem; padding-left: 1.25rem; }
+  .commerce-pressure-index li { min-height: 0; padding: 1.05rem .25rem; border-top: 1px solid #555; border-right: 0; font-size: .82rem; }
+  .commerce-pressure-index li:first-child { border-top: 0; }
+  .commerce-relevant-proof a { min-height: 0; padding: 1.35rem 1.25rem 1.6rem; }
+  .commerce-relevant-proof h3 { margin-top: 2.25rem; }
+  .commerce-inquiry > div { position: static; }
   .commerce-eyebrow { font-size: .61rem; }
   .commerce-hero { display: block; padding: 8.25rem 1.25rem 4.5rem; }
   .commerce-hero h1 { margin-bottom: 1.35rem; font-size: clamp(3.35rem, 16.3vw, 4.65rem); line-height: .86; }
   .commerce-hero__copy > p { font-size: 1rem; }
   .commerce-actions { align-items: stretch; flex-direction: column; }
   .commerce-button { width: 100%; }
-  .commerce-hero__copy > small { display: block; line-height: 1.4; }
   .commerce-hero__graphic { position: relative; right: auto; bottom: auto; display: block; width: min(21rem, 94vw); margin: 2.25rem auto 0; opacity: 1; }
-  .commerce-signal-card { min-width: 8.6rem; min-height: 6rem; padding: .78rem; border-radius: .8rem; }
-  .commerce-signal-card strong { font-size: 1.15rem; }
-  .commerce-signal-card span { font-size: .48rem; }
-  .commerce-signal-card i { top: .62rem; right: .62rem; width: 1.25rem; height: 1.25rem; }
-  .commerce-outcomes, .commerce-path, .commerce-fit, .commerce-faq, .commerce-final { padding-right: 1.25rem; padding-left: 1.25rem; }
-  .commerce-outcomes > header { margin-bottom: 3.5rem; }
-  .commerce-outcomes h2, .commerce-path h2, .commerce-fit h2, .commerce-final h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
-  .commerce-outcomes article { min-height: 18rem; padding: 1rem 0 1.5rem; }
-  .commerce-outcomes article p { min-height: auto; }
-  .commerce-proof { padding: 6.5rem 1.25rem; }
-  .commerce-proof h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
-  .commerce-proof__model { min-height: 0; padding: 1rem; }
-  .commerce-proof__model > header { gap: 1rem; min-height: 4.5rem; }
-  .commerce-proof__benchmark { grid-template-columns: 1fr; gap: 1.25rem; padding: 3rem 0; }
-  .commerce-proof__benchmark strong { font-size: clamp(5.5rem, 25vw, 8rem); }
-  .commerce-proof__model-detail, .commerce-proof__model footer { grid-template-columns: 6.5rem 1fr; gap: .75rem; }
-  .commerce-offers { display: block; min-height: 0; padding: 6.5rem 1.25rem; }
-  .commerce-offers__copy h2 { font-size: clamp(3.1rem, 14vw, 4.4rem); }
-  .commerce-phone-scene { min-height: 0; margin-top: 4.7rem; }
-  .commerce-phone { width: min(19rem, calc(100vw - 2.5rem)); height: auto; }
-  .commerce-phone-caption { display: block; }
-  .commerce-phone-controls { gap: .1rem; width: 100%; justify-content: space-between; }
-  .commerce-phone-controls button { width: 2.3rem; }
-  .commerce-entry { display: block; padding: 6.5rem 1.25rem; }
+  .commerce-hero__graphic .commerce-phone-scene { --commerce-phone-width: min(19rem, 100%); }
+  .commerce-path, .commerce-faq { padding-right: 1.25rem; padding-left: 1.25rem; }
+  .commerce-path h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
+  .commerce-phone-scene { min-height: 0; }
+  .commerce-phone-controls { gap: .2rem; }
+  .commerce-entry { padding: 6.5rem 1.25rem; }
   .commerce-entry h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
   .commerce-entry__actions { flex-direction: column; }
-  .commerce-entry__terms { margin-top: 4.5rem; }
-  .commerce-entry__terms div { grid-template-columns: 1fr; gap: .65rem; }
+  .commerce-entry__terms { grid-template-columns: 1fr; margin-top: 4.5rem; }
+  .commerce-entry__terms div { gap: .65rem; padding: 1.35rem 0 1.5rem; border-right: 0; }
+  .commerce-entry__terms div + div { border-top: 1px solid rgba(255,255,255,.3); }
   .commerce-path > header { margin-bottom: 4rem; }
   .commerce-path li { grid-template-columns: 1fr; gap: 1.1rem; padding-bottom: 2.4rem; }
   .commerce-path li h3 { font-size: 2.4rem; }
-  .commerce-fit { gap: 4rem; }
   .commerce-faq { gap: 3rem; }
-  .commerce-faq summary { grid-template-columns: 2rem 1fr auto; gap: .6rem; font-size: .95rem; }
-  .commerce-faq details p { margin-left: 2.6rem; }
+  .commerce-faq summary { gap: .6rem; font-size: .95rem; }
 }
 
 .has-commerce-motion [data-reveal] { transition: none; }

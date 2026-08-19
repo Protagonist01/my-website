@@ -1,17 +1,8 @@
-const clearSkinImage = new URL("../../assets/images/v2-work/clear-skin-treatments.webp", import.meta.url).href;
 const clearSkinAnalysisImage = new URL("../../assets/images/v2-work/clear-skin-analysis.webp", import.meta.url).href;
 const clearSkinCartImage = new URL("../../assets/images/v2-work/clear-skin-cart.webp", import.meta.url).href;
 const clearSkinMobileImage = new URL("../../assets/images/v2-work/clear-skin-mobile.webp", import.meta.url).href;
-const framewiseProductV4Image = new URL("../../assets/images/v2-work/premium/framewise-product-v4.webp", import.meta.url).href;
-const threadmarkProductV4Image = new URL("../../assets/images/v2-work/premium/threadmark-product-v4.webp", import.meta.url).href;
-const cartPilotProductV4Image = new URL("../../assets/images/v2-work/premium/cartpilot-product-v4.webp", import.meta.url).href;
-const marginGuardProductV4Image = new URL("../../assets/images/v2-work/premium/marginguard-product-v4.webp", import.meta.url).href;
-const marginGuardCoverImage = new URL("../../assets/images/v2-work/covers/marginguard-cover-editorial.webp", import.meta.url).href;
 const clearSkinProductV4Image = new URL("../../assets/images/v2-work/premium/clear-skin-product-v4.webp", import.meta.url).href;
-const framewiseCoverImage = new URL("../../assets/images/v2-work/covers/framewise-cover-editorial.webp", import.meta.url).href;
-const threadmarkCoverImage = new URL("../../assets/images/v2-work/covers/threadmark-cover-editorial.webp", import.meta.url).href;
 const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-cover-editorial.webp", import.meta.url).href;
-const cartPilotCoverImage = new URL("../../assets/images/v2-work/covers/cartpilot-cover.webp", import.meta.url).href;
 const clearSkinCoverImage = new URL("../../assets/images/v2-work/covers/clearskin-cover.webp", import.meta.url).href;
 const fruitQualityCoverImage = new URL("../../assets/images/v2-work/covers/fruit-quality-cover-editorial.webp", import.meta.url).href;
 const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-cover-editorial.webp", import.meta.url).href;
@@ -21,18 +12,6 @@ const testimonyOperationsCoverImage = new URL("../../assets/images/v2-work/cover
 const aboutFaceChatbotCoverImage = new URL("../../assets/images/v2-work/covers/aboutface-chatbot-cover-editorial.webp", import.meta.url).href;
 const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-cover-editorial.webp", import.meta.url).href;
 const portfolioWebsiteCoverImage = new URL("../../assets/images/v2-work/covers/portfolio-website-cover-editorial.webp", import.meta.url).href;
-const framewiseSystemImage = new URL("../../assets/images/v2-work/generated/framewise-system.webp", import.meta.url).href;
-const framewiseFormatsImage = new URL("../../assets/images/v2-work/generated/framewise-formats.webp", import.meta.url).href;
-const framewiseVersionsImage = new URL("../../assets/images/v2-work/generated/framewise-versions.webp", import.meta.url).href;
-const threadmarkSystemImage = new URL("../../assets/images/v2-work/generated/threadmark-system.webp", import.meta.url).href;
-const threadmarkLibraryImage = new URL("../../assets/images/v2-work/generated/threadmark-library.webp", import.meta.url).href;
-const threadmarkCitationImage = new URL("../../assets/images/v2-work/generated/threadmark-citation.webp", import.meta.url).href;
-const cartPilotSystemImage = new URL("../../assets/images/v2-work/generated/cartpilot-system.webp", import.meta.url).href;
-const cartPilotComparisonImage = new URL("../../assets/images/v2-work/generated/cartpilot-comparison.webp", import.meta.url).href;
-const cartPilotConfirmationImage = new URL("../../assets/images/v2-work/generated/cartpilot-confirmation.webp", import.meta.url).href;
-const marginGuardSystemImage = new URL("../../assets/images/v2-work/generated/marginguard-system.webp", import.meta.url).href;
-const marginGuardWaterfallImage = new URL("../../assets/images/v2-work/generated/marginguard-waterfall.webp", import.meta.url).href;
-const marginGuardGuardrailImage = new URL("../../assets/images/v2-work/generated/marginguard-guardrail.webp", import.meta.url).href;
 const testimonyImage = new URL("../../works/works images/testimony-v2.webp", import.meta.url).href;
 const fruitQualityImage = new URL("../../works/works images/fq4-v2.webp", import.meta.url).href;
 const revenueAuditImage = new URL(
@@ -54,23 +33,14 @@ const smartTodoImage = "https://raw.githubusercontent.com/Protagonist01/smart-to
 export const paths = {
   home: "/",
   work: "/v2/work/",
-  about: "/v2/about/",
   proof: "/v2/proof/",
   contact: "/v2/contact/",
-  ecommerce: "/v2/ecommerce/",
+  storecraft: "/v2/storecraft/",
   referrals: "/v2/referrals/",
   referralDashboard: "/v2/referrals/dashboard/",
-  aiEngineering: "/v2/services/ai-engineering/",
-  machineLearning: "/v2/services/machine-learning/",
-  conversationalAI: "/v2/services/conversational-ai/",
-  product: "/v2/services/product-engineering/",
   projectsGallery: "/demo%20gallery/",
   commerceGallery: "/ecommerce%20demo%20gallery/",
   compare: "/compare/",
-  framewise: "/v2/work/framewise/",
-  threadmark: "/v2/work/threadmark/",
-  cartPilot: "/v2/work/cartpilot/",
-  marginGuard: "/v2/work/marginguard/",
   clearSkin: "/v2/work/clear-skin/",
   retrievalAnalytics: "/v2/work/retrieval-analytics/",
   selfHealingMonitor: "/v2/work/self-healing-monitor/",
@@ -83,12 +53,22 @@ export const paths = {
   fruitQuality: "/v2/work/archive/fruit-quality/",
 };
 
-export const navigation = [
-  { label: "Featured Projects", href: paths.work },
-  { label: "Expertise", href: `${paths.home}#expertise` },
-  { label: "About", href: paths.about },
-  { label: "Evidence", href: paths.proof },
+export const RESUME_PATH = "/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf";
+
+// __RESUME_AVAILABLE__ is replaced at build time by vite.config.js, which checks
+// whether the PDF is actually present. Resume links stay out of the DOM until it is.
+// Outside the bundler (node tests) the token is undeclared, so treat it as absent.
+export const resumeAvailable = typeof __RESUME_AVAILABLE__ === "undefined" ? false : __RESUME_AVAILABLE__;
+
+const allNavigation = [
+  { label: "Work", href: "/#work" },
+  { label: "Capabilities", href: "/#services" },
+  { label: "About", href: "/#about" },
+  { label: "Resume", href: RESUME_PATH, target: "_blank", gated: true },
+  { label: "Contact", href: "/#contact" },
 ];
+
+export const navigation = allNavigation.filter((item) => !item.gated || resumeAvailable);
 
 export const projects = [
   {
@@ -96,52 +76,78 @@ export const projects = [
     index: "01",
     type: "Built product",
     sector: "AI analytics / Text-to-SQL",
+    category: "AI Engineering",
     title: "Retrieval-Augmented Analytics",
     shortTitle: "RAA Dashboard",
     summary: "A text-to-SQL analytics workspace where a user asks a business question in plain English and receives a validated query, result, chart, and source trail.",
-    outcome: "Help non-technical users answer recurring data questions without giving generated SQL unrestricted database access.",
+    outcome: "Help non-technical users answer recurring data questions with a validated, read-only query they can inspect.",
     stack: ["FastAPI", "Next.js", "DuckDB", "sqlglot"],
     visual: "retrieval-analytics",
     image: raaArchitectureImage,
     coverImage: raaDashboardCoverImage,
     coverBackground: "#f0eee8",
-    sourceImage: raaArchitectureImage,
     imageAlt: "Editorial still life showing a question moving through schema grounding and validation into a traceable analytical result",
     href: paths.retrievalAnalytics,
     tone: "cool",
     featured: true,
+    evidence: "built",
     status: "Built product / Public repository",
     lead: "Ask a business question in plain English. See the SQL, result, chart, and evidence used to answer it.",
     challenge: "A generated query can use the wrong table, invent a column, or attempt to change data. The product needed to find the relevant schema, validate the SQL, run it read-only, and clearly explain failures.",
-    role: "I designed and built the retrieval pipeline, SQL safety checks, evaluation suite, FastAPI services, and analytics interface.",
-    story: {
-      systemTitle: "How a plain-English question becomes a safe, traceable database answer.",
-      systemCaption: "Repository architecture / Retrieval, validation, read-only execution, and streaming",
-      processTitle: "Find the right schema. Generate SQL. Validate it. Run it read-only. Show the evidence.",
-      galleryTitle: "The dashboard keeps the question, SQL, result, chart, and explanation in one place.",
-    },
-    architecture: [
-      "Retrieve only the tables, columns, relationships, and metric definitions relevant to the question.",
-      "Parse the generated SQL with sqlglot and reject writes, unknown fields, and unsafe structures.",
-      "Execute permitted queries in read-only DuckDB and return the result with its SQL and source trail.",
+    role: "I designed and developed this project end to end: the retrieval pipeline, SQL safety checks, evaluation suite, FastAPI services, and analytics interface.",
+    measured: [
+      { value: "~74%", label: "execution accuracy on the evaluation set" },
+      { value: "~96%", label: "of generated queries are valid SQL" },
+      { value: "~4.2s", label: "p95 end to end, on the documented GPT-4o run" },
     ],
-    phases: [
-      { num: "01", title: "Understand the question", copy: "Match the user's language to the relevant business terms and database schema." },
-      { num: "02", title: "Check the query", copy: "Reject SQL that writes data, references missing fields, or breaks the execution rules." },
-      { num: "03", title: "Show the answer", copy: "Return the result, chart, SQL, source tables, and a plain-language explanation together." },
+    measuredNote: "Measured on evals/golden_set.jsonl: 80 natural-language-to-SQL pairs adapted from Spider onto the bundled e-commerce schema. Self-correction recovers about 61% of first-attempt failures and parse success is about 98%. The validator carries more than 40 unit tests.",
+    flow: [
+      { step: "Schema retriever", detail: "Keyword match over table and column names, cached in Redis for five minutes." },
+      { step: "Text-to-SQL model", detail: "Generates a query against the retrieved schema slice only." },
+      { step: "SQL validator", detail: "sqlglot parse, then table and column existence checks, then the safety guard." },
+      { step: "DuckDB executor", detail: "Runs read-only and in-process, capped at 10,000 rows and a five-second timeout." },
+      { step: "Explainer model", detail: "Turns the result set into a plain-language answer beside the SQL that produced it." },
+      { step: "SSE response", detail: "Streams the SQL, rows, chart, and explanation as each stage completes." },
+    ],
+    diagram: raaArchitectureImage,
+    diagramAlt: "Repository architecture diagram for the retrieval-augmented analytics pipeline",
+    diagramCaption: "The repository's own architecture diagram: retrieval, generation, validation, read-only execution, explanation.",
+    decisions: [
+      {
+        decision: "DROP, INSERT, UPDATE, DELETE, ATTACH and PRAGMA are rejected immediately, with no retry.",
+        tradeoff: "A write attempt is reported, never repaired. The one self-correction retry is reserved for queries that parse but fail on execution.",
+      },
+      {
+        decision: "Execution is a read-only in-process DuckDB session with a 10,000-row cap and a five-second timeout.",
+        tradeoff: "A legitimately large aggregate can hit the cap, and no generated query can change or lock the database.",
+      },
+      {
+        decision: "Retrieval sends only the tables and columns matched to the question, never the whole schema.",
+        tradeoff: "Smaller prompts and less exposure, but a table whose name shares no vocabulary with the question is missed.",
+      },
+      {
+        decision: "Evaluation runs against a fixed golden set rather than sampled traffic.",
+        tradeoff: "Results are reproducible between changes and say nothing about a schema the set does not contain.",
+      },
+    ],
+    limits: [
+      "Schema retrieval is keyword-only. A question that uses none of the schema's vocabulary will retrieve the wrong tables.",
+      "DuckDB runs single-node and in-process. There is no distributed execution path.",
+      "The evaluation set is synthetic: Spider questions adapted onto a bundled e-commerce schema, not real analyst traffic.",
+      "The BigQuery and Snowflake connectors are experimental.",
     ],
     gallery: [
-      { video: raaDemoVideo, alt: "Retrieval-Augmented Analytics dashboard demonstration", caption: "The real demo moves from a natural-language question to streamed SQL, result, chart, and explanation." },
+      { video: raaDemoVideo, alt: "Retrieval-Augmented Analytics dashboard demonstration", caption: "The demo moves from a natural-language question to streamed SQL, result, chart, and explanation." },
     ],
     repository: "https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard",
-    proof: ["~96% SQL validity", "~74% execution accuracy", "~4.2s P95 in the documented GPT-4o run"],
-    qualifier: "Repository evaluation used a synthetic Spider-adapted set; performance on domain-specific production data may differ.",
+    qualifier: "The repository describes itself as a portfolio project. Its evaluation used a synthetic Spider-adapted set, so performance on domain-specific production data may differ.",
   },
   {
     id: "self-healing-monitor",
     index: "02",
     type: "Built SRE demonstration",
     sector: "Agentic infrastructure",
+    category: "Automation",
     title: "Self-Healing Monitor",
     summary: "An incident-response agent that reads Prometheus alerts, logs, deployment context, and runbooks before recommending a recovery action.",
     outcome: "Allow a small set of low-risk recovery actions to run automatically while sending higher-risk actions to an operator for approval.",
@@ -151,44 +157,66 @@ export const projects = [
     coverImage: selfHealingMonitorCoverImage,
     coverBackground: "#f0ede6",
     coverInHero: true,
-    sourceImage: selfHealingDashboardImage,
     imageAlt: "Editorial incident-recovery sequence showing evidence, a policy gate, human approval, and restored service",
     href: paths.selfHealingMonitor,
     tone: "warm",
     featured: true,
+    evidence: "built",
     status: "Built product / Controlled SRE demonstration",
-    lead: "The agent can investigate broadly, but it can only execute actions that an explicit policy allows.",
+    lead: "The agent investigates an incident in full, then acts inside an explicit policy allowlist.",
     challenge: "Automatically restarting the wrong service can make an incident worse. The system needed to gather evidence, recommend an action, check its risk, and require human approval when the action exceeded a strict allowlist.",
-    role: "I built the agent workflow, runbook retrieval, action policy, approval queue, audit log, tests, and operator dashboard.",
-    story: {
-      systemTitle: "How the agent decides whether to act, ask for approval, or refuse.",
-      systemCaption: "Built operator surface / Incident, recommendation, policy decision, and audit state",
-      processTitle: "Receive the alert. Gather evidence. Check policy. Execute or request approval. Record the result.",
-      galleryTitle: "Operators can inspect the evidence, proposed action, permission decision, and final result.",
-    },
-    architecture: [
-      "Combine each Prometheus alert with recent deployments, logs, service health, and the matching runbook.",
-      "Check whether the proposed action is allowlisted, supported by evidence, and limited in blast radius.",
-      "Run permitted actions, queue risky ones for approval, and save every decision and execution attempt.",
+    role: "I designed and developed this project end to end: the agent workflow, runbook retrieval, action policy, approval queue, audit log, tests, and operator dashboard.",
+    measured: [
+      { value: "21 / 21", label: "backend tests passing" },
+      { value: "4 / 4", label: "action-correctness scenarios" },
+      { value: "4 / 4", label: "policy-correctness scenarios" },
     ],
-    phases: [
-      { num: "01", title: "Investigate", copy: "Read the alert, logs, deployment history, metrics, and matching runbook." },
-      { num: "02", title: "Check permission", copy: "Compare the proposed action with the allowlist, evidence requirements, and blast-radius rules." },
-      { num: "03", title: "Act or ask", copy: "Run a permitted action or send the full incident context to an operator for approval." },
+    measuredNote: "These are the repository's own verification runs: the backend suite, both correctness suites, and the dashboard build. The demo services are deliberately faulty, so they establish that the policy gate behaves as specified — not that the agent has run production infrastructure unattended.",
+    flow: [
+      { step: "Alert", detail: "Prometheus fires and Alertmanager posts the alert to a FastAPI webhook." },
+      { step: "Context", detail: "The agent gathers the metric window, recent logs, recent deploys, and any matching runbook." },
+      { step: "Diagnosis", detail: "A LangGraph workflow returns a cause, a confidence score, and a risk-ranked action plan." },
+      { step: "Policy gate", detail: "Four conditions are checked before anything is allowed to execute." },
+      { step: "Execute or queue", detail: "A permitted action runs with one retry on failure; everything else goes to the human approval queue." },
+      { step: "Audit", detail: "Every decision, gate result, and execution attempt is written to a Postgres audit log." },
+    ],
+    decisions: [
+      {
+        decision: "Four conditions must all hold before an action executes: confidence at or above 0.75, the action on the auto-action allowlist, impact below high, and human approval not required.",
+        tradeoff: "A correct diagnosis at 0.7 confidence waits for a person, and the gate cannot be talked past by a persuasive explanation.",
+      },
+      {
+        decision: "The default allowlist contains only container restart and notify-only.",
+        tradeoff: "Scaling replicas and rolling back a deploy are implemented but opt-in, so the destructive end of the risk order stays closed until someone deliberately opens it.",
+      },
+      {
+        decision: "Runbooks are matched by embedding retrieval over ChromaDB rather than by rule.",
+        tradeoff: "Runbooks can be written as prose instead of config, and a semantically close but wrong runbook can be retrieved.",
+      },
+      {
+        decision: "Context gathering is deliberately lightweight — a metrics window, recent logs, recent deploys.",
+        tradeoff: "Diagnosis is fast and cheap, and it will miss causes that need deeper correlation across services.",
+      },
+    ],
+    limits: [
+      "The Kubernetes executor is scaffolded, not finished. The working demonstration path is Docker.",
+      "There is no feedback loop. The agent does not learn whether its previous action actually helped.",
+      "Context gathering is shallow by design, so multi-service and slow-burn causes are out of reach.",
+      "The demonstration runs against intentionally faulty services, not real production traffic.",
     ],
     gallery: [
       { image: selfHealingDashboardImage, alt: "Self-Healing Monitor dashboard overview", caption: "Incidents, recommendation status, and the next permitted action share one operator view." },
       { image: selfHealingApprovalImage, alt: "Self-Healing Monitor approval queue and audit log", caption: "Risky remediation remains pending while the evidence and audit trail stay visible." },
     ],
     repository: "https://github.com/Protagonist01/self-healing-monitor",
-    proof: ["21 backend tests", "4/4 action-correctness scenarios", "4/4 policy-correctness scenarios"],
-    qualifier: "This is a controlled demonstration with intentionally faulty services, not a claim of unattended production infrastructure management.",
+    qualifier: "A controlled demonstration with intentionally faulty services. No claim is made about unattended production infrastructure management.",
   },
   {
     id: "ai-voice-receptionist",
     index: "03",
     type: "Public demo",
     sector: "Voice AI / Clinic operations",
+    category: "AI Engineering",
     title: "AI Voice Receptionist",
     summary: "A voice receptionist that answers clinic questions, checks simulated appointment availability, confirms booking details, and sends an SMS summary.",
     outcome: "Show how a natural phone call can produce structured booking data, a clear confirmation step, and a reviewable handoff.",
@@ -202,39 +230,56 @@ export const projects = [
     href: paths.aiVoiceReceptionist,
     tone: "cool",
     featured: true,
+    evidence: "demo",
     status: "Public demo / Mocked calendar integration",
     lead: "The caller hears a natural conversation while the system records each booking step behind the scenes.",
     challenge: "Voice conversations are flexible, but booking systems need exact names, services, dates, and confirmation. The agent had to collect missing details, use bounded tools, recover from failures, and read the final information back to the caller.",
-    role: "I designed the conversation, tool schemas, FastAPI webhooks, Vapi and Twilio integrations, analytics events, and demo interface.",
-    story: {
-      systemTitle: "How a live call becomes structured booking data and a confirmed next step.",
-      systemCaption: "Voice workflow visualization / Call state, tools, and confirmation boundary",
-      processTitle: "Identify the request. Collect details. Use the correct tool. Read everything back. Confirm or hand off.",
-      galleryTitle: "The team can review the call state, tool results, confirmation, SMS, and handoff reason.",
-    },
-    architecture: [
-      "Vapi coordinates the call; Deepgram and ElevenLabs handle speech.",
-      "FastAPI receives typed availability and booking fields from bounded tools.",
-      "Caller ID, tool events, analytics, and Twilio SMS preserve the outcome.",
+    role: "I designed and developed this project end to end: the conversation, tool schemas, FastAPI webhooks, Vapi and Twilio integrations, analytics events, and demo interface.",
+    flow: [
+      { step: "Vapi answers", detail: "Deepgram Nova-2 transcribes, GPT-4o runs the conversation, and ElevenLabs Turbo v2.5 speaks the reply." },
+      { step: "Intent becomes a tool call", detail: "An availability or booking request becomes a typed call to the FastAPI tool endpoint, authenticated with a bearer secret." },
+      { step: "Scheduling", detail: "check_availability and create_booking run against a mocked Acuity Scheduling layer and return JSON." },
+      { step: "Read back", detail: "The agent repeats the service, date, time, and name to the caller before anything is confirmed." },
+      { step: "Confirmation", detail: "A successful booking triggers a Twilio SMS summary; if the SMS fails, the call still completes." },
     ],
-    phases: [
-      { num: "01", title: "Listen", copy: "Capture why the caller is contacting the clinic and what information is missing." },
-      { num: "02", title: "Check", copy: "Use the structured tool to read simulated availability for the requested service." },
-      { num: "03", title: "Confirm", copy: "Read back the details, create the simulated booking, and send the confirmation message." },
+    decisions: [
+      {
+        decision: "The calendar integration is a mock, not a live Acuity account.",
+        tradeoff: "Anyone can call the demo without touching a real clinic's diary, and nothing it books persists.",
+      },
+      {
+        decision: "Only two tools are exposed: availability and booking.",
+        tradeoff: "Cancellation and rescheduling stay conversational, so the agent cannot mutate an appointment it did not create in the same call.",
+      },
+      {
+        decision: "Every tool result is read back to the caller before the booking is created.",
+        tradeoff: "The call takes longer, and a misheard name or date gets corrected before anything is written.",
+      },
+      {
+        decision: "The tool webhook requires a bearer secret, with an insecure-webhook flag reserved for local development.",
+        tradeoff: "Local testing stays easy while the deployed endpoint refuses unauthenticated traffic.",
+      },
+    ],
+    limits: [
+      "Bookings are created with mock identifiers and are not saved once the call ends.",
+      "Cancellation and rescheduling are conversational only. No tool writes them to a calendar.",
+      "The 0.8s availability and 1.2s booking delays are configured simulation values, not measured latency.",
+      "HIPAA mode is off, so the demo is not configured to handle protected health information.",
+      "Inbound SMS and payment capture are planned, not built. The deposit is discussed verbally only.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/ai-voice-receptionist",
-    proof: ["Real-time inbound call flow", "Structured availability and booking tools", "Twilio SMS confirmation"],
-    qualifier: "Availability and bookings are simulated and ephemeral. Cancellation or rescheduling does not modify a real production calendar.",
+    qualifier: "Availability and bookings are simulated. Nothing in this demo writes to a real clinic calendar.",
   },
   {
     id: "code-review-agent",
     index: "04",
     type: "Built product",
     sector: "Developer tools / AI agents",
+    category: "Automation",
     title: "AI Code Review Agent",
     summary: "A GitHub review agent that verifies pull-request events, reviews changed lines with focused repository context, and publishes validated inline findings.",
-    outcome: "Give developers a useful first review pass while supporting hosted or local models and limiting how much repository code enters the review.",
+    outcome: "Give developers a useful first review pass on a hosted or a local model, using the context each changed hunk needs.",
     stack: ["GitHub App", "LangGraph", "Celery", "Redis"],
     visual: "code-review-agent",
     image: codeReviewAgentCoverImage,
@@ -245,204 +290,61 @@ export const projects = [
     href: paths.codeReviewAgent,
     tone: "warm",
     featured: true,
+    evidence: "built",
     status: "Built product / Public repository",
     lead: "Every review comment must point to a changed file and line, explain the issue, and suggest a concrete fix.",
     challenge: "Sending an entire repository to a model creates privacy, cost, and relevance problems. The system needed to authenticate GitHub events, isolate changed hunks, retrieve only useful context, handle long jobs, and reject findings that could not be located in the diff.",
-    role: "I built the GitHub App integration, diff parser, LangGraph workflow, Celery jobs, structured finding schema, observability, tests, and evaluation harness.",
-    story: {
-      systemTitle: "How a pull request becomes a focused, validated review comment.",
-      systemCaption: "Review workflow visualization / Verified webhook, focused context, structured result",
-      processTitle: "Verify the webhook. Parse changed hunks. Retrieve nearby context. Review. Validate. Publish.",
-      galleryTitle: "Every published finding remains connected to its changed line and review job.",
-    },
-    architecture: [
-      "Verify every pull-request webhook with HMAC-SHA256.",
-      "Use Celery, Redis, and LangGraph to review focused diff hunks asynchronously.",
-      "Validate provider output before publishing inline findings or commit status.",
+    role: "I designed and developed this project end to end: the GitHub App integration, diff parser, LangGraph workflow, Celery jobs, structured finding schema, observability, tests, and evaluation harness.",
+    targets: [
+      { value: "≥ 70%", label: "true-positive rate on the golden set" },
+      { value: "≤ 15%", label: "false-positive rate" },
+      { value: "≥ 98%", label: "parse success on model output" },
+      { value: "< 30s", label: "p95 review latency" },
     ],
-    phases: [
-      { num: "01", title: "Verify", copy: "Authenticate the webhook and load only the pull-request event that should run." },
-      { num: "02", title: "Focus", copy: "Parse changed hunks and retrieve the repository context needed to judge them." },
-      { num: "03", title: "Validate", copy: "Reject malformed output and publish only structured, located findings." },
+    targetsNote: "These are the repository's stated targets and CI gates, not measured outcomes. The golden set holds 50 real labelled diffs and CI fails below 80% line coverage. The published latency estimates are roughly 2–5s on a hosted model and 15–30s on a local CPU model.",
+    flow: [
+      { step: "Signed webhook", detail: "A pull-request event is verified with HMAC-SHA256; an invalid signature gets a 403 and no detail." },
+      { step: "Gateway", detail: "FastAPI applies a Redis rate limit and enqueues the job." },
+      { step: "Worker", detail: "Celery picks the job up, so a slow model never blocks the webhook response." },
+      { step: "Diff and context", detail: "A LangGraph graph parses the changed hunks, then fetches only the repo tree, README, and language." },
+      { step: "Review", detail: "The model must answer in a strict file / line / severity / message contract." },
+      { step: "Publish", detail: "Parsed findings become inline comments, a summary, and a commit status." },
+    ],
+    decisions: [
+      {
+        decision: "The model sees changed hunks plus a thin context layer, never the whole repository.",
+        tradeoff: "Lower cost and less code leaving the repo, and anything that only shows up across files is invisible to it.",
+      },
+      {
+        decision: "Output that does not match the file / line / severity / message contract is discarded.",
+        tradeoff: "No malformed comment ever reaches a pull request, and a real finding inside a malformed line is lost silently.",
+      },
+      {
+        decision: "Reviews run on a Celery worker behind a Redis rate limit rather than inline in the webhook.",
+        tradeoff: "GitHub gets an immediate response, which makes a 15–30 second local model run survivable.",
+      },
+      {
+        decision: "The model backend is pluggable across OpenRouter, Ollama, Groq, OpenAI, and Anthropic.",
+        tradeoff: "A team that cannot send code to a hosted provider can run it locally, and both review quality and privacy then depend on the backend chosen.",
+      },
+    ],
+    limits: [
+      "Review is per-hunk. Cross-file problems are out of scope.",
+      "There is no memory between pull requests, so the same comment can recur.",
+      "Malformed model output is dropped without a warning.",
+      "Privacy depends entirely on the configured model backend.",
+      "The repository publishes the evaluation harness and the targets above. It does not publish a completed benchmark run.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/code-review-agent",
-    proof: ["HMAC-verified GitHub webhooks", "80% CI coverage gate", "50-diff evaluation harness"],
-    qualifier: "The repository publishes evaluation targets and tooling, not a completed performance result. Targets are not presented here as measured outcomes.",
-  },
-  {
-    id: "framewise",
-    index: "06",
-    type: "Concept case study",
-    sector: "Creative AI",
-    title: "Framewise",
-    summary: "A creative-AI product concept that saves an approved campaign's palette, lighting, composition, and typography so teams can create consistent variants.",
-    outcome: "Help creative teams adapt one approved visual direction to multiple formats without rebuilding prompts or losing the original art direction.",
-    stack: ["Generative imaging", "Reference control", "React"],
-    image: framewiseProductV4Image,
-    coverImage: framewiseCoverImage,
-    coverBackground: "#eee7dc",
-    sourceImage: framewiseSystemImage,
-    imageAlt: "Editorial art-direction table with coordinated Framewise campaign proofs, materials, and color references",
-    href: paths.framewise,
-    tone: "warm",
-    featured: false,
-    status: "Independent concept / Product promise",
-    lead: "Approve the visual direction once, then reuse its rules across campaign, social, and story formats.",
-    challenge: "AI-generated campaign assets often drift after each edit because the approved references and visual decisions live across separate prompts and files. Teams need a reusable record of what must stay consistent.",
-    role: "I created the product concept, style-memory model, generation and editing workflow, interface direction, and interactive prototype.",
-    story: {
-      systemTitle: "How an approved visual direction becomes reusable production rules.",
-      systemCaption: "Concept visualization / Style memory and control surface",
-      processTitle: "Create a direction. Approve its visual rules. Generate and review each format from those rules.",
-      galleryTitle: "The same approved direction survives different aspect ratios and channel requirements.",
-    },
-    architecture: [
-      "Reference controls store the visual decisions that define a campaign.",
-      "Generation and editing share one versioned canvas instead of separate tools.",
-      "Exports adapt the approved direction without silently changing its style.",
-    ],
-    phases: [
-      { num: "01", title: "Create", copy: "Generate the first visual direction from prompt and references." },
-      { num: "02", title: "Lock", copy: "Keep the approved palette, mood, and composition reusable." },
-      { num: "03", title: "Adapt", copy: "Produce channel-ready variants from the same direction." },
-    ],
-    gallery: [
-      { image: framewiseFormatsImage, alt: "Framewise campaign direction adapted into campaign, social, and story formats", caption: "One approved direction adapts across formats without losing its visual rules." },
-      { image: framewiseVersionsImage, alt: "Framewise version history with locked palette, light, and composition", caption: "Every revision keeps the approved creative decisions visible and reusable." },
-    ],
-  },
-  {
-    id: "threadmark",
-    index: "07",
-    type: "Concept case study",
-    sector: "Research SaaS",
-    title: "Threadmark",
-    summary: "A research-workspace concept that turns websites, PDFs, recordings, and images into a concise brief with a source attached to every claim.",
-    outcome: "Help teams summarize large mixed-source research collections while keeping citations, conflicting evidence, and reviewer decisions visible.",
-    stack: ["Multimodal retrieval", "Citations", "TypeScript"],
-    image: threadmarkProductV4Image,
-    coverImage: threadmarkCoverImage,
-    coverBackground: "#eeeae1",
-    sourceImage: threadmarkSystemImage,
-    imageAlt: "Editorial research tableau connecting mixed source material to a central cited brief",
-    href: paths.threadmark,
-    tone: "cool",
-    featured: false,
-    status: "Independent concept / Product promise",
-    lead: "Read the brief, open any claim, and inspect the exact source passage that supports or contradicts it.",
-    challenge: "A polished AI summary may combine weak evidence, omit disagreement, or make verification slow. Reviewers need to check the exact supporting passage without leaving the brief.",
-    role: "I designed the product concept, mixed-media ingestion model, retrieval and citation architecture, conflict states, and review interface.",
-    story: {
-      systemTitle: "How mixed research sources become a brief that can still be verified.",
-      systemCaption: "Concept visualization / Multimodal evidence architecture",
-      processTitle: "Import sources. Split them into evidence segments. Draft claims. Attach citations. Flag conflicts. Review the brief.",
-      galleryTitle: "Reviewers can verify a claim and compare conflicting evidence beside the brief.",
-    },
-    architecture: [
-      "Documents, media, and links enter one normalized evidence index.",
-      "Generated claims retain direct references to their supporting source segments.",
-      "Conflicting evidence is surfaced instead of blended into false certainty.",
-    ],
-    phases: [
-      { num: "01", title: "Collect", copy: "Bring mixed research material into one project." },
-      { num: "02", title: "Connect", copy: "Link every generated claim to supporting evidence." },
-      { num: "03", title: "Brief", copy: "Publish a concise answer with its source trail intact." },
-    ],
-    gallery: [
-      { image: threadmarkLibraryImage, alt: "Threadmark source library with document, web, audio, and image sources", caption: "Every source type enters one reviewable library before synthesis begins." },
-      { image: threadmarkCitationImage, alt: "Threadmark research brief beside a supporting source and conflict", caption: "A reviewer can verify the claim and inspect disagreement without leaving the brief." },
-    ],
-  },
-  {
-    id: "cartpilot",
-    index: "08",
-    type: "Concept case study",
-    sector: "Conversational commerce",
-    title: "CartPilot",
-    summary: "A guided-shopping concept that turns a customer's natural-language needs into product filters, comparisons, and a cart action they must confirm.",
-    outcome: "Help shoppers reach a confident product choice faster while keeping prices, policies, trade-offs, and cart changes visible.",
-    stack: ["Storefront MCP", "Tool calling", "React"],
-    image: cartPilotProductV4Image,
-    coverImage: cartPilotCoverImage,
-    coverBackground: "#f4ead8",
-    sourceImage: cartPilotSystemImage,
-    imageAlt: "CartPilot shopping agent with product results, comparison, policy evidence, and cart confirmation",
-    href: paths.cartPilot,
-    tone: "warm",
-    featured: false,
-    status: "Independent concept / Product promise",
-    lead: "Describe what you need in everyday language, compare the best matches, and approve the cart change yourself.",
-    challenge: "Customers often know the outcome they want but not the catalogue terms needed to find it. The agent must translate intent into filters without hiding product evidence, return policies, price differences, or who controls the cart.",
-    role: "I designed the product concept, intent-to-filter model, storefront tools, comparison experience, and confirmation boundary.",
-    story: {
-      systemTitle: "How a customer's request becomes a transparent product comparison and confirmed cart action.",
-      systemCaption: "Concept visualization / Guided-selling action model",
-      processTitle: "Understand the need. Apply catalogue constraints. Compare matches. Explain trade-offs. Ask for confirmation.",
-      galleryTitle: "The recommendation explains why it fits and waits before changing the cart.",
-    },
-    architecture: [
-      "Storefront tools expose catalogue, policy, and cart capabilities to the agent.",
-      "Recommendations explain the product evidence behind the match.",
-      "Cart changes remain pending until the shopper confirms them.",
-    ],
-    phases: [
-      { num: "01", title: "Understand", copy: "Translate customer intent into product constraints." },
-      { num: "02", title: "Compare", copy: "Explain the strongest options and trade-offs." },
-      { num: "03", title: "Confirm", copy: "Prepare the cart and wait for approval." },
-    ],
-    gallery: [
-      { image: cartPilotComparisonImage, alt: "CartPilot comparison of three lightweight travel jackets", caption: "The best match stands out while price, protection, packability, and returns stay visible." },
-      { image: cartPilotConfirmationImage, alt: "CartPilot pending cart change with confirm and revise controls", caption: "The system explains the match and trade-off, then waits for explicit approval." },
-    ],
-  },
-  {
-    id: "marginguard",
-    index: "09",
-    type: "Concept case study",
-    sector: "Commerce intelligence",
-    title: "MarginGuard",
-    summary: "A commerce-intelligence concept that calculates contribution margin per order, finds where profit is leaking, and previews a rule before the team applies it.",
-    outcome: "Help commerce teams see which discounts, returns, shipping costs, or fulfilment decisions are reducing margin and which issue is worth fixing first.",
-    stack: ["Commerce data", "Cost modeling", "Python"],
-    image: marginGuardProductV4Image,
-    coverImage: marginGuardCoverImage,
-    coverBackground: "#f1eee7",
-    sourceImage: marginGuardSystemImage,
-    imageAlt: "Editorial MarginGuard workflow tracing revenue through cost leaks into protected contribution margin",
-    href: paths.marginGuard,
-    tone: "cool",
-    featured: false,
-    status: "Independent concept / Product promise",
-    lead: "See the real profit left after discounts, returns, product cost, shipping, and fulfilment.",
-    challenge: "Sales dashboards show revenue but often separate the costs that determine whether an order was profitable. The team needs one calculation, a ranked list of recoverable losses, and a safe way to model a policy change before applying it.",
-    role: "I designed the product concept, order-level margin model, leak-ranking logic, guardrail preview, and decision interface.",
-    story: {
-      systemTitle: "How order data becomes a ranked list of recoverable margin leaks.",
-      systemCaption: "Modeled scenario / Profitability and guardrail logic",
-      processTitle: "Calculate contribution margin. Group repeated losses. Rank recoverable leaks. Preview a guardrail.",
-      galleryTitle: "The modeled dashboard shows both the source of the loss and the effect of a proposed rule.",
-    },
-    architecture: [
-      "Order revenue is reconciled with discounts, returns, fulfilment, and product cost.",
-      "Leak detection ranks issues by recoverable contribution margin.",
-      "Recommended controls show expected impact before they are applied.",
-    ],
-    phases: [
-      { num: "01", title: "Trace", copy: "Follow revenue through every variable cost." },
-      { num: "02", title: "Find", copy: "Rank the leaks with the strongest recovery potential." },
-      { num: "03", title: "Protect", copy: "Apply a measurable guardrail to the first leak." },
-    ],
-    gallery: [
-      { image: marginGuardWaterfallImage, alt: "Modeled MarginGuard contribution margin waterfall and ranked leaks", caption: "A modeled waterfall makes every variable cost and recoverable leak visible." },
-      { image: marginGuardGuardrailImage, alt: "Modeled MarginGuard guardrail preview with current and modeled margin", caption: "The team sees the modeled effect before choosing to approve or revise the guardrail." },
-    ],
+    qualifier: "The numbers on this page are targets and CI gates taken from the repository, not measured results. They are not presented here as outcomes.",
   },
   {
     id: "clear-skin",
     index: "05",
     type: "Built product",
     sector: "Clinic commerce / AI concierge",
+    category: "Full-Stack Product Engineering",
     title: "Clear Skin Concierge",
     summary: "A full-stack skincare clinic and commerce product with an AI concierge that answers from approved content and prepares product, quiz, cart, or booking actions.",
     outcome: "Connect AI guidance to real customer journeys while keeping recommendations grounded and requiring confirmation before cart or booking changes.",
@@ -450,30 +352,58 @@ export const projects = [
     image: clearSkinProductV4Image,
     coverImage: clearSkinCoverImage,
     coverBackground: "#f3eeea",
-    sourceImage: clearSkinImage,
     imageAlt: "Clear Skin concierge with guided analysis, approved recommendations, treatment details, and booking confirmation",
     href: paths.clearSkin,
     tone: "warm",
     featured: true,
-    status: "Public repository / Built product",
-    lead: "The concierge can guide a customer from a skincare question to a product or treatment, but it cannot silently change the cart or book an appointment.",
+    evidence: "built",
+    status: "Built product / Public repository",
+    lead: "The concierge guides a customer from a skincare question to a product or a treatment, and every cart or booking action waits for their confirmation.",
     challenge: "The same assistant needed to answer product and policy questions, support skincare discovery, and prepare commerce or booking actions. Safety rules, approved knowledge, typed outputs, and customer confirmation had to remain explicit throughout the journey.",
-    role: "I led product strategy and built the Next.js application, retrieval layer, AI routing, typed action contracts, commerce flows, booking flows, and safety controls.",
-    story: {
-      systemTitle: "How a conversation becomes a safe product, cart, quiz, or booking action.",
-      systemCaption: "Built product / Controlled concierge surface",
-      processTitle: "Identify the request. Retrieve approved information. Return a typed proposal. Ask the customer to confirm.",
-      galleryTitle: "The concierge stays connected to the product journey from discovery through confirmation.",
-    },
-    architecture: [
-      "Next.js routes connect catalogue, cart, checkout, accounts, booking, and email.",
-      "A deterministic router and bounded agent return typed, inspectable decisions.",
-      "Cart and booking changes remain pending until the customer confirms.",
+    role: "I designed and developed this project end to end: product strategy, the Next.js application, retrieval layer, AI routing, typed action contracts, commerce flows, booking flows, and safety controls.",
+    measuredLabel: "Built surface",
+    measured: [
+      { value: "7", label: "typed actions the agent can propose; three require customer confirmation" },
+      { value: "8", label: "tools in the registry, each with a typed contract" },
+      { value: "2", label: "tool turns maximum before the agent must answer" },
     ],
-    phases: [
-      { num: "01", title: "Guide", copy: "Connect intent to approved treatments and products." },
-      { num: "02", title: "Prepare", copy: "Return a typed product, quiz, cart, or booking action." },
-      { num: "03", title: "Confirm", copy: "Keep consequential actions visible and reversible." },
+    measuredNote: "Counted from the repository: 13 pages, roughly 17 API routes, and 8 SQLite tables. These are facts about what is built, not performance results — the repository publishes no benchmark.",
+    flow: [
+      { step: "Widget request", detail: "A message hits the chat route and passes a cost and identity gate." },
+      { step: "Deterministic router", detail: "Safety checks and routing run in code before a model is involved." },
+      { step: "Semantic cache", detail: "A near-identical earlier question is answered from cache instead of the model." },
+      { step: "Bounded agent", detail: "The model may take at most two tool turns, choosing from a typed registry of eight tools." },
+      { step: "Typed decision", detail: "It returns one of four modes: direct action, advisory chat, guided workflow, or a request for clarification." },
+      { step: "Confirmation", detail: "Cart changes and booking handoffs are proposals; the customer confirms before anything commits." },
+    ],
+    decisions: [
+      {
+        decision: "Action payloads are rehydrated from the local catalogue rather than trusted from the model.",
+        tradeoff: "The model can name a product but cannot invent its price, id, or availability.",
+      },
+      {
+        decision: "Adding to cart, removing from cart, and starting a booking all require explicit customer confirmation.",
+        tradeoff: "One extra tap on every commerce action, and the assistant can never silently change what someone is buying.",
+      },
+      {
+        decision: "The agent is capped at two tool turns.",
+        tradeoff: "A hard ceiling on cost and latency, at the price of giving up on questions that would need a deeper tool chain.",
+      },
+      {
+        decision: "A deterministic router and the safety checks run before the model, not after it.",
+        tradeoff: "Some requests never reach a model at all, which is cheaper and more predictable, and the router has to be kept in step with the catalogue.",
+      },
+      {
+        decision: "Retrieval uses Pinecone when credentials exist and falls back to lexical search when they do not.",
+        tradeoff: "The app runs in a bare environment, and answer quality degrades quietly rather than erroring.",
+      },
+    ],
+    limits: [
+      "Checkout is a demo path. No real payment is taken.",
+      "Persistence is SQLite on the local filesystem, which is unsuitable for a serverless deployment as it stands.",
+      "The app needs a Node runtime. It will not run as a static export.",
+      "The repository is a portfolio snapshot of the application and carries no open-source licence.",
+      "No latency, accuracy, or conversion figure is published for the concierge.",
     ],
     gallery: [
       { image: clearSkinAnalysisImage, alt: "Clear Skin analysis experience with AI concierge", caption: "Guided analysis connects intent to a care path." },
@@ -481,6 +411,7 @@ export const projects = [
       { image: clearSkinMobileImage, alt: "Clear Skin concierge on a compact viewport", caption: "The same journey remains usable on mobile." },
     ],
     repository: "https://github.com/Protagonist01/clear-skin-concierge-site",
+    qualifier: "The public repository is a documentation and portfolio snapshot of the application. The counts above describe that snapshot.",
   },
 ];
 
@@ -492,9 +423,10 @@ export const projectNotes = [
     index: "H1",
     type: "Hobby project",
     sector: "RAG / Conversational commerce",
+    category: "AI Engineering",
     title: "AboutFace Chatbot",
     summary: "A skincare support chatbot that answers product, ingredient, shipping, and returns questions from an approved knowledge base.",
-    outcome: "Show how retrieval can keep customer-support answers grounded before the later Clear Skin project added cart and booking actions.",
+    outcome: "Show how retrieval keeps customer-support answers grounded in the brand's own catalogue and support content.",
     visual: "aboutface-chatbot",
     image: aboutFaceImage,
     coverImage: aboutFaceChatbotCoverImage,
@@ -504,7 +436,7 @@ export const projectNotes = [
     href: paths.aboutFaceChatbot,
     status: "Public demo / Supporting evolution story",
     challenge: "A general chatbot could invent product details or policies. This assistant needed to answer only from the brand's approved catalogue and support content while still feeling helpful and conversational.",
-    role: "I built the catalogue ingestion, embeddings and Pinecone retrieval, brand prompt, responsive chat interface, and deployment.",
+    role: "I designed and developed this project end to end: catalogue ingestion, embeddings and Pinecone retrieval, the brand prompt, the responsive chat interface, and deployment.",
     lessons: [
       "The chatbot retrieves relevant catalogue or policy passages before writing an answer.",
       "Suggested questions help customers begin common product and support conversations quickly.",
@@ -519,9 +451,10 @@ export const projectNotes = [
     index: "H2",
     type: "Hobby project",
     sector: "Python / CLI productivity",
+    category: "Full-Stack Product Engineering",
     title: "Smart Todo App",
     summary: "A keyboard-focused Python task manager that parses compact text into dates, times, tags, priorities, assignments, and durations.",
-    outcome: "Turn one compact command into a structured task without using an AI model or a long form.",
+    outcome: "Turn one typed line into a fully structured task through deterministic parsing rules.",
     visual: "smart-todo",
     image: smartTodoImage,
     coverImage: smartTodoCoverImage,
@@ -530,8 +463,8 @@ export const projectNotes = [
     imageAlt: "Editorial task-parsing desk turning one compact command into structured fields and local storage",
     href: paths.smartTodo,
     status: "Built product / Public repository",
-    challenge: "Fast task entry needed structure without forcing the user through a long form or depending on a language model.",
-    role: "I built the Python application, regular-expression parser, local persistence, command interface, and automated tests.",
+    challenge: "Task capture is only fast if a single typed line can carry the date, time, tag, priority, and duration on its own.",
+    role: "I designed and developed this project end to end: the Python application, regular-expression parser, local persistence, command interface, and automated tests.",
     lessons: [
       "Regular expressions extract dates, times, tags, priorities, assignments, and durations from the command.",
       "Atomic JSON writes reduce the chance of corrupting the locally stored task list.",
@@ -544,6 +477,7 @@ export const projectNotes = [
     index: "H3",
     type: "Hobby project",
     sector: "Interaction design / Frontend",
+    category: "Full-Stack Product Engineering",
     title: "Portfolio Website",
     summary: "This responsive portfolio combines project case studies, service pages, motion, accessible reduced-motion states, and an AI guide grounded in published site content.",
     outcome: "Help recruiters and potential clients understand the work, inspect supporting evidence, and reach the right contact path.",
@@ -556,7 +490,7 @@ export const projectNotes = [
     href: paths.portfolioWebsite,
     status: "Independent build / This website",
     challenge: "A grid of project cards could show what I made, but not the problem, decisions, limits, evidence, or relevance of each project. The site also needed to work consistently across screen sizes and motion preferences.",
-    role: "I designed the content structure and interactions, built the frontend, implemented responsive and reduced-motion behavior, grounded the AI guide, and tested the site.",
+    role: "I designed and developed this project end to end: the content structure and interactions, the frontend, responsive and reduced-motion behavior, the grounded AI guide, and the test suite.",
     lessons: [
       "Each case study explains the problem, key decisions, system, evidence, and project limits in a consistent order.",
       "The layout and interaction adapt for smaller screens, while reduced-motion users receive stable static states.",
@@ -572,6 +506,7 @@ export const archiveProjects = [
     index: "A1",
     type: "Built system / Archive",
     sector: "Nonprofit operations",
+    category: "Automation",
     title: "Automated Testimony Operations",
     summary: "A workflow system that brings testimony intake, editing, approval, and publishing into one queue while protecting confidential client details.",
     outcome: "Replace a recurring ten-person handoff with one operator view that shows ownership, status, exceptions, and publishing history.",
@@ -583,15 +518,41 @@ export const archiveProjects = [
     imageAlt: "Editorial publishing workflow showing testimony intake, summary, human approval, archive, and audit trail",
     href: paths.testimony,
     tone: "warm",
+    evidence: "client",
     status: "Built client system / NDA-safe archive",
+    sourceNote: "Under NDA — no public repository or demo",
     lead: "One queue shows every testimony from submission to publication.",
     challenge: "Submissions moved between multiple people and tools. It was difficult to see who owned an item, whether it had been edited or approved, and what was ready to publish.",
-    role: "I mapped the workflow, designed and built the product, added AI-assisted summaries, and delivered the system.",
-    architecture: ["Structured intake stores each submission and its required context in one record.", "AI-assisted summaries shorten the first review, but a person still approves every edit.", "The operator queue shows the owner, current stage, exception, and publishing history of each item."],
-    phases: [
-      { num: "01", title: "Collect", copy: "Store each submission and its context as one trackable record." },
-      { num: "02", title: "Review", copy: "Create a draft summary, edit it, and send it to the right person for approval." },
-      { num: "03", title: "Publish", copy: "Publish the approved testimony and keep its status history." },
+    role: "I designed and developed this system end to end: the workflow mapping, the product itself, AI-assisted summaries, and delivery to the client.",
+    measured: [
+      { value: "10 → 1", label: "a recurring ten-person handoff became one operator queue" },
+    ],
+    measuredNote: "This is the single documented outcome of the engagement. The client, the organisation, the dates, and the volumes are covered by NDA and are not published here.",
+    flow: [
+      { step: "Intake", detail: "Each submission is stored as one record with the context needed to review it." },
+      { step: "Draft", detail: "An AI-assisted summary shortens the first read." },
+      { step: "Approval", detail: "A person edits and approves every summary before it moves on." },
+      { step: "Queue", detail: "One operator view shows owner, stage, exception, and publishing history." },
+      { step: "Publish", detail: "Approved testimony is published and its status history is kept." },
+    ],
+    decisions: [
+      {
+        decision: "A person approves every AI-assisted summary.",
+        tradeoff: "Slower than automatic publishing, and nothing reaches an audience without a named approver.",
+      },
+      {
+        decision: "Ownership and stage are properties of the record, not of somebody's inbox.",
+        tradeoff: "The queue answers who has an item and what is blocking it without anyone having to ask.",
+      },
+      {
+        decision: "Summaries assist the first review rather than replacing it.",
+        tradeoff: "Review time drops while editorial judgement stays with the team.",
+      },
+    ],
+    limits: [
+      "Client identity, organisation, dates, and volumes are under NDA and are not published here.",
+      "There is no public repository and no live demonstration.",
+      "The one documented outcome is the collapse of the ten-person loop into a single operator queue. No further commercial result is claimed.",
     ],
     gallery: [],
   },
@@ -600,38 +561,70 @@ export const archiveProjects = [
     index: "A2",
     type: "Built system / Archive",
     sector: "Agritech / Applied ML",
+    category: "AI Engineering",
     title: "Fruit Quality Prediction",
     summary: "A deployed machine-learning product that uses a feijoa image to classify current ripeness and forecast six quality measures over 35 days of storage.",
     outcome: "Combine a 90.10% ripeness-classification result with storage-quality forecasts that users can inspect and save.",
-    stack: ["FastAPI", "React", "TensorFlow", "ONNX"],
+    stack: ["FastAPI", "React", "TensorFlow", "scikit-learn"],
     image: fruitQualityImage,
     coverImage: fruitQualityCoverImage,
     coverBackground: "#f3efe4",
     imageAlt: "Botanical science still life showing feijoa ripeness stages and quality measurement materials",
     href: paths.fruitQuality,
     tone: "cool",
+    evidence: "built",
     status: "Built applied-ML system / Public archive",
     lead: "Upload one image to see the fruit's ripeness now and how its measured quality may change during storage.",
     challenge: "A single ripeness label does not explain how fruit quality changes after harvest. The product needed to combine image classification, storage inputs, six forecasted quality measures, and saved prediction history in one usable interface.",
-    role: "I prepared the data, trained the classifier and regressors, exported ONNX inference, built the FastAPI services and React interface, added persistence, and deployed the product.",
-    architecture: ["A MobileNetV2 model exported to ONNX returns ripeness probabilities from the uploaded image.", "A Random Forest uses storage inputs to forecast six quality measures across a 35-day curve.", "FastAPI serves both predictions, and Supabase stores the user's prediction history for the React interface."],
-    phases: [
-      { num: "01", title: "Upload", copy: "Check that the fruit image and storage inputs are usable." },
-      { num: "02", title: "Predict", copy: "Classify current ripeness and forecast six quality measures over time." },
-      { num: "03", title: "Review", copy: "Show the probabilities, forecast curve, inputs, and saved result together." },
+    role: "I designed and developed this project end to end: data preparation, the classifier and regressors, the FastAPI services and React interface, persistence, and deployment.",
+    measured: [
+      { value: "90.10%", label: "test accuracy across three ripeness classes" },
+      { value: "90.13", label: "macro F1 over unripe, ripe, and overripe" },
+      { value: "R² > 0.99", label: "on held-out data for all six storage-quality targets" },
+    ],
+    measuredNote: "Per-class F1: 90.70 unripe, 87.10 ripe, 92.59 overripe. The repository does not publish the dataset size, MAE or RMSE, per-target R², inference latency, or model size.",
+    flow: [
+      { step: "Upload", detail: "One feijoa image plus the storage inputs: temperature from 6 to 17°C, perforation from 0 to 3, and CIELab colour." },
+      { step: "Classify", detail: "A MobileNetV2 transfer-learning model returns probabilities for unripe, ripe, and overripe." },
+      { step: "Forecast", detail: "A Random Forest over standardised inputs predicts six quality measures across a 35-day storage curve." },
+      { step: "Serve", detail: "FastAPI exposes the classification and quality endpoints on serverless hosting; model weights are pulled from Hugging Face Hub on cold start." },
+      { step: "Review", detail: "Probabilities, the forecast curve, and the inputs are stored and shown together in the interface." },
+    ],
+    decisions: [
+      {
+        decision: "Two models rather than one: a CNN for the image and a Random Forest for the storage forecast.",
+        tradeoff: "Each is trained and evaluated on its own terms, and the forecast depends on a user supplying storage inputs correctly.",
+      },
+      {
+        decision: "Model weights are pulled from Hugging Face Hub at cold start rather than bundled with the deployment.",
+        tradeoff: "The serverless deployment stays inside its size limit and pays a cold-start cost on the first request.",
+      },
+      {
+        decision: "Dataset labelling was bootstrapped with a vision-language model before manual correction.",
+        tradeoff: "A usable training set came together quickly, and label noise from the auto-labelling pass is possible.",
+      },
+      {
+        decision: "The six targets are forecast over a fixed 35-day curve.",
+        tradeoff: "Results are comparable between samples, and storage beyond 35 days is not modelled at all.",
+      },
+    ],
+    limits: [
+      "The six forecast targets are weight loss, water-vapour transmission, O₂, CO₂, relative humidity, and firmness — all over a fixed 35-day window.",
+      "The repository publishes accuracy and F1 but not the dataset size, error magnitudes, per-target R², or latency.",
+      "The README is internally inconsistent about the exported inference runtime, describing ONNX Runtime while listing a Keras artifact.",
+      "Forecast quality depends on the user entering accurate storage temperature, perforation, and colour values.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction",
+    qualifier: "R² above 0.99 across all six targets is the figure the repository reports on held-out test data. With the dataset size unpublished, read it as a repository-reported result rather than an independently validated one.",
   },
 ];
 
 const homeFeaturedProjectOrder = [
-  { id: "framewise", title: "FrameWise" },
-  { id: "threadmark", title: "ThreadMark" },
-  { id: "retrieval-analytics", title: "RAA Dashboard" },
-  { id: "cartpilot", title: "CartPilot" },
-  { id: "clear-skin", title: "ClearSkin" },
-  { id: "fruit-quality", title: "Fruit Quality" },
+  { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
+  { id: "self-healing-monitor", title: "Self-Healing Monitor" },
+  { id: "code-review-agent", title: "AI Code Review Agent" },
+  { id: "ai-voice-receptionist", title: "AI Voice Receptionist" },
 ];
 
 export const homeFeaturedProjects = homeFeaturedProjectOrder
@@ -676,133 +669,50 @@ export const demonstrations = [
   },
 ];
 
-export const services = {
-  "ai-engineering": {
-    slug: "ai-engineering",
-    navLabel: "AI Engineering & Agent Systems",
-    eyebrow: "Service 01 / AI systems",
-    title: "AI agents that use your data and tools without hiding what they do.",
-    intro: "I help teams turn an AI demo into a working product that uses approved knowledge, calls defined tools, records what happened, and sends uncertain or high-risk cases to a person.",
-    promise: "Turn an AI demo into a controlled product your team can test and operate.",
-    signals: ["Agents", "RAG", "Tool use", "Evaluation"],
-    problems: [
-      "Your prototype can answer questions but cannot safely update a product, workflow, or internal system.",
-      "Your team cannot see which source, tool, or rule produced an answer or action.",
-      "There is no repeatable test set for accuracy, tool use, refusals, latency, or escalation.",
-    ],
-    system: [
-      { num: "01", title: "Connect the right knowledge", copy: "Give the system access to approved documents, product data, or live context and preserve the source of each answer." },
-      { num: "02", title: "Limit what it can do", copy: "Define tool inputs, permissions, confirmation steps, refusal rules, and the cases that need a person." },
-      { num: "03", title: "Test real tasks", copy: "Measure answer quality, tool use, failure cases, latency, refusals, and escalation before allowing more actions." },
-      { num: "04", title: "Make it operable", copy: "Give the team traces, metrics, exceptions, and controls for reviewing how the system behaves." },
-    ],
-    relatedProjects: ["retrieval-analytics", "self-healing-monitor", "code-review-agent", "clear-skin"],
-    accent: "blue",
-  },
-  "machine-learning": {
-    slug: "machine-learning",
-    navLabel: "Machine Learning & Data Products",
-    eyebrow: "Service 02 / ML and data",
-    title: "Machine-learning and analytics products people can use outside a notebook.",
-    intro: "I build text-to-SQL analytics, predictive models, retrieval systems, evaluation pipelines, APIs, and interfaces that turn data into a result a user can inspect and act on.",
-    promise: "Connect the model to the data, interface, checks, and feedback it needs.",
-    signals: ["Predictive ML", "Analytics", "Data systems", "Evaluation"],
-    problems: [
-      "Your model works in a notebook but users have no reliable way to submit inputs or receive results.",
-      "Recurring business questions still depend on an analyst writing every query by hand.",
-      "Users see a prediction without its input quality, confidence, threshold, or review status.",
-    ],
-    system: [
-      { num: "01", title: "Define the decision", copy: "Identify the user, the input they have, the result they need, the data boundary, and how quality will be measured." },
-      { num: "02", title: "Build the data and model pipeline", copy: "Prepare the data, train or connect the model, and keep each input and output traceable." },
-      { num: "03", title: "Test weak and uncertain cases", copy: "Measure accuracy, latency, uncertainty, drift, and which results must go to a person." },
-      { num: "04", title: "Deliver the product", copy: "Build the API, interface, monitoring, prediction history, and feedback path around the model." },
-    ],
-    relatedProjects: ["retrieval-analytics", "fruit-quality"],
-    accent: "mint",
-  },
-  "conversational-ai": {
-    slug: "conversational-ai",
-    navLabel: "Conversational AI & Voice Systems",
-    eyebrow: "Service 03 / Conversation",
-    title: "Chat and voice assistants that answer, act, and hand off safely.",
-    intro: "I build support, guided-selling, booking, internal-assistant, and voice workflows that answer from approved information, use defined tools, confirm important details, and transfer the full context to a person when needed.",
-    promise: "Turn repeated conversations into resolved requests or clear human handoffs.",
-    signals: ["Voice AI", "RAG chat", "Booking", "Escalation"],
-    problems: [
-      "Customers repeat the same questions, but every booking, order check, or next step still needs a person.",
-      "Your chatbot can produce a confident answer that is not supported by approved product or policy information.",
-      "Calls and chats end without a saved result, confirmation, escalation reason, or responsible owner.",
-    ],
-    system: [
-      { num: "01", title: "Map the conversation", copy: "Define the common requests, required information, approved answers, and points where the assistant may be uncertain." },
-      { num: "02", title: "Ground each answer", copy: "Retrieve from approved product, policy, account, or internal content and make limitations clear." },
-      { num: "03", title: "Use defined tools", copy: "Call booking, product, messaging, order, or support tools with validated fields and explicit confirmation." },
-      { num: "04", title: "Hand off with context", copy: "Send the collected details, tool results, and reason for escalation to the person taking over." },
-    ],
-    relatedProjects: ["ai-voice-receptionist", "clear-skin", "aboutface-chatbot"],
-    accent: "ember",
-  },
-  "product-engineering": {
-    slug: "product-engineering",
-    navLabel: "Full-Stack Product Engineering",
-    eyebrow: "Service 04 / Product delivery",
-    title: "Complete software products, from the first user flow to deployment.",
-    intro: "I help founders and teams define the product, design the interaction, build the frontend and backend, connect data and AI, handle failure states, test it, and prepare it for deployment.",
-    promise: "Build the user experience and the systems behind it as one product.",
-    signals: ["Product UX", "React", "FastAPI", "Delivery"],
-    problems: [
-      "Your product idea is split between design, frontend, backend, and AI work with no clear technical route from one to the next.",
-      "The main demo works, but mobile layouts, loading, errors, permissions, recovery, and edge cases remain fragile.",
-      "You have a model or automation, but users still need a clear interface and the team needs an operational handoff.",
-    ],
-    system: [
-      { num: "01", title: "Define the product", copy: "Agree on the user, problem, primary flow, business reason, scope, and evidence of success." },
-      { num: "02", title: "Design the system", copy: "Map the journey, screens, states, data contracts, integrations, and architecture before building." },
-      { num: "03", title: "Build and test", copy: "Implement the interface, services, database, integrations, and automated tests together." },
-      { num: "04", title: "Prepare for real use", copy: "Improve accessibility, mobile behavior, performance, failure recovery, deployment, documentation, and handoff." },
-    ],
-    relatedProjects: ["clear-skin", "retrieval-analytics", "portfolio-website", "smart-todo"],
-    accent: "gold",
-  },
-};
-
-export const capabilities = [
+// Homepage "Working stack" section: five layers, read top down like a rack.
+// Each logos entry is a key in src/v2/stackLogos.js.
+//
+// Most logos here are evidenced by a shipped project's `stack` above or by the
+// Technical Skills list in knowledge/henry-context.md. AWS and Kubernetes are the
+// exceptions: both were added on request and neither appears in that list yet, so the
+// assistant cannot currently back them up. Redis sits in Services rather than Data
+// because the one project using it runs it as the Celery broker.
+export const workingStack = [
   {
+    id: "interface",
     index: "01",
-    title: "AI Engineering & Agent Systems",
-    summary: "Build agents that answer from approved knowledge, use defined tools, and record how they reached each result.",
-    outcome: "AI products your team can test, control, and review.",
-    href: paths.aiEngineering,
+    label: "Interface",
+    note: "The surface a user actually touches.",
+    logos: ["react", "nextdotjs"],
   },
   {
+    id: "services",
     index: "02",
-    title: "Machine Learning & Data Products",
-    summary: "Turn predictive models, analytics, retrieval, and data pipelines into APIs and interfaces people can use.",
-    outcome: "Model results with visible inputs, confidence, checks, and review states.",
-    href: paths.machineLearning,
+    label: "Services & APIs",
+    note: "The request path and the jobs behind it.",
+    logos: ["python", "fastapi", "celery", "redis"],
   },
   {
+    id: "intelligence",
     index: "03",
-    title: "Conversational AI & Voice Systems",
-    summary: "Build chat and voice assistants that answer from approved content, use tools, confirm details, and hand off context.",
-    outcome: "Conversations that end with a resolved request or a clear human owner.",
-    href: paths.conversationalAI,
+    label: "AI & agents",
+    note: "Reasoning, tool use, and the evidence for each answer.",
+    logos: ["langgraph", "langchain", "huggingface"],
   },
   {
+    id: "data",
     index: "04",
-    title: "Full-Stack Product Engineering",
-    summary: "Design and build the interface, backend, data, integrations, tests, deployment, and recovery states together.",
-    outcome: "A complete product that works beyond the main demo flow.",
-    href: paths.product,
+    label: "Data & retrieval",
+    note: "Where state lives and how it is found again.",
+    logos: ["postgresql", "duckdb", "supabase", "pinecone"],
   },
-];
-
-export const stackGroups = [
-  { label: "AI systems", items: ["LangGraph", "LangChain", "RAG", "OpenAI", "Vapi"] },
-  { label: "ML & data", items: ["TensorFlow", "scikit-learn", "Pandas", "DuckDB", "SQL"] },
-  { label: "Product", items: ["React", "Next.js", "TypeScript", "Python", "FastAPI"] },
-  { label: "Operations", items: ["PostgreSQL", "Redis", "Docker", "Prometheus", "Grafana"] },
+  {
+    id: "delivery",
+    index: "05",
+    label: "Delivery & ops",
+    note: "Shipping it, then watching it run.",
+    logos: ["docker", "kubernetes", "aws", "prometheus", "grafana"],
+  },
 ];
 
 export const engagements = [
@@ -815,7 +725,7 @@ export const engagements = [
 export const evidence = [
   { value: "7", label: "Typed concierge actions", detail: "Clear Skin", href: paths.clearSkin },
   { value: "90.10%", label: "Classification accuracy", detail: "Fruit Quality Prediction", href: paths.fruitQuality },
-  { value: "4", label: "Explicit product concepts", detail: "No client claims", href: paths.work },
+  { value: "9", label: "Public repositories you can read", detail: "Every project but the NDA one", href: paths.work },
   { value: "3", label: "Built systems documented", detail: "Public or NDA-safe", href: paths.proof },
 ];
 

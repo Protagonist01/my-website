@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from api._lib.assistant import answer_portfolio_question  # noqa: E402
+from api._lib.config import BRANDS, brand_for_page  # noqa: E402
 
 MAX_BODY_BYTES = 24 * 1024
 RATE_LIMIT: dict[str, list[float]] = {}
@@ -57,6 +58,10 @@ def handle_request(method: str, raw_body: bytes, headers: dict[str, str] | None 
         return 400, response_headers, {"error": "Please send valid JSON."}
     message = body.get("message", "").strip() if isinstance(body.get("message"), str) else ""
     page = body.get("page", "/v2/")[:220] if isinstance(body.get("page"), str) else "/v2/"
+    # An unrecognised brand falls back to the visitor's route rather than erroring, so a
+    # stale cached bundle asking for a brand this deployment does not know still answers.
+    requested_brand = body.get("brand")
+    brand = requested_brand if isinstance(requested_brand, str) and requested_brand in BRANDS else brand_for_page(page)
     raw_history = body.get("history", [])
     history = [
         item for item in raw_history
@@ -65,7 +70,7 @@ def handle_request(method: str, raw_body: bytes, headers: dict[str, str] | None 
     if not message or len(message) > 1_200:
         return 400, response_headers, {"error": "Please send a message between 1 and 1,200 characters."}
     try:
-        answer = answer_portfolio_question(message=message, history=history, page=page)
+        answer = answer_portfolio_question(message=message, history=history, page=page, brand=brand)
         return 200, response_headers, answer
     except Exception as error:
         print(f"Portfolio chat request failed: {error}", file=sys.stderr)

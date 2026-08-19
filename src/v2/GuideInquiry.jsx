@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { enrichReferralFormData, recordReferralLead } from "./referralClient.js";
+import { CONTACT_EMAIL, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 
-const CONTACT_ENDPOINT = "https://formspree.io/f/mqevwkpl";
 const COMMERCE_SERVICE = "Commerce AI & Automation";
 const COMMERCE_CONTEXT_PATTERN = /\b(e-?commerce|shopify|online store|store pressure|revenue leak|cart|checkout|returns?|retention|inventory|margin|commerce brief)\b/i;
 const SERVICE_OPTIONS = [
@@ -85,14 +84,8 @@ export function GuideInquiry({
     formData.append("source", copy.source);
     if (conversationContext) formData.append("conversation_context", conversationContext.slice(0, 600));
     try {
-      enrichReferralFormData(formData);
-      const response = await fetch(CONTACT_ENDPOINT, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
-      });
-      if (!response.ok) throw new Error("The inquiry could not be sent.");
-      void recordReferralLead({
+      await submitContactForm(formData);
+      recordContactReferral({
         name: values.name,
         email: values.email,
         description: values.description,
@@ -102,8 +95,9 @@ export function GuideInquiry({
       setStep("sent");
       onSubmitted?.(values);
     } catch (submitError) {
+      console.error(submitError);
       setStatus("error");
-      setError(`${submitError.message} You can email hfadeni@gmail.com instead.`);
+      setError(`Your inquiry could not be sent. Your details are still here — please try again, or email ${CONTACT_EMAIL}.`);
     }
   };
 

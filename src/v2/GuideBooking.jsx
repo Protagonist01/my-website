@@ -156,6 +156,8 @@ export function GuideBooking({ onClose, onBooked }) {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setError("Please enter a valid email address.");
     setError("");
     setStatus("checking-email");
+
+    let verificationRequired = false;
     try {
       const response = await fetch("/api/cal/verify", {
         method: "POST",
@@ -164,15 +166,31 @@ export function GuideBooking({ onClose, onBooked }) {
       });
       const payload = await response.json();
       if (!response.ok) throw new Error(payload.error || "Email verification could not be checked.");
-      if (payload.required) {
-        await requestVerificationCode();
-        return;
-      }
-      setStatus("ready");
-      setStep("confirm");
+      verificationRequired = Boolean(payload.required);
     } catch (requestError) {
+      // The check itself failed, so we cannot tell whether verification is
+      // needed. Continue to confirmation: /api/cal/book re-checks and will ask
+      // for a code if one is actually required.
+      console.error(requestError);
       setStatus("ready");
       setStep("confirm");
+      return;
+    }
+
+    if (!verificationRequired) {
+      setStatus("ready");
+      setStep("confirm");
+      return;
+    }
+
+    // Verification is genuinely required, so a failure to send the code must
+    // surface rather than advancing to a step the visitor cannot complete.
+    try {
+      await requestVerificationCode();
+    } catch (verificationError) {
+      console.error(verificationError);
+      setStatus("error");
+      setError(verificationError.message);
     }
   };
 

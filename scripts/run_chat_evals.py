@@ -60,7 +60,11 @@ def evaluate_retrieval(case: dict[str, Any]) -> list[dict[str, Any]]:
     expected = case.get("expect", {}).get("retrievalHeadings", [])
     if not expected:
         return []
-    retrieved = assistant._retrieve_knowledge(case["prompt"], case.get("page", "/v2/"))
+    retrieved = assistant._retrieve_knowledge(
+        case["prompt"],
+        case.get("page", "/v2/"),
+        case.get("brand", "henry"),
+    )
     headings = retrieved.get("headings", [])
     return [
         _check(
@@ -162,6 +166,7 @@ def run_evaluations(dataset: dict[str, Any], mode: str, selected_ids: set[str] |
                     message=case["prompt"],
                     history=case.get("history", []),
                     page=case.get("page", "/v2/"),
+                    brand=case.get("brand", "henry"),
                 )
                 elapsed_ms = round((time.monotonic() - request_started) * 1000)
                 checks.extend(evaluate_response(case, response, elapsed_ms))

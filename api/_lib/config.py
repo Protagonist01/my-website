@@ -18,33 +18,22 @@ APPROVED_ROUTES = {
     "/": "Home",
     "/#about": "About Henry",
     "/#services": "Services",
-    "/#offers": "Offers",
     "/#work": "Featured work",
+    "/#stack": "Working stack",
     "/#contact": "Contact",
     "/v2/work/": "All work",
-    "/v2/about/": "About",
     "/v2/proof/": "Proof",
     "/v2/contact/": "Contact",
-    "/v2/services/ai-agents/": "AI agents",
-    "/v2/services/ai-workflows/": "AI workflows",
-    "/v2/services/ai-engineering/": "AI Engineering & Agent Systems",
-    "/v2/services/machine-learning/": "Machine Learning & Data Products",
-    "/v2/services/conversational-ai/": "Conversational AI & Voice Systems",
-    "/v2/services/product-engineering/": "Full-Stack Product Engineering",
-    "/v2/services/ecommerce-automation/": "E-commerce automation",
+    "/v2/storecraft/": "StoreCraft commerce systems",
     "/v2/referrals/": "Referral programme",
     "/v2/referrals/dashboard/": "Referral partner dashboard",
-    "/v2/offers/revenue-leak-audit/": "Revenue Leak Audit",
-    "/v2/offers/ai-support-concierge/": "AI Support Concierge",
-    "/v2/offers/ai-ops-dashboard/": "AI Ops Dashboard",
-    "/v2/offers/retention-automation/": "Retention Automation",
-    "/v2/offers/inventory-intelligence/": "Inventory Intelligence",
-    "/v2/offers/returns-automation/": "Returns Automation",
-    "/v2/offers/custom-automation/": "Custom Automation",
-    "/v2/work/framewise/": "Framewise",
-    "/v2/work/threadmark/": "Threadmark",
-    "/v2/work/cartpilot/": "CartPilot",
-    "/v2/work/marginguard/": "MarginGuard",
+    "/v2/storecraft/revenue-leak-audit/": "Revenue Leak Audit",
+    "/v2/storecraft/ai-support-concierge/": "AI Support Concierge",
+    "/v2/storecraft/ai-ops-dashboard/": "AI Ops Dashboard",
+    "/v2/storecraft/retention-automation/": "Retention Automation",
+    "/v2/storecraft/inventory-intelligence/": "Inventory Intelligence",
+    "/v2/storecraft/returns-automation/": "Returns Automation",
+    "/v2/storecraft/custom-automation/": "Custom Automation",
     "/v2/work/clear-skin/": "Clear Skin Concierge",
     "/v2/work/retrieval-analytics/": "Retrieval-Augmented Analytics",
     "/v2/work/self-healing-monitor/": "Self-Healing Monitor",
@@ -63,6 +52,38 @@ APPROVED_ROUTES = {
     "https://github.com/Protagonist01/smart-todo-app": "Smart Todo App repository",
     "https://github.com/Protagonist01/my-website": "Portfolio Website repository",
 }
+
+# StoreCraft is a separate brand with its own page, knowledge base, and assistant, so
+# it gets a narrower registry: the commerce pages, the commerce-relevant case studies,
+# and the two routes out. Selecting from APPROVED_ROUTES keeps the labels identical and
+# fails loudly at import if a route is ever renamed on one side only.
+STORECRAFT_ROUTE_KEYS = (
+    "/",
+    "/v2/contact/",
+    "/v2/storecraft/",
+    "/v2/storecraft/revenue-leak-audit/",
+    "/v2/storecraft/ai-support-concierge/",
+    "/v2/storecraft/ai-ops-dashboard/",
+    "/v2/storecraft/retention-automation/",
+    "/v2/storecraft/inventory-intelligence/",
+    "/v2/storecraft/returns-automation/",
+    "/v2/storecraft/custom-automation/",
+    "/v2/work/clear-skin/",
+    "/v2/work/aboutface-chatbot/",
+)
+STORECRAFT_ROUTES = {route: APPROVED_ROUTES[route] for route in STORECRAFT_ROUTE_KEYS}
+
+DEFAULT_BRAND = "henry"
+BRANDS = {
+    "henry": {"knowledge": "henry-context.md", "routes": APPROVED_ROUTES},
+    "storecraft": {"knowledge": "storecraft-context.md", "routes": STORECRAFT_ROUTES},
+}
+
+
+def brand_for_page(page: str) -> str:
+    """Pick the assistant brand from the visitor's route when the client omits one."""
+    return "storecraft" if isinstance(page, str) and "/v2/storecraft/" in page else DEFAULT_BRAND
+
 
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.4-mini")
 OPENROUTER_MODEL = os.environ.get("OPENROUTER_MODEL", "openai/gpt-5.4-mini")

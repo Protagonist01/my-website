@@ -1,15 +1,16 @@
 const routeMap = [
   { label: "Home", v1: "/", v2: "/v2/" },
   { label: "Work", v1: "/works/", v2: "/v2/work/" },
-  { label: "About", v1: "/about/", v2: "/v2/about/" },
-  { label: "Skills", v1: "/my-stack/", v2: "/v2/about/#stack" },
-  { label: "Experience", v1: "/experience/", v2: "/v2/about/#experience" },
+  { label: "About", v1: "/about/", v2: "/#about" },
+  { label: "Skills", v1: "/my-stack/", v2: "/#stack" },
   { label: "Evidence", v1: "/testimonial/", v2: "/v2/proof/" },
   { label: "Contact", v1: "/contact/", v2: "/v2/contact/" },
-  { label: "AI engineering", v1: "/works/ai-agents/", v2: "/v2/services/ai-engineering/" },
-  { label: "Machine learning", v1: "/works/ai-workflows/", v2: "/v2/services/machine-learning/" },
-  { label: "Conversational AI", v1: "/ecommerce%20demo%20gallery/", v2: "/v2/services/conversational-ai/" },
-  { label: "Full-stack product engineering", v1: "/works/fullstack/", v2: "/v2/services/product-engineering/" },
+  // v2 has no per-capability pages, so the old service pages all land on the homepage
+  // Capabilities section. The commerce gallery is the exception: it has a real successor.
+  { label: "AI engineering", v1: "/works/ai-agents/", v2: "/#services" },
+  { label: "Machine learning", v1: "/works/ai-workflows/", v2: "/#services" },
+  { label: "Conversational AI", v1: "/ecommerce%20demo%20gallery/", v2: "/v2/storecraft/" },
+  { label: "Full-stack product engineering", v1: "/works/fullstack/", v2: "/#services" },
   { label: "Project galleries", v1: "/demo%20gallery/", v2: "/v2/work/#experiments" },
 ];
 
