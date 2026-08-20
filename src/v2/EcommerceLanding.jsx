@@ -86,6 +86,21 @@ function Arrow() {
   return <span aria-hidden="true">↗</span>;
 }
 
+// The phone's seven clips are ~8MB and preload eagerly, so on a phone it has to be absent from the
+// tree rather than hidden: display:none still fetches them. The query is read during the first
+// render, not in the effect, or the requests are already away before the effect can prevent them.
+function useCompactViewport() {
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 700px)").matches);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 700px)");
+    const update = () => setCompact(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  return compact;
+}
+
 function useCommerceMotion(rootRef) {
   useEffect(() => {
     const root = rootRef.current;
@@ -116,22 +131,28 @@ function useCommerceMotion(rootRef) {
           root.querySelector(".commerce-hero h1"),
           root.querySelector(".commerce-hero__copy > p"),
         ].filter(Boolean);
+        // The graphic is absent below 700px, where its clips are too heavy to be worth a decorative
+        // mockup, so both hero tweens have to be conditional: GSAP warns on a target it cannot
+        // resolve, whether that is a selector matching nothing or an empty array.
+        const heroGraphic = root.querySelector(".commerce-hero__graphic");
         const intro = gsap.timeline({ defaults: { ease: "power4.out" } });
         intro
           .from(heroText, { y: 54, autoAlpha: 0, duration: 0.95, stagger: 0.09 })
-          .from(".commerce-actions", { clipPath: "inset(0 100% 0 0)", autoAlpha: 0, duration: 0.75 }, "-=.58")
-          .from(".commerce-hero__graphic", { scale: 0.88, autoAlpha: 0, duration: 1.25 }, "-=1");
+          .from(".commerce-actions", { clipPath: "inset(0 100% 0 0)", autoAlpha: 0, duration: 0.75 }, "-=.58");
+        if (heroGraphic) intro.from(heroGraphic, { scale: 0.88, autoAlpha: 0, duration: 1.25 }, "-=1");
 
-        gsap.timeline({
+        const heroParallax = gsap.timeline({
           scrollTrigger: {
             trigger: ".commerce-hero",
             start: "top top",
-            end: "bottom top",
+            // Without the phone the hero is roughly half as tall, so scrubbing over its own
+            // height alone would run the fade at twice the speed. Extend the window to match.
+            end: () => window.matchMedia("(max-width: 700px)").matches ? "bottom+=80% top" : "bottom top",
             scrub: 1,
           },
         })
-          .to(".commerce-hero__copy", { y: -72, autoAlpha: 0.38, ease: "none" }, 0)
-          .to(".commerce-hero__graphic", { y: 92, ease: "none" }, 0);
+          .to(".commerce-hero__copy", { y: -72, autoAlpha: 0.38, ease: "none" }, 0);
+        if (heroGraphic) heroParallax.to(heroGraphic, { y: 92, ease: "none" }, 0);
 
         gsap.from(".commerce-pressure-index > header", {
           y: 64,
@@ -310,6 +331,7 @@ export function CommerceInquiry({ sectionId = "commerce-inquiry" }) {
 
 export default function EcommerceLanding({ offerRail }) {
   const pageRef = useRef(null);
+  const compact = useCompactViewport();
   useCommerceMotion(pageRef);
 
   return (
@@ -324,7 +346,7 @@ export default function EcommerceLanding({ offerRail }) {
             <a className="commerce-button commerce-button--text" href="/v2/contact/" data-contact-context="Store pressure: " onClick={() => trackCommerceEvent("cta_clicked", { cta: "discuss_store_pressure", location: "hero" })}>Discuss store pressure <Arrow /></a>
           </div>
         </div>
-        <div className="commerce-hero__graphic"><CommercePhone /></div>
+        {!compact && <div className="commerce-hero__graphic"><CommercePhone /></div>}
       </section>
 
       <section className="commerce-pressure-index" aria-labelledby="commerce-pressure-title">

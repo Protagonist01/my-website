@@ -511,6 +511,26 @@ export function EndingSequence({ brand = replicaContent, cover }) {
         gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
         return;
       }
+      // On StoreCraft mobile the cover is the inquiry form, which is far taller than one panel, so
+      // the CSS unstacks the overlay and lets the form scroll normally. That collapses `travel` to
+      // nothing, so progress would saturate the moment the section's top cleared the viewport and
+      // the wordmark would fire while the visitor was still at the top of the form. Detect it from
+      // layout rather than a page slug, and take the floor from the wordmark's own seat instead.
+      const stacked = sticky ? getComputedStyle(sticky).position !== "sticky" : false;
+      if (stacked) {
+        gsap.set([cover, under], { clearProps: "transform" });
+        // The mask, not the inner span: the span is what these timelines translate, so measuring
+        // it would feed the animation back into its own trigger.
+        const seat = wordmark.parentElement.getBoundingClientRect().bottom;
+        if (seat <= window.innerHeight + 2 && !floorReached) {
+          floorReached = true;
+          raiseWordmark();
+        } else if (seat > window.innerHeight + 24 && floorReached) {
+          floorReached = false;
+          lowerWordmark();
+        }
+        return;
+      }
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
@@ -583,7 +603,7 @@ function useReplicaMotion(rootRef) {
         // re-measured. Without it a rotate or a collapsing URL bar leaves the portrait's rise
         // fixed at the old height while the hole reserved for it moves, which is the desync this
         // scene is built to avoid.
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true, invalidateOnRefresh: true } });
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: replicaAnimation.mobileScrub, invalidateOnRefresh: true } });
         const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
         const portraitWrap = root.querySelector(".replica-portrait-wrap");
@@ -635,7 +655,7 @@ function useReplicaMotion(rootRef) {
           trigger: ".replica-statement p",
           start: "top bottom",
           end: "center center",
-          scrub: true,
+          scrub: replicaAnimation.mobileScrub,
           invalidateOnRefresh: true,
         } : {
           trigger: ".replica-statement-scene",
@@ -654,7 +674,7 @@ function useReplicaMotion(rootRef) {
           trigger: services,
           start: mobileScroll ? "top bottom" : "top top",
           end: mobileScroll ? "top top" : "bottom bottom",
-          scrub: mobileScroll ? true : .6,
+          scrub: mobileScroll ? replicaAnimation.mobileScrub : .6,
           invalidateOnRefresh: true,
         },
       });
@@ -749,40 +769,6 @@ function useReplicaMotion(rootRef) {
   }, [rootRef]);
 }
 
-function useMobileVisualViewport(rootRef) {
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return undefined;
-    const mobile = window.matchMedia("(max-width: 700px)");
-    let frame = 0;
-
-    const update = () => {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        if (!mobile.matches) {
-          root.style.removeProperty("--mobile-visual-height");
-          return;
-        }
-        const height = Math.ceil(window.visualViewport?.height || window.innerHeight);
-        root.style.setProperty("--mobile-visual-height", `${height}px`);
-      });
-    };
-
-    update();
-    window.visualViewport?.addEventListener("resize", update, { passive: true });
-    window.addEventListener("orientationchange", update, { passive: true });
-    mobile.addEventListener("change", update);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.visualViewport?.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-      mobile.removeEventListener("change", update);
-      root.style.removeProperty("--mobile-visual-height");
-    };
-  }, [rootRef]);
-}
-
 // AWS is the one mark here that is a wordmark lockup rather than a square glyph: the official
 // artwork is "aws" set under the smile, so it is roughly 5:3 and its top and bottom thirds of
 // the 24x24 box are empty. Cropping the viewBox to the ink and letting the width follow from
@@ -844,7 +830,6 @@ export default function ReplicaHome({ works }) {
   const root = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
   const [contactContext, setContactContext] = useState("");
-  useMobileVisualViewport(root);
   useReplicaMotion(root);
   const openContact = useCallback((context = "") => {
     setContactContext(context);

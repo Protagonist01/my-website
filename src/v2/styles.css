@@ -545,7 +545,7 @@ button, a { color: inherit; }
     pointer-events: none;
   }
   .v2-offer-rail + .replica-ending { z-index: 1; margin-top: 0; }
-  .v2-offers-mobile-sticky { position: sticky; top: 0; height: var(--mobile-visual-height, 100dvh); min-height: 0; overflow: hidden; isolation: isolate; background: #000; pointer-events: auto; will-change: transform; }
+  .v2-offers-mobile-sticky { position: sticky; top: 0; height: 100svh; min-height: 0; overflow: hidden; isolation: isolate; background: #000; pointer-events: auto; will-change: transform; }
   .v2-offers-mobile-sticky::before { position: absolute; z-index: 10; inset: -2px; content: ""; background: #000; pointer-events: none; }
   .v2-offers-mobile-world { position: absolute; z-index: 20; inset: -2px; overflow: hidden; isolation: isolate; background: #000; opacity: 0; will-change: opacity; }
   .v2-offers-mobile-ambient, .v2-offers-mobile-grid { position: absolute; z-index: 0; inset: 0; pointer-events: none; }
