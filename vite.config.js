@@ -1,25 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import { cpSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
-
-function copyStaticDirs(directories) {
-  return {
-    name: "copy-static-directories",
-    closeBundle() {
-      const outDir = resolve(__dirname, "dist");
-
-      directories.forEach((directory) => {
-        const sourceDir = resolve(__dirname, directory);
-        const targetDir = resolve(outDir, directory);
-
-        if (existsSync(sourceDir)) {
-          cpSync(sourceDir, targetDir, { recursive: true });
-        }
-      });
-    }
-  };
-}
 
 function localApiRoutes() {
   const routes = new Map([
@@ -66,7 +48,7 @@ export default defineConfig(({ mode }) => {
     define: {
       __RESUME_AVAILABLE__: JSON.stringify(resumeAvailable),
     },
-    plugins: [react(), localApiRoutes(), copyStaticDirs(["web demos"])],
+    plugins: [react(), localApiRoutes()],
     build: {
       rollupOptions: {
         input: {

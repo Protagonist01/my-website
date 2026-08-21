@@ -199,15 +199,12 @@ Payout account details are available only through the server service role; partn
 │   └── migrations/               Referral tables, RLS, and commission trigger
 ├── tests/                        Assistant, booking & navigation tests
 ├── v2/                           HTML entry points for V2 pages
-├── demo gallery/                 AI & automation demo gallery
-├── ecommerce demo gallery/       E-commerce demo gallery
-├── web demos/                    Static standalone demos (copied at build)
 ├── index.html                    Primary entry point
 ├── vite.config.js                Multi-page build & local API middleware
 └── vercel.json                   Deployment, functions, security headers
 ```
 
-> Legacy and experimental directories remain in the repo. The current experience lives in `src/v2/`, `v2/`, `api/`, and `knowledge/`.
+> The current experience lives in `src/v2/`, `v2/`, `api/`, and `knowledge/`. V1 legacy pages are preserved in root directories as historical archives.
 
 ---
 
