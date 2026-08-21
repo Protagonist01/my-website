@@ -78,6 +78,8 @@ export default defineConfig(({ mode }) => {
         "v2-case-self-healing-monitor": resolve(__dirname, "v2/work/self-healing-monitor/index.html"),
         "v2-case-ai-voice-receptionist": resolve(__dirname, "v2/work/ai-voice-receptionist/index.html"),
         "v2-case-code-review-agent": resolve(__dirname, "v2/work/code-review-agent/index.html"),
+        "v2-case-url-shortener": resolve(__dirname, "v2/work/url-shortener/index.html"),
+        "v2-case-realtime-chat": resolve(__dirname, "v2/work/realtime-chat/index.html"),
         "v2-note-aboutface-chatbot": resolve(__dirname, "v2/work/aboutface-chatbot/index.html"),
         "v2-note-smart-todo": resolve(__dirname, "v2/work/smart-todo/index.html"),
         "v2-note-portfolio-website": resolve(__dirname, "v2/work/portfolio-website/index.html"),

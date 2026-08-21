@@ -56,6 +56,9 @@
 .v2-cs__tag--demo { background: var(--gray-200); color: var(--gray-700); }
 .v2-cs__tag--client { background: var(--gray-800); color: var(--gray-0); }
 .v2-cs__tag--category { background: transparent; border: 1px solid var(--gray-300); color: var(--gray-700); }
+/* Only set when the project has a `liveUrl`: a deployment anyone can open. */
+.v2-cs__tag--live { display: inline-flex; gap: .4rem; align-items: center; background: #e3f3e9; color: #146c43; }
+.v2-cs__tag--live::before { width: .38rem; height: .38rem; border-radius: 50%; background: currentcolor; content: ""; }
 
 .v2-cs__title {
   max-width: 22ch;
