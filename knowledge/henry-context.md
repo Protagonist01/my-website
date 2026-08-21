@@ -1,7 +1,7 @@
 # Henry Fadeni - Public Portfolio Knowledge Base
 
-Version: 1.8
-Last verified: 2026-07-26
+Version: 1.9
+Last verified: 2026-08-21
 Scope: V2 portfolio assistant  
 Owner: Henry Fadeni  
 Public contact: hfadeni@gmail.com  
@@ -331,11 +331,12 @@ Deliverables: workflow map, system integration, and control layer.
 - FastAPI and REST APIs
 - Node.js and Next.js
 - PostgreSQL, SQLite, SQL, and DuckDB
-- Redis
+- Redis for caching, rate limiting, and pub/sub fan-out
 - Pandas and PySpark
 - ETL and data workflows
-- Server-Sent Events
+- WebSockets and Server-Sent Events
 - Webhooks and asynchronous jobs
+- Database migrations with Alembic
 
 ### Frontend and Product
 
@@ -437,6 +438,7 @@ Dates: April 2022-July 2022.
 Use the current project label from this list and preserve its meaning:
 
 - Built product / public repository: implemented system with a public source repository.
+- Built product / live deployment: implemented system with a public source repository and a public deployment anyone can open. The deployment runs on a free hosting tier, so present it as a working demonstration of the system, never as a capacity or uptime claim.
 - Built product / controlled SRE demonstration: implemented system demonstrated against intentionally faulty services, not unattended production infrastructure.
 - Public demo / mocked calendar integration: implemented demonstration whose availability and booking records are simulated.
 - Built client system / NDA-safe archive: implementation is documented without exposing restricted client material.
@@ -445,17 +447,19 @@ Use the current project label from this list and preserve its meaning:
 
 Every project in the work collection has either a public repository or a delivered client system behind it. Never convert a target, threshold, or projection into a measured production outcome.
 
+Two projects carry a public deployment as well as a repository: the URL Shortener API and the Realtime Chat Service. Their cards and case-study pages show a "Live" marker and a link labelled "Open live app" or "Open the deployment". Only those two are live. Do not describe any other project as live, hosted, running, or deployed, and do not offer a URL for one.
+
 Every project also carries exactly one category tag, shown on its card and case-study page:
 
 - AI Engineering: Retrieval-Augmented Analytics, AI Voice Receptionist, Fruit Quality Prediction, AboutFace Chatbot.
 - Automation: Self-Healing Monitor, AI Code Review Agent, Automated Testimony Operations.
-- Full-Stack Product Engineering: Clear Skin Concierge, Smart Todo App, Portfolio Website.
+- Full-Stack Product Engineering: Clear Skin Concierge, URL Shortener API, Realtime Chat Service, Smart Todo App, Portfolio Website.
 
 The category describes the kind of engineering work, and the evidence label above describes what can be verified. They are separate and should never be substituted for each other.
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 and verified on 2026-08-18. The work collection is organized into five featured stories, two archive projects, and three hobby projects.
+Decision status: implemented in V2 and verified on 2026-08-21. The work collection is organized into seven featured stories, two archive projects, and three hobby projects. Six of the seven featured stories appear on the homepage; Clear Skin Concierge is the seventh and leads the client-work section of the Work page instead.
 
 Publication rules:
 
@@ -470,8 +474,10 @@ Published full case studies:
 3. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
 4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
 5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
-6. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
-7. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
+6. URL Shortener API: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
+7. Realtime Chat Service: /v2/work/realtime-chat/. Core story: how a chat room stays correct when the people in it are spread across more than one worker. Live deployment; the tests prove behaviour, not throughput.
+8. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
+9. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
 
 Hobby project treatments:
 
@@ -642,6 +648,89 @@ Relevant questions:
 - How does Henry decide what an agent may execute automatically?
 - Can Henry work with Prometheus, audit logs, and operator dashboards?
 
+### URL Shortener API
+
+Status: Built product / live deployment.
+Repository: https://github.com/Protagonist01/url-shortener
+Live deployment: https://url-shortener-api-9rw4.onrender.com/
+Dedicated V2 case study: /v2/work/url-shortener/
+Category tag: Full-Stack Product Engineering.
+Stack shown on the card: FastAPI, PostgreSQL, Redis, Celery.
+
+Summary:
+
+> A link service with non-sequential short codes, a Redis read cache in front of PostgreSQL, sliding-window rate limits, and click analytics kept out of the redirect path.
+
+The problem it answers: shortening a URL is one insert, but serving it is the hard part. The redirect has to stay fast under repeat traffic, short codes must not be guessable by counting upwards, abusive clients need throttling before they reach the database, and click analytics cannot be allowed to slow the one request users actually wait on.
+
+Key implementation evidence:
+
+- Short codes are the row id, XOR-salted, then base62-encoded, so links created in sequence do not produce adjacent codes.
+- Redis read cache on a resolved short code with a 3600-second TTL, falling back to PostgreSQL only on a miss.
+- Three sliding-window rate limits in Redis: 100, 20, and 5 requests per 60 seconds. The limiter fails closed when Redis is unreachable.
+- Click tracking runs after the response is returned, so no user waits on the insert, the user-agent parse, or the geolocation call.
+- Four PostgreSQL tables with Alembic migrations applied automatically on deploy.
+- Per-link analytics aggregation plus a Prometheus metrics endpoint for request counts and latencies.
+- 18 API tests across creation, redirect, rate limits, expiry, and analytics.
+- A light operator interface over the API.
+
+Important qualifiers:
+
+- The repository publishes no latency or throughput benchmark. The counts above describe what is built, not how fast it runs.
+- The XOR salt hides sequence, not identity. It is obscurity, not access control.
+- A click is lost if the process restarts inside the roughly ten-millisecond window between the response and the write.
+- Client IPs come from x-forwarded-for with no trusted-proxy allow-list, so a caller can spoof the address the rate limiter and geolocation see.
+- Geolocation is a best-effort call to a free third-party API capped at 45 requests per minute with no result caching, so country data is patchy under load.
+- The live deployment is a single free-tier web service running the FastAPI background-task tracker. The Celery worker, beat scheduler, and scheduled expiry cleanup exist in the repository but are not running there.
+
+Relevant questions:
+
+- Has Henry built a backend API from scratch?
+- Can Henry work with Redis caching and rate limiting?
+- How does Henry keep analytics off a latency-sensitive path?
+- Which of Henry's projects can I open and use right now?
+
+### Realtime Chat Service
+
+Status: Built product / live deployment.
+Repository: https://github.com/Protagonist01/realtime-chat
+Live deployment: https://realtime-chat-9kwe.onrender.com/
+Dedicated V2 case study: /v2/work/realtime-chat/
+Category tag: Full-Stack Product Engineering.
+Stack shown on the card: FastAPI, WebSockets, Redis, SQLite.
+
+Summary:
+
+> A multi-room chat backend where sockets on separate workers stay in sync through one Redis channel per room, with JWT authentication, presence counters, and cursor-paginated history.
+
+The problem it answers: a single-process chat server is a set of sockets and a loop. The moment two workers serve the same room, that set only reaches whoever happened to land on that process. Messages, presence, and history all have to stay correct across workers without every worker subscribing to every room.
+
+Key implementation evidence:
+
+- A JWT is presented before the socket is accepted, so an invalid token never reaches a room.
+- One Redis channel per room. A worker subscribes on the first joiner it serves and releases the subscription after the last one leaves, so subscriptions are reference-counted rather than held open.
+- Messages are persisted, then published to the room channel rather than written straight to local sockets, so there is one delivery path even when sender and recipient share a worker.
+- Presence is a Redis hash counter per user, so the same person on two devices is counted once.
+- History is cursor-paginated at 15 messages per page with no overlapping ids, so a page stays stable while new messages keep arriving.
+- A cross-process test asserts that two workers exchange messages.
+- A browser client over the WebSocket API.
+
+Important qualifiers:
+
+- No latency, throughput, or concurrent-connection figure is published. The tests prove behaviour, not performance.
+- History lives in SQLite on Render's ephemeral filesystem and is lost on every redeploy.
+- The free-tier instance sleeps after fifteen minutes idle, so the first connection after a quiet spell waits roughly thirty seconds on a cold start. Say this before sending someone to the link.
+- Presence counters carry no TTL, so a worker that dies without cleaning up leaves its users showing as online.
+- If a worker's Redis subscriber connection drops, that process stops receiving room messages without raising an error.
+- The cross-worker test runs two ASGI applications inside one process rather than two separate operating-system processes.
+
+Relevant questions:
+
+- Has Henry built realtime or WebSocket systems?
+- How does Henry scale sockets across more than one process?
+- How does Henry handle presence and message history?
+- Which of Henry's projects can I open and use right now?
+
 ### Feijoa Fruit Quality ML System
 
 Status: Built applied-ML system / public archive with a deployed browser demo.
@@ -764,8 +853,17 @@ The assistant may cite these original repositories because they match projects d
 - https://github.com/Protagonist01/ai-voice-receptionist
 - https://github.com/Protagonist01/clear-skin-concierge-site
 - https://github.com/Protagonist01/self-healing-monitor
+- https://github.com/Protagonist01/url-shortener
+- https://github.com/Protagonist01/realtime-chat
 - https://github.com/Protagonist01/my-website
 - https://github.com/Protagonist01/smart-todo-app
+
+Two of these also have a public deployment the assistant may link:
+
+- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/
+- Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
+
+Both run on a free hosting tier. Offer them as working demonstrations, mention that the chat instance sleeps when idle and takes roughly thirty seconds to wake, and never present either URL as evidence of production scale.
 
 Smart Todo is approved only for direct questions and compact project-card context. Do not proactively feature it, call it an AI or LLM product, or treat it as a full case study. Do not use the forked data-engineer-handbook as evidence of Henry's authored work. Do not proactively promote stock-trading-python-app, medical-aesthetics-industry-ai-agent, the profile README repository, or other experiments unless Henry later adds them to the approved showcase list.
 
@@ -850,7 +948,7 @@ Recommend Machine Learning & Data Products when the core need involves predictiv
 
 Recommend Conversational AI & Voice Systems when the core need involves grounded chat, real-time voice, customer or staff guidance, booking, messaging tools, or conversation-to-human handoff.
 
-Recommend Full-Stack Product Engineering when the visitor needs a complete interface, backend, API, data model, AI integration, responsive experience, or launch-ready application.
+Recommend Full-Stack Product Engineering when the visitor needs a complete interface, backend, API, data model, AI integration, responsive experience, or launch-ready application. It also covers backend-only needs with no AI in them: an API, a caching or rate-limiting layer, realtime sockets, or a data model. Point those visitors at the URL Shortener API and the Realtime Chat Service, which are the two projects that show backend engineering on its own.
 
 Multiple services may apply. Explain the primary recommendation first, then mention the supporting capability.
 
@@ -881,19 +979,23 @@ Display the homepage featured work in this order:
 1. Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
 2. Self-Healing Monitor: /v2/work/self-healing-monitor/
 3. AI Code Review Agent: /v2/work/code-review-agent/
-4. AI Voice Receptionist: /v2/work/ai-voice-receptionist/
+4. URL Shortener API: /v2/work/url-shortener/
+5. Realtime Chat Service: /v2/work/realtime-chat/
+6. AI Voice Receptionist: /v2/work/ai-voice-receptionist/
+
+Entries 4 and 5 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these six is titled by the projects themselves and carries no eyebrow label above it.
 
 ### Work Page Structure
 
 The V2 Work page presents the portfolio in three levels so visitors can understand the collection quickly:
 
-1. Four featured case studies in the same order as the homepage featured work.
+1. Six featured case studies in the same order as the homepage featured work.
 2. Client work and archive in this exact order: Clear Skin Concierge, Automated Testimony Operations, and Fruit Quality Prediction.
 3. Three hobby projects: AboutFace Chatbot, Smart Todo App, and Portfolio Website.
 
 Every project on the page has either a public GitHub repository or a delivered client system behind it. Each project also carries one category tag: AI Engineering, Full-Stack Product Engineering, or Automation.
 
-The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Work-page and homepage cards use purpose-built editorial project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These covers explain the project context; they must not be treated as generic evidence of a shipped client interface. Project status and qualifiers remain the source of truth. Individual case-study pages carry no hero image; they open on the title, lead, and verified facts.
+The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Work-page and homepage cards use purpose-built editorial project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These covers explain the project context; they must not be treated as generic evidence of a shipped client interface. The URL Shortener API and Realtime Chat Service have no cover photograph; their cards render a built diagram of the system instead, which is a drawing of the architecture and not a screenshot of the running app. Project status and qualifiers remain the source of truth. Individual case-study pages carry no hero image; they open on the title, lead, and verified facts.
 
 All case-study and offer pages share one scroll-synchronous chapter navigator. The progress line begins at zero, advances continuously with the real chapter positions, and must never jump ahead of the current scroll. The five-step project story follows the same rule on desktop and uses these labels: Problem, What I found, Decision, How it works, and Result. Mobile uses explicit taps instead. Desktop e-commerce offer media must use the same viewport-position transformation for every offer, including the last card.
 
@@ -911,6 +1013,8 @@ not link anywhere. Never offer a /v2/services/ link; send service questions to
 - Self-Healing Monitor: /v2/work/self-healing-monitor/
 - AI Voice Receptionist: /v2/work/ai-voice-receptionist/
 - AI Code Review Agent: /v2/work/code-review-agent/
+- URL Shortener API: /v2/work/url-shortener/
+- Realtime Chat Service: /v2/work/realtime-chat/
 - AboutFace Chatbot hobby project: /v2/work/aboutface-chatbot/
 - Smart Todo App hobby project: /v2/work/smart-todo/
 - Portfolio Website hobby project: /v2/work/portfolio-website/
@@ -979,13 +1083,29 @@ Suggestions should be relevant to the active page and conversation state. Do not
 
 - Can Henry build the frontend and backend?
 - Show me a complete AI product.
+- Show me a backend Henry built and deployed.
 - What does a prototype sprint include?
 
 ### Featured Projects Page
 
 - Which projects are fully built?
+- Which projects can I open and use right now?
 - Which projects have public source code?
 - Compare Clear Skin and the About Face chatbot.
+
+### URL Shortener Project
+
+- Why are the short codes not sequential?
+- How does click tracking stay off the redirect path?
+- Open the live app.
+- Open the public repository.
+
+### Realtime Chat Project
+
+- How do two workers stay in sync?
+- Why is presence a counter instead of a flag?
+- Open the live app.
+- Open the public repository.
 
 ### Clear Skin Project
 
@@ -1055,6 +1175,19 @@ Yes. The Feijoa Fruit Quality system combines image classification and regressio
 
 Yes. His public work includes React and Next.js interfaces, FastAPI and Node.js services, databases, APIs, AI orchestration, testing, observability, and deployment. Scope still needs to be discussed for each project.
 
+### Which of Henry's projects can I open and use right now?
+
+Two, both deployed and open to anyone:
+
+- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/ with its case study at /v2/work/url-shortener/.
+- Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/ with its case study at /v2/work/realtime-chat/.
+
+Both run on a free hosting tier, so offer them as working demonstrations rather than production systems. Mention that the chat instance sleeps after fifteen minutes idle and takes roughly thirty seconds to wake. The other projects have public repositories to read but no deployment to open, so never invent a URL for one.
+
+### Has Henry built backend infrastructure rather than AI features?
+
+Yes. The URL Shortener API and the Realtime Chat Service are both backend-first builds with a light interface on top. The shortener covers Redis caching, sliding-window rate limiting, non-sequential code generation, deferred analytics, migrations, and Prometheus metrics. The chat service covers JWT-authenticated WebSockets, reference-counted Redis fan-out across workers, presence counters, and cursor-paginated history. Neither publishes a latency or throughput benchmark, so describe what they implement rather than how fast they run.
+
 ### What does Henry charge?
 
 No public fixed pricing is listed. Recommend a project-discovery call or project inquiry so Henry can understand the scope.
@@ -1123,8 +1256,17 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 - https://github.com/Protagonist01/ai-voice-receptionist
 - https://github.com/Protagonist01/clear-skin-concierge-site
 - https://github.com/Protagonist01/self-healing-monitor
+- https://github.com/Protagonist01/url-shortener
+- https://github.com/Protagonist01/realtime-chat
 - https://github.com/Protagonist01/my-website
 - https://github.com/Protagonist01/smart-todo-app
+
+### Live Deployment Sources
+
+- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/
+- Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
+
+Both are free-tier deployments supplied by Henry on 2026-08-21. No other project in this document has a public deployment.
 
 ### Commerce Research Sources
 
