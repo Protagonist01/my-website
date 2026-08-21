@@ -237,8 +237,18 @@
 .replica-footer__statement span { display: block; }
 .replica-footer__links, .replica-footer__contact { padding-top: 42px; }
 .replica-footer__links h2, .replica-footer__contact h2 { margin: 0 0 22px; font-size: 24px; font-weight: 500; line-height: 1; letter-spacing: -.03em; }
-.replica-footer__links > div { display: grid; max-width: 280px; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
-.replica-footer__links a { display: inline-flex; align-items: center; justify-content: center; height: 35px; padding: 0 15px; border: 1px solid var(--light-text); border-radius: 7px; background: var(--light-text); color: var(--ink); font-size: 14px; line-height: 1; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
+/* Every pill is stretched to its track, so the horizontal padding here was never visible
+   spacing — it was a min-width. At 15px a side the longest labels ("Start with the audit"
+   and "How the work runs", 111px of text at 14px Neue Montreal) needed 144px against a
+   136px track, so they wrapped to two lines inside a pill whose height is fixed at 35px.
+   At 10px they need 133px and fit, and nothing else moves: the pills are still 136px wide
+   with their text centred, which is 12px clear of the longest label either side.
+   auto-fit rather than a fixed pair of columns because the middle footer track goes fluid
+   below 901px and a 320px phone leaves less than the pair needs; below 276px of room the
+   block drops to one full-width column rather than squeezing two. nowrap is the guarantee
+   that no label returns to two lines. */
+.replica-footer__links > div { display: grid; max-width: 280px; grid-template-columns: repeat(auto-fit, minmax(134px, 1fr)); gap: 8px; }
+.replica-footer__links a { display: inline-flex; align-items: center; justify-content: center; height: 35px; padding: 0 10px; border: 1px solid var(--light-text); border-radius: 7px; background: var(--light-text); color: var(--ink); font-size: 14px; line-height: 1; white-space: nowrap; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
 .replica-footer__links a:hover { background: transparent; color: var(--light-text); }
 .replica-footer__links a:focus-visible, .replica-footer__contact a:focus-visible { outline: 2px solid var(--light-text); outline-offset: 3px; }
 .replica-footer__contact a { color: var(--light-text); font-size: 16px; text-decoration: none; }
@@ -284,6 +294,11 @@
      "/DEVING SINCE" line and the measured gap under "Hey!" where they already worked, so a
      taller image costs no extra height in the copy below it. */
   .replica-intro__sticky { --mobile-portrait-top: 54%; --mobile-portrait-width: 155px; --mobile-portrait-height: 206px; --mobile-about-gap: 270px; }
+  /* The nav is fixed and opaque across y30-90, so any anchor jump or focused field that the browser
+     scrolls to the top of the viewport lands underneath it. "Send an inquiry" in the nav and in the
+     footer both point at the form, and without this the textarea arrives with its first line behind
+     the pill. 104px is the nav's own floor plus a little air. */
+  html { scroll-padding-top: 104px; }
   .replica-nav { top: 30px; width: min(300px, calc(100vw - 30px)); height: 60px; }
   .replica-nav.is-open { height: min(var(--replica-nav-open-height), calc(100svh - 60px)); height: min(var(--replica-nav-open-height), calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
@@ -322,52 +337,70 @@
   .replica-services { height: 100svh; }
   .replica-services__sticky { align-items: start; }
   .replica-services__inner { width: calc(100% - 36px); padding: 132px 0 16px; }
-  .replica-services__inner > h2 { margin-bottom: 12px; font-size: 38px; }
+  /* The heading has to out-space a row, not match one. Each article carries 12px of padding
+     top and bottom, so at a 12px heading margin the air above the first capability was 24px
+     and the air between two capabilities 25px — identical, which is why the heading read as
+     another row rather than a heading. This breakpoint also compresses the type contrast to
+     38/22 where the desktop has 70/31, so size alone cannot carry the hierarchy here either.
+     36px puts 48px above the list against 25px between rows. The pinned section has the room:
+     the list ended 333px clear of the bottom of a 375x812 viewport before this. */
+  .replica-services__inner > h2 { margin-bottom: 36px; font-size: 38px; }
   .replica-services article { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 12px 0; }
   .replica-services h3 { max-width: 16ch; margin-bottom: 8px; font-size: 22px; line-height: 1.02; }
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-stack__inner { width: calc(100% - 36px); padding: 0; }
   .replica-stack__eyebrow { margin-bottom: 30px; }
   .replica-end-container { width: calc(100% - 48px); }
-  /* --replica-vh is 100svh, the same stable unit the intro, statement, services and stack scenes
-     pin against. The panel used to track the live visualViewport instead, so every URL-bar
-     collapse resized the section mid-scroll and the page visibly grew while scrolling back up.
-     svh is the URL-bar-visible height, so it never changes during a scroll and the panel can
-     never be taller than what is on screen.
+  /* The ending is not a pinned overlay on phones. It was: one --replica-vh tall with
+     overflow: hidden, the paper contact card on top, the ink footer beneath, and the card sliding
+     up to reveal it. That only works while the card fits inside one screen, and Henry's card does
+     not. Measured at 393x680 the grid runs 758px against a 680px panel, at 360x640 it runs 752px
+     against 640px, and even at 375x812 it runs 854px against 812px. The surplus was simply
+     clipped: .replica-socials sits entirely below the cut on every size tested, and the submit
+     button lost its bottom edge -- 2px at 680, 36 of its 42px at 640, which left a 6px sliver of
+     "Send project brief" and no way to send the form at all.
 
-     The panel is now sized from the footer's content rather than from a viewport-height clamp.
-     The old clamp(38rem, 76svh, 40rem) bottomed out at its 38rem floor on every phone, reserving
-     608px for ~470-507px of content and leaving 100-120px of dead air between the email and the
-     HENRY wordmark, which sits at bottom: 0. Both the wordmark (clamp(76px, 27.7vw, 118px)) and
-     the grid's type scale with width, not height, and measuring at 320/375/393 gives a content
-     height of 470/497/507px -- a near-exact fit for 310px + 50vw. Adding the gap I actually want
-     to that fit sets the email-to-HENRY distance directly at ~40px on any phone width instead of
-     falling out of a clamp. It over-reserves slightly toward 700px, where the wordmark font caps
-     and the statement stops wrapping to three lines, which is the safe direction.
+     Switching the sticky viewport to a stable svh is what made this permanent. It used to track
+     the live visualViewport, which by the time you reach the footer with the URL bar collapsed is
+     60-100px taller, and that slack was quietly absorbing most of the overflow. Fixing the
+     mid-scroll resize removed the slack and exposed the clip underneath it.
 
-     The min() cap stays: the sticky viewport is one --replica-vh with overflow: hidden and the
-     cover slides up by the measured under height, so a panel taller than the screen would push
-     the footer out of view. */
-  .replica-ending { --footer-panel-height: min(var(--replica-vh), calc(350px + 50vw)); height: calc(var(--replica-vh) + var(--footer-panel-height)); }
-  .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--replica-vh); min-height: 0; overflow: hidden; }
-  .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
-  .replica-ending__under { top: auto; height: var(--footer-panel-height); }
-  .replica-ending__cover { height: 100%; }
+     So the overlay flattens here: the contact card is a section in normal flow, the footer follows
+     it, and nothing can be cut off because nothing is constrained to a viewport any more. The
+     cover reveal is desktop-only now. This is the same layout StoreCraft already used for the same
+     reason -- its inquiry form stands ~1400px against an 812px panel -- and the same shape as the
+     reduced-motion fallback further down, so dropping the page scoping unifies three cases into
+     one rule set rather than adding a fourth.
+
+     updateEnding() in ReplicaHome needs no change: it reads position !== "sticky" off the sticky
+     element to detect exactly this layout and already takes the flow path, taking the wordmark's
+     floor from its own seat rather than from a scrub progress that no longer has any travel.
+
+     --footer-panel-height is not overridden here any more. It only ever fed the pinned panel's
+     height, and the dead air it was tuned to remove -- 100-120px between the email and the HENRY
+     wordmark, left over from a fixed-height panel holding shorter content -- cannot occur once the
+     footer is sized by its own content. */
+  .replica-ending { height: auto; }
+  .replica-ending__sticky { position: relative; display: flex; height: auto; min-height: 0; overflow: visible; flex-direction: column; }
+  .replica-ending__under, .replica-ending__cover { position: relative; inset: auto; height: auto; overflow: visible; }
+  .replica-ending__cover { order: 1; transform: none !important; }
+  .replica-ending__under { order: 2; }
   .replica-ending__under .replica-footer, .replica-ending__under .replica-footer__shell,
-  .replica-ending__cover .replica-contact { height: 100%; }
-  /* StoreCraft's cover is the inquiry form, not Henry's short contact card, and at one column it
-     stands about 1400px against an 812px panel, so the overlay clipped the submit button off the
-     bottom with no way to scroll to it. Flatten the stack here: the form is a section in normal
-     flow and the footer follows it. Henry's cover is sized to fit the panel, so his is untouched.
-     Same shape as the reduced-motion fallback further down, which already ships this layout. */
-  body[data-v2-page="storecraft"] .replica-ending { height: auto; }
-  body[data-v2-page="storecraft"] .replica-ending__sticky { position: relative; display: flex; height: auto; overflow: visible; flex-direction: column; }
-  body[data-v2-page="storecraft"] .replica-ending__under,
-  body[data-v2-page="storecraft"] .replica-ending__cover { position: relative; inset: auto; height: auto; overflow: visible; }
-  body[data-v2-page="storecraft"] .replica-ending__cover { order: 1; transform: none !important; }
-  body[data-v2-page="storecraft"] .replica-ending__under { order: 2; }
-  body[data-v2-page="storecraft"] .replica-ending__under .replica-footer,
-  body[data-v2-page="storecraft"] .replica-ending__under .replica-footer__shell { height: auto; }
+  .replica-ending__cover .replica-contact { height: auto; }
+  /* The wordmark seats itself with position: absolute; bottom: 0, which needs a band to sit in, and
+     height: auto above took that band away, so the letters landed on /Contact and on the email.
+     Relative puts it back in flow under the grid while the left bleed and the stacking it declares
+     in the base rule keep working. The margin then absorbs the scaleY stretch, which grows upward
+     out of the seat and so paints above its own layout box: .81em is that box (padding-top .05em
+     plus line-height .76em), and the term is multiplied by the shortfall like every other wordmark
+     constant, so a six-character wordmark adds nothing but the trailing air.
+
+     That air is the email-to-HENRY distance, which is the one number this footer was explicitly
+     tuned for: 102px of dead space inside the old fixed-height panel, 39px once that panel was
+     sized to its content. Flowing the footer put it at 18px, tighter than either, so it is set
+     here rather than inherited from the 18px StoreCraft chose -- same footer, same relationship,
+     one value. */
+  .replica-ending__under .replica-footer__wordmark { position: relative; margin-top: calc(.81em * var(--wordmark-stretch, .66) * var(--wordmark-shortfall) + 40px); }
   .replica-contact { min-height: 0; padding: 82px 0 68px; }
   .replica-contact__grid { display: flex; flex-direction: column; }
   .replica-contact__copy { display: contents; min-height: 0; }
@@ -405,7 +438,9 @@
   .replica-about { padding-top: 90px; }
   .replica-about h2 { font-size: 40px; }
   .replica-services__inner { padding-top: 118px; }
-  .replica-services__inner > h2 { margin-bottom: 8px; font-size: 32px; }
+  /* Same reasoning as the 36px above, scaled to this tier's 8px article padding, where the
+     two gaps were 16px and 16px: 26px puts 34px above the list against 16px between rows. */
+  .replica-services__inner > h2 { margin-bottom: 26px; font-size: 32px; }
   .replica-services article { padding: 8px 0; }
   .replica-services h3 { margin-bottom: 5px; font-size: 18px; }
   .replica-services p { gap: 2px 6px; font-size: 10.5px; line-height: 1.25; }
