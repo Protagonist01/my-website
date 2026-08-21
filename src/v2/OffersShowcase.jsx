@@ -22,11 +22,12 @@ export default function OffersShowcase() {
   const viewportRef = useRef(null);
   const trackRef = useRef(null);
   const mobileStageRef = useRef(null);
-  // Viewports of scroll the mobile rail occupies. Raised from .68/1.15 on two counts: the rail was
-  // advancing a card every ~455px, which read as a flick rather than a browse, and the handoff out
-  // of the services headline now claims the first .44 of the stage, so the rail needs the extra
-  // length to come out slower rather than merely later.
-  const mobileStageViewports = commerceOffers.length * 1 + 1.55;
+  // Viewports of scroll the mobile rail occupies. .68/1.15 advanced a card every ~455px, which read
+  // as a flick rather than a browse; 1/1.55 fixed the pace but paid for it in dead scroll, because
+  // the handoff claimed the first .44 of an 8.55-viewport stage and left roughly 1700px of
+  // half-empty screen in front of the first card. .82/1.2 keeps the ~566px advance that length was
+  // bought for and takes the slack out of the front of the stage instead.
+  const mobileStageViewports = commerceOffers.length * .82 + 1.2;
   const filteredOffers = useMemo(
     () => filter === "ALL SYSTEMS" ? commerceOffers : commerceOffers.filter((offer) => offer.filter === filter),
     [filter],
@@ -163,22 +164,25 @@ export default function OffersShowcase() {
       const progress = displayedProgress;
       // Every stage below used to fire between .18 and .30, so roughly 570px of scroll carried the
       // text exit, the world fade, the first card, the number wheel and the rail start all at once.
-      // Spread across .16 to .52 they read as one handoff instead of a pile-up.
-      const chapterStart = .44;
+      // Spreading them out cured the pile-up but pushed the whole handoff too far down the stage:
+      // the first card waited on .28 of a stage 1.6 viewports longer than this one, so the copy had
+      // finished leaving and nothing had arrived for about 1700px. These windows keep that spread
+      // and start it near the top of the stage, which puts the first card roughly 620px in.
+      const chapterStart = .28;
       const chapterEnd = .995;
-      const textTravel = smoothstep(.06, .30, progress);
-      const worldReveal = smoothstep(.24, .40, progress);
-      const entryReveal = smoothstep(.28, .44, progress);
+      const textTravel = smoothstep(.03, .19, progress);
+      const worldReveal = smoothstep(.12, .25, progress);
+      const entryReveal = smoothstep(.13, .28, progress);
       const chapterProgress = clamp((progress - chapterStart) / (chapterEnd - chapterStart));
       const exact = chapterProgress * Math.max(0, cards.length - 1);
       const numberExact = chapterProgress * Math.max(0, numbers.length - 1);
-      const numberReveal = smoothstep(.30, .44, progress);
-      const followingCardsReveal = smoothstep(.36, .52, progress);
+      const numberReveal = smoothstep(.15, .28, progress);
+      const followingCardsReveal = smoothstep(.19, .34, progress);
       const currentEntryY = 72 * (1 - entryReveal);
 
       words.forEach((word, index) => {
-        const wordStart = .02 + (index / Math.max(1, words.length - 1)) * .09;
-        const revealAmount = smoothstep(wordStart, wordStart + .05, progress);
+        const wordStart = .015 + (index / Math.max(1, words.length - 1)) * .05;
+        const revealAmount = smoothstep(wordStart, wordStart + .04, progress);
         const channel = (from, to) => Math.round(from + (to - from) * revealAmount);
         // Channels rather than a var() tween because this path interpolates per frame.
         // The end must stay --offers-ink; the start is deliberately darker than
@@ -190,15 +194,15 @@ export default function OffersShowcase() {
         // Upward drift, not the sideways exit this used to run: every other reveal on the page
         // moves on the y-axis, and a full pin-width slide was the one thing pulling horizontally.
         introContent.style.transform = `translate3d(0, ${(-textTravel * pin.clientHeight * .16).toFixed(2)}px, 0)`;
-        introContent.style.opacity = (1 - smoothstep(.16, .34, progress)).toFixed(4);
+        introContent.style.opacity = (1 - smoothstep(.08, .21, progress)).toFixed(4);
       }
       if (intro) {
-        intro.style.opacity = (1 - smoothstep(.2, .38, progress)).toFixed(4);
+        intro.style.opacity = (1 - smoothstep(.11, .24, progress)).toFixed(4);
         // Released only once the copy has finished fading, so the article stops swallowing taps
         // aimed at the cards rising under it while it is invisible, and never sooner, or the
         // headline goes dead while it is still legible. The filters are display:none here, so
         // the cards are the only thing this gate is protecting.
-        intro.style.pointerEvents = progress > .34 ? "none" : "auto";
+        intro.style.pointerEvents = progress > .21 ? "none" : "auto";
       }
       if (offerWorld) offerWorld.style.opacity = worldReveal.toFixed(4);
 
