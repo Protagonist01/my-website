@@ -279,14 +279,21 @@
 }
 
 @media (max-width: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 62%; --mobile-portrait-height: 150px; }
-  .replica-nav { top: 30px; width: calc(100vw - 30px); max-width: 360px; height: 60px; }
+  /* The portrait is a 3:4 crop on mobile, and it grows upward: the top anchor is set so the
+     bottom edge lands where the old near-square box ended. Holding the bottom keeps the
+     "/DEVING SINCE" line and the measured gap under "Hey!" where they already worked, so a
+     taller image costs no extra height in the copy below it. */
+  .replica-intro__sticky { --mobile-portrait-top: 54%; --mobile-portrait-width: 155px; --mobile-portrait-height: 206px; --mobile-about-gap: 270px; }
+  .replica-nav { top: 30px; width: min(300px, calc(100vw - 30px)); height: 60px; }
   .replica-nav.is-open { height: min(var(--replica-nav-open-height), calc(100svh - 60px)); height: min(var(--replica-nav-open-height), calc(100dvh - 60px)); }
   .replica-nav__top { padding-left: 17px; }
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-  .replica-intro { height: 150svh; }
+  /* 150svh crammed the whole hero-to-about choreography into half a screen of scroll past the
+     first, so the portrait flip, the title exit and the copy reveal all raced. 185svh gives it
+     close to the desktop ratio (190vh) and lets the same timeline read at a walking pace. */
+  .replica-intro { height: 185svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__lede { top: 108px; right: 20px; left: 20px; max-width: none; gap: 7px; }
   .replica-hero__subline { max-width: 30ch; font-size: 12px; }
@@ -296,11 +303,15 @@
   .replica-hero__spark { top: -48px; left: -12px; width: 56px; height: 56px; }
   .replica-hero__bolt { right: -8px; bottom: -32px; width: 59px; height: 59px; }
   .replica-hero__year { display: none; }
-  .replica-hero__since { top: calc(var(--mobile-portrait-top) + var(--mobile-portrait-height) + 8px); right: auto; bottom: auto; left: calc(50% - 77.5px); width: auto; font-size: 12px; letter-spacing: .025em; white-space: nowrap; transform: none; }
-  .replica-portrait-wrap { top: var(--mobile-portrait-top); width: 155px; height: var(--mobile-portrait-height); }
+  .replica-hero__since { top: calc(var(--mobile-portrait-top) + var(--mobile-portrait-height) + 8px); right: auto; bottom: auto; left: calc(50% - var(--mobile-portrait-width) / 2); width: auto; font-size: 12px; letter-spacing: .025em; white-space: nowrap; transform: none; }
+  .replica-portrait-wrap { top: var(--mobile-portrait-top); width: var(--mobile-portrait-width); height: var(--mobile-portrait-height); }
   .replica-about { display: block; padding: 178px 20px 0; }
   .replica-about__left { display: block; padding: 0; }
-  .replica-about h2 { margin-bottom: 270px; font-size: 45px; line-height: 1; }
+  /* The gap under the heading is the hole the portrait rises into, so its size follows from how
+     far the portrait travels — a distance only the timeline knows. useReplicaMotion measures
+     where the portrait lands and overwrites --mobile-about-gap on the sticky; the value declared
+     with the other portrait constants is the fallback used before its first refresh. */
+  .replica-about h2 { margin-bottom: var(--mobile-about-gap); font-size: 45px; line-height: 1; }
   .replica-about__left strong { display: block; width: 100%; margin-bottom: 14px; font-size: 15px; line-height: 1.35; }
   .replica-about__right { padding: 0; }
   .replica-about__right p { width: 100%; margin-bottom: 10px; font-size: 14px; line-height: 1.35; }
@@ -317,17 +328,46 @@
   .replica-services p { grid-column: 1; flex-wrap: wrap; gap: 3px 7px; font-size: 12px; line-height: 1.35; }
   .replica-stack__inner { width: calc(100% - 36px); padding: 0; }
   .replica-stack__eyebrow { margin-bottom: 30px; }
-  .replica-stack__layer { grid-template-columns: 30px 34px minmax(0, 1fr); gap: 0 12px; min-height: 0; }
-  .replica-stack__logo-set { padding-left: 16px; }
-  .replica-stack__logo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 14px; }
   .replica-end-container { width: calc(100% - 48px); }
-  .replica-ending { --replica-vh: 100svh; --footer-panel-height: min(var(--replica-vh), clamp(38rem, 76svh, 40rem)); height: calc(var(--mobile-visual-height, 100dvh) + var(--footer-panel-height)); }
-  .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--mobile-visual-height, 100dvh); min-height: 0; overflow: hidden; }
+  /* --replica-vh is 100svh, the same stable unit the intro, statement, services and stack scenes
+     pin against. The panel used to track the live visualViewport instead, so every URL-bar
+     collapse resized the section mid-scroll and the page visibly grew while scrolling back up.
+     svh is the URL-bar-visible height, so it never changes during a scroll and the panel can
+     never be taller than what is on screen.
+
+     The panel is now sized from the footer's content rather than from a viewport-height clamp.
+     The old clamp(38rem, 76svh, 40rem) bottomed out at its 38rem floor on every phone, reserving
+     608px for ~470-507px of content and leaving 100-120px of dead air between the email and the
+     HENRY wordmark, which sits at bottom: 0. Both the wordmark (clamp(76px, 27.7vw, 118px)) and
+     the grid's type scale with width, not height, and measuring at 320/375/393 gives a content
+     height of 470/497/507px -- a near-exact fit for 310px + 50vw. Adding the gap I actually want
+     to that fit sets the email-to-HENRY distance directly at ~40px on any phone width instead of
+     falling out of a clamp. It over-reserves slightly toward 700px, where the wordmark font caps
+     and the statement stops wrapping to three lines, which is the safe direction.
+
+     The min() cap stays: the sticky viewport is one --replica-vh with overflow: hidden and the
+     cover slides up by the measured under height, so a panel taller than the screen would push
+     the footer out of view. */
+  .replica-ending { --footer-panel-height: min(var(--replica-vh), calc(350px + 50vw)); height: calc(var(--replica-vh) + var(--footer-panel-height)); }
+  .replica-ending__sticky { position: sticky; top: 0; display: block; height: var(--replica-vh); min-height: 0; overflow: hidden; }
   .replica-ending__under, .replica-ending__cover { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
   .replica-ending__under { top: auto; height: var(--footer-panel-height); }
   .replica-ending__cover { height: 100%; }
   .replica-ending__under .replica-footer, .replica-ending__under .replica-footer__shell,
   .replica-ending__cover .replica-contact { height: 100%; }
+  /* StoreCraft's cover is the inquiry form, not Henry's short contact card, and at one column it
+     stands about 1400px against an 812px panel, so the overlay clipped the submit button off the
+     bottom with no way to scroll to it. Flatten the stack here: the form is a section in normal
+     flow and the footer follows it. Henry's cover is sized to fit the panel, so his is untouched.
+     Same shape as the reduced-motion fallback further down, which already ships this layout. */
+  body[data-v2-page="storecraft"] .replica-ending { height: auto; }
+  body[data-v2-page="storecraft"] .replica-ending__sticky { position: relative; display: flex; height: auto; overflow: visible; flex-direction: column; }
+  body[data-v2-page="storecraft"] .replica-ending__under,
+  body[data-v2-page="storecraft"] .replica-ending__cover { position: relative; inset: auto; height: auto; overflow: visible; }
+  body[data-v2-page="storecraft"] .replica-ending__cover { order: 1; transform: none !important; }
+  body[data-v2-page="storecraft"] .replica-ending__under { order: 2; }
+  body[data-v2-page="storecraft"] .replica-ending__under .replica-footer,
+  body[data-v2-page="storecraft"] .replica-ending__under .replica-footer__shell { height: auto; }
   .replica-contact { min-height: 0; padding: 82px 0 68px; }
   .replica-contact__grid { display: flex; flex-direction: column; }
   .replica-contact__copy { display: contents; min-height: 0; }
@@ -360,10 +400,10 @@
 }
 
 @media (max-width: 700px) and (max-height: 700px) {
-  .replica-intro__sticky { --mobile-portrait-top: 60%; --mobile-portrait-height: 125px; }
+  .replica-intro__sticky { --mobile-portrait-top: 51.5%; --mobile-portrait-width: 132px; --mobile-portrait-height: 176px; --mobile-about-gap: 220px; }
   .replica-hero__title { top: 15%; }
   .replica-about { padding-top: 90px; }
-  .replica-about h2 { margin-bottom: 220px; font-size: 40px; }
+  .replica-about h2 { font-size: 40px; }
   .replica-services__inner { padding-top: 118px; }
   .replica-services__inner > h2 { margin-bottom: 8px; font-size: 32px; }
   .replica-services article { padding: 8px 0; }
@@ -439,4 +479,56 @@
   .replica-stack__logo-set:nth-child(4) { grid-row: 8; }
   .replica-stack__layer:nth-child(5) { grid-row: 9; }
   .replica-stack__logo-set:nth-child(5) { grid-row: 10; }
+}
+
+/* Icon-first stack on phones. The rack's server-blade cards were built for the desktop scene,
+   where they sit in their own column opposite the logos and the .is-active highlight is the thing
+   the scroll drives. Unpinned and full-width on a phone they became five boxes of chrome the
+   reader has to scroll past to reach the marks, which are the point of the section. So each layer
+   collapses to the same small mono caption the desktop logo sets already use ("01 INTERFACE") and
+   its marks open out into a 3-up grid underneath, icon over name.
+
+   Deliberately mobile-only rather than folded into the unpinned block above: reduced-motion
+   desktop is also unpinned but still has 1180px to work with, so it keeps the cards and notes.
+
+   Every layer stays in the DOM, so the .replica-stack__layer ScrollTriggers in useReplicaMotion
+   still resolve; the highlight just lands on the caption instead of a card. */
+@media (max-width: 700px) {
+  .replica-stack__layer,
+  .replica-stack__layer.is-active {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: inherit;
+  }
+  .replica-stack__vents, .replica-stack__note { display: none; }
+  /* Wider than the 20px the card layout used: with the notes gone, this margin is the only thing
+     separating one layer's names from the next layer's caption. */
+  .replica-stack__layer { margin-top: 30px; }
+  .replica-stack__index, .replica-stack__label {
+    color: var(--muted);
+    font: 500 10px var(--mono);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+  /* The only surviving trace of the active state: the cards it used to invert are gone, and
+     dimming four captions out of five would work against reading the grid. */
+  .replica-stack__layer.is-active .replica-stack__index { color: #1948ff; }
+  .replica-stack__layer.is-active .replica-stack__label { color: var(--ink); }
+
+  .replica-stack__logo-set { margin-top: 14px; padding-left: 0; }
+  .replica-stack__logo-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px 8px; }
+  /* Icon over name, so the mark leads and the 34px label gutter the desktop layout needs
+     disappears. Centring inside each cell is what keeps a 3-up grid of 2 to 5 marks from
+     looking ragged on the last row. */
+  .replica-stack__logo { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 7px; text-align: center; }
+  .replica-stack__logo svg { width: 26px; height: 26px; }
+  .replica-stack__logo svg[data-wide] { height: 26px; }
+  .replica-stack__logo-name { font-size: 11px; }
 }

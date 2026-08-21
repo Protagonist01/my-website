@@ -224,6 +224,7 @@ export default function PortfolioGuide({ page }) {
   const [panelPhase, setPanelPhase] = useState("idle");
   const [maximized, setMaximized] = useState(false);
   const [activeSection, setActiveSection] = useState("");
+  const [floorGuard, setFloorGuard] = useState(0);
   const [prompt, setPrompt] = useState(null);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -402,6 +403,23 @@ export default function PortfolioGuide({ page }) {
       window.removeEventListener("scroll", keepHeroContextAccurate);
     };
   }, [brand, page]);
+
+  // The footer wordmark spans the full page width and is seated on the floor, so the launcher's
+  // resting corner lands on its last letters. Lift by the wordmark's own height while it is on
+  // screen. No selector can express "scrolled to the bottom", hence the measurement; the wordmark
+  // is only ever visible at the floor, so this is the only place the launcher has to move.
+  useEffect(() => {
+    const mask = document.querySelector(".replica-footer__wordmark");
+    if (!mask) return undefined;
+    const observer = new IntersectionObserver(([entry]) => {
+      setFloorGuard(entry.isIntersecting ? Math.round(entry.boundingClientRect.height) + 10 : 0);
+    });
+    observer.observe(mask);
+    return () => {
+      observer.disconnect();
+      setFloorGuard(0);
+    };
+  }, [page]);
 
   useEffect(() => {
     if (
@@ -715,7 +733,7 @@ export default function PortfolioGuide({ page }) {
     .find((message) => message.role === "assistant")?.id;
 
   return createPortal(
-    <div className={`hf-guide${brand.className ? ` ${brand.className}` : ""}${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}`}>
+    <div className={`hf-guide${brand.className ? ` ${brand.className}` : ""}${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}`} style={{ "--hf-guide-floor-guard": `${floorGuard}px` }}>
       {!open && feedback && (
         <FeedbackPrompt
           feedback={feedback}

@@ -511,6 +511,26 @@ export function EndingSequence({ brand = replicaContent, cover }) {
         gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
         return;
       }
+      // On StoreCraft mobile the cover is the inquiry form, which is far taller than one panel, so
+      // the CSS unstacks the overlay and lets the form scroll normally. That collapses `travel` to
+      // nothing, so progress would saturate the moment the section's top cleared the viewport and
+      // the wordmark would fire while the visitor was still at the top of the form. Detect it from
+      // layout rather than a page slug, and take the floor from the wordmark's own seat instead.
+      const stacked = sticky ? getComputedStyle(sticky).position !== "sticky" : false;
+      if (stacked) {
+        gsap.set([cover, under], { clearProps: "transform" });
+        // The mask, not the inner span: the span is what these timelines translate, so measuring
+        // it would feed the animation back into its own trigger.
+        const seat = wordmark.parentElement.getBoundingClientRect().bottom;
+        if (seat <= window.innerHeight + 2 && !floorReached) {
+          floorReached = true;
+          raiseWordmark();
+        } else if (seat > window.innerHeight + 24 && floorReached) {
+          floorReached = false;
+          lowerWordmark();
+        }
+        return;
+      }
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
       const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
@@ -579,19 +599,53 @@ function useReplicaMotion(rootRef) {
       });
 
       mm.add("(max-width: 700px)", () => {
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: true } });
+        // invalidateOnRefresh so the tweens re-read viewportHeight() whenever the scene is
+        // re-measured. Without it a rotate or a collapsing URL bar leaves the portrait's rise
+        // fixed at the old height while the hole reserved for it moves, which is the desync this
+        // scene is built to avoid.
+        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: replicaAnimation.mobileScrub, invalidateOnRefresh: true } });
         const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
+        const portraitWrap = root.querySelector(".replica-portrait-wrap");
         const viewportHeight = () => sticky?.clientHeight || window.innerHeight;
-        const aboutOverflow = () => Math.max(0, (about?.scrollHeight || 0) - viewportHeight() + 18);
+        // Only a real spill earns the lift. Adding the breathing room unconditionally moved the
+        // copy up on every viewport, which slid "Hey!" under the fixed nav on short screens.
+        const aboutOverflow = () => {
+          const spill = (about?.scrollHeight || 0) - viewportHeight();
+          return spill > 0 ? spill + 18 : 0;
+        };
         const portraitLift = () => -Math.min(220, viewportHeight() * .22);
+        // The portrait is absolutely positioned and rises during the scene, while the copy is
+        // static flow that has to leave a hole for where the portrait comes to rest. Sizing that
+        // hole in CSS meant guessing the rise, and the guess was short, so the portrait sat on
+        // the intro line. Measure the landing from the same function the tween uses instead.
+        // offsetTop and offsetHeight are layout values, so the tweened transforms don't skew them.
+        const reserveAboutGap = () => {
+          const heading = about?.querySelector("h2");
+          if (!about || !sticky || !portraitWrap || !heading) return;
+          const landing = portraitWrap.offsetTop + portraitWrap.offsetHeight + portraitLift();
+          const headingBottom = heading.offsetTop + heading.offsetHeight;
+          const gap = Math.max(0, Math.round(landing - headingBottom + replicaAnimation.mobilePortraitClearance));
+          sticky.style.setProperty("--mobile-about-gap", `${gap}px`);
+        };
+        reserveAboutGap();
+        // Re-measure before ScrollTrigger takes its own, so a resize cannot leave the two disagreeing.
+        ScrollTrigger.addEventListener("refreshInit", reserveAboutGap);
         timeline
           .to(".replica-hero__title", { y: () => -viewportHeight() * .92, autoAlpha: 0, duration: .26, ease: "none" }, 0.05)
           .to(".replica-hero__since", { y: () => viewportHeight() * .08, autoAlpha: 0, duration: .16, ease: "none" }, 0.05)
           .to(".replica-portrait-card", { rotateY: 180, duration: .52, ease: "none" }, 0.08)
           .to(".replica-portrait-wrap", { y: portraitLift, scale: 1, autoAlpha: 1, duration: .48, ease: "none" }, 0.08)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.014, ease: "power2.out" }, 0.42)
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.52);
+          // Copy and portrait take this last step together — the hole is sized for where the
+          // portrait landed, so moving one without the other closes it again. It starts where the
+          // portrait's own rise ends, so nothing tweens the portrait's y in two places at once.
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.56)
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .06, ease: "none" }, 0.56);
+        return () => {
+          ScrollTrigger.removeEventListener("refreshInit", reserveAboutGap);
+          sticky?.style.removeProperty("--mobile-about-gap");
+        };
       });
 
       const wordElements = gsap.utils.toArray(".replica-statement span");
@@ -601,7 +655,7 @@ function useReplicaMotion(rootRef) {
           trigger: ".replica-statement p",
           start: "top bottom",
           end: "center center",
-          scrub: true,
+          scrub: replicaAnimation.mobileScrub,
           invalidateOnRefresh: true,
         } : {
           trigger: ".replica-statement-scene",
@@ -620,7 +674,7 @@ function useReplicaMotion(rootRef) {
           trigger: services,
           start: mobileScroll ? "top bottom" : "top top",
           end: mobileScroll ? "top top" : "bottom bottom",
-          scrub: mobileScroll ? true : .6,
+          scrub: mobileScroll ? replicaAnimation.mobileScrub : .6,
           invalidateOnRefresh: true,
         },
       });
@@ -715,40 +769,6 @@ function useReplicaMotion(rootRef) {
   }, [rootRef]);
 }
 
-function useMobileVisualViewport(rootRef) {
-  useEffect(() => {
-    const root = rootRef.current;
-    if (!root) return undefined;
-    const mobile = window.matchMedia("(max-width: 700px)");
-    let frame = 0;
-
-    const update = () => {
-      window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        if (!mobile.matches) {
-          root.style.removeProperty("--mobile-visual-height");
-          return;
-        }
-        const height = Math.ceil(window.visualViewport?.height || window.innerHeight);
-        root.style.setProperty("--mobile-visual-height", `${height}px`);
-      });
-    };
-
-    update();
-    window.visualViewport?.addEventListener("resize", update, { passive: true });
-    window.addEventListener("orientationchange", update, { passive: true });
-    mobile.addEventListener("change", update);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      window.visualViewport?.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-      mobile.removeEventListener("change", update);
-      root.style.removeProperty("--mobile-visual-height");
-    };
-  }, [rootRef]);
-}
-
 // AWS is the one mark here that is a wordmark lockup rather than a square glyph: the official
 // artwork is "aws" set under the smile, so it is roughly 5:3 and its top and bottom thirds of
 // the 24x24 box are empty. Cropping the viewBox to the ink and letting the width follow from
@@ -810,7 +830,6 @@ export default function ReplicaHome({ works }) {
   const root = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
   const [contactContext, setContactContext] = useState("");
-  useMobileVisualViewport(root);
   useReplicaMotion(root);
   const openContact = useCallback((context = "") => {
     setContactContext(context);

@@ -197,12 +197,8 @@ body[data-v2-page="storecraft"], .commerce-page {
   .commerce-hero__copy > p { font-size: 1rem; }
   .commerce-actions { align-items: stretch; flex-direction: column; }
   .commerce-button { width: 100%; }
-  .commerce-hero__graphic { position: relative; right: auto; bottom: auto; display: block; width: min(21rem, 94vw); margin: 2.25rem auto 0; opacity: 1; }
-  .commerce-hero__graphic .commerce-phone-scene { --commerce-phone-width: min(19rem, 100%); }
   .commerce-path, .commerce-faq { padding-right: 1.25rem; padding-left: 1.25rem; }
   .commerce-path h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
-  .commerce-phone-scene { min-height: 0; }
-  .commerce-phone-controls { gap: .2rem; }
   .commerce-entry { padding: 6.5rem 1.25rem; }
   .commerce-entry h2 { font-size: clamp(3.1rem, 14vw, 4.5rem); }
   .commerce-entry__actions { flex-direction: column; }

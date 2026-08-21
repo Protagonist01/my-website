@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects } from "./data.js";
 import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
 import { replicaContent } from "./replicaContent.js";
+import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { storecraftContent } from "./storecraftContent.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
@@ -151,26 +152,42 @@ function useWorkSpecialisationsMotion(sectionRef) {
 
         const timeline = gsap.timeline({ defaults: { ease: "none" } });
         const leadIn = .45;
-        timeline.to(track, { y: () => -itemHeight() * (itemCount - 1), duration: itemCount - 1 }, leadIn);
+        // Every property of a transition now starts at `start` and lands on `start + shift`, and
+        // the rest of the unit is a dwell where the entry sits still.
+        //
+        // Previously the copy track was one continuous linear glide across the whole sequence
+        // while the crossfades, the number rail and the image wipe ran in their own windows that
+        // closed at .76, .68 and .86 of each unit. So the incoming copy reached full opacity and
+        // its image finished wiping while the text was still sliding, and no project ever came to
+        // rest. Landing them together is what makes a transition read as one movement.
+        const shift = .62;
+        const trackEase = "power1.inOut";
 
         for (let transition = 0; transition < itemCount - 1; transition += 1) {
           const start = leadIn + transition;
-          timeline.to(entries[transition], { opacity: 0.07, duration: 0.38 }, start + 0.08);
-          timeline.to(entries[transition + 1], { opacity: 1, duration: 0.42 }, start + 0.34);
-          timeline.to(numbers[transition], { opacity: 0, y: -8, duration: 0.34 }, start + 0.08);
-          timeline.to(numbers[transition + 1], { opacity: 1, y: 0, duration: 0.34 }, start + 0.34);
-          timeline.to(imageLayers[transition + 1], {
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.78,
-          }, start + 0.08);
+          timeline.to(track, { y: () => -itemHeight() * (transition + 1), duration: shift, ease: trackEase }, start);
+          timeline.to(entries[transition], { opacity: 0.07, duration: shift * .55 }, start);
+          timeline.to(entries[transition + 1], { opacity: 1, duration: shift * .6 }, start + (shift * .4));
+          timeline.to(numbers[transition], { opacity: 0, y: -8, duration: shift * .5 }, start);
+          timeline.to(numbers[transition + 1], { opacity: 1, y: 0, duration: shift * .5 }, start + (shift * .5));
+          // Shares the track's ease so the wipe and the slide move as one rather than merely
+          // finishing at the same moment.
+          timeline.to(imageLayers[transition + 1], { clipPath: "inset(0% 0% 0% 0%)", duration: shift, ease: trackEase }, start);
         }
+
+        // Pins the total duration so the last project gets the same dwell as the others instead of
+        // the sequence ending early and leaving the scrub mapped against a shorter timeline.
+        timeline.to({}, { duration: 1 - shift }, leadIn + itemCount - 2 + shift);
 
         timeline.scrollTrigger = ScrollTrigger.create({
           trigger: section,
           start: () => window.innerWidth <= 700 ? "top 116px" : window.innerWidth <= 900 ? "top 148px" : "top 160px",
           end: "bottom bottom",
           animation: timeline,
-          scrub: true,
+          // Desktop keeps the rigid 1:1 coupling a wheel handles well. Touch scrolling arrives in
+          // momentum bursts, so the same coupling reproduces every jolt on the way through the
+          // transitions; a small catch-up window smooths them without feeling detached.
+          scrub: window.innerWidth <= 700 ? replicaAnimation.mobileScrub : true,
           invalidateOnRefresh: true,
           anticipatePin: 1,
           markers: false,
