@@ -214,6 +214,14 @@ body[data-v2-page="storecraft"], .commerce-page {
 
 .has-commerce-motion [data-reveal] { transition: none; }
 
+/* The global [data-reveal] default is opacity 0, and this page opts out of the generic reveal
+   observer, so a main bundle that never executes used to leave every section after the offers rail
+   blank on both mobile and desktop. Default them visible instead and let the motion layer opt back
+   in: has-commerce-motion is added synchronously by useCommerceMotion before it awaits anything, so
+   it means "the page's own JS is running and will drive these". No JS, no class, content shows. */
+.commerce-page [data-reveal] { opacity: 1; transform: none; }
+.commerce-page.has-commerce-motion [data-reveal]:not(.is-visible) { opacity: 0; transform: translateY(2.5rem); }
+
 @media (prefers-reduced-motion: reduce) {
   .commerce-page *, .commerce-page *::before, .commerce-page *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
