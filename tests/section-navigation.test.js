@@ -49,7 +49,10 @@ test("chat home-section aliases navigate to the matching section without reloadi
 
   assert.equal(handled, true);
   assert.equal(scrollCalls.length, 1);
-  assert.equal(scrollCalls[0].top, 816);
+  // 900 measured minus the replica nav's 104px clearance. The nav is fixed at top 29-30 with a
+  // 60px height at every width, so a narrower viewport does not earn a smaller offset; 84 used to
+  // put this 6px under the pill.
+  assert.equal(scrollCalls[0].top, 796);
 });
 
 test("assistant routes use the canonical homepage and section destinations", () => {

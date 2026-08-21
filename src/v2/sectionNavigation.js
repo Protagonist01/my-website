@@ -38,7 +38,14 @@ function navigationUrl(href) {
 }
 
 function navigationOffset() {
-  if (document.querySelector(".replica-nav")) return window.innerWidth <= 720 ? 84 : 104;
+  // The replica nav is fixed at top 29-30 with a 60px height, so its opaque floor is 89-90px at
+  // every width; only its width changes at the 700px breakpoint. The narrow branch returned 84,
+  // which landed the destination's top edge 6px underneath the pill, and it disagreed with the
+  // scroll-padding-top that governs the paths this function cannot reach -- a pasted hash on load,
+  // and the browser scrolling a focused field into view. One clearance for both, the floor plus
+  // air. The header used on the other routes sits lower and shorter, floor 68 narrow and 82 wide,
+  // so its pair still clears.
+  if (document.querySelector(".replica-nav")) return 104;
   if (document.querySelector(".v2-header")) return window.innerWidth <= 720 ? 84 : 112;
   return 24;
 }
