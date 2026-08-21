@@ -224,7 +224,7 @@ export default function PortfolioGuide({ page }) {
   const [panelPhase, setPanelPhase] = useState("idle");
   const [maximized, setMaximized] = useState(false);
   const [activeSection, setActiveSection] = useState("");
-  const [floorGuard, setFloorGuard] = useState(0);
+  const [atFloor, setAtFloor] = useState(false);
   const [prompt, setPrompt] = useState(null);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -405,19 +405,26 @@ export default function PortfolioGuide({ page }) {
   }, [brand, page]);
 
   // The footer wordmark spans the full page width and is seated on the floor, so the launcher's
-  // resting corner lands on its last letters. Lift by the wordmark's own height while it is on
-  // screen. No selector can express "scrolled to the bottom", hence the measurement; the wordmark
-  // is only ever visible at the floor, so this is the only place the launcher has to move.
+  // resting corner lands on its last letters. No selector can express "scrolled to the bottom",
+  // hence the observer; the wordmark is only ever visible at the floor, so this is the only place
+  // the launcher is in the way.
+  //
+  // This used to lift the launcher by the wordmark's own height, which worked while the mobile
+  // footer sat in a fixed-height panel with ~100px of dead air above the letters. That panel is
+  // now sized to its content and the air is 40px, so a 98px lift overshoots into the footer's
+  // own /Contact heading. Fade the launcher out at the floor instead of trying to find a gap:
+  // the footer's links are the same links the guide would hand out, so nothing is lost, and a
+  // height-independent rule cannot be broken by the next footer change.
   useEffect(() => {
     const mask = document.querySelector(".replica-footer__wordmark");
     if (!mask) return undefined;
     const observer = new IntersectionObserver(([entry]) => {
-      setFloorGuard(entry.isIntersecting ? Math.round(entry.boundingClientRect.height) + 10 : 0);
+      setAtFloor(entry.isIntersecting);
     });
     observer.observe(mask);
     return () => {
       observer.disconnect();
-      setFloorGuard(0);
+      setAtFloor(false);
     };
   }, [page]);
 
@@ -733,7 +740,7 @@ export default function PortfolioGuide({ page }) {
     .find((message) => message.role === "assistant")?.id;
 
   return createPortal(
-    <div className={`hf-guide${brand.className ? ` ${brand.className}` : ""}${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}`} style={{ "--hf-guide-floor-guard": `${floorGuard}px` }}>
+    <div className={`hf-guide${brand.className ? ` ${brand.className}` : ""}${open ? " is-open" : ""}${prompt ? " has-prompt" : ""}${feedback ? " has-feedback" : ""}${maximized ? " is-maximized" : ""}${panelPhase === "opening" ? " is-opening" : ""}${panelPhase === "closing" ? " is-closing" : ""}${mobileCase ? " is-mobile-case" : ""}${atFloor && !open ? " is-at-floor" : ""}`}>
       {!open && feedback && (
         <FeedbackPrompt
           feedback={feedback}

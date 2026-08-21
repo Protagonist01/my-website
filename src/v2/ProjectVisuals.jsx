@@ -5,6 +5,8 @@ const visualLabels = {
   "self-healing-monitor": "Prometheus incident moving through diagnosis, policy checks, and human approval",
   "ai-voice-receptionist": "Clinic call moving through intent capture, availability, and a simulated booking confirmation",
   "code-review-agent": "Pull-request diff moving through context retrieval, structured review, and commit status",
+  "url-shortener": "Long URL becoming a short code, then a cached redirect with click tracking recorded after the response",
+  "realtime-chat": "One chat room fanning out across two workers through a single Redis channel",
   "aboutface-chatbot": "Product question moving through retrieval into a grounded cosmetic recommendation",
   "smart-todo": "Command-line task entry parsed into date, tag, priority, and assignment fields",
   "portfolio-website": "Portfolio story system connecting content, motion, responsive layouts, and verification",
@@ -48,6 +50,45 @@ function CodeReviewVisual() {
   </>;
 }
 
+function UrlShortenerVisual() {
+  return <>
+    <div className="v2-project-visual__link">
+      <small>Target URL</small>
+      <code>https://example.com/spring/lookbook?utm_source=newsletter</code>
+      <i aria-hidden="true">↓</i>
+      <small>Short code · id XOR-salted, base62</small>
+      <strong>/r/9kQx2f</strong>
+    </div>
+    <div className="v2-project-visual__route">
+      <Step number="01" label="Sliding window" state="ready" /><Step number="02" label="Redis hit" state="active" /><Step number="03" label="Redirect" state="ready" />
+    </div>
+    <div className="v2-project-visual__meter">
+      <div><small>Cache TTL</small><strong>3600s</strong></div>
+      <div><small>Rate limit</small><strong>100 / 60s</strong></div>
+      <div><small>Click write</small><strong>After the response</strong></div>
+    </div>
+  </>;
+}
+
+function RealtimeChatVisual() {
+  return <>
+    <div className="v2-project-visual__fanout">
+      <small>room / general</small>
+      <div><span>worker 1</span><i /><i /></div>
+      <div className="v2-project-visual__fanout-bus"><strong>Redis channel</strong></div>
+      <div><span>worker 2</span><i /><i /><i /></div>
+    </div>
+    <div className="v2-project-visual__route">
+      <Step number="01" label="JWT accepted" state="ready" /><Step number="02" label="Subscribe once" state="active" /><Step number="03" label="Fan out" state="ready" />
+    </div>
+    <div className="v2-project-visual__meter">
+      <div><small>Subscriptions</small><strong>1 per room</strong></div>
+      <div><small>Presence</small><strong>Counter per user</strong></div>
+      <div><small>History</small><strong>Cursor · 15 per page</strong></div>
+    </div>
+  </>;
+}
+
 function AboutFaceVisual() {
   return <>
     <div className="v2-project-visual__chat"><span>Customer</span><p>Which serum suits dry, sensitive skin?</p></div>
@@ -73,6 +114,8 @@ const VisualById = {
   "self-healing-monitor": SelfHealingVisual,
   "ai-voice-receptionist": VoiceVisual,
   "code-review-agent": CodeReviewVisual,
+  "url-shortener": UrlShortenerVisual,
+  "realtime-chat": RealtimeChatVisual,
   "aboutface-chatbot": AboutFaceVisual,
   "smart-todo": TodoVisual,
   "portfolio-website": PortfolioVisual,

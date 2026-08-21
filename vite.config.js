@@ -1,25 +1,7 @@
 import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
-import { cpSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { resolve } from "node:path";
-
-function copyStaticDirs(directories) {
-  return {
-    name: "copy-static-directories",
-    closeBundle() {
-      const outDir = resolve(__dirname, "dist");
-
-      directories.forEach((directory) => {
-        const sourceDir = resolve(__dirname, directory);
-        const targetDir = resolve(outDir, directory);
-
-        if (existsSync(sourceDir)) {
-          cpSync(sourceDir, targetDir, { recursive: true });
-        }
-      });
-    }
-  };
-}
 
 function localApiRoutes() {
   const routes = new Map([
@@ -66,7 +48,7 @@ export default defineConfig(({ mode }) => {
     define: {
       __RESUME_AVAILABLE__: JSON.stringify(resumeAvailable),
     },
-    plugins: [react(), localApiRoutes(), copyStaticDirs(["web demos"])],
+    plugins: [react(), localApiRoutes()],
     build: {
       rollupOptions: {
         input: {
@@ -78,6 +60,8 @@ export default defineConfig(({ mode }) => {
         "v2-case-self-healing-monitor": resolve(__dirname, "v2/work/self-healing-monitor/index.html"),
         "v2-case-ai-voice-receptionist": resolve(__dirname, "v2/work/ai-voice-receptionist/index.html"),
         "v2-case-code-review-agent": resolve(__dirname, "v2/work/code-review-agent/index.html"),
+        "v2-case-url-shortener": resolve(__dirname, "v2/work/url-shortener/index.html"),
+        "v2-case-realtime-chat": resolve(__dirname, "v2/work/realtime-chat/index.html"),
         "v2-note-aboutface-chatbot": resolve(__dirname, "v2/work/aboutface-chatbot/index.html"),
         "v2-note-smart-todo": resolve(__dirname, "v2/work/smart-todo/index.html"),
         "v2-note-portfolio-website": resolve(__dirname, "v2/work/portfolio-website/index.html"),

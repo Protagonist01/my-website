@@ -117,6 +117,15 @@ function useCommerceMotion(rootRef) {
     let disposed = false;
     root.classList.add("has-commerce-motion");
 
+    // Every section after the offers rail carries its whole content in [data-reveal], which starts at
+    // opacity 0, and this page opts out of the generic reveal observer in V2App, so showContent here
+    // is the only thing that can ever make that content visible. It used to run after the GSAP import
+    // resolved, which meant a blocked, slow, or 404'd chunk left four sections permanently blank --
+    // laid out, sized, hit-testable, and invisible. The catch below cannot help: an import that never
+    // settles never rejects. Reveal first, then animate. GSAP's own gsap.from re-hides what it is
+    // about to tween on the frame it initialises, so the reveals it drives are unaffected.
+    showContent();
+
     const setup = async () => {
       const [{ gsap }, { ScrollTrigger }] = await Promise.all([
         import("gsap"),
@@ -124,7 +133,6 @@ function useCommerceMotion(rootRef) {
       ]);
       if (disposed) return;
       gsap.registerPlugin(ScrollTrigger);
-      showContent();
 
       context = gsap.context(() => {
         const heroText = [

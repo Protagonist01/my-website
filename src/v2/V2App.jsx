@@ -321,7 +321,6 @@ function WorkSpecialisations({ home = false, items = projects }) {
   useWorkSpecialisationsMotion(sectionRef);
   return (
     <section className={home ? "v2-home-works" : undefined} aria-label={home ? "Featured Projects" : undefined}>
-      {home && <header className="v2-home-works__intro"><span>// Featured Projects</span></header>}
       <section ref={sectionRef} className="v2-works-scroll" id={home ? "work" : "selected-work"} data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">
@@ -336,11 +335,12 @@ function WorkSpecialisations({ home = false, items = projects }) {
               <div className="v2-works-panel__track" data-work-copy-track>
                 {items.map((project, index) => (
                   <article className="v2-works-entry" data-work-copy-entry aria-hidden={index === 0 ? "false" : "true"} key={project.id}>
-                    <span>{project.sector}<CategoryTag category={project.category} /></span>
+                    <span>{project.sector}<CategoryTag category={project.category} /><LiveTag project={project} /></span>
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                     <nav className="v2-works-entry__actions" aria-label={`${project.title} actions`}>
                       <a href={project.href} tabIndex={index === 0 ? 0 : -1}>View case study <Arrow /></a>
+                      {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>Open live app <Arrow /></a>}
                       {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>GitHub <Arrow /></a>}
                     </nav>
                   </article>
@@ -354,11 +354,12 @@ function WorkSpecialisations({ home = false, items = projects }) {
         {items.map((project, index) => (
           <article key={project.id}>
             <a href={project.href}><ProjectMedia project={project} compact loading={index === 0 ? "eager" : "lazy"} /></a>
-            <span>{project.index} / {project.sector}<CategoryTag category={project.category} /></span>
+            <span>{project.index} / {project.sector}<CategoryTag category={project.category} /><LiveTag project={project} /></span>
             <h2>{project.title}</h2>
             <p>{project.summary}</p>
             <nav className="v2-works-mobile__actions" aria-label={`${project.title} actions`}>
               <a href={project.href}>View case study <Arrow /></a>
+              {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">Open live app <Arrow /></a>}
               {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">GitHub <Arrow /></a>}
             </nav>
           </article>
@@ -376,6 +377,12 @@ function PageTitle({ kicker, title }) {
 // Automation. Rendered inside the eyebrow label so it inherits that context.
 function CategoryTag({ category }) {
   return category ? <i className="v2-tag">{category}</i> : null;
+}
+
+// A project only claims to be live if `liveUrl` in data.js points at a deployment
+// anyone can open. The pill sits in the same eyebrow line as the category tag.
+function LiveTag({ project }) {
+  return project.liveUrl ? <i className="v2-tag v2-tag--live">Live</i> : null;
 }
 
 function WorkLibraryCard({ project, index }) {

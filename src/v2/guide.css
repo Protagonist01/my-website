@@ -6,37 +6,48 @@
    reverses the panel's ground (the visitor's own turn, and the one filled button that is
    not the accent), and --accent-rgb is the accent's hue for the same washes.
 
-   Henry's default: the site's dark half. --ink for the ground, --light-text on it, and the
-   one lime accent the ink sections already use on the contact form. There is no second
-   accent because the site has none on ink; blue only ever appears on paper. */
+   Henry's default is the half the page is actually printed on. The panel used to take the
+   site's dark half, which put an ink card on a paper page; it now takes --paper for the
+   ground, --ink on it, and blue for the accent, because blue is the only accent the paper
+   sections use -- the contact eyebrow and the active stack index are the two places. Lime is
+   the site's other colour and it is not an option here: --accent is a text colour in fifteen
+   rules, and #d8ff57 on #f0efe8 is 1.3:1. Lime stays where the site puts it, on ink.
+
+   --tint is the ink triple the page's own paper hairlines are written with, so --line comes
+   out at rgba(17,17,17,.16), a value replica.css already sets by hand. --invert is still the
+   surface that reverses the ground, which is now the ink rather than the paper, so the
+   visitor's own turn reads dark on light. The shadows are re-cut rather than re-alpha'd:
+   the dark theme's blacks turn to smudge on paper, so these are roughly a third the alpha
+   and tinted with the ink, and --shadow-float loses its inset highlight because a light
+   hairline only reads on a dark surface. */
 .hf-guide {
-  --hf-bg: #121212;
-  --hf-surface: #191918;
-  --hf-surface-raised: #1f1f1d;
-  --hf-surface-soft: #262623;
-  --hf-text: #f4f3ed;
-  --hf-muted: #cdcbc2;
-  --hf-subtle: #99968c;
+  --hf-bg: #f0efe8;
+  --hf-surface: #f6f5f0;
+  --hf-surface-raised: #fffffd;
+  --hf-surface-soft: #e5e4dd;
+  --hf-text: #121212;
+  --hf-muted: #54524c;
+  --hf-subtle: #66645f;
   --hf-line: rgba(var(--hf-tint), .16);
-  --hf-accent: #d8ff57;
-  --hf-accent-deep: #bfe93f;
-  --hf-on-accent: #121212;
-  --hf-tint: 244, 243, 237;
-  --hf-accent-rgb: 216, 255, 87;
-  --hf-bg-rgb: 18, 18, 18;
-  --hf-invert: #f4f3ed;
-  --hf-on-invert: #121212;
-  --hf-invert-hover: #d8d7d0;
-  --hf-well: rgba(0, 0, 0, .22);
-  --hf-danger: #ff9a9a;
-  --hf-danger-strong: #ffb2b2;
-  --hf-scheme: dark;
-  --hf-shadow-panel: 0 32px 100px rgba(0, 0, 0, .52);
-  --hf-shadow-float: 0 24px 60px rgba(0, 0, 0, .42), 0 1px 0 rgba(var(--hf-tint), .05) inset;
-  --hf-shadow-tile: 0 10px 18px rgba(0, 0, 0, .34);
-  --hf-shadow-cloud: drop-shadow(0 14px 20px rgba(0, 0, 0, .36));
-  --hf-shadow-cloud-mobile: drop-shadow(0 8px 12px rgba(0, 0, 0, .28));
-  --hf-shadow-bubble: 0 8px 18px rgba(0, 0, 0, .3);
+  --hf-accent: #1948ff;
+  --hf-accent-deep: #0b1f72;
+  --hf-on-accent: #f4f3ed;
+  --hf-tint: 17, 17, 17;
+  --hf-accent-rgb: 25, 72, 255;
+  --hf-bg-rgb: 240, 239, 232;
+  --hf-invert: #121212;
+  --hf-on-invert: #f4f3ed;
+  --hf-invert-hover: #2a2a2a;
+  --hf-well: #e6e5de;
+  --hf-danger: #c11c15;
+  --hf-danger-strong: #a1150f;
+  --hf-scheme: light;
+  --hf-shadow-panel: 0 32px 80px rgba(18, 18, 18, .18), 0 2px 6px rgba(18, 18, 18, .07);
+  --hf-shadow-float: 0 18px 44px rgba(18, 18, 18, .15);
+  --hf-shadow-tile: 0 8px 16px rgba(18, 18, 18, .18);
+  --hf-shadow-cloud: drop-shadow(0 12px 18px rgba(18, 18, 18, .17));
+  --hf-shadow-cloud-mobile: drop-shadow(0 7px 11px rgba(18, 18, 18, .14));
+  --hf-shadow-bubble: 0 6px 14px rgba(18, 18, 18, .15);
   position: fixed;
   z-index: 12000;
   right: 22px;
@@ -55,18 +66,18 @@
   body[data-v2-page="storecraft"] .hf-guide-prompt { display: none; }
 }
 
-/* StoreCraft's panel takes the light half instead, because that is the half its page is
-   printed on: paper for the ground, the commerce ink for type, sage and off-white for the
-   raised surfaces, and blue for the accent. Lime is not the accent here even though it is
-   StoreCraft's other colour, because lime on paper is the one pairing the site never makes.
-   --invert holds the ink, so the visitor's own turn and the filled buttons come out dark on
-   a light panel, exactly reversed from Henry's. The shadows are re-cut rather than reused:
-   the dark theme's heavy blacks turn to smudge on paper, so these are about a third the
-   alpha and tinted with the ink instead of neutral black.
+/* StoreCraft's panel is paper too, but sage where Henry's is neutral: the same ground, the
+   commerce ink for type, sage and off-white for the raised surfaces, and the same blue accent.
+   Lime is not the accent here either, for the same reason it is not Henry's. What this block
+   really carries is the hue of the neutrals -- --tint, --invert, --well, the surfaces and the
+   shadow tints all move from ink to sage -- so the panel reads as printed with the page it
+   sits on rather than dropped onto it.
 
    Both classes land on the same element, so this block only wins by sitting after the one
    above it. Everything it does not name is inherited from there, including --hf-line, which
-   is written in terms of --tint and so repoints with it. */
+   is written in terms of --tint and so repoints with it. The declarations that now match
+   Henry's exactly are kept rather than trimmed, so each block still reads as a whole
+   palette instead of a diff. */
 .hf-guide--storecraft {
   --hf-bg: #f0efe8;
   --hf-surface: #f7f6f1;
@@ -170,8 +181,8 @@
   pointer-events: none;
 }
 
-/* The launcher stands on paper, not on the panel's ink, so it casts a shadow rather than
-   glowing: lime on paper is the one pairing the site never makes. */
+/* The launcher stands on paper, so it casts a shadow rather than glowing: a glow needs a dark
+   ground to read against, and there is no longer one anywhere in this component. */
 .hf-guide-launcher::before {
   position: absolute;
   z-index: -1;
@@ -263,7 +274,11 @@
   height: 100%;
   object-fit: contain;
   object-position: center bottom;
-  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, .34));
+  /* Re-cut with the rest of the shadows when the panel moved to paper. This one is not a token
+     because only a brand with an avatar illustration reaches it, and the character now stands on
+     paper in both places it appears -- the launcher and the panel header -- so one value covers
+     both. .34 neutral black was sized for an ink panel and read as dirt on paper. */
+  filter: drop-shadow(0 10px 15px rgba(18, 18, 18, .2));
   transform-origin: 50% 68%;
 }
 
@@ -910,7 +925,9 @@
 
 /* The assistant answers on the panel's own ground; the visitor's own turn is a card that
    reverses it, the same inversion the homepage uses for an active stack layer. --invert is
-   what makes that hold in both themes: paper on Henry's ink, ink on StoreCraft's paper. */
+   what makes that hold in both themes: now that both grounds are paper it resolves to the
+   ink in each, neutral for Henry and sage for StoreCraft, so the card reverses whichever
+   paper it is sitting on. */
 .hf-guide-message.is-user .hf-guide-message__content {
   width: fit-content;
   max-width: 86%;
@@ -1810,10 +1827,31 @@ body.hf-guide-max-open {
 @media (max-width: 760px) {
   .hf-guide {
     right: 6px;
-    /* The guard is published by PortfolioGuide while the footer wordmark is on screen, so the
-       launcher steps up off the letters at the page floor and settles back on the way out. */
-    bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--hf-guide-floor-guard, 0px));
-    transition: bottom .5s cubic-bezier(.16, 1, .3, 1);
+    bottom: max(8px, env(safe-area-inset-bottom));
+    transition: opacity .32s ease;
+  }
+
+  /* PortfolioGuide sets is-at-floor while the footer wordmark is on screen and the panel is shut.
+     The launcher's resting corner sits on the footer's own content down there, and the footer
+     carries the same links the guide would offer, so step out of the way rather than hunt for a
+     gap the next footer change would close. :not(.is-open) restates the JSX guard here so an open
+     conversation can never be faded out from under the visitor. */
+  .hf-guide.is-at-floor:not(.is-open) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Both endings flow on phones, so their forms are real forms here rather than panels behind a
+     cover, and the launcher rests over the last field of each. Give the field the screen for as
+     long as it has focus. Engines without :has() drop the rule and behave as they did before.
+     :not(.is-open) for the same reason as the rule above, and it is load-bearing here: the shut
+     sheet is 78svh, so the page stays live and tappable in the strip over it, and a field tapped
+     up there would otherwise fade an open conversation to nothing with no launcher to get it
+     back. */
+  body:has(.replica-contact-form:focus-within) .hf-guide:not(.is-open),
+  body:has(.commerce-inquiry form:focus-within) .hf-guide:not(.is-open) {
+    opacity: 0;
+    pointer-events: none;
   }
 
   .hf-guide-launcher,
@@ -1901,7 +1939,10 @@ body.hf-guide-max-open {
     bottom: 0;
     left: 0;
     width: 100vw;
+    /* svh is the URL-bar-visible height, so a maximized panel left a strip of page showing once the
+       bar collapsed. dvh tracks the bar; the svh line stays as the fallback. */
     height: 100svh;
+    height: 100dvh;
     border: 0;
     border-radius: 0;
   }

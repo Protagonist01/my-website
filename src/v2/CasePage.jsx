@@ -101,7 +101,7 @@ function Gallery({ items }) {
   );
 }
 
-function Head({ back, backLabel, eyebrow, category, evidence, title, lead, facts }) {
+function Head({ back, backLabel, eyebrow, category, evidence, live, title, lead, facts }) {
   return (
     <header className="v2-cs__head">
       <a className="v2-cs__back" href={back}>{"←"} {backLabel}</a>
@@ -109,6 +109,7 @@ function Head({ back, backLabel, eyebrow, category, evidence, title, lead, facts
         <span>{eyebrow}</span>
         {category && <span className="v2-cs__tag v2-cs__tag--category">{category}</span>}
         <span className={`v2-cs__tag v2-cs__tag--${evidence}`}>{EVIDENCE_TAG[evidence]}</span>
+        {live && <span className="v2-cs__tag v2-cs__tag--live">Live</span>}
       </div>
       <h1 className="v2-cs__title">{title}</h1>
       <p className="v2-cs__lead">{lead}</p>
@@ -117,11 +118,16 @@ function Head({ back, backLabel, eyebrow, category, evidence, title, lead, facts
   );
 }
 
-function Foot({ context, ctaLabel = "Discuss this work", repository, repositoryLabel = "Open the repository", next, nextLabel = "Next case" }) {
+function Foot({ context, ctaLabel = "Discuss this work", live, liveLabel = "Open the live app", repository, repositoryLabel = "Open the repository", next, nextLabel = "Next case" }) {
   return (
     <footer className="v2-cs__foot">
       <div className="v2-cs__actions">
         <a className="v2-cs__cta" href={paths.contact} data-contact-context={context}>{ctaLabel} <Arrow /></a>
+        {live && (
+          <a className="v2-cs__repo" href={live} target="_blank" rel="noopener noreferrer">
+            {liveLabel} <Arrow />
+          </a>
+        )}
         {repository && (
           <a className="v2-cs__repo" href={repository} target="_blank" rel="noopener noreferrer">
             {repositoryLabel} <Arrow />
@@ -150,12 +156,16 @@ export function ProjectCasePage({ project }) {
         eyebrow={`${project.index} / ${project.sector}`}
         category={project.category}
         evidence={evidence}
+        live={Boolean(project.liveUrl)}
         title={project.title}
         lead={project.lead || project.outcome}
         facts={[
           ["Status", project.status],
           ["Stack", project.stack?.join(" · ")],
           ["Role", project.role],
+          ["Live", project.liveUrl
+            ? <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">Open the deployment <Arrow /></a>
+            : null],
           ["Source", project.repository
             ? <a href={project.repository} target="_blank" rel="noopener noreferrer">Open on GitHub <Arrow /></a>
             : project.sourceNote],
@@ -209,6 +219,7 @@ export function ProjectCasePage({ project }) {
 
       <Foot
         context={`I'd like to discuss ${project.title}.`}
+        live={project.liveUrl}
         repository={project.repository}
         next={next}
       />
