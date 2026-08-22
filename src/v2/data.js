@@ -2,12 +2,14 @@ const clearSkinAnalysisImage = new URL("../../assets/images/v2-work/clear-skin-a
 const clearSkinCartImage = new URL("../../assets/images/v2-work/clear-skin-cart.webp", import.meta.url).href;
 const clearSkinMobileImage = new URL("../../assets/images/v2-work/clear-skin-mobile.webp", import.meta.url).href;
 const clearSkinProductV4Image = new URL("../../assets/images/v2-work/premium/clear-skin-product-v4.webp", import.meta.url).href;
-const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-product-evidence.png", import.meta.url).href;
+const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-cover-editorial.jpg", import.meta.url).href;
 const clearSkinCoverImage = new URL("../../assets/images/v2-work/covers/clearskin-product-evidence.png", import.meta.url).href;
 const fruitQualityCoverImage = new URL("../../assets/images/v2-work/covers/fruit-quality-product-evidence.png", import.meta.url).href;
-const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-product-evidence.png", import.meta.url).href;
-const aiVoiceReceptionistCoverImage = new URL("../../assets/images/v2-work/covers/ai-voice-receptionist-cover-editorial.webp", import.meta.url).href;
-const codeReviewAgentCoverImage = new URL("../../assets/images/v2-work/covers/code-review-agent-cover-editorial.webp", import.meta.url).href;
+const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-cover-editorial.jpg", import.meta.url).href;
+const aiVoiceReceptionistCoverImage = new URL("../../assets/images/v2-work/covers/ai-voice-receptionist-cover-editorial.jpg", import.meta.url).href;
+const codeReviewAgentCoverImage = new URL("../../assets/images/v2-work/covers/code-review-agent-cover-editorial.jpg", import.meta.url).href;
+const snipurlCoverImage = new URL("../../assets/images/v2-work/covers/snipurl-cover-editorial.png", import.meta.url).href;
+const realtimeChatCoverImage = new URL("../../assets/images/v2-work/covers/realtime-chat-cover-editorial.jpg", import.meta.url).href;
 const testimonyOperationsCoverImage = new URL("../../assets/images/v2-work/covers/testimony-operations-cover-editorial.webp", import.meta.url).href;
 const aboutFaceChatbotCoverImage = new URL("../../assets/images/v2-work/covers/aboutface-product-evidence.png", import.meta.url).href;
 const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-product-evidence.png", import.meta.url).href;
@@ -423,6 +425,8 @@ export const projects = [
     outcome: "Keep the redirect fast and the abuse surface small while still recording who clicked what, from where, and when.",
     stack: ["FastAPI", "PostgreSQL", "Redis", "Celery"],
     visual: "url-shortener",
+    coverImage: snipurlCoverImage,
+    coverBackground: "#f0eee6",
     href: paths.urlShortener,
     tone: "cool",
     featured: true,
@@ -488,12 +492,14 @@ export const projects = [
     type: "Built product",
     sector: "Realtime backend / WebSockets",
     category: "Full-Stack Product Engineering",
-    title: "Realtime Chat Service",
-    shortTitle: "Realtime Chat",
+    title: "Realtime.chat",
+    shortTitle: "Realtime.chat",
     summary: "A multi-room chat backend where sockets on separate workers stay in sync through one Redis channel per room, with JWT auth, presence counters, and cursor-paginated history.",
     outcome: "Keep a room correct when the people in it are spread across more than one process.",
     stack: ["FastAPI", "WebSockets", "Redis", "SQLite"],
     visual: "realtime-chat",
+    coverImage: realtimeChatCoverImage,
+    coverBackground: "#f0ede4",
     href: paths.realtimeChat,
     tone: "warm",
     featured: true,
@@ -760,7 +766,7 @@ const homeFeaturedProjectOrder = [
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },
   { id: "code-review-agent", title: "AI Code Review Agent" },
   { id: "url-shortener", title: "SnipURL" },
-  { id: "realtime-chat", title: "Realtime Chat Service" },
+  { id: "realtime-chat", title: "Realtime.chat" },
   { id: "ai-voice-receptionist", title: "AI Voice Receptionist" },
 ];
 
