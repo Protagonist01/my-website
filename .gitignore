@@ -20,6 +20,7 @@ coverage/
 /context/
 /demos/context/
 .codex-screenshots/
+.codex-tmp/
 .codex-chrome-profile*/
 edge-cdp-profile/
 

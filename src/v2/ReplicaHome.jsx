@@ -713,6 +713,20 @@ function useReplicaMotion(rootRef) {
           stackSets.forEach((set, position) => set.classList.toggle("is-active", position === active));
         };
 
+        // Marks power on as their layer first arrives. The CSS owns the hidden
+        // state behind a motion-capable media query, so this only ever adds a
+        // class: desktop and reduced motion never see a mark hidden, and a
+        // phone that rotates wide after playing keeps its grid because the
+        // query stops applying.
+        stackSets.forEach((set, index) => {
+          if (!set || !stackLayers[index]) return;
+          ScrollTrigger.create({
+            trigger: stackLayers[index],
+            start: "top 70%",
+            onEnter: () => set.classList.add("is-powered"),
+          });
+        });
+
         if (mobileScroll) {
           // Mobile shows every layer's logos inline, so the highlight only tracks
           // whichever layer the reader has reached.
@@ -777,12 +791,12 @@ function useReplicaMotion(rootRef) {
 // column in replica.css is sized for the width this produces, so every label still lines up.
 const MARK_VIEWBOXES = { aws: "0 4.8 24 14.4" };
 
-function StackLogo({ slug }) {
+function StackLogo({ slug, index = 0 }) {
   const mark = stackLogos[slug];
   if (!mark) return null;
   const viewBox = MARK_VIEWBOXES[slug];
   return (
-    <span className="replica-stack__logo">
+    <span className="replica-stack__logo" style={{ "--mark": index }}>
       <svg viewBox={viewBox ?? "0 0 24 24"} data-wide={viewBox ? "" : undefined} aria-hidden="true" focusable="false"><path d={mark.path} /></svg>
       <span className="replica-stack__logo-name">{mark.title}</span>
     </span>
@@ -814,7 +828,7 @@ function WorkingStackSection() {
                 <div className="replica-stack__logo-set" key={layer.id} data-layer={layer.id}>
                   <span className="replica-stack__logo-set-label">{layer.label}</span>
                   <div className="replica-stack__logo-grid">
-                    {layer.logos.map((slug) => <StackLogo slug={slug} key={slug} />)}
+                    {layer.logos.map((slug, markIndex) => <StackLogo slug={slug} index={markIndex} key={slug} />)}
                   </div>
                 </div>
               ))}

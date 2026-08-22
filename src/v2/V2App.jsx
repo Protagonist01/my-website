@@ -316,12 +316,12 @@ function WorkImageLayer({ project, index }) {
   );
 }
 
-function WorkSpecialisations({ home = false, items = projects }) {
+function WorkSpecialisations({ items = projects }) {
   const sectionRef = useRef(null);
   useWorkSpecialisationsMotion(sectionRef);
   return (
-    <section className={home ? "v2-home-works" : undefined} aria-label={home ? "Featured Projects" : undefined}>
-      <section ref={sectionRef} className="v2-works-scroll" id={home ? "work" : "selected-work"} data-work-specialisations style={{ "--works-count": items.length }}>
+    <section className="v2-home-works" aria-label="Featured Projects">
+      <section ref={sectionRef} className="v2-works-scroll" id="work" data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">
             {items.map((project, index) => <WorkImageLayer project={project} index={index} key={project.id} />)}
@@ -385,51 +385,11 @@ function LiveTag({ project }) {
   return project.liveUrl ? <i className="v2-tag v2-tag--live">Live</i> : null;
 }
 
-function WorkLibraryCard({ project, index }) {
-  const hasCover = Boolean(project.coverImage);
-  const hasVisual = hasProjectVisual(project.id);
-  return (
-    <a className="v2-work-library__card" href={project.href} data-reveal>
-      <div className={`v2-work-library__media${hasCover || hasVisual ? "" : " v2-work-library__media--signal"}`}>
-        {hasCover ? <ProjectMedia project={project} compact /> : hasVisual ? <ProjectVisual id={project.id} compact /> : <><span>{String(index + 1).padStart(2, "0")}</span><div>{project.stack?.slice(0, 3).map((item) => <i key={item}>{item}</i>)}</div></>}
-      </div>
-      <span>{project.sector}<CategoryTag category={project.category} /></span>
-      <h3>{project.title}</h3>
-      <p>{project.summary}</p>
-      <strong>Open the case study <Arrow /></strong>
-    </a>
-  );
-}
-
-function WorkPage() {
-  const supportingOrder = ["clear-skin", "testimony-operations", "fruit-quality"];
-  const supporting = supportingOrder.map((id) => caseStudies.find((project) => project.id === id)).filter(Boolean);
-  return <>
-    <section className="v2-work-index-hero">
-      <span>Work / Source, proof, and scope</span>
-      <h1>Every project here has a repository you can read or a client system I delivered.</h1>
-      <div>
-        <nav aria-label="Work page actions"><a className="v2-action v2-action--primary" href="#selected-work">Inspect built systems <Arrow /></a><a className="v2-action v2-action--text" href={paths.contact}>Discuss your project <Arrow /></a></nav>
-      </div>
-      <dl><div><dt>01</dt><dd>Featured and inspectable</dd></div><div><dt>02</dt><dd>Client work and archive</dd></div><div><dt>03</dt><dd>Hobby projects</dd></div></dl>
-    </section>
-    <WorkSpecialisations items={homeFeaturedProjects} />
-    <section className="v2-work-library" id="more-work" aria-labelledby="work-library-title">
-      <header data-reveal><span>Client work and archive</span><h2 id="work-library-title">Delivered systems and earlier applied work.</h2></header>
-      <div>{supporting.map((project, index) => <WorkLibraryCard project={project} index={index} key={project.id} />)}</div>
-    </section>
-    <section className="v2-project-notes" aria-labelledby="project-notes-title">
-      <header><span>Hobby Projects</span><h2 id="project-notes-title">Smaller products built to test a focused idea.</h2></header>
-      <div>{projectNotes.map((project) => <a href={project.href} key={project.id}><ProjectMedia project={project} compact /><span>{project.index} / {project.type}<CategoryTag category={project.category} /></span><h3>{project.title}</h3><p>{project.summary}</p><strong>Explore the hobby project <Arrow /></strong></a>)}</div>
-    </section>
-  </>;
-}
-
 function ProjectNote({ project }) {
   const related = project.related ? allWork.find((item) => item.href === project.related) : null;
   return <article className="v2-project-note">
     <section className="v2-project-note__hero">
-      <a href={paths.work}>← All work</a>
+      <a href="/#work">← All work</a>
       <div data-reveal><span>{project.index} / {project.type}<CategoryTag category={project.category} /></span><h1>{project.title}</h1><p>{project.summary}</p><strong>{project.status}</strong></div>
       <ProjectMedia project={project} loading="eager" />
     </section>
@@ -448,7 +408,6 @@ function Renderer({ page }) {
   if (page === "storecraft") return <EcommerceLanding offerRail={<OffersShowcase />} />;
   if (page === "referrals") return <ReferralCampaign />;
   if (page === "referral-dashboard") return <ReferralDashboard />;
-  if (page === "work") return <WorkPage />;
   if (page === "contact") return <PageTitle kicker="Contact" title="Tell me what should change." />;
   const offer = commerceOffers.find((item) => page === `offer-${item.id}`);
   if (offer) return <OfferCasePage offer={offer} />;
@@ -489,7 +448,7 @@ export function V2App({ page }) {
   };
   if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} />;
   const isCasePage = page.startsWith("case-") || page.startsWith("offer-");
-  const usesProjectNavigation = page === "work" || page === "storecraft" || page === "referrals" || page === "referral-dashboard" || page.startsWith("case-") || page.startsWith("offer-");
+  const usesProjectNavigation = page === "storecraft" || page === "referrals" || page === "referral-dashboard" || page.startsWith("case-") || page.startsWith("offer-");
   // StoreCraft is its own brand: its own nav wordmark, its own footer, and its own
   // inquiry form as the ending cover instead of Henry's "Let's talk." section.
   const isStorecraft = page === "storecraft" || page.startsWith("offer-");

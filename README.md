@@ -44,7 +44,7 @@ the decisions behind them, how the systems work, the evidence available, and the
 | **AI Voice Receptionist** | AI Engineering | Public voice demo with simulated booking · [public repo](https://github.com/Protagonist01/ai-voice-receptionist) | `/v2/work/ai-voice-receptionist/` |
 | **AI Code Review Agent** | Automation | Built GitHub review agent · [public repo](https://github.com/Protagonist01/code-review-agent) | `/v2/work/code-review-agent/` |
 | **Clear Skin Concierge** | Full-Stack Product Engineering | Built clinic-commerce & AI concierge product · [public repo](https://github.com/Protagonist01/clear-skin-concierge-site) | `/v2/work/clear-skin/` |
-| **URL Shortener API** | Full-Stack Product Engineering | Built link service · [live app](https://url-shortener-api-9rw4.onrender.com/) · [public repo](https://github.com/Protagonist01/url-shortener) | `/v2/work/url-shortener/` |
+| **SnipURL** | Full-Stack Product Engineering | Built link service · [live app](https://snipurl-f23p.onrender.com/) · [public repo](https://github.com/Protagonist01/url-shortener) | `/v2/work/url-shortener/` |
 | **Realtime Chat Service** | Full-Stack Product Engineering | Built multi-worker chat backend · [live app](https://realtime-chat-9kwe.onrender.com/) · [public repo](https://github.com/Protagonist01/realtime-chat) | `/v2/work/realtime-chat/` |
 
 Every project on the site has either a public repository or a delivered client system behind it.

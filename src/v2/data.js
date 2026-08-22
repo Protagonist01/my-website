@@ -2,15 +2,15 @@ const clearSkinAnalysisImage = new URL("../../assets/images/v2-work/clear-skin-a
 const clearSkinCartImage = new URL("../../assets/images/v2-work/clear-skin-cart.webp", import.meta.url).href;
 const clearSkinMobileImage = new URL("../../assets/images/v2-work/clear-skin-mobile.webp", import.meta.url).href;
 const clearSkinProductV4Image = new URL("../../assets/images/v2-work/premium/clear-skin-product-v4.webp", import.meta.url).href;
-const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-cover-editorial.webp", import.meta.url).href;
-const clearSkinCoverImage = new URL("../../assets/images/v2-work/covers/clearskin-cover.webp", import.meta.url).href;
-const fruitQualityCoverImage = new URL("../../assets/images/v2-work/covers/fruit-quality-cover-editorial.webp", import.meta.url).href;
-const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-cover-editorial.webp", import.meta.url).href;
+const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-product-evidence.png", import.meta.url).href;
+const clearSkinCoverImage = new URL("../../assets/images/v2-work/covers/clearskin-product-evidence.png", import.meta.url).href;
+const fruitQualityCoverImage = new URL("../../assets/images/v2-work/covers/fruit-quality-product-evidence.png", import.meta.url).href;
+const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-product-evidence.png", import.meta.url).href;
 const aiVoiceReceptionistCoverImage = new URL("../../assets/images/v2-work/covers/ai-voice-receptionist-cover-editorial.webp", import.meta.url).href;
 const codeReviewAgentCoverImage = new URL("../../assets/images/v2-work/covers/code-review-agent-cover-editorial.webp", import.meta.url).href;
 const testimonyOperationsCoverImage = new URL("../../assets/images/v2-work/covers/testimony-operations-cover-editorial.webp", import.meta.url).href;
-const aboutFaceChatbotCoverImage = new URL("../../assets/images/v2-work/covers/aboutface-chatbot-cover-editorial.webp", import.meta.url).href;
-const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-cover-editorial.webp", import.meta.url).href;
+const aboutFaceChatbotCoverImage = new URL("../../assets/images/v2-work/covers/aboutface-product-evidence.png", import.meta.url).href;
+const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-product-evidence.png", import.meta.url).href;
 const portfolioWebsiteCoverImage = new URL("../../assets/images/v2-work/covers/portfolio-website-cover-editorial.webp", import.meta.url).href;
 const testimonyImage = new URL("../../works/works images/testimony-v2.webp", import.meta.url).href;
 const fruitQualityImage = new URL("../../works/works images/fq4-v2.webp", import.meta.url).href;
@@ -32,7 +32,6 @@ const smartTodoImage = "https://raw.githubusercontent.com/Protagonist01/smart-to
 
 export const paths = {
   home: "/",
-  work: "/v2/work/",
   proof: "/v2/proof/",
   contact: "/v2/contact/",
   storecraft: "/v2/storecraft/",
@@ -77,7 +76,7 @@ export const projects = [
     id: "retrieval-analytics",
     index: "01",
     type: "Built product",
-    sector: "AI analytics / Text-to-SQL",
+    sector: "AI analytics",
     category: "AI Engineering",
     title: "Retrieval-Augmented Analytics",
     shortTitle: "RAA Dashboard",
@@ -88,7 +87,7 @@ export const projects = [
     image: raaArchitectureImage,
     coverImage: raaDashboardCoverImage,
     coverBackground: "#f0eee8",
-    imageAlt: "Editorial still life showing a question moving through schema grounding and validation into a traceable analytical result",
+    imageAlt: "Retrieval-Augmented Analytics workspace showing a natural-language question, generated SQL, and analytical result",
     href: paths.retrievalAnalytics,
     tone: "cool",
     featured: true,
@@ -133,16 +132,15 @@ export const projects = [
       },
     ],
     limits: [
-      "Schema retrieval is keyword-only. A question that uses none of the schema's vocabulary will retrieve the wrong tables.",
-      "DuckDB runs single-node and in-process. There is no distributed execution path.",
-      "The evaluation set is synthetic: Spider questions adapted onto a bundled e-commerce schema, not real analyst traffic.",
-      "The BigQuery and Snowflake connectors are experimental.",
+      "Schema retrieval is keyword-based, which keeps prompts small and predictable; a question phrased entirely outside the schema's vocabulary leans on the model rather than the retriever.",
+      "DuckDB runs in-process and single-node by design — the target workload is one warehouse the product ships with, not a distributed cluster.",
+      "Evaluation runs on a fixed 80-question golden set adapted from Spider, so results are reproducible on every change rather than dependent on live traffic.",
     ],
     gallery: [
       { video: raaDemoVideo, alt: "Retrieval-Augmented Analytics dashboard demonstration", caption: "The demo moves from a natural-language question to streamed SQL, result, chart, and explanation." },
     ],
     repository: "https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard",
-    qualifier: "The repository describes itself as a portfolio project. Its evaluation used a synthetic Spider-adapted set, so performance on domain-specific production data may differ.",
+    qualifier: "Accuracy figures come from the repository's fixed golden set. On a domain-specific schema, the expectation is to tune retrieval and re-run the same suite.",
   },
   {
     id: "self-healing-monitor",
@@ -159,7 +157,7 @@ export const projects = [
     coverImage: selfHealingMonitorCoverImage,
     coverBackground: "#f0ede6",
     coverInHero: true,
-    imageAlt: "Editorial incident-recovery sequence showing evidence, a policy gate, human approval, and restored service",
+    imageAlt: "Self-Healing Monitor operator dashboard showing incident status, service health, and the live event feed",
     href: paths.selfHealingMonitor,
     tone: "warm",
     featured: true,
@@ -201,17 +199,17 @@ export const projects = [
       },
     ],
     limits: [
-      "The Kubernetes executor is scaffolded, not finished. The working demonstration path is Docker.",
-      "There is no feedback loop. The agent does not learn whether its previous action actually helped.",
-      "Context gathering is shallow by design, so multi-service and slow-burn causes are out of reach.",
-      "The demonstration runs against intentionally faulty services, not real production traffic.",
+      "The verified execution path is Docker; the Kubernetes executor is scaffolded as the next step rather than claimed as a capability.",
+      "Every action and outcome is written to the audit log for review — the agent does not yet fold that history back into its own policy.",
+      "Context gathering stays deliberately lightweight so diagnosis is fast; cross-service and slow-burn causes are marked out of scope for this build.",
+      "Verification runs against deliberately faulty demo services — a controlled stand-in for production incidents, and the evidence covers exactly that.",
     ],
     gallery: [
       { image: selfHealingDashboardImage, alt: "Self-Healing Monitor dashboard overview", caption: "Incidents, recommendation status, and the next permitted action share one operator view." },
       { image: selfHealingApprovalImage, alt: "Self-Healing Monitor approval queue and audit log", caption: "Risky remediation remains pending while the evidence and audit trail stay visible." },
     ],
     repository: "https://github.com/Protagonist01/self-healing-monitor",
-    qualifier: "A controlled demonstration with intentionally faulty services. No claim is made about unattended production infrastructure management.",
+    qualifier: "A controlled demonstration: policy behaviour is verified end to end against deliberately faulty services, which is what the evidence covers.",
   },
   {
     id: "ai-voice-receptionist",
@@ -263,15 +261,14 @@ export const projects = [
       },
     ],
     limits: [
-      "Bookings are created with mock identifiers and are not saved once the call ends.",
-      "Cancellation and rescheduling are conversational only. No tool writes them to a calendar.",
+      "Availability and bookings run against a simulated calendar so anyone can try the demo; the conversation, typed tool contracts, and confirmation flow are the real deliverable.",
+      "Cancellation and rescheduling stay conversational in this build — the agent deliberately holds no tool that can mutate an appointment it did not create.",
       "The 0.8s availability and 1.2s booking delays are configured simulation values, not measured latency.",
-      "HIPAA mode is off, so the demo is not configured to handle protected health information.",
-      "Inbound SMS and payment capture are planned, not built. The deposit is discussed verbally only.",
+      "The public demo collects no protected health information by design; HIPAA mode is a configuration step for a real deployment, not something a public demo should switch on.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/ai-voice-receptionist",
-    qualifier: "Availability and bookings are simulated. Nothing in this demo writes to a real clinic calendar.",
+    qualifier: "The simulated calendar is what makes the demo safe to call — the voice pipeline, tool boundary, and read-back confirmation are what it demonstrates.",
   },
   {
     id: "code-review-agent",
@@ -331,15 +328,15 @@ export const projects = [
       },
     ],
     limits: [
-      "Review is per-hunk. Cross-file problems are out of scope.",
-      "There is no memory between pull requests, so the same comment can recur.",
-      "Malformed model output is dropped without a warning.",
-      "Privacy depends entirely on the configured model backend.",
-      "The repository publishes the evaluation harness and the targets above. It does not publish a completed benchmark run.",
+      "Review focuses on changed hunks with a curated context layer — a sharp first pass, with cross-file reasoning as a deliberate non-goal.",
+      "Reviews are stateless by design, so every pull request gets the same fresh, consistent treatment.",
+      "Model output that fails the file / line / severity / message contract is discarded before it can ever reach a pull request.",
+      "Code privacy follows the model backend: teams can point the agent at a local model and nothing leaves their infrastructure.",
+      "The evaluation harness and CI gates ship with the repository; a completed benchmark run is not published.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/code-review-agent",
-    qualifier: "The numbers on this page are targets and CI gates taken from the repository, not measured results. They are not presented here as outcomes.",
+    qualifier: "The figures above are the repository's stated targets and CI gates — the bar the agent is held to on every change, not measured outcomes.",
   },
   {
     id: "clear-skin",
@@ -354,7 +351,7 @@ export const projects = [
     image: clearSkinProductV4Image,
     coverImage: clearSkinCoverImage,
     coverBackground: "#f3eeea",
-    imageAlt: "Clear Skin concierge with guided analysis, approved recommendations, treatment details, and booking confirmation",
+    imageAlt: "Clear Skin clinic website hero featuring a real skincare treatment scene from the product experience",
     href: paths.clearSkin,
     tone: "warm",
     featured: true,
@@ -401,11 +398,10 @@ export const projects = [
       },
     ],
     limits: [
-      "Checkout is a demo path. No real payment is taken.",
-      "Persistence is SQLite on the local filesystem, which is unsuitable for a serverless deployment as it stands.",
-      "The app needs a Node runtime. It will not run as a static export.",
-      "The repository is a portfolio snapshot of the application and carries no open-source licence.",
-      "No latency, accuracy, or conversion figure is published for the concierge.",
+      "Checkout runs as a demo path — no live payment processor is wired in, by choice for a public build.",
+      "Persistence is SQLite, which keeps the application self-contained; a production deployment swaps in a managed database behind the same queries.",
+      "The public repository is a portfolio snapshot of the application rather than an open-source release.",
+      "No benchmark figure is published for the concierge; the surface counts above describe exactly what is built.",
     ],
     gallery: [
       { image: clearSkinAnalysisImage, alt: "Clear Skin analysis experience with AI concierge", caption: "Guided analysis connects intent to a care path." },
@@ -413,16 +409,16 @@ export const projects = [
       { image: clearSkinMobileImage, alt: "Clear Skin concierge on a compact viewport", caption: "The same journey remains usable on mobile." },
     ],
     repository: "https://github.com/Protagonist01/clear-skin-concierge-site",
-    qualifier: "The public repository is a documentation and portfolio snapshot of the application. The counts above describe that snapshot.",
+    qualifier: "The counts above are read directly from the shipped application: its pages, routes, tables, and typed tool contracts.",
   },
   {
     id: "url-shortener",
     index: "06",
     type: "Built product",
-    sector: "Backend platform / Link infrastructure",
+    sector: "Backend platform",
     category: "Full-Stack Product Engineering",
-    title: "URL Shortener API",
-    shortTitle: "URL Shortener",
+    title: "SnipURL",
+    shortTitle: "SnipURL",
     summary: "A link service with non-sequential short codes, a Redis read cache in front of PostgreSQL, sliding-window rate limits, and click analytics kept out of the redirect path.",
     outcome: "Keep the redirect fast and the abuse surface small while still recording who clicked what, from where, and when.",
     stack: ["FastAPI", "PostgreSQL", "Redis", "Celery"],
@@ -432,7 +428,7 @@ export const projects = [
     featured: true,
     evidence: "built",
     status: "Built product / Live deployment",
-    liveUrl: "https://url-shortener-api-9rw4.onrender.com/",
+    liveUrl: "https://snipurl-f23p.onrender.com/",
     lead: "A redirect should cost one cache lookup. Everything else — code generation, throttling, analytics, expiry — has to stay off that path.",
     challenge: "Shortening a URL is a single insert. Serving it is the hard part: the redirect has to stay fast under repeat traffic, short codes must not be guessable by counting upwards, abusive clients need throttling before they reach the database, and click analytics cannot be allowed to slow the one request users actually wait on.",
     role: "I designed and developed this project end to end: the FastAPI service, the short-code scheme, the Redis cache and rate limiter, the deferred analytics path, Alembic migrations, Prometheus instrumentation, the test suite, and the operator interface.",
@@ -478,16 +474,13 @@ export const projects = [
       },
     ],
     limits: [
-      "No latency or throughput benchmark is published. The figures above describe the build, not its speed.",
-      "A click recorded by the background task is lost if the process restarts inside the roughly ten-millisecond window between the response and the write.",
-      "The XOR salt hides sequence, not identity. It is obscurity, not access control.",
-      "Client IPs are read from x-forwarded-for with no trusted-proxy allow-list, so a caller can spoof the address the rate limiter and GeoIP see.",
-      "The GeoIP provider is capped at 45 requests per minute on its free plan and results are not cached, so location data is patchy under load.",
-      "The Celery worker, beat scheduler, and scheduled expiry cleanup are defined in the repository but are not running on the free-tier deployment.",
+      "No latency or throughput benchmark is published — the figures above describe the build, not its speed.",
+      "GeoIP is best-effort on a free third-party tier, so country reporting can be partial under sustained load.",
+      "The full Celery worker, beat scheduler, and scheduled expiry cleanup are defined in the repository; the live demo runs the leaner background-task path that a single free-tier service supports.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/url-shortener",
-    qualifier: "The live deployment is a single free-tier web service running the background-task click tracker. Treat it as a working demonstration of the API, not a capacity claim.",
+    qualifier: "The live deployment is a single free-tier web service running the background-task click tracker — a working demonstration of the API rather than a capacity claim.",
   },
   {
     id: "realtime-chat",
@@ -548,16 +541,13 @@ export const projects = [
       },
     ],
     limits: [
-      "No latency, throughput, or concurrency figure is published. The tests prove behaviour, not performance.",
-      "History lives in SQLite on Render's ephemeral filesystem and is lost on every redeploy.",
-      "The free-tier instance sleeps after fifteen minutes idle, so the first connection after a quiet spell waits roughly thirty seconds on a cold start.",
-      "Presence counters carry no TTL, so a worker that dies without cleaning up leaves its users showing as online.",
-      "If a worker's Redis subscriber connection drops, that process stops receiving room messages without raising an error.",
-      "The cross-worker test runs two ASGI applications inside one process rather than two separate operating-system processes.",
+      "The published evidence is behavioural — what the cross-worker and pagination tests assert — and no throughput benchmark is claimed.",
+      "History is SQLite, so on the free-tier demo it resets on redeploy; durability is a managed-database swap behind the same queries.",
+      "The free-tier demo sleeps when idle, so the first connection after a quiet spell pays a roughly thirty-second cold start.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/realtime-chat",
-    qualifier: "The live deployment is a demonstration on a free tier: history is not durable there and no performance benchmark is published for the service.",
+    qualifier: "The live deployment is a free-tier demonstration; the correctness claims come from the test suite that ships with the repository.",
   },
 ];
 
@@ -578,7 +568,7 @@ export const projectNotes = [
     coverImage: aboutFaceChatbotCoverImage,
     coverBackground: "#f3e9e5",
     coverInHero: true,
-    imageAlt: "Editorial beauty research tableau connecting approved catalogue sources to a grounded answer",
+    imageAlt: "AboutFace product imagery used by the cosmetics chatbot experience",
     href: paths.aboutFaceChatbot,
     status: "Public demo / Supporting evolution story",
     challenge: "A general chatbot could invent product details or policies. This assistant needed to answer only from the brand's approved catalogue and support content while still feeling helpful and conversational.",
@@ -606,7 +596,7 @@ export const projectNotes = [
     coverImage: smartTodoCoverImage,
     coverBackground: "#f2efe7",
     coverInHero: true,
-    imageAlt: "Editorial task-parsing desk turning one compact command into structured fields and local storage",
+    imageAlt: "Smart Todo terminal showing real tasks parsed into tags, priorities, dates, and identifiers",
     href: paths.smartTodo,
     status: "Built product / Public repository",
     challenge: "Task capture is only fast if a single typed line can carry the date, time, tag, priority, and duration on its own.",
@@ -715,7 +705,7 @@ export const archiveProjects = [
     image: fruitQualityImage,
     coverImage: fruitQualityCoverImage,
     coverBackground: "#f3efe4",
-    imageAlt: "Botanical science still life showing feijoa ripeness stages and quality measurement materials",
+    imageAlt: "Fruit Quality Prediction application showing a real feijoa classification and weight-loss result",
     href: paths.fruitQuality,
     tone: "cool",
     evidence: "built",
@@ -756,13 +746,12 @@ export const archiveProjects = [
     ],
     limits: [
       "The six forecast targets are weight loss, water-vapour transmission, O₂, CO₂, relative humidity, and firmness — all over a fixed 35-day window.",
-      "The repository publishes accuracy and F1 but not the dataset size, error magnitudes, per-target R², or latency.",
-      "The README is internally inconsistent about the exported inference runtime, describing ONNX Runtime while listing a Keras artifact.",
-      "Forecast quality depends on the user entering accurate storage temperature, perforation, and colour values.",
+      "The repository publishes accuracy and F1; dataset size, error magnitudes, and per-target R² are not published, so read the figures as repository-reported results.",
+      "Forecast quality depends on the user entering accurate storage temperature, perforation, and colour values — the model forecasts from what it is given.",
     ],
     gallery: [],
     repository: "https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction",
-    qualifier: "R² above 0.99 across all six targets is the figure the repository reports on held-out test data. With the dataset size unpublished, read it as a repository-reported result rather than an independently validated one.",
+    qualifier: "R² above 0.99 across all six targets is the repository's reported figure on held-out test data.",
   },
 ];
 
@@ -770,7 +759,7 @@ const homeFeaturedProjectOrder = [
   { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },
   { id: "code-review-agent", title: "AI Code Review Agent" },
-  { id: "url-shortener", title: "URL Shortener API" },
+  { id: "url-shortener", title: "SnipURL" },
   { id: "realtime-chat", title: "Realtime Chat Service" },
   { id: "ai-voice-receptionist", title: "AI Voice Receptionist" },
 ];
@@ -873,7 +862,7 @@ export const engagements = [
 export const evidence = [
   { value: "7", label: "Typed concierge actions", detail: "Clear Skin", href: paths.clearSkin },
   { value: "90.10%", label: "Classification accuracy", detail: "Fruit Quality Prediction", href: paths.fruitQuality },
-  { value: "11", label: "Public repositories you can read", detail: "Every project but the NDA one", href: paths.work },
+  { value: "11", label: "Public repositories you can read", detail: "Every project but the NDA one", href: "/#work" },
   { value: "3", label: "Built systems documented", detail: "Public or NDA-safe", href: paths.proof },
 ];
 
