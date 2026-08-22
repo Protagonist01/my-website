@@ -567,3 +567,22 @@
   .replica-stack__logo svg[data-wide] { height: 26px; }
   .replica-stack__logo-name { font-size: 11px; }
 }
+
+/* Mark power-on for phones: every grid starts dimmed and its marks pop in one
+   by one as the layer arrives (--mark is each mark's index, set inline in
+   WorkingStackSection; .is-powered is added by the stack wiring in
+   useReplicaMotion). Both the hidden state and the reveal live inside this
+   motion-capable query, so the desktop scene and reduced motion see the plain
+   grid with no animation and no layout coupling. */
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+  .replica-stack__logo { opacity: 0; transform: translateY(14px) scale(.55); }
+  .replica-stack__logo-set.is-powered .replica-stack__logo {
+    animation: replica-stack-power-on .6s cubic-bezier(.34, 1.56, .64, 1) both;
+    animation-delay: calc(var(--mark, 0) * 90ms);
+  }
+}
+
+@keyframes replica-stack-power-on {
+  from { opacity: 0; transform: translateY(14px) scale(.55); }
+  to { opacity: 1; transform: none; }
+}

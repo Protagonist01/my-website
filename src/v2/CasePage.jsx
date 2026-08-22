@@ -205,7 +205,7 @@ export function ProjectCasePage({ project }) {
       )}
 
       {project.limits?.length > 0 && (
-        <Block label="Limits" id="limits">
+        <Block label="Boundaries" id="limits">
           <Points items={project.limits} />
           {project.qualifier && <p className="v2-cs__note">{project.qualifier}</p>}
         </Block>

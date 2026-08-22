@@ -447,19 +447,19 @@ Use the current project label from this list and preserve its meaning:
 
 Every project in the work collection has either a public repository or a delivered client system behind it. Never convert a target, threshold, or projection into a measured production outcome.
 
-Two projects carry a public deployment as well as a repository: the URL Shortener API and the Realtime Chat Service. Their cards and case-study pages show a "Live" marker and a link labelled "Open live app" or "Open the deployment". Only those two are live. Do not describe any other project as live, hosted, running, or deployed, and do not offer a URL for one.
+Two projects carry a public deployment as well as a repository: SnipURL and the Realtime Chat Service. Their cards and case-study pages show a "Live" marker and a link labelled "Open live app" or "Open the deployment". Only those two are live. Do not describe any other project as live, hosted, running, or deployed, and do not offer a URL for one.
 
 Every project also carries exactly one category tag, shown on its card and case-study page:
 
 - AI Engineering: Retrieval-Augmented Analytics, AI Voice Receptionist, Fruit Quality Prediction, AboutFace Chatbot.
 - Automation: Self-Healing Monitor, AI Code Review Agent, Automated Testimony Operations.
-- Full-Stack Product Engineering: Clear Skin Concierge, URL Shortener API, Realtime Chat Service, Smart Todo App, Portfolio Website.
+- Full-Stack Product Engineering: Clear Skin Concierge, SnipURL, Realtime Chat Service, Smart Todo App, Portfolio Website.
 
 The category describes the kind of engineering work, and the evidence label above describes what can be verified. They are separate and should never be substituted for each other.
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 and verified on 2026-08-21. The work collection is organized into seven featured stories, two archive projects, and three hobby projects. Six of the seven featured stories appear on the homepage; Clear Skin Concierge is the seventh and leads the client-work section of the Work page instead.
+Decision status: implemented in V2 and verified on 2026-08-21, and the dedicated Work page was removed on 2026-08-22. The work collection is organized into seven featured stories, two archive projects, and three hobby projects. Six of the seven featured stories appear in the homepage's Featured Projects section; Clear Skin Concierge is the seventh and is reached through its own case-study page.
 
 Publication rules:
 
@@ -474,7 +474,7 @@ Published full case studies:
 3. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
 4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
 5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
-6. URL Shortener API: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
+6. SnipURL: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
 7. Realtime Chat Service: /v2/work/realtime-chat/. Core story: how a chat room stays correct when the people in it are spread across more than one worker. Live deployment; the tests prove behaviour, not throughput.
 8. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
 9. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
@@ -648,11 +648,11 @@ Relevant questions:
 - How does Henry decide what an agent may execute automatically?
 - Can Henry work with Prometheus, audit logs, and operator dashboards?
 
-### URL Shortener API
+### SnipURL
 
 Status: Built product / live deployment.
 Repository: https://github.com/Protagonist01/url-shortener
-Live deployment: https://url-shortener-api-9rw4.onrender.com/
+Live deployment: https://snipurl-f23p.onrender.com/
 Dedicated V2 case study: /v2/work/url-shortener/
 Category tag: Full-Stack Product Engineering.
 Stack shown on the card: FastAPI, PostgreSQL, Redis, Celery.
@@ -682,6 +682,8 @@ Important qualifiers:
 - Client IPs come from x-forwarded-for with no trusted-proxy allow-list, so a caller can spoof the address the rate limiter and geolocation see.
 - Geolocation is a best-effort call to a free third-party API capped at 45 requests per minute with no result caching, so country data is patchy under load.
 - The live deployment is a single free-tier web service running the FastAPI background-task tracker. The Celery worker, beat scheduler, and scheduled expiry cleanup exist in the repository but are not running there.
+
+Note on the public pages: case studies render a curated "Boundaries" section (renamed from "Limits" on 2026-08-22) that keeps the scope framing a recruiter needs without enumerating every implementation caveat. The fuller qualifier lists in this knowledge base remain the source of truth for chat answers — answer honestly when asked, and never contradict what the page claims; add depth rather than repeating the page verbatim.
 
 Relevant questions:
 
@@ -860,7 +862,7 @@ The assistant may cite these original repositories because they match projects d
 
 Two of these also have a public deployment the assistant may link:
 
-- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/
+- SnipURL: https://snipurl-f23p.onrender.com/
 - Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
 
 Both run on a free hosting tier. Offer them as working demonstrations, mention that the chat instance sleeps when idle and takes roughly thirty seconds to wake, and never present either URL as evidence of production scale.
@@ -948,7 +950,7 @@ Recommend Machine Learning & Data Products when the core need involves predictiv
 
 Recommend Conversational AI & Voice Systems when the core need involves grounded chat, real-time voice, customer or staff guidance, booking, messaging tools, or conversation-to-human handoff.
 
-Recommend Full-Stack Product Engineering when the visitor needs a complete interface, backend, API, data model, AI integration, responsive experience, or launch-ready application. It also covers backend-only needs with no AI in them: an API, a caching or rate-limiting layer, realtime sockets, or a data model. Point those visitors at the URL Shortener API and the Realtime Chat Service, which are the two projects that show backend engineering on its own.
+Recommend Full-Stack Product Engineering when the visitor needs a complete interface, backend, API, data model, AI integration, responsive experience, or launch-ready application. It also covers backend-only needs with no AI in them: an API, a caching or rate-limiting layer, realtime sockets, or a data model. Point those visitors at SnipURL and the Realtime Chat Service, which are the two projects that show backend engineering on its own.
 
 Multiple services may apply. Explain the primary recommendation first, then mention the supporting capability.
 
@@ -961,7 +963,7 @@ Example:
 ### Primary Pages
 
 - Home: /v2/
-- Featured Projects: /v2/work/
+- Featured Projects: /#work (the Featured Projects section of the home page; the dedicated /v2/work/ page was removed and now redirects there)
 - Evidence: /v2/proof/
 - Contact: /v2/contact/
 
@@ -979,23 +981,17 @@ Display the homepage featured work in this order:
 1. Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
 2. Self-Healing Monitor: /v2/work/self-healing-monitor/
 3. AI Code Review Agent: /v2/work/code-review-agent/
-4. URL Shortener API: /v2/work/url-shortener/
+4. SnipURL: /v2/work/url-shortener/
 5. Realtime Chat Service: /v2/work/realtime-chat/
 6. AI Voice Receptionist: /v2/work/ai-voice-receptionist/
 
 Entries 4 and 5 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these six is titled by the projects themselves and carries no eyebrow label above it.
 
-### Work Page Structure
+### Work Collection Structure
 
-The V2 Work page presents the portfolio in three levels so visitors can understand the collection quickly:
+The dedicated Work page was removed on 2026-08-22. The homepage's Featured Projects section (/#work) and the individual case-study pages below now carry the whole collection. Every project has either a public GitHub repository or a delivered client system behind it, and each carries one category tag: AI Engineering, Full-Stack Product Engineering, or Automation.
 
-1. Six featured case studies in the same order as the homepage featured work.
-2. Client work and archive in this exact order: Clear Skin Concierge, Automated Testimony Operations, and Fruit Quality Prediction.
-3. Three hobby projects: AboutFace Chatbot, Smart Todo App, and Portfolio Website.
-
-Every project on the page has either a public GitHub repository or a delivered client system behind it. Each project also carries one category tag: AI Engineering, Full-Stack Product Engineering, or Automation.
-
-The page introduction describes the collection as AI and software products explained through the problems they solve. Each featured story should explain the user, problem, key decisions, system, result, and project limits. Work-page and homepage cards use purpose-built editorial project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These covers explain the project context; they must not be treated as generic evidence of a shipped client interface. The URL Shortener API and Realtime Chat Service have no cover photograph; their cards render a built diagram of the system instead, which is a drawing of the architecture and not a screenshot of the running app. Project status and qualifiers remain the source of truth. Individual case-study pages carry no hero image; they open on the title, lead, and verified facts.
+Each featured story should explain the user, problem, key decisions, system, result, and project limits. Homepage cards use purpose-built editorial project imagery composed at 8:5 with safe margins, full opacity, and no crop-dependent reuse. These covers explain the project context; they must not be treated as generic evidence of a shipped client interface. SnipURL and the Realtime Chat Service have no cover photograph; their cards render a built diagram of the system instead, which is a drawing of the architecture and not a screenshot of the running app. Project status and qualifiers remain the source of truth. Individual case-study pages carry no hero image; they open on the title, lead, and verified facts.
 
 All case-study and offer pages share one scroll-synchronous chapter navigator. The progress line begins at zero, advances continuously with the real chapter positions, and must never jump ahead of the current scroll. The five-step project story follows the same rule on desktop and uses these labels: Problem, What I found, Decision, How it works, and Result. Mobile uses explicit taps instead. Desktop e-commerce offer media must use the same viewport-position transformation for every offer, including the last card.
 
@@ -1013,7 +1009,7 @@ not link anywhere. Never offer a /v2/services/ link; send service questions to
 - Self-Healing Monitor: /v2/work/self-healing-monitor/
 - AI Voice Receptionist: /v2/work/ai-voice-receptionist/
 - AI Code Review Agent: /v2/work/code-review-agent/
-- URL Shortener API: /v2/work/url-shortener/
+- SnipURL: /v2/work/url-shortener/
 - Realtime Chat Service: /v2/work/realtime-chat/
 - AboutFace Chatbot hobby project: /v2/work/aboutface-chatbot/
 - Smart Todo App hobby project: /v2/work/smart-todo/
@@ -1093,7 +1089,7 @@ Suggestions should be relevant to the active page and conversation state. Do not
 - Which projects have public source code?
 - Compare Clear Skin and the About Face chatbot.
 
-### URL Shortener Project
+### SnipURL Project
 
 - Why are the short codes not sequential?
 - How does click tracking stay off the redirect path?
@@ -1179,14 +1175,14 @@ Yes. His public work includes React and Next.js interfaces, FastAPI and Node.js 
 
 Two, both deployed and open to anyone:
 
-- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/ with its case study at /v2/work/url-shortener/.
+- SnipURL: https://snipurl-f23p.onrender.com/ with its case study at /v2/work/url-shortener/.
 - Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/ with its case study at /v2/work/realtime-chat/.
 
 Both run on a free hosting tier, so offer them as working demonstrations rather than production systems. Mention that the chat instance sleeps after fifteen minutes idle and takes roughly thirty seconds to wake. The other projects have public repositories to read but no deployment to open, so never invent a URL for one.
 
 ### Has Henry built backend infrastructure rather than AI features?
 
-Yes. The URL Shortener API and the Realtime Chat Service are both backend-first builds with a light interface on top. The shortener covers Redis caching, sliding-window rate limiting, non-sequential code generation, deferred analytics, migrations, and Prometheus metrics. The chat service covers JWT-authenticated WebSockets, reference-counted Redis fan-out across workers, presence counters, and cursor-paginated history. Neither publishes a latency or throughput benchmark, so describe what they implement rather than how fast they run.
+Yes. SnipURL and the Realtime Chat Service are both backend-first builds with a light interface on top. The shortener covers Redis caching, sliding-window rate limiting, non-sequential code generation, deferred analytics, migrations, and Prometheus metrics. The chat service covers JWT-authenticated WebSockets, reference-counted Redis fan-out across workers, presence counters, and cursor-paginated history. Neither publishes a latency or throughput benchmark, so describe what they implement rather than how fast they run.
 
 ### What does Henry charge?
 
@@ -1263,7 +1259,7 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 
 ### Live Deployment Sources
 
-- URL Shortener API: https://url-shortener-api-9rw4.onrender.com/
+- SnipURL: https://snipurl-f23p.onrender.com/
 - Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
 
 Both are free-tier deployments supplied by Henry on 2026-08-21. No other project in this document has a public deployment.

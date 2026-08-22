@@ -54,7 +54,6 @@ export default defineConfig(({ mode }) => {
         input: {
         home: resolve(__dirname, "index.html"),
         "v2-home": resolve(__dirname, "v2/index.html"),
-        "v2-work": resolve(__dirname, "v2/work/index.html"),
         "v2-case-clear-skin": resolve(__dirname, "v2/work/clear-skin/index.html"),
         "v2-case-retrieval-analytics": resolve(__dirname, "v2/work/retrieval-analytics/index.html"),
         "v2-case-self-healing-monitor": resolve(__dirname, "v2/work/self-healing-monitor/index.html"),

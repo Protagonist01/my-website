@@ -21,7 +21,6 @@ APPROVED_ROUTES = {
     "/#work": "Featured work",
     "/#stack": "Working stack",
     "/#contact": "Contact",
-    "/v2/work/": "All work",
     "/v2/proof/": "Proof",
     "/v2/contact/": "Contact",
     "/v2/storecraft/": "StoreCraft commerce systems",
@@ -39,7 +38,7 @@ APPROVED_ROUTES = {
     "/v2/work/self-healing-monitor/": "Self-Healing Monitor",
     "/v2/work/ai-voice-receptionist/": "AI Voice Receptionist",
     "/v2/work/code-review-agent/": "AI Code Review Agent",
-    "/v2/work/url-shortener/": "URL Shortener API",
+    "/v2/work/url-shortener/": "SnipURL",
     "/v2/work/realtime-chat/": "Realtime Chat Service",
     "/v2/work/aboutface-chatbot/": "AboutFace Chatbot hobby project",
     "/v2/work/smart-todo/": "Smart Todo engineering note",
@@ -50,14 +49,14 @@ APPROVED_ROUTES = {
     "https://github.com/Protagonist01/self-healing-monitor": "Self-Healing Monitor repository",
     "https://github.com/Protagonist01/ai-voice-receptionist": "AI Voice Receptionist repository",
     "https://github.com/Protagonist01/code-review-agent": "AI Code Review Agent repository",
-    "https://github.com/Protagonist01/url-shortener": "URL Shortener API repository",
+    "https://github.com/Protagonist01/url-shortener": "SnipURL repository",
     "https://github.com/Protagonist01/realtime-chat": "Realtime Chat Service repository",
     "https://github.com/Protagonist01/aboutface-chatbot-demo": "AboutFace Chatbot repository",
     "https://github.com/Protagonist01/smart-todo-app": "Smart Todo App repository",
     "https://github.com/Protagonist01/my-website": "Portfolio Website repository",
     # The only two deployments a visitor can open. Both run on a free tier, so the
     # assistant should offer them as demonstrations rather than production systems.
-    "https://url-shortener-api-9rw4.onrender.com/": "URL Shortener API live app",
+    "https://snipurl-f23p.onrender.com/": "SnipURL live app",
     "https://realtime-chat-9kwe.onrender.com/": "Realtime Chat Service live app",
 }
 

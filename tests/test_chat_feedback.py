@@ -24,7 +24,7 @@ def feedback_body(**overrides):
         "rating": "positive",
         "comment": "",
         "trigger": "chat_close",
-        "page": "/v2/work/",
+        "page": "/v2/work/url-shortener/",
         "user_message_count": 2,
         "assistant_message_count": 2,
         "last_assistant_message_id": "message-2",
