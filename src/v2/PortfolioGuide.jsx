@@ -13,6 +13,7 @@ import {
 } from "./chatFeedback.js";
 import { guideBrandForPage } from "./guideBrands.js";
 import { navigateToTarget } from "./sectionNavigation.js";
+import { trackChatFeedbackEvent } from "./analytics.js";
 
 const INITIAL_PROMPT_DELAY_MS = 600;
 const FOLLOW_UP_PROMPT_DELAY_MIN_MS = 15_000;
@@ -646,6 +647,15 @@ export default function PortfolioGuide({ page }) {
     });
     const result = await response.json().catch(() => ({}));
     if (!response.ok) throw new Error(result.error || "Your feedback could not be saved. Please try again.");
+    // Mirrors the stored row: counts and IDs only, never chat transcript contents.
+    trackChatFeedbackEvent(comment.trim() ? "note" : "rating", {
+      rating: payload.rating,
+      trigger: payload.trigger,
+      brand: brand.id,
+      conversation_id: payload.conversation_id,
+      user_message_count: payload.user_message_count,
+      assistant_message_count: payload.assistant_message_count,
+    });
   };
 
   const submitFeedbackRating = async (rating) => {

@@ -9,6 +9,7 @@ import {
   readChatFeedbackSession,
   withFeedbackStatus,
 } from "../src/v2/chatFeedback.js";
+import { trackChatFeedbackEvent, trackCommerceEvent } from "../src/v2/analytics.js";
 
 const conversationId = "7f3cb3bc-c0cf-4bd8-a878-8c41590ce9db";
 
@@ -67,4 +68,88 @@ test("invalid stored state is replaced with a fresh conversation", () => {
     readChatFeedbackSession(storage, () => conversationId),
     { conversationId, status: "unrated" },
   );
+});
+
+function stubAnalyticsWindow() {
+  if (typeof globalThis.CustomEvent !== "function") {
+    globalThis.CustomEvent = class CustomEvent {
+      constructor(type, init) {
+        this.type = type;
+        this.detail = init?.detail;
+      }
+    };
+  }
+  const calls = { dataLayer: [], plausible: [], posthog: [], domEvents: [] };
+  globalThis.window = {
+    location: { pathname: "/v2/" },
+    dispatchEvent: (event) => calls.domEvents.push(event),
+    dataLayer: calls.dataLayer,
+    plausible: (name, options) => calls.plausible.push([name, options]),
+    posthog: { capture: (name, props) => calls.posthog.push([name, props]) },
+  };
+  return calls;
+}
+
+test("chat feedback events reach every analytics sink with the chat_feedback prefix", () => {
+  const calls = stubAnalyticsWindow();
+  try {
+    trackChatFeedbackEvent("rating", {
+      rating: "positive",
+      trigger: "chat_close",
+      brand: "henry",
+      conversation_id: conversationId,
+    });
+    assert.equal(calls.domEvents[0].type, "chat-feedback:analytics");
+    assert.equal(calls.domEvents[0].detail.eventName, "chat_feedback_rating");
+    assert.deepEqual(calls.dataLayer[0], {
+      event: "chat_feedback_rating",
+      rating: "positive",
+      trigger: "chat_close",
+      brand: "henry",
+      conversation_id: conversationId,
+      path: "/v2/",
+    });
+    assert.deepEqual(calls.plausible[0], ["chat_feedback_rating", {
+      props: {
+        rating: "positive",
+        trigger: "chat_close",
+        brand: "henry",
+        conversation_id: conversationId,
+        path: "/v2/",
+      },
+    }]);
+    assert.deepEqual(calls.posthog[0], ["chat_feedback_rating", {
+      rating: "positive",
+      trigger: "chat_close",
+      brand: "henry",
+      conversation_id: conversationId,
+      path: "/v2/",
+    }]);
+  } finally {
+    delete globalThis.window;
+  }
+});
+
+test("empty feedback properties are dropped before reaching analytics", () => {
+  const calls = stubAnalyticsWindow();
+  try {
+    trackChatFeedbackEvent("note", { rating: "negative", comment: "", extra: null });
+    const entry = calls.dataLayer[0];
+    assert.equal(entry.event, "chat_feedback_note");
+    assert.equal("comment" in entry, false);
+    assert.equal("extra" in entry, false);
+  } finally {
+    delete globalThis.window;
+  }
+});
+
+test("commerce events keep their storecraft prefix and DOM event name", () => {
+  const calls = stubAnalyticsWindow();
+  try {
+    trackCommerceEvent("cta_clicked", { platform: "shopify" });
+    assert.equal(calls.dataLayer[0].event, "storecraft_cta_clicked");
+    assert.equal(calls.domEvents[0].type, "storecraft:analytics");
+  } finally {
+    delete globalThis.window;
+  }
 });
