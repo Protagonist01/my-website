@@ -128,7 +128,7 @@ The [`Chat evaluations`](.github/workflows/chat-evals.yml) GitHub Actions workfl
 
 After a visitor has sent at least two messages and received a successful answer, closing the guide shows one short thumbs-up/thumbs-down prompt. A rating can include an optional 500-character note. The prompt is non-blocking, appears only once per conversation, and resets when chat history is cleared.
 
-Feedback is sent to the server-only `/api/feedback` endpoint and stored in Supabase. It includes a random conversation ID, rating, optional note, page, trigger, message counts, and the last assistant message ID. Chat message contents and visitor IP addresses are not stored with feedback.
+Feedback is sent to the server-only `/api/feedback` endpoint and stored in Supabase. It includes a random conversation ID, rating, optional note, page, trigger, message counts, and the last assistant message ID. Chat message contents and visitor IP addresses are not stored with feedback. Successful saves also emit `chat_feedback_rating` and `chat_feedback_note` events (same fields, no transcript) to PostHog, Plausible, and the GTM data layer through `trackChatFeedbackEvent` in `src/v2/analytics.js`.
 
 Run `supabase/migrations/202607220002_chat_feedback.sql` after the referral migration, then use the same server-only `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` values. The public browser never receives the service-role key.
 
