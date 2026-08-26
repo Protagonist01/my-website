@@ -62,6 +62,9 @@ button, a { color: inherit; }
 }
 .v2-site { overflow: visible; }
 .v2-site main, .v2-offer-rail { overflow: clip; }
+/* Placeholder while a lazy page chunk downloads, so the ending sequence and footer do
+   not climb into view behind the navigation before the page body has mounted. */
+.v2-page-pending { min-height: 100svh; }
 
 .v2-header {
   position: fixed;

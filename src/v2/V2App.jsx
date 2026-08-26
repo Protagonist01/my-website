@@ -1,20 +1,30 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects } from "./data.js";
-import ReplicaHome, { ContactOverlay, EndingSequence, FloatingNavigation } from "./ReplicaHome.jsx";
 import { replicaContent } from "./replicaContent.js";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { storecraftContent } from "./storecraftContent.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
 import { ConfettiSuccess } from "./FormSuccess.jsx";
-import EcommerceLanding, { CommerceInquiry } from "./EcommerceLanding.jsx";
-import OffersShowcase from "./OffersShowcase.jsx";
 import { commerceOffers } from "./offersData.js";
-import { ReferralCampaign, ReferralDashboard } from "./ReferralCampaign.jsx";
-import { captureReferralAttribution } from "./referralClient.js";
 import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
-import { OfferCasePage, ProjectCasePage } from "./CasePage.jsx";
+import { ContactOverlay, EndingSequence, FloatingNavigation } from "./SiteChrome.jsx";
+const ReplicaHome = lazy(() => import("./ReplicaHome.jsx"));
+const EcommerceLanding = lazy(() => import("./EcommerceLanding.jsx"));
+const CommerceInquiry = lazy(() => import("./EcommerceLanding.jsx").then((module) => ({ default: module.CommerceInquiry })));
+const OffersShowcase = lazy(() => import("./OffersShowcase.jsx"));
+const OfferCasePage = lazy(() => import("./CasePage.jsx").then((module) => ({ default: module.OfferCasePage })));
+const ProjectCasePage = lazy(() => import("./CasePage.jsx").then((module) => ({ default: module.ProjectCasePage })));
+const ReferralCampaign = lazy(() => import("./ReferralCampaign.jsx").then((module) => ({ default: module.ReferralCampaign })));
+const ReferralDashboard = lazy(() => import("./ReferralCampaign.jsx").then((module) => ({ default: module.ReferralDashboard })));
+
+// Lazy page chunks land after this shell has already run its observers against an
+// empty <main>, so the reveal and visibility effects re-scan once real content mounts.
+function ContentReady({ onReady, children }) {
+  useEffect(() => { onReady(); }, [onReady]);
+  return children;
+}
 
 const expertise = [
   ["01", "AI products", "Agents, retrieval, and generative experiences"],
@@ -27,7 +37,7 @@ function Arrow() {
   return <span className="v2-direction-arrow" aria-hidden="true">{"\u2197"}</span>;
 }
 
-function useReveal(rootRef, page) {
+function useReveal(rootRef, page, contentVersion) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
@@ -41,10 +51,11 @@ function useReveal(rootRef, page) {
     }, { threshold: 0.08, rootMargin: "0px 0px -8%" });
     root.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [page, rootRef]);
+    // contentVersion re-runs the scan when a lazy page body mounts its [data-reveal] nodes.
+  }, [page, rootRef, contentVersion]);
 }
 
-function useAnimationVisibility(rootRef, page) {
+function useAnimationVisibility(rootRef, page, contentVersion) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return undefined;
@@ -57,10 +68,10 @@ function useAnimationVisibility(rootRef, page) {
     root.querySelectorAll("main section").forEach((section) => observer.observe(section));
     root.querySelectorAll(".v2-product-orbit i, .replica-hero__spark, .replica-hero__bolt").forEach((owner) => loopObserver.observe(owner));
     return () => { observer.disconnect(); loopObserver.disconnect(); };
-  }, [page, rootRef]);
+  }, [page, rootRef, contentVersion]);
 }
 
-function useInitialHashScroll(page) {
+function useInitialHashScroll(page, contentVersion) {
   useEffect(() => {
     const id = decodeURIComponent(window.location.hash.slice(1));
     if (!id) return undefined;
@@ -88,7 +99,9 @@ function useInitialHashScroll(page) {
       window.removeEventListener("load", handleLoad);
       interactionEvents.forEach((eventName) => window.removeEventListener(eventName, markInteraction));
     };
-  }, [page]);
+    // contentVersion replays the attempt once the lazy page body (and its anchor
+    // targets) exist; the settle timers alone can fire before that chunk lands.
+  }, [page, contentVersion]);
 }
 
 function useWorkSpecialisationsMotion(sectionRef) {
@@ -422,11 +435,15 @@ export function V2App({ page }) {
   const root = useRef(null);
   const [contactOpen, setContactOpen] = useState(false);
   const [contactContext, setContactContext] = useState("");
-  useReveal(root, page);
-  useAnimationVisibility(root, page);
-  useInitialHashScroll(page);
+  const [contentVersion, setContentVersion] = useState(0);
+  const noteContentReady = useCallback(() => setContentVersion((version) => version + 1), []);
+  useReveal(root, page, contentVersion);
+  useAnimationVisibility(root, page, contentVersion);
+  useInitialHashScroll(page, contentVersion);
   useEffect(() => {
-    void captureReferralAttribution();
+    // Supabase is only needed when a referral code is actually present, and the client
+    // itself is a lazy chunk, so it never joins this bundle's critical path.
+    void import("./referralClient.js").then((module) => module.captureReferralAttribution());
   }, []);
   useEffect(() => {
     if (page === "contact") setContactOpen(true);
@@ -446,12 +463,14 @@ export function V2App({ page }) {
     if (handleSectionNavigationClick(event)) return;
     openContactFromLink(event);
   };
-  if (page === "home") return <ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} />;
+  if (page === "home") {
+    return <Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} /></Suspense>;
+  }
   const isCasePage = page.startsWith("case-") || page.startsWith("offer-");
   const usesProjectNavigation = page === "storecraft" || page === "referrals" || page === "referral-dashboard" || page.startsWith("case-") || page.startsWith("offer-");
   // StoreCraft is its own brand: its own nav wordmark, its own footer, and its own
   // inquiry form as the ending cover instead of Henry's "Let's talk." section.
   const isStorecraft = page === "storecraft" || page.startsWith("offer-");
   const brand = isStorecraft ? storecraftContent : replicaContent;
-  return <div className={`v2-site${isCasePage ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation brand={brand} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Renderer page={page} /></main>{!isCasePage && <div className="replica-end"><EndingSequence brand={brand} cover={isStorecraft ? <CommerceInquiry sectionId="" /> : undefined} /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  return <div className={`v2-site${isCasePage ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation brand={brand} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ContentReady onReady={noteContentReady}><Renderer page={page} /></ContentReady></Suspense></main>{!isCasePage && <div className="replica-end"><EndingSequence brand={brand} cover={isStorecraft ? <Suspense fallback={null}><CommerceInquiry sectionId="" /></Suspense> : undefined} /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

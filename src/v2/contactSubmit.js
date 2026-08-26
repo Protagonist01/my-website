@@ -1,5 +1,6 @@
-import { enrichReferralFormData, recordReferralLead } from "./referralClient.js";
-
+// referralClient carries the Supabase SDK; importing it dynamically keeps that SDK out
+// of the critical path so it only downloads when a visitor actually submits a form (or
+// opens the referrals page, which imports it directly).
 export const CONTACT_ENDPOINT = "https://formspree.io/f/mqevwkpl";
 export const CONTACT_EMAIL = "hfadeni@gmail.com";
 
@@ -12,6 +13,7 @@ export const CONTACT_ERROR_MESSAGE = `Your message could not be sent. Your detai
  * reported to the visitor as sent, because the lead is otherwise lost silently.
  */
 export async function submitContactForm(formData, { endpoint = CONTACT_ENDPOINT } = {}) {
+  const { enrichReferralFormData } = await import("./referralClient.js");
   let response;
   try {
     response = await fetch(endpoint, {
@@ -38,5 +40,5 @@ export async function submitContactForm(formData, { endpoint = CONTACT_ENDPOINT 
  * submission and never converts its own failure into a failed contact.
  */
 export function recordContactReferral(details) {
-  void recordReferralLead(details);
+  void import("./referralClient.js").then(({ recordReferralLead }) => recordReferralLead(details));
 }

@@ -6,6 +6,9 @@ const dataSource = readFileSync(new URL("../src/v2/data.js", import.meta.url), "
 const replicaSource = readFileSync(new URL("../src/v2/replicaContent.js", import.meta.url), "utf8");
 const appSource = readFileSync(new URL("../src/v2/V2App.jsx", import.meta.url), "utf8");
 const homeSource = readFileSync(new URL("../src/v2/ReplicaHome.jsx", import.meta.url), "utf8");
+// The shared chrome (navigation, contact surfaces, ending sequence) renders on every
+// page including the homepage, so its ids count as rendered markup.
+const chromeSource = readFileSync(new URL("../src/v2/SiteChrome.jsx", import.meta.url), "utf8");
 
 test("navigation is declared in exactly one place", () => {
   const declarations = [dataSource, replicaSource, appSource].filter((source) =>
@@ -35,7 +38,7 @@ test("every homepage anchor in the navigation exists in the rendered markup", ()
   const anchors = [...dataSource.matchAll(/href: "\/#([\w-]+)"/g)].map((match) => match[1]);
   assert.ok(anchors.length > 0, "expected at least one homepage anchor");
 
-  const markup = homeSource + appSource;
+  const markup = homeSource + appSource + chromeSource;
   for (const anchor of anchors) {
     const literal = new RegExp(`id="${anchor}"`);
     const conditional = new RegExp(`id=\\{[^}]*"${anchor}"`);
