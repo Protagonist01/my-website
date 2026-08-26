@@ -589,10 +589,10 @@ Relevant questions:
 
 ### AboutFace Chatbot
 
-Status: Public demo, unofficial and unaffiliated with about-face or Halsey.  
+Status: Public demo with live deployment, unofficial and unaffiliated with about-face or Halsey.  
 Repository: https://github.com/Protagonist01/aboutface-chatbot-demo
 Live demo: https://aboutface-chatbot-demo.vercel.app/
-Dedicated V2 case study: /v2/work/aboutface-chatbot/  
+Dedicated V2 case study: /v2/work/aboutface-chatbot/
 
 Summary:
 
@@ -864,12 +864,13 @@ The assistant may cite these original repositories because they match projects d
 - https://github.com/Protagonist01/my-website
 - https://github.com/Protagonist01/smart-todo-app
 
-Two of these also have a public deployment the assistant may link:
+Three of these also have a public deployment the assistant may link:
 
+- AboutFace Chatbot: https://aboutface-chatbot-demo.vercel.app/
 - SnipURL: https://snipurl-f23p.onrender.com/
 - Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
 
-Both run on a free hosting tier. Offer them as working demonstrations, mention that the chat instance sleeps when idle and takes roughly thirty seconds to wake, and never present either URL as evidence of production scale.
+All run on a free hosting tier. Offer them as working demonstrations, mention that the SnipURL and Realtime Chat instances sleep when idle and take roughly thirty seconds to wake, and never present any of these URLs as evidence of production scale.
 
 Smart Todo is approved only for direct questions and compact project-card context. Do not proactively feature it, call it an AI or LLM product, or treat it as a full case study. Do not use the forked data-engineer-handbook as evidence of Henry's authored work. Do not proactively promote stock-trading-python-app, medical-aesthetics-industry-ai-agent, the profile README repository, or other experiments unless Henry later adds them to the approved showcase list.
 
@@ -990,7 +991,7 @@ Display the homepage featured work in this order:
 6. SnipURL: /v2/work/url-shortener/
 7. Realtime Chat Service: /v2/work/realtime-chat/
 
-Entries 1, 6, and 7 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these seven is titled by the projects themselves and carries no eyebrow label above it.
+Entries 1, 3, 6, and 7 carry a "Live" marker and an "Open live app" link next to the case-study link. The other three have no deployment to open. The homepage section that holds these seven is titled by the projects themselves and carries no eyebrow label above it.
 
 ### Work Collection Structure
 
@@ -1263,10 +1264,11 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 
 ### Live Deployment Sources
 
+- AboutFace Chatbot: https://aboutface-chatbot-demo.vercel.app/
 - SnipURL: https://snipurl-f23p.onrender.com/
 - Realtime Chat Service: https://realtime-chat-9kwe.onrender.com/
 
-Both are free-tier deployments supplied by Henry on 2026-08-21. No other project in this document has a public deployment.
+All are free-tier deployments. No other project in this document has a public deployment.
 
 ### Commerce Research Sources
 

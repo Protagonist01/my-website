@@ -72,8 +72,9 @@ export const APPROVED_ROUTES = new Map([
   ["https://github.com/Protagonist01/realtime-chat", "Realtime Chat Service repository"],
   ["https://github.com/Protagonist01/smart-todo-app", "Smart Todo App repository"],
   ["https://github.com/Protagonist01/my-website", "Portfolio Website repository"],
-  // The only two deployments a visitor can open. Both run on a free tier, so the
+  // The only deployments a visitor can open. All run on a free tier, so the
   // assistant should offer them as demonstrations rather than production systems.
+  ["https://aboutface-chatbot-demo.vercel.app/", "AboutFace Chatbot live demo"],
   ["https://snipurl-f23p.onrender.com/", "SnipURL live app"],
   ["https://realtime-chat-9kwe.onrender.com/", "Realtime Chat Service live app"],
 ]);

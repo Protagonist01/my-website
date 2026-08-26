@@ -29,7 +29,7 @@ const raaArchitectureImage = "https://raw.githubusercontent.com/Protagonist01/re
 const portfolioImage = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
 const selfHealingDashboardImage = "https://raw.githubusercontent.com/Protagonist01/self-healing-monitor/main/demo_artifacts/01-dashboard-overview.png";
 const selfHealingApprovalImage = "https://raw.githubusercontent.com/Protagonist01/self-healing-monitor/main/demo_artifacts/02-approval-queue-and-audit.png";
-const aboutFaceImage = "https://raw.githubusercontent.com/Protagonist01/aboutface-chatbot-demo/main/public/images/hero-product-new.png";
+const aboutFaceImage = new URL("../../assets/aboutface.png", import.meta.url).href;
 const smartTodoImage = "https://raw.githubusercontent.com/Protagonist01/smart-todo-app/main/screenshots/3-list-tasks.png";
 
 export const paths = {
@@ -304,7 +304,8 @@ export const projects = [
     tone: "cool",
     featured: true,
     evidence: "demo",
-    status: "Public demo / Unofficial brand demonstration",
+    status: "Public demo / Live deployment",
+    liveUrl: "https://aboutface-chatbot-demo.vercel.app/",
     lead: "The assistant retrieves relevant catalogue or policy passages before it writes a single word of its answer.",
     challenge: "A general chatbot could invent product details, ingredients, or return policies. The assistant needed to answer only from the brand's approved catalogue and support content while still feeling helpful and conversational, and to degrade predictably when an external provider failed.",
     role: "I designed and developed this project end to end: catalogue ingestion and atomic chunking, Pinecone embeddings and reranking, the brand prompt and JSON response schema, the responsive chat interface, tests, and deployment.",
