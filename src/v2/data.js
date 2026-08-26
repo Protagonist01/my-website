@@ -11,7 +11,6 @@ const snipurlCoverImage = new URL("../../assets/images/v2-work/covers/snipurl-co
 const keepupCoverImage = new URL("../../assets/images/v2-work/covers/keepup-cover-editorial.png", import.meta.url).href;
 const realtimeChatCoverImage = new URL("../../assets/images/v2-work/covers/realtime-chat-cover-editorial.jpg", import.meta.url).href;
 const testimonyOperationsCoverImage = new URL("../../assets/images/v2-work/covers/testimony-operations-cover-editorial.webp", import.meta.url).href;
-const aboutFaceChatbotCoverImage = new URL("../../assets/images/v2-work/covers/aboutface-product-evidence.png", import.meta.url).href;
 const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-product-evidence.png", import.meta.url).href;
 const portfolioWebsiteCoverImage = new URL("../../assets/images/v2-work/covers/portfolio-website-cover-editorial.webp", import.meta.url).href;
 const testimonyImage = new URL("../../works/works images/testimony-v2.webp", import.meta.url).href;
@@ -296,7 +295,7 @@ export const projects = [
     stack: ["Node.js", "Pinecone", "OpenRouter", "Express"],
     visual: "aboutface-chatbot",
     image: aboutFaceImage,
-    coverImage: aboutFaceChatbotCoverImage,
+    coverImage: aboutFaceImage,
     coverBackground: "#f3e9e5",
     coverInHero: true,
     imageAlt: "AboutFace cosmetics product imagery used by the chatbot experience",
