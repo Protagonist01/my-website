@@ -10,6 +10,7 @@ const visualLabels = {
   "aboutface-chatbot": "Product question moving through retrieval into a grounded cosmetic recommendation",
   "smart-todo": "Command-line task entry parsed into date, tag, priority, and assignment fields",
   "portfolio-website": "Portfolio story system connecting content, motion, responsive layouts, and verification",
+  "keepup": "A goal room where a six-character code opens a shared list, a tick checks you in, and the room confirms it",
 };
 
 function Step({ number, label, state }) {
@@ -109,6 +110,28 @@ function PortfolioVisual() {
   </>;
 }
 
+function KeepUpVisual() {
+  return <>
+    <div className="v2-project-visual__room">
+      <small>Room code · K4QH7M</small>
+      <strong>Read 3 pages</strong>
+      <div className="v2-project-visual__rows">
+        <div><i aria-hidden="true">✓</i><span><b>Tolu</b> — done today</span></div>
+        <div><i aria-hidden="true">✓</i><span><b>Ada</b> — two chapters</span></div>
+        <div><i aria-hidden="true">·</i><span><b>You</b> — open row</span></div>
+      </div>
+    </div>
+    <div className="v2-project-visual__route">
+      <Step number="01" label="Start" state="ready" /><Step number="02" label="Invite" state="active" /><Step number="03" label="Check in" />
+    </div>
+    <div className="v2-project-visual__meter">
+      <div><small>No signup</small><strong>Display name only</strong></div>
+      <div><small>Room code</small><strong>6 characters</strong></div>
+      <div><small>Your place</small><strong>This browser</strong></div>
+    </div>
+  </>;
+}
+
 const VisualById = {
   "retrieval-analytics": RetrievalAnalyticsVisual,
   "self-healing-monitor": SelfHealingVisual,
@@ -119,6 +142,7 @@ const VisualById = {
   "aboutface-chatbot": AboutFaceVisual,
   "smart-todo": TodoVisual,
   "portfolio-website": PortfolioVisual,
+  "keepup": KeepUpVisual,
 };
 
 export function ProjectVisual({ id, compact = false, artifact = false, className = "" }) {

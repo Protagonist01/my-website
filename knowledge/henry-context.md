@@ -378,7 +378,7 @@ Dates: January 2025-present.
 
 Henry builds production-style AI systems that turn business data, workflows, customer conversations, and operational alerts into intelligent automation. Work includes RAG, agents, analytics, AI voice workflows, and full-stack AI products.
 
-Public evidence includes the retrieval analytics dashboard, AI code review agent, Clear Skin concierge, AI voice receptionist, and self-healing monitor documented below.
+Public evidence includes the retrieval analytics dashboard, AI code review agent, Clear Skin concierge, AboutFace chatbot, and self-healing monitor documented below.
 
 ### Forging Ahead Foundation - Board Member
 
@@ -459,7 +459,7 @@ The category describes the kind of engineering work, and the evidence label abov
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 and verified on 2026-08-21, and the dedicated Work page was removed on 2026-08-22. The work collection is organized into seven featured stories, two archive projects, and three hobby projects. Six of the seven featured stories appear in the homepage's Featured Projects section; Clear Skin Concierge is the seventh and is reached through its own case-study page.
+Decision status: implemented in V2 and verified on 2026-08-21, and the dedicated Work page was removed on 2026-08-22. The work collection is organized into seven featured stories, two archive projects, and two hobby projects. Six of the seven featured stories appear in the homepage's Featured Projects section; Clear Skin Concierge is the seventh and is reached through its own case-study page. The AI Voice Receptionist is temporarily not featured; its public repository remains approved evidence but it has no live site route while it is off the homepage.
 
 Publication rules:
 
@@ -471,7 +471,7 @@ Published full case studies:
 
 1. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
 2. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
-3. AI Voice Receptionist: /v2/work/ai-voice-receptionist/. Core story: how a clinic call becomes structured booking data, a confirmed simulated result, or a human handoff. Always disclose that calendar availability and bookings are simulated.
+3. AboutFace Chatbot: /v2/work/aboutface-chatbot/. Core story: how a cosmetics support chatbot retrieves and reranks approved catalogue passages before answering product, shade, shipping, and returns questions. Always disclose that the knowledge base is a curated demo subset, not the brand's live catalogue, and that the demo is unofficial and unaffiliated with about-face or Halsey.
 4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
 5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
 6. SnipURL: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
@@ -481,7 +481,6 @@ Published full case studies:
 
 Hobby project treatments:
 
-- AboutFace Chatbot: /v2/work/aboutface-chatbot/. A dedicated hobby-project note paired with Clear Skin, showing the progression from grounded text answers to typed product actions.
 - Smart Todo App: /v2/work/smart-todo/. A dedicated hobby-project note for a deterministic, regex-driven Python command-line task manager with strong automated testing. It is not an AI or LLM task planner.
 - Portfolio Website: /v2/work/portfolio-website/. A dedicated hobby-project note covering interaction design, motion, responsive systems, content architecture, assistant grounding, and QA. It is not a client project.
 - AI Tools / Coming Soon: a placeholder, not an evidenced project. Remove it from the gallery and never cite it as completed work.
@@ -587,36 +586,41 @@ Relevant questions:
 - How would Henry control cart or booking actions?
 - Can Henry connect AI to a real full-stack customer journey?
 
-### AI Voice Receptionist
+### AboutFace Chatbot
 
-Status: Public demo with mocked calendar integration.  
-Repository: https://github.com/Protagonist01/ai-voice-receptionist
-Dedicated V2 case study: /v2/work/ai-voice-receptionist/  
+Status: Public demo, unofficial and unaffiliated with about-face or Halsey.  
+Repository: https://github.com/Protagonist01/aboutface-chatbot-demo
+Live demo: https://aboutface-chatbot-demo.vercel.app/
+Dedicated V2 case study: /v2/work/aboutface-chatbot/  
 
 Summary:
 
-> A voice receptionist demonstration that answers clinic questions, checks simulated appointment availability, confirms booking details, creates a simulated booking record, and sends an SMS summary.
+> A cosmetics support chatbot named "the muse" that answers product, shade, shipping, returns, and brand questions from an approved knowledge base using a retrieval-augmented pipeline.
 
 Key implementation evidence:
 
-- Real-time inbound voice workflow.
-- Structured `check_availability` and `create_booking` tools.
-- Webhook authorization.
-- Caller-ID capture and end-of-call analytics.
-- Outbound SMS booking confirmations through Twilio.
-- FastAPI backend and a Next.js/React/TypeScript demo interface.
+- Atomic chunking: seed-knowledge.js splits the knowledge base into product, subsection, and FAQ records.
+- Pinecone embeddings with the multilingual-e5-large model.
+- Each question retrieves 15 vector candidates and reranks the best five with bge-reranker-v2-m3.
+- Only the five reranked records are sent to a fixed OpenRouter model under a strict JSON response schema.
+- A response validator rejects incomplete output or exposed model planning.
+- Pinecone and model failures use explicit named fallbacks instead of choosing a random model.
+- The default model is nvidia/nemotron-3-super-120b-a12b:free with two named free fallbacks.
+- Node.js and Express backend with a responsive chat interface.
+- Tests cover atomic chunking, local retrieval, and response validation; a separate evaluation checks live Pinecone retrieval.
 
 Important qualifiers:
 
-- The Acuity Scheduling calendar integration is mocked.
-- Demo bookings are simulated records and are never written to a production calendar.
-- Cancellation and rescheduling do not trigger a real calendar action.
+- The demo is unofficial and is not affiliated with about-face or Halsey.
+- The knowledge base is a curated subset, not the brand's live catalogue.
+- In-memory rate limiting suits a demo load; a production deployment should use a shared rate-limit store.
+- The assistant only returns text. Clear Skin Concierge later adds typed cart and booking proposals that require customer confirmation.
 
 Relevant questions:
 
-- Has Henry worked with voice AI?
-- Can Henry design appointment-booking voice workflows?
-- Does Henry disclose demo limitations?
+- Has Henry built RAG systems?
+- Can Henry build a grounded customer-support chatbot?
+- How does retrieval keep a chatbot from inventing product details?
 
 ### Self-Healing Microservices Monitor
 
@@ -852,7 +856,6 @@ The assistant may cite these original repositories because they match projects d
 - https://github.com/Protagonist01/code-review-agent
 - https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction
 - https://github.com/Protagonist01/aboutface-chatbot-demo
-- https://github.com/Protagonist01/ai-voice-receptionist
 - https://github.com/Protagonist01/clear-skin-concierge-site
 - https://github.com/Protagonist01/self-healing-monitor
 - https://github.com/Protagonist01/url-shortener
@@ -983,7 +986,7 @@ Display the homepage featured work in this order:
 3. AI Code Review Agent: /v2/work/code-review-agent/
 4. SnipURL: /v2/work/url-shortener/
 5. Realtime Chat Service: /v2/work/realtime-chat/
-6. AI Voice Receptionist: /v2/work/ai-voice-receptionist/
+6. AboutFace Chatbot: /v2/work/aboutface-chatbot/
 
 Entries 4 and 5 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these six is titled by the projects themselves and carries no eyebrow label above it.
 
@@ -1007,11 +1010,10 @@ not link anywhere. Never offer a /v2/services/ link; send service questions to
 
 - Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
 - Self-Healing Monitor: /v2/work/self-healing-monitor/
-- AI Voice Receptionist: /v2/work/ai-voice-receptionist/
+- AboutFace Chatbot: /v2/work/aboutface-chatbot/
 - AI Code Review Agent: /v2/work/code-review-agent/
 - SnipURL: /v2/work/url-shortener/
 - Realtime Chat Service: /v2/work/realtime-chat/
-- AboutFace Chatbot hobby project: /v2/work/aboutface-chatbot/
 - Smart Todo App hobby project: /v2/work/smart-todo/
 - Portfolio Website hobby project: /v2/work/portfolio-website/
 - Automated Testimony Operations: /v2/work/archive/testimony-operations/
@@ -1072,7 +1074,7 @@ Suggestions should be relevant to the active page and conversation state. Do not
 ### Conversational AI & Voice Systems Page
 
 - Show me a grounded chat system.
-- How does the voice receptionist hand off to a person?
+- How does the AboutFace chatbot stay grounded in approved content?
 - Which actions require confirmation?
 
 ### Full-Stack Product Engineering Page
@@ -1161,7 +1163,7 @@ Yes. Public examples include the About Face chatbot, Clear Skin concierge, retri
 
 ### Has Henry built voice AI?
 
-Yes. The AI Voice Receptionist demonstrates real-time call handling, simulated availability and booking tools, analytics, and Twilio SMS confirmation. Its calendar integration is explicitly a mock rather than a production booking system.
+Yes. The AI Voice Receptionist (a public repository at https://github.com/Protagonist01/ai-voice-receptionist) demonstrates real-time call handling, simulated availability and booking tools, analytics, and Twilio SMS confirmation. Its calendar integration is explicitly a mock rather than a production booking system. This project is temporarily not featured on the site, so link to the repository rather than a site route.
 
 ### Does Henry work with machine learning outside LLMs?
 
@@ -1249,7 +1251,6 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 - https://github.com/Protagonist01/code-review-agent
 - https://github.com/Protagonist01/feijoa-classification-and-weightloss-prediction
 - https://github.com/Protagonist01/aboutface-chatbot-demo
-- https://github.com/Protagonist01/ai-voice-receptionist
 - https://github.com/Protagonist01/clear-skin-concierge-site
 - https://github.com/Protagonist01/self-healing-monitor
 - https://github.com/Protagonist01/url-shortener

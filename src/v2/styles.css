@@ -439,6 +439,25 @@ button, a { color: inherit; }
 
 .v2-works-image-layer > .v2-project-visual, .v2-works-mobile article > a .v2-project-visual { min-height: 100%; }
 
+/* keepup: no cover image, so the proof visual renders. Same container-query treatment as
+   url-shortener and realtime-chat — every part is sized in cqw so one drawing stays legible
+   across the works stage, the mid band, and a mobile card. */
+.v2-project-visual--keepup { --visual-bg: #0f1a17; --visual-panel: #16241f; --visual-accent: #8fe3a8; }
+.v2-project-visual--keepup,
+.v2-project-visual--keepup.is-compact { container-type: inline-size; grid-template-columns: minmax(0, 1.06fr) minmax(0, .74fr); gap: 3%; padding: 3.6%; }
+.v2-project-visual--keepup small { font-size: 1.5cqw; }
+.v2-project-visual--keepup .v2-project-visual__step { gap: 1.6cqw; padding: 2cqw; border-radius: 1.1cqw; }
+.v2-project-visual--keepup .v2-project-visual__step > span { width: 4.3cqw; height: 4.3cqw; font-size: 1.5cqw; }
+.v2-project-visual--keepup .v2-project-visual__step strong { font-size: 1.85cqw; }
+.v2-project-visual--keepup .v2-project-visual__route { gap: 1.3cqw; align-content: center; }
+.v2-project-visual__room { align-self: center; display: grid; gap: 1.4cqw; padding: 3.1cqw; border: 1px solid var(--visual-line); border-radius: 1.3cqw; background: var(--visual-panel); }
+.v2-project-visual__room > strong { display: block; font: 430 4.4cqw/1.05 var(--display); }
+.v2-project-visual__rows { display: grid; gap: 1.2cqw; margin-top: 1cqw; }
+.v2-project-visual__rows > div { display: grid; grid-template-columns: auto 1fr; gap: 1.4cqw; align-items: center; padding: 1.6cqw 2cqw; border: 1px solid var(--visual-line); border-radius: 1cqw; }
+.v2-project-visual__rows > div > i { display: grid; width: 4cqw; height: 4cqw; border: 1px solid var(--visual-accent); border-radius: .8cqw; color: var(--visual-accent); font-size: 2.2cqw; font-style: normal; font-weight: 600; place-items: center; }
+.v2-project-visual__rows > div > span { font-size: 1.8cqw; }
+.v2-project-visual__rows > div > span b { color: var(--visual-accent); font-weight: 600; }
+
 /* Supporting project notes */
 .v2-project-note__context > span, .v2-project-note__lessons header span { font: .62rem/1 var(--mono); text-transform: uppercase; }
 .v2-project-note__hero { min-height: 100svh; padding: 8rem var(--gutter) 4rem; background: #11120f; color: #f7f6f0; }

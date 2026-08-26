@@ -41,7 +41,7 @@ the decisions behind them, how the systems work, the evidence available, and the
 |:--|:--|:--|:--|
 | **Retrieval-Augmented Analytics** | AI Engineering | Built text-to-SQL product · [public repo](https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard) | `/v2/work/retrieval-analytics/` |
 | **Self-Healing Monitor** | Automation | Controlled SRE-agent demonstration · [public repo](https://github.com/Protagonist01/self-healing-monitor) | `/v2/work/self-healing-monitor/` |
-| **AI Voice Receptionist** | AI Engineering | Public voice demo with simulated booking · [public repo](https://github.com/Protagonist01/ai-voice-receptionist) | `/v2/work/ai-voice-receptionist/` |
+| **AboutFace Chatbot** | AI Engineering | Public RAG cosmetics-support demo · [public repo](https://github.com/Protagonist01/aboutface-chatbot-demo) · [live demo](https://aboutface-chatbot-demo.vercel.app/) | `/v2/work/aboutface-chatbot/` |
 | **AI Code Review Agent** | Automation | Built GitHub review agent · [public repo](https://github.com/Protagonist01/code-review-agent) | `/v2/work/code-review-agent/` |
 | **Clear Skin Concierge** | Full-Stack Product Engineering | Built clinic-commerce & AI concierge product · [public repo](https://github.com/Protagonist01/clear-skin-concierge-site) | `/v2/work/clear-skin/` |
 | **SnipURL** | Full-Stack Product Engineering | Built link service · [live app](https://snipurl-f23p.onrender.com/) · [public repo](https://github.com/Protagonist01/url-shortener) | `/v2/work/url-shortener/` |
@@ -60,7 +60,6 @@ Every project on the site has either a public repository or a delivered client s
 
 | Project | Focus | Route |
 |:--|:--|:--|
-| **AboutFace Chatbot** | Grounded skincare support chat | `/v2/work/aboutface-chatbot/` |
 | **Smart Todo App** | Deterministic Python task parsing | `/v2/work/smart-todo/` |
 | **Portfolio Website** | Interaction design, frontend engineering, assistant grounding, QA | `/v2/work/portfolio-website/` |
 
