@@ -1,5 +1,7 @@
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects } from "./data.js";
 import { replicaContent } from "./replicaContent.js";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
@@ -108,142 +110,115 @@ function useWorkSpecialisationsMotion(sectionRef) {
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return undefined;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
 
-    let context;
-    let disposed = false;
+    gsap.registerPlugin(ScrollTrigger);
+
     let resizeTimer = 0;
+    const context = gsap.context(() => {
+      const track = section.querySelector("[data-work-copy-track]");
+      const entries = gsap.utils.toArray("[data-work-copy-entry]", section);
+      const numbers = gsap.utils.toArray("[data-work-number-rail] span", section);
+      const imageLayers = gsap.utils.toArray("[data-work-image-layer]", section);
+      const itemCount = entries.length;
+      const itemHeight = () => entries[0]?.offsetHeight || 380;
 
-    const setup = async () => {
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      if (disposed) return;
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      if (!itemCount || !track) return;
+
+      gsap.set(entries, { opacity: (index) => index === 0 ? 1 : 0.07 });
+      gsap.set(numbers, { opacity: (index) => index === 0 ? 1 : 0, y: (index) => index === 0 ? 0 : 8 });
+      const closedImageClip = () => "inset(0% 100% 100% 0%)";
+      gsap.set(imageLayers.slice(1), { clipPath: closedImageClip });
+
+      let semanticIndex = -1;
+      const updateSemanticState = (progress) => {
+        const nextIndex = Math.min(entries.length - 1, Math.max(0, Math.round(progress * (entries.length - 1))));
+        if (nextIndex === semanticIndex) return;
+        semanticIndex = nextIndex;
+        entries.forEach((entry, index) => {
+          const active = index === nextIndex;
+          entry.setAttribute("aria-hidden", active ? "false" : "true");
+          entry.querySelectorAll("a").forEach((link) => link.setAttribute("tabindex", active ? "0" : "-1"));
+        });
+      };
+      updateSemanticState(0);
+
+      const timeline = gsap.timeline({ defaults: { ease: "none" } });
+      const leadIn = .45;
+      // Every property of a transition now starts at `start` and lands on `start + shift`, and
+      // the rest of the unit is a dwell where the entry sits still.
+      const shift = .62;
+      const trackEase = "power1.inOut";
+
+      for (let transition = 0; transition < itemCount - 1; transition += 1) {
+        const start = leadIn + transition;
+        timeline.to(track, { y: () => -itemHeight() * (transition + 1), duration: shift, ease: trackEase }, start);
+        timeline.to(entries[transition], { opacity: 0.07, duration: shift * .55 }, start);
+        timeline.to(entries[transition + 1], { opacity: 1, duration: shift * .6 }, start + (shift * .4));
+        timeline.to(numbers[transition], { opacity: 0, y: -8, duration: shift * .5 }, start);
+        timeline.to(numbers[transition + 1], { opacity: 1, y: 0, duration: shift * .5 }, start + (shift * .5));
+        timeline.to(imageLayers[transition + 1], { clipPath: "inset(0% 0% 0% 0%)", duration: shift, ease: trackEase }, start);
+      }
+
+      // Pins the total duration so the last project gets the same dwell as the others instead of
+      // the sequence ending early and leaving the scrub mapped against a shorter timeline.
+      timeline.to({}, { duration: 1 - shift }, leadIn + itemCount - 2 + shift);
+
+      timeline.scrollTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: () => window.innerWidth <= 700 ? "top 116px" : window.innerWidth <= 900 ? "top 148px" : "top 160px",
+        end: "bottom bottom",
+        animation: timeline,
+        // Desktop keeps the rigid 1:1 coupling a wheel handles well. Touch scrolling arrives in
+        // momentum bursts, so the same coupling reproduces every jolt on the way through the
+        // transitions; a small catch-up window smooths them without feeling detached.
+        scrub: window.innerWidth <= 700 ? replicaAnimation.mobileScrub : true,
+        invalidateOnRefresh: true,
+        anticipatePin: 1,
+        markers: false,
+        onUpdate: (self) => updateSemanticState(self.progress),
+      });
+
+      const requestedProgress = new URLSearchParams(window.location.search).get("progress");
+      if (new URLSearchParams(window.location.search).get("debug") === "1" && requestedProgress !== null) {
+        requestAnimationFrame(() => {
+          const progress = Math.min(1, Math.max(0, Number(requestedProgress) || 0));
+          const trigger = timeline.scrollTrigger;
+          window.scrollTo({ top: trigger.start + ((trigger.end - trigger.start) * progress), behavior: "auto" });
+          ScrollTrigger.update();
+        });
+      }
+
+      let viewportWidth = window.visualViewport?.width || window.innerWidth;
+      let viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const refresh = () => {
+        const nextWidth = window.visualViewport?.width || window.innerWidth;
+        const nextHeight = window.visualViewport?.height || window.innerHeight;
+        const mobile = nextWidth <= 700;
+        const widthChanged = Math.abs(nextWidth - viewportWidth) >= 2;
+        const heightChanged = Math.abs(nextHeight - viewportHeight) >= 2;
+        if (!widthChanged && (mobile || !heightChanged)) return;
+        viewportWidth = nextWidth;
+        viewportHeight = nextHeight;
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120);
+      };
+      window.addEventListener("resize", refresh, { passive: true });
       const images = [...section.querySelectorAll("img")];
-      await Promise.allSettled(images.map((image) => {
-        if (image.complete && image.naturalWidth) return image.decode?.() || Promise.resolve();
-        return new Promise((resolve) => {
-          image.addEventListener("load", resolve, { once: true });
-          image.addEventListener("error", resolve, { once: true });
-        });
-      }));
-
-      if (disposed) return;
-
-      const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-        import("gsap"),
-        import("gsap/ScrollTrigger"),
-      ]);
-      if (disposed) return;
-      gsap.registerPlugin(ScrollTrigger);
-
-      context = gsap.context(() => {
-        const track = section.querySelector("[data-work-copy-track]");
-        const entries = gsap.utils.toArray("[data-work-copy-entry]", section);
-        const numbers = gsap.utils.toArray("[data-work-number-rail] span", section);
-        const imageLayers = gsap.utils.toArray("[data-work-image-layer]", section);
-        const itemCount = entries.length;
-        const itemHeight = () => entries[0]?.offsetHeight || 380;
-
-        if (!itemCount || !track) return;
-
-        gsap.set(entries, { opacity: (index) => index === 0 ? 1 : 0.07 });
-        gsap.set(numbers, { opacity: (index) => index === 0 ? 1 : 0, y: (index) => index === 0 ? 0 : 8 });
-        const closedImageClip = () => "inset(0% 100% 100% 0%)";
-        gsap.set(imageLayers.slice(1), { clipPath: closedImageClip });
-
-        let semanticIndex = -1;
-        const updateSemanticState = (progress) => {
-          const nextIndex = Math.min(entries.length - 1, Math.max(0, Math.round(progress * (entries.length - 1))));
-          if (nextIndex === semanticIndex) return;
-          semanticIndex = nextIndex;
-          entries.forEach((entry, index) => {
-            const active = index === nextIndex;
-            entry.setAttribute("aria-hidden", active ? "false" : "true");
-            entry.querySelectorAll("a").forEach((link) => link.setAttribute("tabindex", active ? "0" : "-1"));
-          });
-        };
-        updateSemanticState(0);
-
-        const timeline = gsap.timeline({ defaults: { ease: "none" } });
-        const leadIn = .45;
-        // Every property of a transition now starts at `start` and lands on `start + shift`, and
-        // the rest of the unit is a dwell where the entry sits still.
-        //
-        // Previously the copy track was one continuous linear glide across the whole sequence
-        // while the crossfades, the number rail and the image wipe ran in their own windows that
-        // closed at .76, .68 and .86 of each unit. So the incoming copy reached full opacity and
-        // its image finished wiping while the text was still sliding, and no project ever came to
-        // rest. Landing them together is what makes a transition read as one movement.
-        const shift = .62;
-        const trackEase = "power1.inOut";
-
-        for (let transition = 0; transition < itemCount - 1; transition += 1) {
-          const start = leadIn + transition;
-          timeline.to(track, { y: () => -itemHeight() * (transition + 1), duration: shift, ease: trackEase }, start);
-          timeline.to(entries[transition], { opacity: 0.07, duration: shift * .55 }, start);
-          timeline.to(entries[transition + 1], { opacity: 1, duration: shift * .6 }, start + (shift * .4));
-          timeline.to(numbers[transition], { opacity: 0, y: -8, duration: shift * .5 }, start);
-          timeline.to(numbers[transition + 1], { opacity: 1, y: 0, duration: shift * .5 }, start + (shift * .5));
-          // Shares the track's ease so the wipe and the slide move as one rather than merely
-          // finishing at the same moment.
-          timeline.to(imageLayers[transition + 1], { clipPath: "inset(0% 0% 0% 0%)", duration: shift, ease: trackEase }, start);
-        }
-
-        // Pins the total duration so the last project gets the same dwell as the others instead of
-        // the sequence ending early and leaving the scrub mapped against a shorter timeline.
-        timeline.to({}, { duration: 1 - shift }, leadIn + itemCount - 2 + shift);
-
-        timeline.scrollTrigger = ScrollTrigger.create({
-          trigger: section,
-          start: () => window.innerWidth <= 700 ? "top 116px" : window.innerWidth <= 900 ? "top 148px" : "top 160px",
-          end: "bottom bottom",
-          animation: timeline,
-          // Desktop keeps the rigid 1:1 coupling a wheel handles well. Touch scrolling arrives in
-          // momentum bursts, so the same coupling reproduces every jolt on the way through the
-          // transitions; a small catch-up window smooths them without feeling detached.
-          scrub: window.innerWidth <= 700 ? replicaAnimation.mobileScrub : true,
-          invalidateOnRefresh: true,
-          anticipatePin: 1,
-          markers: false,
-          onUpdate: (self) => updateSemanticState(self.progress),
-        });
-
-        const requestedProgress = new URLSearchParams(window.location.search).get("progress");
-        if (new URLSearchParams(window.location.search).get("debug") === "1" && requestedProgress !== null) {
-          requestAnimationFrame(() => {
-            const progress = Math.min(1, Math.max(0, Number(requestedProgress) || 0));
-            const trigger = timeline.scrollTrigger;
-            window.scrollTo({ top: trigger.start + ((trigger.end - trigger.start) * progress), behavior: "auto" });
-            ScrollTrigger.update();
-          });
-        }
-
-        let viewportWidth = window.visualViewport?.width || window.innerWidth;
-        let viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const refresh = () => {
-          const nextWidth = window.visualViewport?.width || window.innerWidth;
-          const nextHeight = window.visualViewport?.height || window.innerHeight;
-          const mobile = nextWidth <= 700;
-          const widthChanged = Math.abs(nextWidth - viewportWidth) >= 2;
-          const heightChanged = Math.abs(nextHeight - viewportHeight) >= 2;
-          if (!widthChanged && (mobile || !heightChanged)) return;
-          viewportWidth = nextWidth;
-          viewportHeight = nextHeight;
-          window.clearTimeout(resizeTimer);
-          resizeTimer = window.setTimeout(() => ScrollTrigger.refresh(), 120);
-        };
-        window.addEventListener("resize", refresh, { passive: true });
-        document.fonts?.ready.then(() => !disposed && ScrollTrigger.refresh());
-        section._workResizeCleanup = () => window.removeEventListener("resize", refresh);
+      Promise.allSettled([
+        document.fonts?.ready || Promise.resolve(),
+        ...images.map((img) => img.decode?.() || Promise.resolve()),
+      ]).then(() => {
         ScrollTrigger.refresh();
-      }, section);
-    };
+      });
+      section._workResizeCleanup = () => window.removeEventListener("resize", refresh);
+      ScrollTrigger.refresh();
+    }, section);
 
-    setup();
     return () => {
-      disposed = true;
       window.clearTimeout(resizeTimer);
       section._workResizeCleanup?.();
-      context?.revert();
+      context.revert();
     };
   }, [sectionRef]);
 }
