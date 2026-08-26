@@ -39,9 +39,10 @@ the decisions behind them, how the systems work, the evidence available, and the
 
 | Project | Category | Type | Route |
 |:--|:--|:--|:--|
+| **KeepUp** | Full-Stack Product Engineering | Built no-signup accountability app · [live app](https://use-keepup.vercel.app/) | `/v2/work/keepup/` |
 | **Retrieval-Augmented Analytics** | AI Engineering | Built text-to-SQL product · [public repo](https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard) | `/v2/work/retrieval-analytics/` |
-| **Self-Healing Monitor** | Automation | Controlled SRE-agent demonstration · [public repo](https://github.com/Protagonist01/self-healing-monitor) | `/v2/work/self-healing-monitor/` |
 | **AboutFace Chatbot** | AI Engineering | Public RAG cosmetics-support demo · [public repo](https://github.com/Protagonist01/aboutface-chatbot-demo) · [live demo](https://aboutface-chatbot-demo.vercel.app/) | `/v2/work/aboutface-chatbot/` |
+| **Self-Healing Monitor** | Automation | Controlled SRE-agent demonstration · [public repo](https://github.com/Protagonist01/self-healing-monitor) | `/v2/work/self-healing-monitor/` |
 | **AI Code Review Agent** | Automation | Built GitHub review agent · [public repo](https://github.com/Protagonist01/code-review-agent) | `/v2/work/code-review-agent/` |
 | **Clear Skin Concierge** | Full-Stack Product Engineering | Built clinic-commerce & AI concierge product · [public repo](https://github.com/Protagonist01/clear-skin-concierge-site) | `/v2/work/clear-skin/` |
 | **SnipURL** | Full-Stack Product Engineering | Built link service · [live app](https://snipurl-f23p.onrender.com/) · [public repo](https://github.com/Protagonist01/url-shortener) | `/v2/work/url-shortener/` |

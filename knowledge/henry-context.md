@@ -459,7 +459,7 @@ The category describes the kind of engineering work, and the evidence label abov
 
 ## Case Study Editorial Plan
 
-Decision status: implemented in V2 and verified on 2026-08-21, and the dedicated Work page was removed on 2026-08-22. The work collection is organized into seven featured stories, two archive projects, and two hobby projects. Six of the seven featured stories appear in the homepage's Featured Projects section; Clear Skin Concierge is the seventh and is reached through its own case-study page. The AI Voice Receptionist is temporarily not featured; its public repository remains approved evidence but it has no live site route while it is off the homepage.
+Decision status: implemented in V2 and verified on 2026-08-21, and the dedicated Work page was removed on 2026-08-22. The work collection is organized into eight featured stories, two archive projects, and two hobby projects. Seven of the eight featured stories appear in the homepage's Featured Projects section; Clear Skin Concierge is the eighth and is reached through its own case-study page. The AI Voice Receptionist is temporarily not featured; its public repository remains approved evidence but it has no live site route while it is off the homepage.
 
 Publication rules:
 
@@ -469,15 +469,16 @@ Publication rules:
 
 Published full case studies:
 
-1. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
-2. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
+1. KeepUp: /v2/work/keepup/. Core story: how a no-signup shared accountability room keeps a goal alive with a tick, optional proof, room confirmation, and browser-held identity.
+2. Retrieval-Augmented Analytics Dashboard: /v2/work/retrieval-analytics/. Core story: how a plain-English question becomes validated SQL, a useful answer, and a visible source trail.
 3. AboutFace Chatbot: /v2/work/aboutface-chatbot/. Core story: how a cosmetics support chatbot retrieves and reranks approved catalogue passages before answering product, shade, shipping, and returns questions. Always disclose that the knowledge base is a curated demo subset, not the brand's live catalogue, and that the demo is unofficial and unaffiliated with about-face or Halsey.
-4. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
-5. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
-6. SnipURL: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
-7. Realtime Chat Service: /v2/work/realtime-chat/. Core story: how a chat room stays correct when the people in it are spread across more than one worker. Live deployment; the tests prove behaviour, not throughput.
-8. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
-9. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
+4. Self-Healing Microservices Monitor: /v2/work/self-healing-monitor/. Core story: how evidence and explicit rules decide whether an incident action runs, waits for approval, or is refused.
+5. AI Code Review Agent: /v2/work/code-review-agent/. Core story: how a changed line becomes a focused, validated GitHub review comment. Repository targets are not measured results.
+6. Clear Skin Concierge: /v2/work/clear-skin/. Core story: how approved knowledge and typed proposals connect a conversation to product, cart, quiz, or booking flows without silently acting for the customer.
+7. SnipURL: /v2/work/url-shortener/. Core story: how a redirect stays fast on one cache lookup while code generation, throttling, analytics, and expiry are all kept off that path. Live deployment; the build figures are not performance results.
+8. Realtime Chat Service: /v2/work/realtime-chat/. Core story: how a chat room stays correct when the people in it are spread across more than one worker. Live deployment; the tests prove behaviour, not throughput.
+9. Automated Testimony Operations: /v2/work/archive/testimony-operations/. Core story: how one queue replaced repeated intake, editing, approval, and publishing handoffs. Client details remain protected.
+10. Fruit Quality Prediction: /v2/work/archive/fruit-quality/. Core story: how a fruit image becomes current ripeness probabilities and six storage-quality forecasts a user can inspect.
 
 Hobby project treatments:
 
@@ -981,14 +982,15 @@ Example:
 
 Display the homepage featured work in this order:
 
-1. Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
-2. Self-Healing Monitor: /v2/work/self-healing-monitor/
-3. AI Code Review Agent: /v2/work/code-review-agent/
-4. SnipURL: /v2/work/url-shortener/
-5. Realtime Chat Service: /v2/work/realtime-chat/
-6. AboutFace Chatbot: /v2/work/aboutface-chatbot/
+1. KeepUp: /v2/work/keepup/
+2. Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
+3. AboutFace Chatbot: /v2/work/aboutface-chatbot/
+4. Self-Healing Monitor: /v2/work/self-healing-monitor/
+5. AI Code Review Agent: /v2/work/code-review-agent/
+6. SnipURL: /v2/work/url-shortener/
+7. Realtime Chat Service: /v2/work/realtime-chat/
 
-Entries 4 and 5 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these six is titled by the projects themselves and carries no eyebrow label above it.
+Entries 1, 6, and 7 carry a "Live" marker and an "Open live app" link next to the case-study link. The other four have no deployment to open. The homepage section that holds these seven is titled by the projects themselves and carries no eyebrow label above it.
 
 ### Work Collection Structure
 
@@ -1008,9 +1010,10 @@ not link anywhere. Never offer a /v2/services/ link; send service questions to
 
 ### Project Pages
 
+- KeepUp: /v2/work/keepup/
 - Retrieval-Augmented Analytics: /v2/work/retrieval-analytics/
-- Self-Healing Monitor: /v2/work/self-healing-monitor/
 - AboutFace Chatbot: /v2/work/aboutface-chatbot/
+- Self-Healing Monitor: /v2/work/self-healing-monitor/
 - AI Code Review Agent: /v2/work/code-review-agent/
 - SnipURL: /v2/work/url-shortener/
 - Realtime Chat Service: /v2/work/realtime-chat/
