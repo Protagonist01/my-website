@@ -2,6 +2,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { commerceOffers, OFFER_FILTERS, OFFERS_DEBUG, OFFERS_STATEMENT } from "./offersData.js";
 import { trackCommerceEvent } from "./analytics.js";
 
+// Drives srcset selection for both rail surfaces: the mobile stage card is
+// min(72vw, 21rem) wide, the desktop frame sits inside --offers-media-width
+// (60vw-96vw depending on breakpoint, minus its inset).
+const OFFER_IMAGE_SIZES = "(max-width: 760px) min(72vw, 336px), (max-width: 900px) 88vw, 56vw";
+
 function Arrow() {
   return <span className="v2-direction-arrow" aria-hidden="true">{"↗"}</span>;
 }
@@ -312,8 +317,8 @@ export default function OffersShowcase() {
                         }}
                       >
                         <div className="v2-offers-mobile-card__media" aria-hidden="true">
-                          <img src={offer.image} alt="" width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
-                          <img src={offer.hoverImage} alt="" width="1086" height="1448" loading="lazy" />
+                          <img src={offer.image} srcSet={offer.imageSet} sizes={OFFER_IMAGE_SIZES} alt="" width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
+                          <img src={offer.hoverImage} srcSet={offer.hoverSet} sizes={OFFER_IMAGE_SIZES} alt="" width="1086" height="1448" loading="lazy" />
                         </div>
                         <figcaption><strong>{offer.title}</strong></figcaption>
                       </figure>
@@ -347,8 +352,8 @@ export default function OffersShowcase() {
                       <span>{offer.category}</span><strong>{offer.valueLabel}</strong><span>{offer.timingLabel}</span>
                     </figcaption>
                     <div className="v2-offer-media__frame">
-                      <img src={offer.image} alt={offer.imageAlt} width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
-                      <img className="v2-offer-media__alternate" src={offer.hoverImage} alt="" aria-hidden="true" width="1086" height="1448" loading="lazy" />
+                      <img src={offer.image} srcSet={offer.imageSet} sizes={OFFER_IMAGE_SIZES} alt={offer.imageAlt} width="1024" height="1280" loading={index === 0 ? "eager" : "lazy"} fetchPriority={index === 0 ? "high" : "auto"} />
+                      <img className="v2-offer-media__alternate" src={offer.hoverImage} srcSet={offer.hoverSet} sizes={OFFER_IMAGE_SIZES} alt="" aria-hidden="true" width="1086" height="1448" loading="lazy" />
                     </div>
                   </figure>
                 </React.Fragment>

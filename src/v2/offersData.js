@@ -1,6 +1,12 @@
 const offerPortrait = (name) => new URL(`../../assets/images/v2-offers/${name}`, import.meta.url).href;
 const offerAlternate = (name) => new URL(`../../ecommerce demo gallery/e-commerce demo media assets/${name}`, import.meta.url).href;
 
+// Responsive variants for the offer imagery. The mobile rail card renders at
+// min(72vw, 21rem), so 2x-3x phones can use the 640/896 variants instead of the
+// full-size portraits; the desktop rail keeps the originals at its larger frame.
+const portraitSrcSet = (name) => `${offerPortrait(name)} 1024w, ${offerPortrait(name.replace(/\.webp$/, "-896.webp"))} 896w, ${offerPortrait(name.replace(/\.webp$/, "-640.webp"))} 640w`;
+const alternateSrcSet = (name) => `${offerAlternate(name)} 1086w, ${offerAlternate(name.replace(/\.webp$/, "-896.webp"))} 896w, ${offerAlternate(name.replace(/\.webp$/, "-640.webp"))} 640w`;
+
 export const OFFERS_DEBUG = false;
 export const OFFER_FILTERS = ["ALL SYSTEMS", "REVENUE", "CUSTOMER", "OPERATIONS"];
 export const OFFERS_STATEMENT = "Each system takes on one place a growing store loses time, margin, or customers.";
@@ -31,7 +37,7 @@ export const commerceOffers = [
     impact: "The founder ends with one recoverable opportunity, the evidence behind it, and a practical first build path.",
     deliverables: ["Signal audit", "Leak scorecard", "Priority roadmap"],
     scopeNote: "This is an engagement, not a case study. The audit produces a ranked leak map and a build recommendation. It does not change anything in the store by itself. No client result is claimed on this page.",
-    image: offerPortrait("revenue-leak-audit-portrait.webp"), hoverImage: offerAlternate("Revenue_Leak_Audit (1).webp"), imageAlt: "Commerce parcels, receipts, and a magnifying glass representing a revenue leak audit",
+    image: offerPortrait("revenue-leak-audit-portrait.webp"), hoverImage: offerAlternate("Revenue_Leak_Audit (1).webp"), imageSet: portraitSrcSet("revenue-leak-audit-portrait.webp"), hoverSet: alternateSrcSet("Revenue_Leak_Audit (1).webp"), imageAlt: "Commerce parcels, receipts, and a magnifying glass representing a revenue leak audit",
   },
   {
     id: "concierge", number: "02", filter: "CUSTOMER", category: "CUSTOMER EXPERIENCE",
@@ -54,7 +60,7 @@ export const commerceOffers = [
     impact: "Customers move from question to confident next step, and the team keeps control of the sensitive and unusual cases.",
     deliverables: ["Knowledge layer", "Guided selling", "Action guardrails"],
     scopeNote: "This is an engagement, not a case study. Scope is one request type first, widened only once its numbers hold. No client result is claimed on this page.",
-    image: offerPortrait("ai-support-concierge-portrait.webp"), hoverImage: offerAlternate("AI Support Concierge(1).webp"), imageAlt: "Laptop, phone, headset, and commerce parcels arranged as an AI support desk",
+    image: offerPortrait("ai-support-concierge-portrait.webp"), hoverImage: offerAlternate("AI Support Concierge(1).webp"), imageSet: portraitSrcSet("ai-support-concierge-portrait.webp"), hoverSet: alternateSrcSet("AI Support Concierge(1).webp"), imageAlt: "Laptop, phone, headset, and commerce parcels arranged as an AI support desk",
   },
   {
     id: "dashboard", number: "03", filter: "OPERATIONS", category: "FOUNDER OPERATIONS",
@@ -77,7 +83,7 @@ export const commerceOffers = [
     impact: "Daily decisions get faster because the exception, its context, and the next action arrive together.",
     deliverables: ["Daily brief", "Exception feed", "Decision dashboard"],
     scopeNote: "This is an engagement, not a case study. The dashboard reports and summarises; it does not take operational actions on its own. No client result is claimed on this page.",
-    image: offerPortrait("ai-ops-dashboard-portrait.webp"), hoverImage: offerAlternate("AI Ops Dashboard (1).webp"), imageAlt: "Miniature commerce operation under glass connected to operational signals",
+    image: offerPortrait("ai-ops-dashboard-portrait.webp"), hoverImage: offerAlternate("AI Ops Dashboard (1).webp"), imageSet: portraitSrcSet("ai-ops-dashboard-portrait.webp"), hoverSet: alternateSrcSet("AI Ops Dashboard (1).webp"), imageAlt: "Miniature commerce operation under glass connected to operational signals",
   },
   {
     id: "retention", number: "04", filter: "REVENUE", category: "LIFECYCLE GROWTH",
@@ -100,7 +106,7 @@ export const commerceOffers = [
     impact: "Every message has a clear reason to arrive, which creates timely second-purchase opportunities without blanket discounting.",
     deliverables: ["Buyer segments", "Lifecycle routes", "Performance signals"],
     scopeNote: "This is an engagement, not a case study. The holdout is non-negotiable, which means the first honest read on incremental revenue takes a full purchase cycle. No client result is claimed on this page.",
-    image: offerPortrait("retention-automation-portrait.webp"), hoverImage: offerAlternate("Retention Automation(1).webp"), imageAlt: "Premium packages and a phone connected in a circular customer retention journey",
+    image: offerPortrait("retention-automation-portrait.webp"), hoverImage: offerAlternate("Retention Automation(1).webp"), imageSet: portraitSrcSet("retention-automation-portrait.webp"), hoverSet: alternateSrcSet("Retention Automation(1).webp"), imageAlt: "Premium packages and a phone connected in a circular customer retention journey",
   },
   {
     id: "inventory", number: "05", filter: "OPERATIONS", category: "INVENTORY CONTROL",
@@ -123,7 +129,7 @@ export const commerceOffers = [
     impact: "The team sees risk early enough to reorder, protect a campaign, or release cash tied up in slow stock.",
     deliverables: ["Risk monitor", "Reorder logic", "Stock alerts"],
     scopeNote: "This is an engagement, not a case study. Forecast quality depends on your sales history and on supplier lead times being accurate. Where lead times are unknown, the system flags that instead of guessing. No client result is claimed on this page.",
-    image: offerPortrait("inventory-intelligence-portrait.webp"), hoverImage: offerAlternate("Inventory Intelligience System(1).webp"), imageAlt: "Organized stockroom with parcels, folded goods, and an inventory tablet",
+    image: offerPortrait("inventory-intelligence-portrait.webp"), hoverImage: offerAlternate("Inventory Intelligience System(1).webp"), imageSet: portraitSrcSet("inventory-intelligence-portrait.webp"), hoverSet: alternateSrcSet("Inventory Intelligience System(1).webp"), imageAlt: "Organized stockroom with parcels, folded goods, and an inventory tablet",
   },
   {
     id: "returns", number: "06", filter: "OPERATIONS", category: "RETURNS OPERATIONS",
@@ -146,7 +152,7 @@ export const commerceOffers = [
     impact: "Straightforward returns take minutes, risky cases reach a person, and more revenue stays with the store.",
     deliverables: ["Guided intake", "Policy checks", "Exchange routing"],
     scopeNote: "This is an engagement, not a case study. Exchange-first routing only works where the catalogue supports a genuine alternative, so the honest ceiling on exchange conversion is set by your product range. No client result is claimed on this page.",
-    image: offerPortrait("returns-automation-portrait.webp"), hoverImage: offerAlternate("Returns Automation(1).webp"), imageAlt: "Returned clothing, packages, labels, and a checklist arranged for processing",
+    image: offerPortrait("returns-automation-portrait.webp"), hoverImage: offerAlternate("Returns Automation(1).webp"), imageSet: portraitSrcSet("returns-automation-portrait.webp"), hoverSet: alternateSrcSet("Returns Automation(1).webp"), imageAlt: "Returned clothing, packages, labels, and a checklist arranged for processing",
   },
   {
     id: "custom", number: "07", filter: "OPERATIONS", category: "CUSTOM SYSTEMS",
@@ -169,6 +175,6 @@ export const commerceOffers = [
     impact: "A store-specific system removes repeated work without forcing the operation into another generic platform.",
     deliverables: ["Workflow map", "System integration", "Control layer"],
     scopeNote: "This is an engagement, not a case study. Where an off-the-shelf app already covers the workflow properly, I will say so rather than build a custom version of it. No client result is claimed on this page.",
-    image: offerPortrait("custom-automations-portrait.webp"), hoverImage: offerAlternate("Custom Automations(1).webp"), imageAlt: "Commerce storefront model connected to a custom automation network",
+    image: offerPortrait("custom-automations-portrait.webp"), hoverImage: offerAlternate("Custom Automations(1).webp"), imageSet: portraitSrcSet("custom-automations-portrait.webp"), hoverSet: alternateSrcSet("Custom Automations(1).webp"), imageAlt: "Commerce storefront model connected to a custom automation network",
   },
 ];
