@@ -75,8 +75,79 @@ export const navigation = allNavigation.filter((item) => !item.gated || resumeAv
 
 export const projects = [
   {
-    id: "retrieval-analytics",
+    id: "keepup",
     index: "01",
+    type: "Built product",
+    sector: "Social productivity / Realtime web",
+    category: "Full-Stack Product Engineering",
+    title: "KeepUp",
+    shortTitle: "KeepUp",
+    summary: "A no-signup shared accountability app where a small group keeps one goal alive in a room — a tick checks you in, optional proof rides along, the room confirms it, and your place is held by this browser.",
+    outcome: "Keep goals alive by putting them in a room with the few people who would notice if you went quiet — without an account, an app store, or anything to sign up for.",
+    stack: ["Next.js", "Supabase", "Vercel"],
+    visual: "keepup",
+    coverImage: keepupCoverImage,
+    coverBackground: "#fff3e6",
+    coverInHero: true,
+    imageAlt: "KeepUp live app showing the Chase goals together, not alone hero beside a demo room card with a six-character code",
+    href: paths.keepup,
+    tone: "warm",
+    featured: true,
+    evidence: "built",
+    status: "Built product / Live deployment",
+    liveUrl: "https://use-keepup.vercel.app/",
+    lead: "Goals die in private. Put yours in a room with the few people who would notice if you went quiet — no signup, no email, just a name and a six-character code.",
+    challenge: "Private goals slip quietly. The product needed to make starting a goal a ninety-second affair, let a small group share one list without accounts, turn a daily check-in into a single tap, and keep everyone's place correct across devices in real time — all without asking anyone for an email or a password.",
+    role: "I designed and developed this product end to end: the room and goal model, the three sharing shapes, the no-account identity, the check-in and proof flow, the realtime sync, the watcher role, and the deployment.",
+    measuredLabel: "Built surface",
+    measured: [
+      { value: "3", label: "room shapes: side by side, split the list, own lanes" },
+      { value: "6", label: "character room code, with O / 0 / I / 1 removed" },
+      { value: "0", label: "sign-up fields — a display name is the whole identity" },
+    ],
+    measuredNote: "Read from the live product: the room shapes, the code alphabet, and the no-account join. These describe what is built, not performance — the repository publishes no benchmark.",
+    flow: [
+      { step: "Start", detail: "Pick a shape — side by side, split the list, or own lanes — name the goal, and set a pace or skip it. The room exists from here on." },
+      { step: "Invite", detail: "Send the six-character room code, or the link that carries it. A joiner picks a display name and is in — no email, no password, no app store." },
+      { step: "Check in", detail: "Today's pace becomes rows owed now. Ticking a row checks you in; a note or a photo can ride along, and skipping either costs nothing." },
+      { step: "The room answers", detail: "One tap from anybody confirms the check-in, and an emoji reaction says the rest. A watcher can react too — it is the one thing watching writes." },
+      { step: "The record keeps itself", detail: "Four weeks stay on the wall, gaps included, and where you are is measured against your own plan — on plan, one back, or two ahead." },
+    ],
+    decisions: [
+      {
+        decision: "Identity is a display name held by this browser, not an account.",
+        tradeoff: "Anyone can start or join in under a minute with no email and no app store, and your place is lost the moment you switch devices or clear storage.",
+      },
+      {
+        decision: "Room codes leave out the characters people misread — no O or 0, no I or 1.",
+        tradeoff: "A code survives being read aloud across a table, and the alphabet is smaller than it could be.",
+      },
+      {
+        decision: "One code, two ways in: checking in or watching.",
+        tradeoff: "A parent, coach, or friend sees every check-in and can react without ever becoming a row in the standings, and the two groups are counted separately.",
+      },
+      {
+        decision: "Position is shown against each person's own plan, never as a ranking.",
+        tradeoff: "The distance reads in neutral ink — on plan, one back, two ahead — and nobody is ever red or locked out.",
+      },
+      {
+        decision: "A check-in is a tick; the note and the photo are optional.",
+        tradeoff: "The whole check-in costs one tap, and proof rides along only when the work is worth showing.",
+      },
+    ],
+    limits: [
+      "Browser-held identity means a cleared store or a new device is a new you — the live product holds no account to recover, by design.",
+      "KeepUp is built for small groups, not audiences: the handful of people who would actually notice if you went quiet for a week.",
+      "The published surface is the live app and the on-page flow; the repository is private, so no benchmark, test count, or architecture figure is claimed here.",
+      "Standings measure against each person's own plan rather than a shared clock, so a faster pace is not a lead and a slower pace is not a debt.",
+    ],
+    gallery: [],
+    repository: "https://github.com/Protagonist01/common-goal",
+    qualifier: "The figures above are read from the live product — the room shapes, the code alphabet, and the no-account join — not from a published benchmark.",
+  },
+  {
+    id: "retrieval-analytics",
+    index: "02",
     type: "Built product",
     sector: "AI analytics",
     category: "AI Engineering",
@@ -146,7 +217,7 @@ export const projects = [
   },
   {
     id: "self-healing-monitor",
-    index: "02",
+    index: "04",
     type: "Built SRE demonstration",
     sector: "Agentic infrastructure",
     category: "Automation",
@@ -277,7 +348,7 @@ export const projects = [
   },
   {
     id: "code-review-agent",
-    index: "04",
+    index: "05",
     type: "Built product",
     sector: "Developer tools / AI agents",
     category: "Automation",
@@ -345,7 +416,7 @@ export const projects = [
   },
   {
     id: "clear-skin",
-    index: "05",
+    index: "06",
     type: "Built product",
     sector: "Clinic commerce / AI concierge",
     category: "Full-Stack Product Engineering",
@@ -418,7 +489,7 @@ export const projects = [
   },
   {
     id: "url-shortener",
-    index: "06",
+    index: "07",
     type: "Built product",
     sector: "Backend platform",
     category: "Full-Stack Product Engineering",
@@ -491,7 +562,7 @@ export const projects = [
   },
   {
     id: "realtime-chat",
-    index: "07",
+    index: "08",
     type: "Built product",
     sector: "Realtime backend / WebSockets",
     category: "Full-Stack Product Engineering",
@@ -557,77 +628,6 @@ export const projects = [
     gallery: [],
     repository: "https://github.com/Protagonist01/realtime-chat",
     qualifier: "The live deployment is a free-tier demonstration; the correctness claims come from the test suite that ships with the repository.",
-  },
-  {
-    id: "keepup",
-    index: "08",
-    type: "Built product",
-    sector: "Social productivity / Realtime web",
-    category: "Full-Stack Product Engineering",
-    title: "KeepUp",
-    shortTitle: "KeepUp",
-    summary: "A no-signup shared accountability app where a small group keeps one goal alive in a room — a tick checks you in, optional proof rides along, the room confirms it, and your place is held by this browser.",
-    outcome: "Keep goals alive by putting them in a room with the few people who would notice if you went quiet — without an account, an app store, or anything to sign up for.",
-    stack: ["Next.js", "Supabase", "Vercel"],
-    visual: "keepup",
-    coverImage: keepupCoverImage,
-    coverBackground: "#fff3e6",
-    coverInHero: true,
-    imageAlt: "KeepUp live app showing the Chase goals together, not alone hero beside a demo room card with a six-character code",
-    href: paths.keepup,
-    tone: "warm",
-    featured: true,
-    evidence: "built",
-    status: "Built product / Live deployment",
-    liveUrl: "https://use-keepup.vercel.app/",
-    lead: "Goals die in private. Put yours in a room with the few people who would notice if you went quiet — no signup, no email, just a name and a six-character code.",
-    challenge: "Private goals slip quietly. The product needed to make starting a goal a ninety-second affair, let a small group share one list without accounts, turn a daily check-in into a single tap, and keep everyone's place correct across devices in real time — all without asking anyone for an email or a password.",
-    role: "I designed and developed this product end to end: the room and goal model, the three sharing shapes, the no-account identity, the check-in and proof flow, the realtime sync, the watcher role, and the deployment.",
-    measuredLabel: "Built surface",
-    measured: [
-      { value: "3", label: "room shapes: side by side, split the list, own lanes" },
-      { value: "6", label: "character room code, with O / 0 / I / 1 removed" },
-      { value: "0", label: "sign-up fields — a display name is the whole identity" },
-    ],
-    measuredNote: "Read from the live product: the room shapes, the code alphabet, and the no-account join. These describe what is built, not performance — the repository publishes no benchmark.",
-    flow: [
-      { step: "Start", detail: "Pick a shape — side by side, split the list, or own lanes — name the goal, and set a pace or skip it. The room exists from here on." },
-      { step: "Invite", detail: "Send the six-character room code, or the link that carries it. A joiner picks a display name and is in — no email, no password, no app store." },
-      { step: "Check in", detail: "Today's pace becomes rows owed now. Ticking a row checks you in; a note or a photo can ride along, and skipping either costs nothing." },
-      { step: "The room answers", detail: "One tap from anybody confirms the check-in, and an emoji reaction says the rest. A watcher can react too — it is the one thing watching writes." },
-      { step: "The record keeps itself", detail: "Four weeks stay on the wall, gaps included, and where you are is measured against your own plan — on plan, one back, or two ahead." },
-    ],
-    decisions: [
-      {
-        decision: "Identity is a display name held by this browser, not an account.",
-        tradeoff: "Anyone can start or join in under a minute with no email and no app store, and your place is lost the moment you switch devices or clear storage.",
-      },
-      {
-        decision: "Room codes leave out the characters people misread — no O or 0, no I or 1.",
-        tradeoff: "A code survives being read aloud across a table, and the alphabet is smaller than it could be.",
-      },
-      {
-        decision: "One code, two ways in: checking in or watching.",
-        tradeoff: "A parent, coach, or friend sees every check-in and can react without ever becoming a row in the standings, and the two groups are counted separately.",
-      },
-      {
-        decision: "Position is shown against each person's own plan, never as a ranking.",
-        tradeoff: "The distance reads in neutral ink — on plan, one back, two ahead — and nobody is ever red or locked out.",
-      },
-      {
-        decision: "A check-in is a tick; the note and the photo are optional.",
-        tradeoff: "The whole check-in costs one tap, and proof rides along only when the work is worth showing.",
-      },
-    ],
-    limits: [
-      "Browser-held identity means a cleared store or a new device is a new you — the live product holds no account to recover, by design.",
-      "KeepUp is built for small groups, not audiences: the handful of people who would actually notice if you went quiet for a week.",
-      "The published surface is the live app and the on-page flow; the repository is private, so no benchmark, test count, or architecture figure is claimed here.",
-      "Standings measure against each person's own plan rather than a shared clock, so a faster pace is not a lead and a slower pace is not a debt.",
-    ],
-    gallery: [],
-    repository: "https://github.com/Protagonist01/common-goal",
-    qualifier: "The figures above are read from the live product — the room shapes, the code alphabet, and the no-account join — not from a published benchmark.",
   },
 ];
 
@@ -808,13 +808,13 @@ export const archiveProjects = [
 ];
 
 const homeFeaturedProjectOrder = [
+  { id: "keepup", title: "KeepUp" },
   { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
+  { id: "aboutface-chatbot", title: "AboutFace Chatbot" },
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },
   { id: "code-review-agent", title: "AI Code Review Agent" },
   { id: "url-shortener", title: "SnipURL" },
   { id: "realtime-chat", title: "Realtime.chat" },
-  { id: "aboutface-chatbot", title: "AboutFace Chatbot" },
-  { id: "keepup", title: "KeepUp" },
 ];
 
 export const homeFeaturedProjects = homeFeaturedProjectOrder
