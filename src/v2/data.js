@@ -53,6 +53,7 @@ export const paths = {
   portfolioWebsite: "/v2/work/portfolio-website/",
   testimony: "/v2/work/archive/testimony-operations/",
   fruitQuality: "/v2/work/archive/fruit-quality/",
+  journal: "/v2/journal/",
 };
 
 export const RESUME_PATH = "/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf";

@@ -1,20 +1,21 @@
 # TAIWO HENRY FADENI
-**Software & AI Engineer | LLM Systems • RAG & Agentic Workflows • Backend Engineering**  
+**Software & AI Engineer | LLM Systems • RAG & Agentic Workflows • Distributed Backends**  
 Lagos, Nigeria (Available for Remote & Relocation) | +234 706 616 1980 | [hfadeni@gmail.com](mailto:hfadeni@gmail.com)  
 [Portfolio: henryfadeni.vercel.app](https://henryfadeni.vercel.app/) | [GitHub: github.com/Protagonist01](https://github.com/Protagonist01) | [LinkedIn: linkedin.com/in/henry-fadeni-ai-engineer](https://www.linkedin.com/in/henry-fadeni-ai-engineer/)
 
 ---
 
 ## PROFESSIONAL SUMMARY
-Software & AI Engineer with a background in Electrical & Electronics Engineering, specializing in production-grade LLM systems, evaluated RAG architectures, autonomous agent workflows (LangGraph), and high-throughput Python backends. Experienced in building deterministic guardrails, human-in-the-loop controls, rigorous evaluation suites (Spider/synthetic benchmarks), and observable distributed backends (FastAPI, Redis, Celery, DuckDB). Proven track record of shipping end-to-end applications from system architecture to CI/CD deployment.
+Software & AI Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, evaluated RAG architectures, autonomous agent workflows (LangGraph), and high-throughput distributed backends. Experienced in building deterministic guardrails, human-in-the-loop controls, automated evaluation suites (Spider golden set), and observable backend architectures (FastAPI, Redis, Celery, DuckDB, WebSockets). Proven track record of shipping end-to-end applications from distributed system architecture to polished user interfaces (React, Next.js).
 
 ---
 
 ## TECHNICAL SKILLS
-- **Programming Languages:** Python (3.12+), SQL (PostgreSQL, DuckDB, SQLite), JavaScript / TypeScript, MATLAB, HTML5/CSS3
-- **AI & LLM Engineering:** Generative AI, LLM APIs (OpenAI, Anthropic, Groq, Ollama), LangChain, LangGraph (Multi-node StateGraphs), RAG Architecture, Vector DBs (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering & Versioning, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL) Controls, LLM Evaluation Harnesses (Golden Sets, Synthetic Benchmarks)
-- **Backend & Data Systems:** FastAPI, RESTful APIs, WebSockets, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Sliding-Window Rate Limiting, Caching), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark, ETL Pipelines
-- **Observability, DevOps & Tools:** Git, GitHub, Docker, Docker Compose, GitHub Actions (CI/CD), Pytest (80%+ coverage gates), Prometheus, Grafana, Structured JSON Logging, Loki, Supabase, Vercel
+- **Programming Languages:** Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, TypeScript, MATLAB, HTML5, CSS3
+- **AI & LLM Systems:** LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations (Golden Sets, Spider Benchmark)
+- **Backend & Distributed Systems:** FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark, ETL Pipelines
+- **Frontend & UI Engineering:** React, Next.js, Vite, TypeScript, Tailwind CSS, Responsive Design, State Management, Interactive Data Dashboards
+- **DevOps, Cloud & Observability:** AWS, Cloudflare, Docker, Docker Compose, GitHub Actions (CI/CD), Git, GitHub, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Structured JSON Logging, Loki, Supabase, Vercel
 
 ---
 
@@ -23,14 +24,14 @@ Software & AI Engineer with a background in Electrical & Electronics Engineering
 ### Retrieval-Augmented Analytics Dashboard (Text-to-SQL) | [GitHub](https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard) · [Case Study](https://henryfadeni.vercel.app/v2/work/retrieval-analytics/)
 *Python · FastAPI · DuckDB · sqlglot · Redis · Next.js · Server-Sent Events (SSE)* | **2026**
 - Architected a natural-language-to-SQL analytics workspace executing sandboxed, read-only analytical queries against DuckDB with streamed SSE explanations and dynamic charts.
-- Built a 2-stage AST validation pipeline using `sqlglot` (enforcing table/column existence checks, write-query rejection, and injection safeguards) with self-correction retry logic.
-- Implemented an automated evaluation harness on an 80-pair Golden Set (adapted from Spider), achieving **96% SQL validity**, **74% execution accuracy**, **61% error self-correction rate**, and **~4.2s p95 latency**.
+- Built a 2-stage AST validation pipeline using `sqlglot` (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.
+- Implemented an automated evaluation harness on an 80-pair Golden Set (adapted from Spider), achieving **96% SQL validity**, **74% execution accuracy**, **61% failure self-correction rate**, and **~4.2s p95 latency**.
 
 ### Autonomous AI Code Review Agent | [GitHub](https://github.com/Protagonist01/code-review-agent) · [Case Study](https://henryfadeni.vercel.app/v2/work/code-review-agent/)
 *Python · FastAPI · LangGraph · Celery · Redis · Docker · Pytest · GitHub API* | **2026**
 - Developed an event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.
 - Implemented HMAC-SHA256 webhook verification, Redis sliding-window rate limiting, and asynchronous job queuing via Celery workers to decouple webhook intake from model inference.
-- Engineered pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama), structured JSON output validation, and a 50-diff evaluation harness with an **80% CI code coverage gate**.
+- Engineered pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama), structured JSON output validation, and an evaluation harness with an **80% CI code coverage gate**.
 
 ### Self-Healing Microservices Monitor (Autonomous SRE Agent) | [GitHub](https://github.com/Protagonist01/self-healing-monitor) · [Case Study](https://henryfadeni.vercel.app/v2/work/self-healing-monitor/)
 *Python · FastAPI · LangGraph · ChromaDB · Prometheus · PostgreSQL · React* | **2026**
@@ -38,15 +39,11 @@ Software & AI Engineer with a background in Electrical & Electronics Engineering
 - Engineered a 4-condition deterministic policy gate (confidence >= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions, logging complete auditable traces to PostgreSQL.
 - Achieved **100% (4/4) action and policy correctness** across simulated failure scenarios with a live React operator dashboard.
 
-### Clear Skin Concierge (AI Commerce & Clinical Assistant) | [GitHub](https://github.com/Protagonist01/clear-skin-concierge-site) · [Case Study](https://henryfadeni.vercel.app/v2/work/clear-skin/)
-*Next.js 14 · TypeScript · OpenAI · Pinecone · SQLite · Tailwind CSS* | **2026**
-- Engineered a full-stack skincare commerce platform featuring an AI concierge with deterministic fast-path routing, semantic caching, and lexical fallback.
-- Designed a typed action engine (7 site actions, 8 tool contracts, 2-turn bounded loop) requiring explicit user confirmation before cart mutations or bookings to prevent silent state mutations.
-
-### SnipURL & Realtime Chat Backend Systems | [SnipURL](https://github.com/Protagonist01/url-shortener) · [Realtime Chat](https://github.com/Protagonist01/realtime-chat)
-*Python · FastAPI · Redis · PostgreSQL · WebSockets · Celery · Alembic* | **2026**
-- Built high-throughput backend services featuring XOR-salted base62 URL generation, Redis read caching (3600s TTL), sliding-window rate limiters, and deferred async analytics.
-- Engineered multi-room WebSocket synchronization scaling across workers via reference-counted Redis Pub/Sub channels, JWT authentication, and cursor-paginated history.
+### Realtime Multi-Room Chat Backend | [GitHub](https://github.com/Protagonist01/realtime-chat) · [Case Study](https://henryfadeni.vercel.app/v2/work/realtime-chat/)
+*Python · FastAPI · WebSockets · Redis · SQLite · Docker* | **2026**
+- Engineered a distributed multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).
+- Implemented JWT authentication during WebSocket handshakes, Redis hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page).
+- Authored cross-process integration test suites verifying synchronized multi-worker message delivery and connection fault isolation.
 
 ---
 

@@ -44,6 +44,7 @@ APPROVED_ROUTES = {
     "/v2/work/portfolio-website/": "Portfolio Website build story",
     "/v2/work/archive/testimony-operations/": "Testimony Operations",
     "/v2/work/archive/fruit-quality/": "Fruit Quality",
+    "/v2/journal/": "Engineering Systems Design Journal",
     RAA_REPOSITORY_URL: "Retrieval-Augmented Analytics Dashboard repository",
     "https://github.com/Protagonist01/self-healing-monitor": "Self-Healing Monitor repository",
     "https://github.com/Protagonist01/aboutface-chatbot-demo": "AboutFace Chatbot repository",

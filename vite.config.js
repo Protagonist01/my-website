@@ -38,9 +38,9 @@ function localApiRoutes() {
 
 export default defineConfig(({ mode }) => {
   Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
-  const resumeAvailable = existsSync(resolve(__dirname, "assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf"));
+  const resumeAvailable = existsSync(resolve(__dirname, "public/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf")) || existsSync(resolve(__dirname, "assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf"));
   if (!resumeAvailable) {
-    console.warn("\n[resume] assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf not found - resume links are omitted from this build.\n");
+    console.warn("\n[resume] Henry-Fadeni-Software-AI-Engineer-Resume.pdf not found - resume links are omitted from this build.\n");
   }
   return {
     base: "./",
@@ -77,7 +77,8 @@ export default defineConfig(({ mode }) => {
         "v2-offer-retention-automation": resolve(__dirname, "v2/storecraft/retention-automation/index.html"),
         "v2-offer-inventory-intelligence": resolve(__dirname, "v2/storecraft/inventory-intelligence/index.html"),
         "v2-offer-returns-automation": resolve(__dirname, "v2/storecraft/returns-automation/index.html"),
-        "v2-offer-custom-automation": resolve(__dirname, "v2/storecraft/custom-automation/index.html")
+        "v2-offer-custom-automation": resolve(__dirname, "v2/storecraft/custom-automation/index.html"),
+        "v2-journal": resolve(__dirname, "v2/journal/index.html")
         }
       }
     }
