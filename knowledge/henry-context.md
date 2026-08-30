@@ -307,66 +307,58 @@ Deliverables: workflow map, system integration, and control layer.
 ### Programming
 
 - Python
-- SQL
-- JavaScript and TypeScript
+- SQL (PostgreSQL, DuckDB, SQLite)
+- JavaScript
 - MATLAB
 
 ### AI and Machine Learning
 
 - Generative AI and LLM APIs
-- Retrieval-augmented generation
+- Retrieval-augmented generation (RAG)
 - LangChain and LangGraph
-- Prompt design and versioning
-- Embeddings and vector search
-- Pinecone and ChromaDB
-- OpenAI APIs and provider abstraction
-- Agent tools, typed actions, memory, guardrails, and human review
-- Evaluation harnesses and model-quality tracking
-- scikit-learn
-- Classification and regression
-- CNN inference and ONNX
+- Prompt engineering and versioning
+- Embeddings, semantic caching, and vector search (Pinecone, ChromaDB)
+- OpenAI APIs and pluggable provider abstraction (OpenAI, Anthropic, Groq, Ollama)
+- Agent tools, typed actions, deterministic guardrails, and human-in-the-loop (HITL) review
+- Evaluation harnesses and model-quality tracking (Golden sets, Spider benchmark)
+- scikit-learn, classification, and regression
 
-### Backend and Data
+### Backend and Distributed Systems
 
-- FastAPI and REST APIs
-- Node.js and Next.js
-- PostgreSQL, SQLite, SQL, and DuckDB
-- Redis for caching, rate limiting, and pub/sub fan-out
+- FastAPI, RESTful APIs, and AsyncIO
+- Next.js and Node.js
+- PostgreSQL, SQLite, and DuckDB
+- Redis for caching, sliding-window rate limiting, and reference-counted pub/sub fan-out
 - Pandas and PySpark
-- ETL and data workflows
-- WebSockets and Server-Sent Events
-- Webhooks and asynchronous jobs
+- WebSockets and Server-Sent Events (SSE)
+- Webhooks and asynchronous worker queues (Celery)
 - Database migrations with Alembic
 
 ### Frontend and Product
 
 - React
-- TypeScript and JavaScript
-- Product interface design
-- Full-stack AI experiences
-- Rich result views, forms, dashboards, and confirmation flows
+- Next.js
+- Responsive design and state management
+- Interactive data dashboards, forms, and confirmation flows
+- Full-stack AI product experiences
 
 ### Automation and Integrations
 
 - n8n and Make
 - Airtable
-- Vapi
-- Twilio
-- Deepgram
-- ElevenLabs
-- Shopify-style webhooks and APIs
+- Vapi, Twilio, Deepgram, ElevenLabs
+- Webhooks and external APIs
 
-### Delivery and Quality
+### Delivery, Cloud and Quality
 
-- Git and GitHub
-- Docker and Docker Compose
-- GitHub Actions
-- pytest
-- Prometheus and Grafana
-- Structured logging and audit trails
-- Vercel
-- Supabase
-- Technical documentation and architecture decision records
+- AWS and Cloudflare
+- Docker
+- GitHub Actions (CI/CD) and Git
+- pytest (CI coverage gates)
+- Prometheus, Grafana, and Loki
+- Structured audit trails and incident logs
+- Vercel and Supabase
+- Technical documentation, architecture decision records, and Engineering Systems Design Journal (`/v2/journal/`)
 
 Do not imply expert-level mastery of every listed tool. Select technologies relevant to the visitor's question and connect them to evidenced projects.
 
@@ -1239,9 +1231,10 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 
 ### Supplied Profile Sources
 
-- Henry Fadeni AI Programming Intern Resume.docx, supplied by Henry.
+- Henry-Fadeni-Software-AI-Engineer-Resume.pdf (Current 1-page ATS Resume at `/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf`).
+- Engineering Systems Design Journal: `/v2/journal/` (In-depth first-principles architecture, AST validation, LangGraph state machine, and distributed pub/sub breakdown).
 - LinkedIn Profile PDF export, four pages, supplied by Henry.
-- Direct factual clarifications supplied on 2026-07-13.
+- Direct factual clarifications supplied on 2026-07-13 and 2026-08-30.
 
 ### Booking Sources
 
