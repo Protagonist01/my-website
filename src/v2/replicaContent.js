@@ -22,7 +22,7 @@ export const replicaContent = {
   statement: "From idea to launch. I shape AI and software into clean, scalable products that move fast, stay simple, perform in real use, and support business growth.",
   aboutActions: [
     { label: "Get Started", href: "#contact" },
-    ...(resumeAvailable ? [{ label: "Download resume", href: RESUME_PATH, download: true }] : []),
+    ...(resumeAvailable ? [{ label: "Download Resume", href: RESUME_PATH, download: true }] : []),
   ],
   servicesHeading: "Capabilities",
   // Stated, not linked: there are no per-capability pages behind these.
