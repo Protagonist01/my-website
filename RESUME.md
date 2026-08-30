@@ -11,11 +11,11 @@ Software & AI Engineer with an Electrical & Electronics Engineering foundation, 
 ---
 
 ## TECHNICAL SKILLS
-- **Programming Languages:** Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, MATLAB, HTML5
+- **Programming Languages:** Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, MATLAB
 - **AI & LLM Systems:** LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations (Golden Sets, Spider Benchmark)
-- **Backend & Distributed Systems:** FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark, ETL Pipelines
-- **Frontend & UI Engineering:** React, Next.js, Tailwind CSS, Responsive Design, State Management, Interactive Data Dashboards
-- **DevOps, Cloud & Observability:** AWS, Cloudflare, Docker, Docker Compose, GitHub Actions (CI/CD), Git, GitHub, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel
+- **Backend & Distributed Systems:** FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark
+- **Frontend & UI Engineering:** React, Next.js, Responsive Design, State Management, Interactive Data Dashboards
+- **DevOps, Cloud & Observability:** AWS, Cloudflare, Docker, GitHub Actions (CI/CD), Git, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel
 
 ---
 
