@@ -3,87 +3,129 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Engineering Design Journal: Systems, Safety Invariants & Distributed Backends — Taiwo Henry Fadeni</title>
-  <meta name="description" content="A comprehensive, first-principles engineering journal documenting the architecture, safety invariants, AST parsing, LangGraph state machines, and distributed pub/sub mechanics of 4 production systems by Henry Fadeni.">
+  <title>Engineering Journal — From Problem to Working Code — Taiwo Henry Fadeni</title>
+  <meta name="description" content="A working engineer's journal: the thoughts, dead ends, decisions, and construction steps behind four production AI and distributed systems — written so a reader can recreate them.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500;1,6..72,600&display=swap" rel="stylesheet">
   <style>
+    /* ──────────────────────────────────────────────────────────────
+       DESIGN TOKENS
+       Aesthetic: the engineer's working notebook.
+       Warm paper, ink colours, handwriting annotations.
+       ────────────────────────────────────────────────────────────── */
     :root {
-      --bg: #FAFAF9;
-      --bg-surface: #FFFFFF;
-      --bg-subtle: #F5F5F4;
-      --text-main: #1C1917;
-      --text-muted: #57534E;
-      --text-subtle: #78716C;
-      --border: #E7E5E4;
-      --border-subtle: #F5F5F4;
-      --border-focus: #2563EB;
-      --primary: #0284C7;
-      --primary-dark: #0369A1;
-      --accent: #2563EB;
-      --code-bg: #0F172A;
-      --code-text: #E2E8F0;
-      --code-border: #1E293B;
-      --callout-bg: #F0F9FF;
-      --callout-border: #0284C7;
-      --warning-bg: #FFFBEB;
-      --warning-border: #D97706;
-      --danger-bg: #FEF2F2;
-      --danger-border: #DC2626;
-      --success-bg: #F0FDF4;
-      --success-border: #16A34A;
-      --font-serif: 'Newsreader', Georgia, Cambria, serif;
-      --font-sans: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      --paper:        #FAF7F1;
+      --paper-surface:#FFFFFF;
+      --paper-subtle: #F5F1E8;
+      --paper-warm:   #F8F3E9;
+      --ink:          #1C1917;
+      --ink-muted:    #57534E;
+      --ink-subtle:   #8A8278;
+      --ink-faint:    #C7BFB3;
+      --margin-line:  rgba(28, 25, 23, 0.07);
+      --border:       #E7E1D6;
+      --border-soft:  #F0EBE0;
+
+      --ink-blue:     #2563EB;
+      --ink-blue-bg:  #EFF6FF;
+      --ink-red:      #C03221;
+      --ink-red-bg:   #FBF0EE;
+      --ink-green:    #15803D;
+      --ink-green-bg: #F0FDF4;
+      --ink-amber:    #B45309;
+      --ink-amber-bg: #FFFBEB;
+
+      --code-bg:      #1A1A2E;
+      --code-text:    #DFE6F0;
+      --code-border:  #2A2A3E;
+      --code-header:  rgba(255,255,255,0.06);
+
+      --font-serif:   'Newsreader', Georgia, Cambria, serif;
+      --font-sans:    'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
+      --font-hand:    'Caveat', 'Comic Sans MS', cursive;
+
+      --progress:     #C03221;
+      --accent:       #2563EB;
     }
 
     [data-theme="dark"] {
-      --bg: #0C0A09;
-      --bg-surface: #1C1917;
-      --bg-subtle: #292524;
-      --text-main: #F5F5F4;
-      --text-muted: #A8A29E;
-      --text-subtle: #78716C;
-      --border: #292524;
-      --border-subtle: #1C1917;
-      --border-focus: #38BDF8;
-      --primary: #38BDF8;
-      --primary-dark: #7DD3FC;
-      --accent: #60A5FA;
-      --code-bg: #020617;
-      --code-text: #F8FAFC;
-      --code-border: #1E293B;
-      --callout-bg: #082F49;
-      --callout-border: #38BDF8;
-      --warning-bg: #451A03;
-      --warning-border: #F59E0B;
-      --danger-bg: #450A0A;
-      --danger-border: #EF4444;
-      --success-bg: #052E16;
-      --success-border: #22C55E;
+      --paper:        #16140F;
+      --paper-surface:#211E18;
+      --paper-subtle: #1C1A15;
+      --paper-warm:   #1A1813;
+      --ink:          #F5F2EC;
+      --ink-muted:    #A8A09A;
+      --ink-subtle:   #78706A;
+      --ink-faint:    #4A453F;
+      --margin-line:  rgba(245, 242, 236, 0.06);
+      --border:       #2D2A24;
+      --border-soft:  #25221C;
+
+      --ink-blue:     #60A5FA;
+      --ink-blue-bg:  #0B1628;
+      --ink-red:      #F87171;
+      --ink-red-bg:   #2A1515;
+      --ink-green:    #4ADE80;
+      --ink-green-bg: #102418;
+      --ink-amber:    #FBBF24;
+      --ink-amber-bg: #2A1F0E;
+
+      --code-bg:      #0B0B14;
+      --code-text:    #E2E8F0;
+      --code-border:  #1E1E2E;
+      --code-header:  rgba(255,255,255,0.04);
+
+      --progress:     #F87171;
+      --accent:       #60A5FA;
     }
 
+    /* ── Reset ── */
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
-      background-color: var(--bg);
-      color: var(--text-main);
+      background-color: var(--paper);
+      color: var(--ink);
       font-family: var(--font-serif);
-      font-size: 19.5px;
-      line-height: 1.8;
+      font-size: 19px;
+      line-height: 1.78;
       -webkit-font-smoothing: antialiased;
-      transition: background-color 0.2s ease, color 0.2s ease;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.25s ease, color 0.25s ease;
+      position: relative;
     }
 
-    /* Top Utility Bar */
+    /* ── Paper texture overlay ── */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.5;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.03 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ── Reading progress bar ── */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      width: 0%;
+      background: var(--progress);
+      z-index: 200;
+      transition: width 0.08s linear;
+    }
+
+    /* ── Top bar ── */
     .top-bar {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--bg);
+      background: var(--paper);
       border-bottom: 1px solid var(--border);
-      padding: 12px 24px;
+      padding: 10px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -91,14 +133,28 @@
       font-size: 13px;
       backdrop-filter: blur(8px);
     }
-    .top-bar-left { display: flex; align-items: center; gap: 16px; font-weight: 600; }
-    .top-bar-left a { color: var(--text-main); text-decoration: none; display: flex; align-items: center; gap: 6px; }
-    .top-bar-left a:hover { color: var(--primary); }
-    .top-bar-actions { display: flex; align-items: center; gap: 12px; }
-    .theme-toggle-btn, .print-btn {
-      background: var(--bg-surface);
+    .top-bar-left { display: flex; align-items: center; gap: 14px; }
+    .top-bar-left a {
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s ease;
+    }
+    .top-bar-left a:hover { color: var(--accent); }
+    .top-bar-label {
+      color: var(--ink-muted);
+      font-family: var(--font-hand);
+      font-size: 18px;
+      font-weight: 500;
+    }
+    .top-bar-actions { display: flex; align-items: center; gap: 10px; }
+    .top-btn {
+      background: var(--paper-surface);
       border: 1px solid var(--border);
-      color: var(--text-muted);
+      color: var(--ink-muted);
       padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
@@ -107,699 +163,1055 @@
       font-weight: 500;
       transition: all 0.15s ease;
     }
-    .theme-toggle-btn:hover, .print-btn:hover {
-      background: var(--bg-subtle);
-      color: var(--text-main);
-      border-color: var(--border-focus);
+    .top-btn:hover {
+      background: var(--paper-subtle);
+      color: var(--ink);
+      border-color: var(--accent);
     }
 
-    /* Main Grid Layout */
+    /* ── Layout ── */
     .layout-wrapper {
       display: grid;
-      grid-template-columns: 300px minmax(0, 1fr);
-      max-width: 1360px;
+      grid-template-columns: 280px minmax(0, 1fr);
+      max-width: 1400px;
       margin: 0 auto;
-      min-height: calc(100vh - 50px);
+      position: relative;
+      z-index: 2;
     }
 
-    /* Sidebar Navigation */
+    /* ── Sidebar ── */
     .sidebar {
       position: sticky;
-      top: 49px;
-      height: calc(100vh - 49px);
-      padding: 40px 24px 60px;
+      top: 43px;
+      height: calc(100vh - 43px);
+      padding: 36px 22px 60px;
       border-right: 1px solid var(--border);
       overflow-y: auto;
       font-family: var(--font-sans);
+      background: var(--paper-warm);
     }
-    .author-card { margin-bottom: 28px; }
-    .author-name { font-size: 17px; font-weight: 700; color: var(--text-main); }
-    .author-tagline { font-size: 13px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
-    .sidebar-section-title {
-      font-size: 11px;
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--ink-faint); border-radius: 4px; }
+
+    .author-card { margin-bottom: 30px; }
+    .author-name {
+      font-size: 16px; font-weight: 700; color: var(--ink);
+      font-family: var(--font-serif);
+    }
+    .author-tag {
+      font-family: var(--font-hand);
+      font-size: 17px;
+      color: var(--ink-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    .sidebar-label {
+      font-size: 10.5px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-subtle);
-      margin: 24px 0 10px;
+      letter-spacing: 0.12em;
+      color: var(--ink-subtle);
+      margin: 22px 0 8px;
     }
-    .toc-nav { list-style: none; }
-    .toc-nav li { margin-bottom: 4px; }
-    .toc-nav a {
-      color: var(--text-muted);
+    .toc { list-style: none; }
+    .toc > li { margin-bottom: 2px; }
+    .toc > li > a {
+      color: var(--ink-muted);
       text-decoration: none;
-      font-size: 13.5px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
       display: block;
-      padding: 6px 10px;
+      padding: 7px 10px;
       border-radius: 6px;
       transition: all 0.15s ease;
-      line-height: 1.4;
     }
-    .toc-nav a:hover {
-      background: var(--bg-subtle);
-      color: var(--primary);
+    .toc > li > a:hover { background: var(--paper-subtle); color: var(--accent); }
+    .toc > li > a.active {
+      background: var(--ink-blue-bg);
+      color: var(--accent);
+      font-weight: 700;
     }
-    .toc-nav a.active {
-      background: var(--callout-bg);
-      color: var(--primary);
-      font-weight: 600;
-    }
-    .toc-subnav {
+    .toc-sub {
       list-style: none;
-      padding-left: 14px;
-      margin-top: 4px;
-      border-left: 1px solid var(--border);
+      padding-left: 12px;
+      margin: 3px 0 6px;
+      border-left: 1px solid var(--margin-line);
     }
-    .toc-subnav a { font-size: 12px; padding: 4px 8px; color: var(--text-subtle); }
-    .toc-subnav a:hover { color: var(--text-main); }
+    .toc-sub a {
+      color: var(--ink-subtle);
+      text-decoration: none;
+      font-size: 11.5px;
+      font-weight: 500;
+      display: block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      transition: color 0.15s ease;
+    }
+    .toc-sub a:hover { color: var(--ink); }
 
-    /* Content Area */
+    .sidebar-links { list-style: none; margin-top: 6px; }
+    .sidebar-links a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 500;
+      display: block;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: all 0.15s ease;
+    }
+    .sidebar-links a:hover { background: var(--paper-subtle); color: var(--accent); }
+
+    /* ── Main content ── */
     .journal-content {
-      padding: 56px 64px 140px;
-      max-width: 940px;
+      padding: 52px 60px 120px;
+      max-width: 960px;
+      position: relative;
     }
 
-    /* Header Section */
+    /* ── Margin line (notebook aesthetic) ── */
+    .journal-content::before {
+      content: "";
+      position: absolute;
+      left: 44px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--margin-line);
+    }
+
+    /* ── Journal header ── */
     .journal-header {
-      margin-bottom: 64px;
-      padding-bottom: 40px;
+      margin-bottom: 72px;
+      padding-bottom: 36px;
       border-bottom: 2px solid var(--border);
     }
     .journal-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--primary);
-      background: var(--callout-bg);
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
-    .journal-main-title {
-      font-size: 42px;
+      font-size: 11px;
       font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: -0.025em;
-      color: var(--text-main);
-      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      background: var(--ink-blue-bg);
+      padding: 5px 13px;
+      border-radius: 20px;
+      margin-bottom: 22px;
     }
+    .journal-title {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    .journal-byline {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      color: var(--ink-muted);
+      margin-bottom: 26px;
+    }
+    .journal-byline strong { color: var(--ink); font-weight: 600; }
     .journal-abstract {
-      font-size: 21px;
+      font-size: 20px;
       font-style: italic;
-      color: var(--text-muted);
-      line-height: 1.6;
-      border-left: 3px solid var(--primary);
-      padding-left: 20px;
-      margin-top: 24px;
+      color: var(--ink-muted);
+      line-height: 1.62;
+      border-left: 3px solid var(--accent);
+      padding-left: 22px;
     }
 
-    /* Article Entries */
-    .journal-chapter {
-      margin-bottom: 110px;
-      scroll-margin-top: 70px;
-    }
-    .chapter-eyebrow {
+    /* ── How to read this journal ── */
+    .reading-guide {
+      background: var(--paper-subtle);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px 28px;
+      margin: 44px 0 0;
       font-family: var(--font-sans);
-      font-size: 13px;
+    }
+    .reading-guide h4 {
+      font-family: var(--font-hand);
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 10px;
+      font-weight: 600;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .reading-guide p {
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+    .reading-guide p + p { margin-top: 8px; }
+
+    /* ── Journal entry (chapter) ── */
+    .entry {
+      margin-bottom: 100px;
+      scroll-margin-top: 56px;
+    }
+    .entry-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.1em;
-      color: var(--primary);
+      color: var(--accent);
       margin-bottom: 8px;
     }
-    .chapter-title {
-      font-size: 32px;
+    .entry-title {
+      font-size: 34px;
       font-weight: 700;
-      line-height: 1.25;
+      line-height: 1.2;
       letter-spacing: -0.02em;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-    .chapter-stack-bar {
+    .entry-stack {
       font-family: var(--font-mono);
-      font-size: 13px;
-      color: var(--text-muted);
-      background: var(--bg-subtle);
-      padding: 8px 14px;
+      font-size: 12.5px;
+      color: var(--ink-muted);
+      background: var(--paper-subtle);
+      padding: 7px 14px;
       border-radius: 6px;
-      margin-bottom: 32px;
+      margin-bottom: 14px;
       border: 1px solid var(--border);
+      display: inline-block;
     }
 
-    /* Typography & Hierarchy */
-    h3 {
+    /* ── Section headings ── */
+    h3.sec {
       font-family: var(--font-sans);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       letter-spacing: -0.01em;
-      margin: 44px 0 16px;
-      color: var(--text-main);
+      margin: 40px 0 14px;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    h4 {
-      font-family: var(--font-sans);
-      font-size: 16.5px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin: 28px 0 12px;
-      color: var(--text-muted);
-    }
-    p { margin-bottom: 24px; }
-    ul, ol { margin: 0 0 24px 28px; }
-    li { margin-bottom: 8px; }
-    strong { font-weight: 600; color: var(--text-main); }
-    em { font-style: italic; }
-
-    /* Metrics Grid */
-    .metrics-dashboard {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin: 32px 0 40px;
-      font-family: var(--font-sans);
-    }
-    .metric-box {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 18px 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-    }
-    .metric-value {
-      font-size: 28px;
-      font-weight: 700;
+    h3.sec .sec-mark {
       font-family: var(--font-mono);
-      color: var(--primary);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .metric-title {
       font-size: 12px;
-      font-weight: 600;
-      color: var(--text-main);
-      line-height: 1.3;
-    }
-    .metric-sub {
-      font-size: 11px;
-      color: var(--text-subtle);
-      margin-top: 4px;
-      line-height: 1.3;
-    }
-
-    /* Architecture Schematics */
-    .arch-diagram {
-      background: var(--bg-surface);
+      color: var(--ink-subtle);
+      font-weight: 500;
+      background: var(--paper-subtle);
+      padding: 2px 8px;
+      border-radius: 4px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      margin: 32px 0;
-      font-family: var(--font-mono);
-      font-size: 13px;
-      line-height: 1.8;
-      overflow-x: auto;
-      color: var(--text-main);
-      box-shadow: 0 1px 4px rgba(0,0,0,0.03);
     }
 
-    /* Code Blocks */
+    p { margin-bottom: 22px; }
+    p:last-child { margin-bottom: 0; }
+    ul, ol { margin: 0 0 22px 24px; }
+    li { margin-bottom: 7px; }
+    strong { font-weight: 600; color: var(--ink); }
+    em { font-style: italic; }
+    code { font-family: var(--font-mono); font-size: 0.88em; }
+    p code, li code {
+      background: var(--paper-subtle);
+      border: 1px solid var(--border);
+      padding: 1.5px 5px;
+      border-radius: 4px;
+      color: var(--ink-red);
+    }
+
+    /* ── Margin annotation (handwritten note) ── */
+    .annotation {
+      font-family: var(--font-hand);
+      font-size: 19px;
+      line-height: 1.45;
+      color: var(--ink-blue);
+      background: var(--ink-blue-bg);
+      border-left: 3px solid var(--ink-blue);
+      padding: 10px 16px;
+      margin: 24px 0;
+      border-radius: 0 6px 6px 0;
+    }
+    .annotation.warn {
+      color: var(--ink-amber);
+      background: var(--ink-amber-bg);
+      border-left-color: var(--ink-amber);
+    }
+    .annotation.danger {
+      color: var(--ink-red);
+      background: var(--ink-red-bg);
+      border-left-color: var(--ink-red);
+    }
+    .annotation.success {
+      color: var(--ink-green);
+      background: var(--ink-green-bg);
+      border-left-color: var(--ink-green);
+    }
+
+    /* ── "Before you read on" — interactive thought pause ── */
+    .thought-pause {
+      background: var(--paper-warm);
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      padding: 28px 30px;
+      margin: 30px 0;
+      position: relative;
+    }
+    .thought-pause-label {
+      font-family: var(--font-hand);
+      font-size: 22px;
+      color: var(--ink-amber);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .thought-pause-question {
+      font-style: italic;
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.65;
+      margin: 0;
+    }
+    .thought-reveal-btn {
+      margin-top: 18px;
+      background: var(--ink);
+      color: var(--paper);
+      border: none;
+      padding: 9px 20px;
+      border-radius: 24px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .thought-reveal-btn:hover {
+      background: var(--accent);
+      transform: translateY(-1px);
+    }
+    .thought-pause-answer {
+      display: none;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      animation: fadeIn 0.45s ease;
+    }
+    .thought-pause.revealed .thought-pause-answer { display: block; }
+    .thought-pause.revealed .thought-reveal-btn { display: none; }
+    .thought-pause.revealed { border-style: solid; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Options grid (with struck-through rejected approaches) ── */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 26px 0;
+    }
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      font-family: var(--font-sans);
+      font-size: 14.5px;
+      line-height: 1.5;
+    }
+    .option.rejected {
+      background: var(--ink-red-bg);
+      border: 1px solid var(--border-soft);
+    }
+    .option.chosen {
+      background: var(--ink-green-bg);
+      border: 1px solid var(--border-soft);
+    }
+    .option-mark {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .option.rejected .option-mark { color: var(--ink-red); }
+    .option.chosen .option-mark { color: var(--ink-green); }
+    .option-body { flex: 1; }
+    .option-name {
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .option.rejected .option-name {
+      text-decoration: line-through;
+      text-decoration-color: var(--ink-red);
+      color: var(--ink-muted);
+    }
+    .option-reason {
+      color: var(--ink-subtle);
+      font-size: 13.5px;
+      margin-top: 2px;
+    }
+
+    /* ── Code cards ── */
     .code-card {
       background: var(--code-bg);
       border: 1px solid var(--code-border);
-      border-radius: 8px;
-      margin: 32px 0;
+      border-radius: 10px;
+      margin: 28px 0;
       overflow: hidden;
       font-family: var(--font-mono);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
     .code-card-header {
-      background: rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 16px;
+      background: var(--code-header);
+      border-bottom: 1px solid var(--code-border);
+      padding: 9px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 12px;
+      font-size: 11.5px;
       color: #94A3B8;
     }
     .code-card-title { display: flex; align-items: center; gap: 8px; font-weight: 600; }
-    .copy-code-btn {
-      background: rgba(255, 255, 255, 0.1);
+    .copy-btn {
+      background: rgba(255,255,255,0.1);
       border: none;
       color: #E2E8F0;
-      padding: 4px 8px;
+      padding: 4px 9px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 10.5px;
       font-family: var(--font-sans);
       cursor: pointer;
       transition: background 0.15s ease;
     }
-    .copy-code-btn:hover { background: rgba(255, 255, 255, 0.2); }
+    .copy-btn:hover { background: rgba(255,255,255,0.2); }
     pre {
-      padding: 20px;
+      padding: 18px 20px;
       overflow-x: auto;
-      font-size: 13.5px;
-      line-height: 1.65;
+      font-size: 13px;
+      line-height: 1.62;
       color: var(--code-text);
     }
-    code { font-family: var(--font-mono); font-size: 0.9em; }
-    p code, li code {
-      background: var(--bg-subtle);
+
+    /* ── Architecture sketch ── */
+    .arch-sketch {
+      background: var(--paper-surface);
       border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.88em;
-      color: var(--primary);
+      border-radius: 10px;
+      padding: 22px 24px;
+      margin: 28px 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.72;
+      overflow-x: auto;
+      color: var(--ink-muted);
+      box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+      white-space: pre;
     }
 
-    /* Callouts */
-    .callout-block {
-      padding: 22px 26px;
-      border-radius: 8px;
-      margin: 32px 0;
-      border-left: 4px solid var(--callout-border);
-      background: var(--callout-bg);
-      font-size: 18px;
-    }
-    .callout-block.warning {
-      border-left-color: var(--warning-border);
-      background: var(--warning-bg);
-    }
-    .callout-block.danger {
-      border-left-color: var(--danger-border);
-      background: var(--danger-bg);
-    }
-    .callout-header {
+    /* ── Metrics ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin: 26px 0 32px;
       font-family: var(--font-sans);
-      font-weight: 700;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
-    .callout-block.warning .callout-header { color: var(--warning-border); }
-    .callout-block.danger .callout-header { color: var(--danger-border); }
-    .callout-block .callout-header { color: var(--primary); }
+    .metric {
+      background: var(--paper-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 14px;
+    }
+    .metric-val {
+      font-size: 24px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+    .metric-label {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+    .metric-sub {
+      font-size: 10.5px;
+      color: var(--ink-subtle);
+      margin-top: 3px;
+      line-height: 1.3;
+    }
 
-    /* Tradeoff Matrix Table */
-    .tradeoff-table {
+    /* ── What went wrong ── */
+    .went-wrong {
+      background: var(--ink-red-bg);
+      border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--ink-red);
+      border-radius: 0 10px 10px 0;
+      padding: 24px 28px;
+      margin: 30px 0;
+    }
+    .went-wrong-title {
+      font-family: var(--font-hand);
+      font-size: 24px;
+      color: var(--ink-red);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+    .went-wrong ul { margin-left: 20px; }
+    .went-wrong li { margin-bottom: 12px; color: var(--ink-muted); }
+    .went-wrong li strong { color: var(--ink-red); }
+
+    /* ── Takeaway ── */
+    .takeaway {
+      background: var(--ink-green-bg);
+      border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--ink-green);
+      border-radius: 0 10px 10px 0;
+      padding: 22px 28px;
+      margin: 30px 0;
+    }
+    .takeaway-label {
+      font-family: var(--font-hand);
+      font-size: 22px;
+      color: var(--ink-green);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .takeaway p {
+      color: var(--ink-muted);
+      font-style: italic;
+      margin: 0;
+    }
+
+    /* ── Table ── */
+    .data-table {
       width: 100%;
       border-collapse: collapse;
-      margin: 32px 0;
+      margin: 26px 0;
       font-family: var(--font-sans);
-      font-size: 14.5px;
+      font-size: 13.5px;
     }
-    .tradeoff-table th, .tradeoff-table td {
-      padding: 12px 16px;
+    .data-table th, .data-table td {
+      padding: 10px 14px;
       border: 1px solid var(--border);
       text-align: left;
-      line-height: 1.5;
+      line-height: 1.45;
     }
-    .tradeoff-table th {
-      background: var(--bg-subtle);
+    .data-table th {
+      background: var(--paper-subtle);
       font-weight: 600;
-      color: var(--text-main);
+      color: var(--ink);
+      font-size: 12.5px;
     }
-    .tradeoff-table td { background: var(--bg-surface); color: var(--text-muted); }
+    .data-table td { color: var(--ink-muted); }
+    .data-table td strong { color: var(--ink); }
 
-    /* Footer */
+    /* ── Footer ── */
     .journal-footer {
-      margin-top: 100px;
-      padding-top: 40px;
+      margin-top: 80px;
+      padding-top: 36px;
       border-top: 1px solid var(--border);
       font-family: var(--font-sans);
-      font-size: 14px;
-      color: var(--text-subtle);
+      font-size: 13px;
+      color: var(--ink-subtle);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
     }
+    .journal-footer a { color: var(--accent); text-decoration: none; }
 
-    /* Print Styles */
+    /* ── Print ── */
     @media print {
       body { font-size: 11pt; line-height: 1.5; background: #fff !important; color: #000 !important; }
-      .top-bar, .sidebar, .copy-code-btn, .noprint { display: none !important; }
+      body::before, .progress-bar, .top-bar, .sidebar, .copy-btn { display: none !important; }
       .layout-wrapper { display: block; max-width: 100%; }
       .journal-content { padding: 0; max-width: 100%; }
-      .journal-chapter { page-break-after: always; margin-bottom: 40pt; }
-      .code-card { border: 1px solid #ccc; background: #f8fafc !important; color: #000 !important; }
+      .journal-content::before { display: none; }
+      .entry { page-break-after: always; margin-bottom: 30pt; }
+      .thought-pause-answer { display: block !important; }
+      .thought-reveal-btn { display: none !important; }
+      .code-card { border: 1px solid #ccc; background: #f8fafc !important; }
       pre { color: #000 !important; }
-      p code { background: #eee !important; color: #000 !important; }
+      .went-wrong, .takeaway, .annotation { break-inside: avoid; }
     }
 
-    /* Responsive */
+    /* ── Responsive ── */
     @media (max-width: 1024px) {
-      .metrics-dashboard { grid-template-columns: repeat(2, 1fr); }
+      .metrics { grid-template-columns: repeat(2, 1fr); }
       .layout-wrapper { grid-template-columns: 1fr; }
       .sidebar { display: none; }
-      .journal-content { padding: 40px 24px 80px; }
-      .journal-main-title { font-size: 32px; }
-      .chapter-title { font-size: 26px; }
+      .journal-content { padding: 36px 24px 80px; }
+      .journal-content::before { display: none; }
+      .journal-title { font-size: 30px; }
+      .entry-title { font-size: 26px; }
+      .journal-abstract { font-size: 18px; }
+    }
+    @media (max-width: 520px) {
+      .metrics { grid-template-columns: 1fr; }
+      .journal-content { padding: 28px 18px 60px; }
+      .journal-title { font-size: 26px; }
+      .thought-pause { padding: 20px 18px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Top Navigation & Controls -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ── Top bar ── -->
 <div class="top-bar">
   <div class="top-bar-left">
-    <a href="/">&larr; Portfolio Home</a>
-    <span style="color: var(--border);">&bull;</span>
-    <span style="color: var(--text-muted);">Engineering Systems Journal</span>
+    <a href="/">&larr; Portfolio</a>
+    <span class="top-bar-label">Engineering Journal</span>
   </div>
   <div class="top-bar-actions">
-    <button class="print-btn" onclick="window.print()">&#128438; Print / Save PDF</button>
-    <button class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()">Toggle Theme</button>
+    <button class="top-btn" onclick="window.print()">&#128438; Save PDF</button>
+    <button class="top-btn" id="themeToggle" onclick="toggleTheme()">Theme</button>
   </div>
 </div>
 
 <div class="layout-wrapper">
 
-  <!-- Sidebar Table of Contents -->
+  <!-- ── Sidebar ── -->
   <aside class="sidebar">
     <div class="author-card">
       <div class="author-name">Taiwo Henry Fadeni</div>
-      <div class="author-tagline">Software & AI Engineer &bull; Systems Design Journal</div>
+      <div class="author-tag">Software &amp; AI Engineer<br>Systems Design Journal</div>
     </div>
 
-    <div class="sidebar-section-title">Case Studies & Design Journals</div>
-    <ul class="toc-nav">
+    <div class="sidebar-label">Journal Entries</div>
+    <ul class="toc">
       <li>
-        <a href="#raa-dashboard" class="active">01. Text-to-SQL Analytics</a>
-        <ul class="toc-subnav">
-          <li><a href="#raa-problem">Problem Space</a></li>
-          <li><a href="#raa-architecture">System Architecture</a></li>
-          <li><a href="#raa-ast">AST Validation Engine</a></li>
-          <li><a href="#raa-sandboxing">DuckDB Sandboxing</a></li>
-          <li><a href="#raa-evaluation">Empirical Evaluation</a></li>
+        <a href="#entry-1" class="active">01. Text-to-SQL Analytics</a>
+        <ul class="toc-sub">
+          <li><a href="#e1-problem">The Problem</a></li>
+          <li><a href="#e1-try">What I Tried First</a></li>
+          <li><a href="#e1-decision">The Decision</a></li>
+          <li><a href="#e1-build">Building It</a></li>
+          <li><a href="#e1-wrong">What Went Wrong</a></li>
         </ul>
       </li>
       <li>
-        <a href="#code-review-agent">02. Autonomous Code Review</a>
-        <ul class="toc-subnav">
-          <li><a href="#cra-problem">Webhook Latency</a></li>
-          <li><a href="#cra-langgraph">LangGraph Workflow</a></li>
-          <li><a href="#cra-diffs">Diff Isolation</a></li>
-          <li><a href="#cra-providers">Provider Abstraction</a></li>
+        <a href="#entry-2">02. AI Code Review Agent</a>
+        <ul class="toc-sub">
+          <li><a href="#e2-problem">The Problem</a></li>
+          <li><a href="#e2-try">What I Tried First</a></li>
+          <li><a href="#e2-decision">The Decision</a></li>
+          <li><a href="#e2-build">Building It</a></li>
+          <li><a href="#e2-wrong">What Went Wrong</a></li>
         </ul>
       </li>
       <li>
-        <a href="#self-healing-monitor">03. SRE Self-Healing Monitor</a>
-        <ul class="toc-subnav">
-          <li><a href="#shm-problem">Autonomous Action Risk</a></li>
-          <li><a href="#shm-policy">4-Condition Policy Gate</a></li>
-          <li><a href="#shm-runbooks">ChromaDB Runbooks</a></li>
-          <li><a href="#shm-audit">PostgreSQL Audit Trail</a></li>
+        <a href="#entry-3">03. Self-Healing SRE Monitor</a>
+        <ul class="toc-sub">
+          <li><a href="#e3-problem">The Problem</a></li>
+          <li><a href="#e3-try">What I Tried First</a></li>
+          <li><a href="#e3-decision">The Decision</a></li>
+          <li><a href="#e3-build">Building It</a></li>
+          <li><a href="#e3-wrong">What Went Wrong</a></li>
         </ul>
       </li>
       <li>
-        <a href="#realtime-chat">04. Distributed Chat Backend</a>
-        <ul class="toc-subnav">
-          <li><a href="#rtc-problem">Multi-Worker Isolation</a></li>
-          <li><a href="#rtc-pubsub">Ref-Counted Pub/Sub</a></li>
-          <li><a href="#rtc-jwt">Pre-Accept Handshake</a></li>
-          <li><a href="#rtc-pagination">Cursor Pagination</a></li>
+        <a href="#entry-4">04. Distributed Chat Backend</a>
+        <ul class="toc-sub">
+          <li><a href="#e4-problem">The Problem</a></li>
+          <li><a href="#e4-try">What I Tried First</a></li>
+          <li><a href="#e4-decision">The Decision</a></li>
+          <li><a href="#e4-build">Building It</a></li>
+          <li><a href="#e4-wrong">What Went Wrong</a></li>
         </ul>
       </li>
     </ul>
 
-    <div class="sidebar-section-title">Artifacts & Links</div>
-    <ul class="toc-nav">
-      <li><a href="/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf" target="_blank">&#8595; Download ATS Resume</a></li>
-      <li><a href="https://github.com/Protagonist01" target="_blank">&#8599; GitHub Profile</a></li>
-      <li><a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" target="_blank">&#8599; LinkedIn Profile</a></li>
+    <div class="sidebar-label">Artifacts</div>
+    <ul class="sidebar-links">
+      <li><a href="/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf" target="_blank">&#8595; Resume (PDF)</a></li>
+      <li><a href="https://github.com/Protagonist01" target="_blank">&#8599; GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" target="_blank">&#8599; LinkedIn</a></li>
     </ul>
   </aside>
 
-  <!-- Main Content Area -->
+  <!-- ── Main content ── -->
   <main class="journal-content">
 
+    <!-- ── Header ── -->
     <header class="journal-header">
-      <div class="journal-badge">Production Architecture &bull; Engineering Design Journal</div>
-      <h1 class="journal-main-title">Building Production AI Systems & Distributed Backends From Scratch</h1>
-      <p style="color: var(--text-muted); font-size: 17px; font-family: var(--font-sans);">
-        By <strong>Taiwo Henry Fadeni</strong> &bull; Verified Technical Breakdown &bull; Lagos, Nigeria (Remote)
-      </p>
+      <div class="journal-badge">Engineering Journal &bull; Thought Process to Working Code</div>
+      <h1 class="journal-title">Four Systems, From Problem to Working Code</h1>
+      <p class="journal-byline">By <strong>Taiwo Henry Fadeni</strong> &bull; Software &amp; AI Engineer &bull; Lagos, Nigeria (Remote)</p>
       <div class="journal-abstract">
-        "This document is a technical retrospective and system design journal. It details the engineering decisions, safety invariants, AST validators, state machine reducers, and distributed pub/sub mechanics behind four flagship systems I built from scratch. It explains not just what was built, but the concrete failure modes that forced each architectural choice."
+        This is not a polished retrospective. It is a working journal — the thoughts, dead ends, decisions, and construction steps behind four systems I built from scratch. Each entry starts with the problem I was staring at, moves through what I tried that didn't work, and arrives at the code that did. The goal: a reader who hasn't seen my repository can recreate the system from what's written here.
+      </div>
+
+      <div class="reading-guide">
+        <h4>How to read this journal</h4>
+        <p>Each entry follows the same arc: <strong>The Problem</strong> (what I was facing), <strong>Before You Read On</strong> (pause and think — the answer is hidden behind a click), <strong>What I Tried First</strong> (the approach that failed and why), <strong>The Decision</strong> (options weighed, with rejected ones crossed out), <strong>Building It</strong> (the construction, concrete enough to type), and <strong>What Went Wrong</strong> (the bugs that forced each choice).</p>
+        <p>The "Before You Read On" sections are the point. Try to sketch the solution before you reveal mine. If your sketch matches, you didn't need this journal. If it doesn't, that's where the learning lives.</p>
       </div>
     </header>
 
-    <!-- ========================================================================= -->
-    <!-- CHAPTER 01: RETRIEVAL-AUGMENTED ANALYTICS DASHBOARD                       -->
-    <!-- ========================================================================= -->
-    <article id="raa-dashboard" class="journal-chapter">
-      <div class="chapter-eyebrow">Case Study 01 &bull; Natural Language to SQL Engine</div>
-      <h2 class="chapter-title">Retrieval-Augmented Analytics Dashboard (Text-to-SQL)</h2>
-      <div class="chapter-stack-bar">FastAPI &bull; DuckDB (In-Memory Sandbox) &bull; sqlglot AST Parser &bull; Redis 7 &bull; Next.js &bull; SSE Streams</div>
+    <!-- ════════════════════════════════════════════════════════════
+         ENTRY 1: TEXT-TO-SQL ANALYTICS DASHBOARD
+         ════════════════════════════════════════════════════════════ -->
+    <article id="entry-1" class="entry">
+      <div class="entry-eyebrow">Entry 01 &bull; Natural Language to SQL</div>
+      <h2 class="entry-title">Retrieval-Augmented Analytics Dashboard</h2>
+      <div class="entry-stack">FastAPI &bull; DuckDB &bull; sqlglot AST &bull; Redis &bull; Next.js &bull; SSE</div>
 
-      <div class="metrics-dashboard">
-        <div class="metric-box">
-          <div class="metric-value">96.0%</div>
-          <div class="metric-title">AST Syntactic Validity</div>
-          <div class="metric-sub">Verified via sqlglot engine</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">74.0%</div>
-          <div class="metric-title">Execution Accuracy</div>
-          <div class="metric-sub">Spider golden benchmark</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">61.0%</div>
-          <div class="metric-title">Self-Correction Rate</div>
-          <div class="metric-sub">Traceback retry recovery</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">~4.2s</div>
-          <div class="metric-title">P95 Latency</div>
-          <div class="metric-sub">Documented GPT-4o run</div>
-        </div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">96%</div><div class="metric-label">AST Validity</div><div class="metric-sub">sqlglot parse check</div></div>
+        <div class="metric"><div class="metric-val">74%</div><div class="metric-label">Execution Accuracy</div><div class="metric-sub">80-question golden set</div></div>
+        <div class="metric"><div class="metric-val">61%</div><div class="metric-label">Self-Correction</div><div class="metric-sub">Traceback retry recovery</div></div>
+        <div class="metric"><div class="metric-val">~4.2s</div><div class="metric-label">P95 Latency</div><div class="metric-sub">GPT-4o documented run</div></div>
       </div>
 
-      <h3 id="raa-problem">1. The Problem Space: The Naive LLM SQL Trap</h3>
+      <p class="annotation">The benchmark isn't the accuracy number — it's the validation boundary. Where does the LLM stop and deterministic code take over? That line is the whole system.</p>
+
+      <!-- ── The Problem ── -->
+      <h3 id="e1-problem" class="sec"><span class="sec-mark">01</span> The Problem: The Naive LLM SQL Trap</h3>
       <p>
-        Giving non-technical stakeholders direct query access to analytical data is one of the most compelling applications of LLMs. However, the naive implementation—injecting user natural language directly into an LLM prompt alongside full database schemas—fails disastrously in production across three vectors:
+        The goal was simple: let a non-technical stakeholder type <em>"What are the top 5 product categories by revenue in Q3 2025?"</em> and get an answer from the data warehouse. The naive implementation — dump the full schema and the question into an LLM prompt, take the SQL it returns, run it — fails on three vectors that I only fully appreciated after watching it break:
       </p>
       <ul>
-        <li><strong>Schema Context Explosion:</strong> Dumping an enterprise data warehouse schema (dozens of tables, hundreds of columns) consumes thousands of prompt tokens. This introduces severe attention drift, inflates query inference costs, and frequently causes the LLM to hallucinate column names from adjacent, un-queried tables.</li>
-        <li><strong>Destructive Mutation & Security Vulnerabilities:</strong> LLMs cannot be trusted to generate read-only SQL. A malformed or adversarial prompt can easily produce <code>DROP TABLE</code>, <code>DELETE FROM</code>, or unindexed table alterations. Furthermore, standard regex sanitization (e.g. checking for the word "DROP") is easily bypassed via comments or nested subqueries (e.g. <code>/* comment */ DROP ...</code>).</li>
-        <li><strong>Synchronous Blocking & Cartesian Joins:</strong> Complex analytical queries that scan hundreds of thousands of rows will lock synchronous HTTP request-response lifecycles, causing connection resets on reverse proxies like Nginx or Cloudflare.</li>
+        <li><strong>Schema context explosion.</strong> The warehouse had dozens of tables and hundreds of columns. Dumping all of it consumed thousands of prompt tokens. The LLM's attention drifted, and it started hallucinating column names from tables adjacent to the one being queried.</li>
+        <li><strong>Destructive mutations.</strong> The LLM cannot be trusted to generate read-only SQL. An adversarial or just confused prompt could produce <code>DROP TABLE</code>, <code>DELETE FROM</code>, or an unindexed table alteration. My first instinct — a regex blocklist checking for the word "DROP" — was bypassed in minutes.</li>
+        <li><strong>Synchronous blocking.</strong> A complex analytical query scanning hundreds of thousands of rows locked the HTTP request-response lifecycle. Reverse proxies like Nginx reset the connection before the query finished.</li>
       </ul>
 
-      <h3 id="raa-architecture">2. System Architecture & End-to-End Topology</h3>
-      <p>
-        To eliminate these failure modes, I designed an evaluated, multi-stage pipeline with strict deterministic validation boundaries:
-      </p>
-
-      <div class="arch-diagram">
-+-----------------------------------------------------------------------------------------+
-|                                    CLIENT (Next.js)                                     |
-|  1. User submits: "What are the top 5 product categories by revenue in Q3 2025?"       |
-+--------------------------------------------+--------------------------------------------+
-                                             | HTTP POST /api/query
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                                  FASTAPI GATEWAY ENGINE                                 |
-|                                                                                         |
-|  [Stage 1: Dynamic Schema Retrieval]                                                    |
-|  - Tokenizes question keywords against database metadata.                               |
-|  - Caches schema slices in Redis with a 300s TTL (bypassing full DDL dump).             |
-|                                                                                         |
-|  [Stage 2: Few-Shot Text-to-SQL Generation]                                             |
-|  - Constructs strict prompt containing ONLY the retrieved table/column slices.          |
-|  - LLM emits SQL candidate wrapped in structured JSON format.                           |
-|                                                                                         |
-|  [Stage 3: Abstract Syntax Tree (AST) Validation with sqlglot]                          |
-|  - Parses query into DuckDB AST representation.                                         |
-|  - Traverses tree to enforce zero write-mutations and strict column allowlist.          |
-|                                                                                         |
-|  [Stage 4: Sandboxed DuckDB In-Memory Execution]                                        |
-|  - Read-only execution session with 5.0s timeout and 10,000-row return limit.          |
-|                                                                                         |
-|  [Stage 5: 1-Shot Self-Correction Loop (On Exception)]                                  |
-|  - If execution fails (e.g. invalid type cast), captures exact traceback for retry.     |
-|                                                                                         |
-|  [Stage 6: Server-Sent Events (SSE) Streaming]                                          |
-|  - Streams SQL -> Execution Status -> Result Table -> Plain-English Explanation.        |
-+-----------------------------------------------------------------------------------------+
+      <!-- ── Before you read on ── -->
+      <div class="thought-pause" id="tp1">
+        <div class="thought-pause-label">&#9999; Before you read on</div>
+        <p class="thought-pause-question">
+          You have an LLM that can write SQL, and a user asks <em>"What are the top 5 product categories by revenue in Q3 2025?"</em> The warehouse has 40 tables and 300 columns. How do you let the LLM answer this without risking a <code>DROP TABLE</code>, a hallucinated column, or a query that locks the database for 30 seconds? Sketch the validation boundary — where does the LLM stop and deterministic code take over?
+        </p>
+        <button class="thought-reveal-btn" onclick="revealThought('tp1')">&#9660; Reveal the reasoning</button>
+        <div class="thought-pause-answer">
+          <p>The LLM should <strong>never touch the execution layer directly</strong>. It generates SQL as a candidate string. Deterministic code then does three things: retrieves only the relevant schema slice (not the whole warehouse), parses the SQL into an Abstract Syntax Tree to check for mutations regardless of formatting, and executes it in a sandboxed in-process engine with a timeout and row cap. The boundary is: LLM proposes, code validates, code executes. The LLM has no authority over what runs.</p>
+        </div>
       </div>
 
-      <h3 id="raa-ast">3. Implementation Deep Dive: Two-Stage AST Validation</h3>
+      <!-- ── What I tried first ── -->
+      <h3 id="e1-try" class="sec"><span class="sec-mark">02</span> What I Tried First</h3>
       <p>
-        The core safety innovation in this system is the replacement of regex filters with an <strong>Abstract Syntax Tree (AST) visitor</strong> using <code>sqlglot</code>. Because SQL is a context-free grammar, inspecting the parsed AST allows us to evaluate the semantic intent of the query regardless of formatting, nested subqueries, or comment obfuscation.
+        My first approach was a regex keyword blocklist. Before executing the LLM's SQL, I checked whether the string contained <code>DROP</code>, <code>DELETE</code>, <code>INSERT</code>, <code>UPDATE</code>, or <code>ALTER</code>. If it did, I rejected it.
       </p>
+      <p>
+        This lasted about ten minutes. The bypass was trivial:
+      </p>
+      <div class="code-card">
+        <div class="code-card-header"><span class="code-card-title">&#9888; Regex bypass</span></div>
+<pre><code>-- The regex sees "SELECT", misses the DROP inside the comment
+SELECT 1; /* harmless */ DROP TABLE users;
+
+-- Or nested inside a subquery the regex doesn't understand
+DELETE FROM (SELECT id FROM orders WHERE status = 'shipped');</code></pre>
+      </div>
+      <p class="annotation danger">Regex operates on strings. SQL is a context-free grammar. You can't evaluate the semantic intent of a query by searching for keywords — you need to parse the structure.</p>
+
+      <!-- ── The Decision ── -->
+      <h3 id="e1-decision" class="sec"><span class="sec-mark">03</span> The Decision</h3>
+      <p>I weighed four approaches for the safety boundary:</p>
+      <div class="options">
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Regex keyword blocklist</div>
+            <div class="option-reason">Bypassed by comments, nesting, and case variations. Operates on strings, not structure.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Read-only database user</div>
+            <div class="option-reason">Prevents writes but doesn't prevent Cartesian explosions, connection resets, or hallucinated columns. No resource limits.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Full schema in the prompt</div>
+            <div class="option-reason">Thousands of tokens, attention drift, hallucinated column names from adjacent tables.</div>
+          </div>
+        </div>
+        <div class="option chosen">
+          <span class="option-mark">&#10003;</span>
+          <div class="option-body">
+            <div class="option-name">AST validation + DuckDB sandbox + schema retrieval</div>
+            <div class="option-reason">Parse the SQL into a syntax tree to check mutations structurally. Execute in an in-process engine with a timeout and row cap. Send only the relevant schema slice to the LLM.</div>
+          </div>
+        </div>
+      </div>
+      <p>
+        The key insight: <strong>SQL is a context-free grammar.</strong> By parsing it into an Abstract Syntax Tree with <code>sqlglot</code>, we can traverse the tree and evaluate the semantic intent of the query regardless of formatting, comments, or nested subqueries. A <code>Drop</code> node in the AST is a <code>Drop</code> node whether it's wrapped in a comment, split across lines, or buried in a subquery. Regex sees strings; the AST sees structure.
+      </p>
+
+      <!-- ── Building it ── -->
+      <h3 id="e1-build" class="sec"><span class="sec-mark">04</span> Building It</h3>
+      <p>
+        The pipeline has six stages. Each stage has a clear input and output, and the LLM is confined to exactly one of them (stage 2).
+      </p>
+      <div class="arch-sketch"> USER QUESTION
+  "What are the top 5 product categories by revenue in Q3 2025?"
+        │
+        ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 1: Schema Retriever                           │
+│  Keyword match over table/column names              │
+│  Cache the slice in Redis (5 min TTL)                │
+│  Output: {tables: [...], columns: {...}}             │
+└──────────────────────┬──────────────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 2: Text-to-SQL Generation  ◄── LLM lives here│
+│  Prompt contains ONLY the retrieved schema slice     │
+│  Output: SQL candidate string                        │
+└──────────────────────┬──────────────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 3: AST Validation (sqlglot)                   │
+│  Parse → reject FORBIDDEN nodes → check table names │
+│  Output: validated AST or rejection message         │
+└──────────────────────┬──────────────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 4: Sandboxed DuckDB Execution                │
+│  Read-only, in-process, 5s timeout, 10K row cap      │
+│  Output: result rows or traceback                   │
+└──────────────────────┬──────────────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 5: Self-Correction (1 retry, on exception)    │
+│  Feed traceback back to the LLM for a fix           │
+│  Output: corrected SQL → back to Stage 3            │
+└──────────────────────┬──────────────────────────────┘
+                       ▼
+┌─────────────────────────────────────────────────────┐
+│  STAGE 6: SSE Streaming                             │
+│  Stream: SQL → status → result table → explanation  │
+└─────────────────────────────────────────────────────┘</div>
+
+      <p>The safety gate is a two-stage AST validator. Here is the actual code, with the two stages labelled:</p>
 
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> backend/validator.py — AST Safety Gate</span>
-          <button class="copy-code-btn" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+          <span class="code-card-title">&#128196; backend/validator.py — Two-Stage AST Safety Gate</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
 <pre><code>import sqlglot
 from sqlglot import exp
-from typing import Tuple, Optional, Set, List
+from typing import Tuple, Optional, Set, Dict
 
-# Explicitly forbid any AST expression that alters state or metadata
+# Every AST expression type that alters state or metadata
 FORBIDDEN_EXPRESSIONS = (
-    exp.Drop,
-    exp.Insert,
-    exp.Update,
-    exp.Delete,
-    exp.AlterTable,
-    exp.Command,
-    exp.Pragma,
-    exp.Create,
-    exp.Merge
+    exp.Drop, exp.Insert, exp.Update, exp.Delete,
+    exp.AlterTable, exp.Command, exp.Pragma,
+    exp.Create, exp.Merge
 )
 
 class SQLASTSafetyValidator:
-    """
-    Two-stage deterministic SQL validation engine:
-    1. Structural Analysis: Ensures query is strictly a read-only SELECT statement.
-    2. Schema Boundary Analysis: Ensures table and column identifiers exist in active schema.
-    """
     def __init__(self, allowed_tables: Set[str], allowed_columns: Dict[str, Set[str]]):
         self.allowed_tables = {t.lower() for t in allowed_tables}
-        self.allowed_columns = {t.lower(): {c.lower() for c in cols} for t, cols in allowed_columns.items()}
+        self.allowed_columns = {
+            t.lower(): {c.lower() for c in cols}
+            for t, cols in allowed_columns.items()
+        }
 
     def validate(self, sql_query: str) -> Tuple[bool, Optional[str], Optional[exp.Expression]]:
-        # Clean markdown codeblocks if model returned them
-        cleaned_sql = sql_query.strip().removeprefix("```sql").removeprefix("```").removesuffix("```").strip()
-        
+        # Strip markdown code fences if the model wrapped the output
+        cleaned = sql_query.strip().removeprefix("```sql").removeprefix("```").removesuffix("```").strip()
+
         try:
-            # Parse into DuckDB dialect AST
-            ast = sqlglot.parse_one(cleaned_sql, read="duckdb")
+            ast = sqlglot.parse_one(cleaned, read="duckdb")
         except sqlglot.errors.ParseError as pe:
-            return False, f"SQL Syntax Parse Error: {str(pe)}", None
+            return False, f"SQL Syntax Parse Error: {pe}", None
 
-        # --- STAGE 1: Structural Mutation Guard ---
-        # Traverse entire tree to ensure no prohibited statement types exist
+        # ── STAGE 1: Structural Mutation Guard ──
+        # Traverse the entire tree — a Drop inside a subquery is still a Drop
         for forbidden_node in ast.find_all(FORBIDDEN_EXPRESSIONS):
-            return False, f"Prohibited operation '{forbidden_node.key.upper()}' detected. Write operations are blocked.", None
+            return False, f"Prohibited operation '{forbidden_node.key.upper()}' detected.", None
 
-        # Enforce that root expression is a SELECT or UNION
+        # Root must be a SELECT or UNION — nothing else is read-only
         if not isinstance(ast, (exp.Select, exp.Union)):
             return False, "Query must be a read-only SELECT or UNION statement.", None
 
-        # --- STAGE 2: Schema Existence Verification ---
-        referenced_tables = set()
+        # ── STAGE 2: Schema Existence Verification ──
+        # Every referenced table must exist in the retrieved schema slice
         for table_node in ast.find_all(exp.Table):
             t_name = table_node.name.lower()
             if t_name not in self.allowed_tables:
                 return False, f"Table '{t_name}' is not in the authorized schema slice.", None
-            referenced_tables.add(t_name)
 
-        return True, None, ast
-</code></pre>
+        return True, None, ast</code></pre>
       </div>
 
-      <h3 id="raa-sandboxing">4. Sandboxed In-Process DuckDB Execution</h3>
+      <p class="annotation">The <code>find_all</code> traversal is the whole point. It walks the entire tree — a <code>Drop</code> node buried three subqueries deep is still found and rejected. A regex would never see it.</p>
+
       <p>
-        Executing generated queries against live operational databases introduces severe blast-radius risks. I selected <strong>DuckDB</strong> as the in-process OLAP engine. Data is partitioned into read-only Parquet/DuckDB tables.
-      </p>
-
-      <div class="callout-block warning">
-        <div class="callout-header">&#9888; The Cartesian Product Risk & Circuit Breaker</div>
-        If an LLM joins a 50,000-row table with a 50,000-row table on a non-unique column, it produces $2.5 \times 10^9$ intermediate tuples. DuckDB is wrapped in a threadpool executor with an asynchronous <code>asyncio.wait_for(..., timeout=5.0)</code> circuit breaker and a <code>LIMIT 10000</code> injection rule to prevent out-of-memory crashes.
-      </div>
-
-      <h3 id="raa-evaluation">5. Empirical Evaluation Methodology</h3>
-      <p>
-        To move beyond qualitative "eyeball testing", I constructed a versioned evaluation harness using 80 natural-language-to-SQL pairs adapted from the Spider benchmark onto our e-commerce warehouse schema.
-      </p>
-      <table class="tradeoff-table">
-        <thead>
-          <tr>
-            <th>Evaluation Dimension</th>
-            <th>Measured Target</th>
-            <th>Observed Result</th>
-            <th>Engineering Implication</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>AST Validity Rate</strong></td>
-            <td>&ge; 95.0%</td>
-            <td><strong>96.0%</strong></td>
-            <td>sqlglot catches syntax flaws before database execution.</td>
-          </tr>
-          <tr>
-            <td><strong>Execution Accuracy</strong></td>
-            <td>&ge; 70.0%</td>
-            <td><strong>74.0%</strong></td>
-            <td>Validates multi-table joins, subqueries, and group-by aggregations.</td>
-          </tr>
-          <tr>
-            <td><strong>Self-Correction Recovery</strong></td>
-            <td>&ge; 50.0%</td>
-            <td><strong>61.0%</strong></td>
-            <td>Traceback feedback recovers queries with minor type/column typos.</td>
-          </tr>
-          <tr>
-            <td><strong>P95 Query Latency</strong></td>
-            <td>&lt; 5.0s</td>
-            <td><strong>~4.2s</strong></td>
-            <td>Includes retrieval, generation, AST validation, execution, and SSE.</td>
-          </tr>
-        </tbody>
-      </table>
-    </article>
-
-    <!-- ========================================================================= -->
-    <!-- CHAPTER 02: AUTONOMOUS AI CODE REVIEW AGENT                               -->
-    <!-- ========================================================================= -->
-    <article id="code-review-agent" class="journal-chapter">
-      <div class="chapter-eyebrow">Case Study 02 &bull; Developer Tooling & Event-Driven Workflows</div>
-      <h2 class="chapter-title">Autonomous AI Code Review Agent</h2>
-      <div class="chapter-stack-bar">FastAPI &bull; LangGraph StateGraph &bull; Celery 5 &bull; Redis 7 &bull; GitHub App REST/GraphQL API &bull; Pytest</div>
-
-      <div class="metrics-dashboard">
-        <div class="metric-box">
-          <div class="metric-value">&ge; 80.0%</div>
-          <div class="metric-title">CI Coverage Gate</div>
-          <div class="metric-sub">Strict unit & integration tests</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">50 Diffs</div>
-          <div class="metric-title">Golden Eval Benchmark</div>
-          <div class="metric-sub">Curated PR evaluation dataset</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">&lt; 50ms</div>
-          <div class="metric-title">Webhook Intake</div>
-          <div class="metric-sub">HMAC verified, async enqueued</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">0%</div>
-          <div class="metric-title">Line Drift Leakage</div>
-          <div class="metric-sub">Deterministic line range filter</div>
-        </div>
-      </div>
-
-      <h3 id="cra-problem">1. The Problem Space: Webhook Deadlines & Diff Hallucinations</h3>
-      <p>
-        Building an automated GitHub pull-request reviewer introduces strict distributed systems and LLM reasoning challenges:
-      </p>
-      <ul>
-        <li><strong>The 10-Second Webhook Deadline:</strong> GitHub Webhooks require an immediate HTTP 2xx response. If an agent performs diff fetching, context retrieval, and multi-turn LLM reasoning synchronously within the request handler, GitHub triggers delivery timeouts and flags the App as unhealthy.</li>
-        <li><strong>Line-Number Hallucinations:</strong> LLMs are notoriously poor at exact line counting. When reviewing a diff hunk, models frequently comment on line numbers that were not modified, causing GitHub's Review API to reject the comment with an <code>Unprocessable Entity (422)</code> error.</li>
-        <li><strong>Enterprise Code Privacy & Lock-in:</strong> Many organizations refuse to send proprietary source code to hosted commercial LLMs (OpenAI/Anthropic). An enterprise-grade agent must support local, air-gapped models without changing its core workflow logic.</li>
-      </ul>
-
-      <h3 id="cra-langgraph">2. LangGraph State Machine Architecture</h3>
-      <p>
-        I modeled the review pipeline as a cyclic, deterministic <strong>LangGraph StateGraph</strong> running inside Celery worker processes. The state is strictly typed using Pydantic:
+        Execution runs in an in-process DuckDB session. Data is partitioned into read-only Parquet tables. The executor wraps every query in an <code>asyncio.wait_for(..., timeout=5.0)</code> circuit breaker and injects a <code>LIMIT 10000</code> to prevent out-of-memory crashes from accidental Cartesian products.
       </p>
 
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> agent/state_machine.py — LangGraph Review Nodes</span>
-          <button class="copy-code-btn" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+          <span class="code-card-title">&#128196; backend/executor.py — Sandboxed Execution</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+        </div>
+<pre><code>import asyncio
+import duckdb
+
+async def execute_sandboxed(conn: duckdb.DuckDBPyConnection, sql: str) -> dict:
+    # Inject a row cap — the LLM can't be trusted to add its own LIMIT
+    if "LIMIT" not in sql.upper():
+        sql = sql.rstrip(";") + " LIMIT 10000"
+
+    try:
+        # 5-second circuit breaker — a Cartesian product will hit this
+        result = await asyncio.wait_for(
+            asyncio.to_thread(conn.execute, sql),
+            timeout=5.0
+        )
+        rows = result.fetchall()
+        columns = [d[0] for d in result.description]
+        return {"success": True, "columns": columns, "rows": rows}
+    except asyncio.TimeoutError:
+        return {"success": False, "error": "Query exceeded 5-second timeout. Likely a Cartesian product on a non-unique column."}
+    except Exception as e:
+        # The traceback is fed back to the LLM for the self-correction retry
+        return {"success": False, "error": str(e), "traceback": traceback.format_exc()}</code></pre>
+      </div>
+
+      <!-- ── What went wrong ── -->
+      <h3 id="e1-wrong" class="sec"><span class="sec-mark">05</span> What Went Wrong</h3>
+      <div class="went-wrong">
+        <div class="went-wrong-title">&#128165; Things that broke before the system worked</div>
+        <ul>
+          <li><strong>The Cartesian product.</strong> The LLM joined a 50,000-row table with a 50,000-row table on a non-unique column — 2.5 billion intermediate tuples. DuckDB's memory spiked and the process crashed. Diagnosis: the LLM doesn't know which columns are unique. Fix: the <code>asyncio.wait_for</code> timeout and the <code>LIMIT 10000</code> injection. The timeout catches it; the row cap prevents the memory spike.</li>
+          <li><strong>Markdown codeblocks in model output.</strong> The LLM wrapped its SQL in <code>```sql ... ```</code> fences. sqlglot couldn't parse the fences and returned a parse error. Diagnosis: checked the raw string the validator received — it had backticks. Fix: the <code>removeprefix("```sql").removesuffix("```")</code> cleaning step before parsing.</li>
+          <li><strong>Schema retrieval misses.</strong> A table named <code>fulfilment_centers</code> was never retrieved when the user asked about "warehouses" — the names shared no vocabulary. Diagnosis: the retriever is keyword-based, so a question phrased entirely outside the schema's vocabulary misses relevant tables. Accepted trade-off: in that case, the system leans on the model's general knowledge rather than the retriever. It's a known limitation, not a bug.</li>
+          <li><strong>Self-correction scope.</strong> I initially tried to let the self-correction retry fix mutation attempts too — feed the rejection message back and let the LLM try again. This was wrong: a <code>DROP TABLE</code> attempt is reported, never repaired. The retry is reserved exclusively for queries that parse and pass the AST gate but fail on execution (a type cast error, a missing column alias). One retry, then give up.</li>
+        </ul>
+      </div>
+
+      <div class="takeaway">
+        <div class="takeaway-label">&#128161; The Takeaway</div>
+        <p>The boundary between "what the LLM controls" and "what deterministic code controls" is the whole system. The LLM generates a candidate. Deterministic code validates it, executes it, and decides whether to retry. Never let the LLM touch the execution layer — and never trust a string filter when you can parse the structure.</p>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Dimension</th><th>Target</th><th>Result</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td><strong>AST Validity</strong></td><td>&ge; 95%</td><td><strong>96%</strong></td><td>sqlglot catches syntax flaws before execution</td></tr>
+          <tr><td><strong>Execution Accuracy</strong></td><td>&ge; 70%</td><td><strong>74%</strong></td><td>Validates joins, subqueries, and group-by aggregations</td></tr>
+          <tr><td><strong>Self-Correction</strong></td><td>&ge; 50%</td><td><strong>61%</strong></td><td>Traceback feedback recovers queries with minor type/column errors</td></tr>
+          <tr><td><strong>P95 Latency</strong></td><td>&lt; 5s</td><td><strong>~4.2s</strong></td><td>Includes retrieval, generation, validation, execution, and SSE streaming</td></tr>
+        </tbody>
+      </table>
+      <p><em>Measured on 80 NL-to-SQL pairs adapted from the Spider benchmark onto a bundled e-commerce schema. The evaluation set is synthetic; accuracy on domain-specific production data may differ. The golden set is versioned so results are reproducible on every change.</em></p>
+    </article>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ENTRY 2: AI CODE REVIEW AGENT
+         ════════════════════════════════════════════════════════════ -->
+    <article id="entry-2" class="entry">
+      <div class="entry-eyebrow">Entry 02 &bull; Developer Tooling &amp; Event-Driven Workflows</div>
+      <h2 class="entry-title">Autonomous AI Code Review Agent</h2>
+      <div class="entry-stack">FastAPI &bull; LangGraph &bull; Celery 5 &bull; Redis &bull; GitHub App API &bull; Pytest</div>
+
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">&ge; 80%</div><div class="metric-label">CI Coverage Gate</div><div class="metric-sub">Unit &amp; integration tests</div></div>
+        <div class="metric"><div class="metric-val">50</div><div class="metric-label">Golden Eval Set</div><div class="metric-sub">Curated labelled diffs</div></div>
+        <div class="metric"><div class="metric-val">&lt; 50ms</div><div class="metric-label">Webhook Intake</div><div class="metric-sub">HMAC verified, enqueued</div></div>
+        <div class="metric"><div class="metric-val">0%</div><div class="metric-label">Line Drift Leakage</div><div class="metric-sub">Hard filter on diff lines</div></div>
+      </div>
+
+      <p class="annotation">GitHub gives you 10 seconds. Your model takes 30. The webhook handler's job is to acknowledge — not to work.</p>
+
+      <!-- ── The Problem ── -->
+      <h3 id="e2-problem" class="sec"><span class="sec-mark">01</span> The Problem: Webhook Deadlines &amp; Line Hallucinations</h3>
+      <p>
+        I wanted to build a GitHub App that automatically reviews pull requests — reads the diff, fetches relevant context, asks an LLM for findings, and posts inline comments on the lines it found issues with. Three constraints shaped everything:
+      </p>
+      <ul>
+        <li><strong>The 10-second webhook deadline.</strong> GitHub requires an HTTP 2xx response almost immediately. If the handler does diff fetching, context retrieval, and multi-turn LLM reasoning synchronously, GitHub triggers delivery timeouts and flags the app as unhealthy.</li>
+        <li><strong>Line-number hallucinations.</strong> LLMs are notoriously bad at exact line counting. When reviewing a diff hunk, the model would frequently comment on line numbers that were not modified. GitHub's Review API then rejected the comment with a <code>422 Unprocessable Entity</code>.</li>
+        <li><strong>Code privacy.</strong> Many organizations refuse to send proprietary source to hosted commercial LLMs. The agent had to support local, air-gapped models without changing its core workflow logic.</li>
+      </ul>
+
+      <!-- ── Before you read on ── -->
+      <div class="thought-pause" id="tp2">
+        <div class="thought-pause-label">&#9999; Before you read on</div>
+        <p class="thought-pause-question">
+          GitHub gives you 10 seconds to respond to a webhook before it times out. Your review takes 15–30 seconds on a local model. How do you reconcile these two timescales without losing the review? And once the review is done, how do you stop the model from commenting on lines that don't exist in the diff? Sketch the architecture — what happens in the webhook handler, what happens after, and where the validation sits.
+        </p>
+        <button class="thought-reveal-btn" onclick="revealThought('tp2')">&#9660; Reveal the reasoning</button>
+        <div class="thought-pause-answer">
+          <p>Split the timeline. The webhook handler does three things and nothing else: verify the HMAC signature, apply a rate limit, and enqueue the job to a worker queue (Celery + Redis). Then it returns 200. The actual review — diff parsing, context retrieval, model inference, comment publishing — happens on the Celery worker, with no deadline pressure. For the line-number problem: after the model emits findings, a deterministic validation node builds a set of actually-modified line numbers from the parsed diff and drops any finding whose line number isn't in that set. The model never reaches GitHub directly — its output passes through a hard filter first.</p>
+        </div>
+      </div>
+
+      <!-- ── What I tried first ── -->
+      <h3 id="e2-try" class="sec"><span class="sec-mark">02</span> What I Tried First</h3>
+      <p>
+        I ran the entire review synchronously inside the webhook handler. The FastAPI endpoint fetched the diff, called the LLM, parsed findings, and posted them to GitHub — all before returning a response.
+      </p>
+      <p>
+        On a hosted model with a 2–5 second response time, this sometimes worked. On a local model (Ollama running Qwen 2.5 Coder on CPU), the review took 15–30 seconds. GitHub timed out at 10, retried the delivery, and the app got a duplicate review on top of the timeout flag.
+      </p>
+      <p>
+        The second problem appeared immediately after: the model commented on line 47 of a file where the diff only touched lines 30–35. GitHub returned <code>422 Unprocessable Entity</code>. The review had good content but it couldn't be anchored to the diff.
+      </p>
+
+      <!-- ── The Decision ── -->
+      <h3 id="e2-decision" class="sec"><span class="sec-mark">03</span> The Decision</h3>
+      <div class="options">
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Synchronous review in the webhook handler</div>
+            <div class="option-reason">Exceeds GitHub's 10-second deadline on any non-trivial model. Duplicate deliveries on retry.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Send the whole repository to the model</div>
+            <div class="option-reason">Privacy risk, token cost, and relevance noise. Most of the repo is irrelevant to any single diff.</div>
+          </div>
+        </div>
+        <div class="option chosen">
+          <span class="option-mark">&#10003;</span>
+          <div class="option-body">
+            <div class="option-name">Async queue + LangGraph state machine + line boundary filter</div>
+            <div class="option-reason">Webhook verifies and enqueues in &lt; 50ms. Worker runs a typed state graph. A hard filter drops findings not anchored to modified lines before they reach GitHub.</div>
+          </div>
+        </div>
+      </div>
+      <p>
+        I modeled the review pipeline as a <strong>LangGraph StateGraph</strong> — a cyclic, deterministic state machine with strictly typed state. Each node has a defined input and output, so the pipeline is inspectable: you can trace exactly which node produced a finding and which node validated it. The model backend is pluggable behind a <code>BaseLLMBackend</code> interface — switch <code>LLM_BACKEND=ollama</code> or <code>LLM_BACKEND=anthropic</code> and the state machine and GitHub integration don't change.
+      </p>
+
+      <!-- ── Building it ── -->
+      <h3 id="e2-build" class="sec"><span class="sec-mark">04</span> Building It</h3>
+      <p>The pipeline is a linear LangGraph state machine with five nodes. The state is a Pydantic-typed dict that flows through each node:</p>
+
+      <div class="code-card">
+        <div class="code-card-header">
+          <span class="code-card-title">&#128196; agent/state_machine.py — LangGraph Review Pipeline</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
 <pre><code>from typing import TypedDict, List, Dict, Any, Optional
 from pydantic import BaseModel, Field
@@ -807,11 +1219,11 @@ from langgraph.graph import StateGraph, END
 
 class ReviewFinding(BaseModel):
     file_path: str = Field(description="Relative path of file in PR")
-    line_number: int = Field(description="Exact modified line number to anchor review")
+    line_number: int = Field(description="Exact modified line to anchor review")
     severity: str = Field(description="CRITICAL, WARNING, or STYLE")
-    title: str = Field(description="One-sentence summary of issue")
-    comment: str = Field(description="Detailed explanation with actionable suggestion")
-    suggested_patch: Optional[str] = Field(default=None, description="Unified diff replacement snippet")
+    title: str = Field(description="One-sentence summary")
+    comment: str = Field(description="Detailed explanation with suggestion")
+    suggested_patch: Optional[str] = Field(default=None)
 
 class ReviewState(TypedDict):
     installation_id: int
@@ -826,183 +1238,220 @@ class ReviewState(TypedDict):
 
 def build_review_graph() -> StateGraph:
     graph = StateGraph(ReviewState)
-    
-    # Register deterministic workflow nodes
+
+    # Each node is a pure function: state in, patched state out
     graph.add_node("parse_diff_hunks", parse_diff_node)
     graph.add_node("retrieve_repo_context", fetch_repo_context_node)
     graph.add_node("execute_model_review", model_inference_node)
     graph.add_node("validate_line_boundaries", validate_findings_node)
     graph.add_node("publish_github_review", publish_review_node)
 
-    # Establish linear dependency pipeline with conditional error handling
     graph.set_entry_point("parse_diff_hunks")
     graph.add_edge("parse_diff_hunks", "retrieve_repo_context")
     graph.add_edge("retrieve_repo_context", "execute_model_review")
     graph.add_edge("execute_model_review", "validate_line_boundaries")
     graph.add_edge("validate_line_boundaries", "publish_github_review")
     graph.add_edge("publish_github_review", END)
-    
-    return graph.compile()
-</code></pre>
+
+    return graph.compile()</code></pre>
       </div>
 
-      <h3 id="cra-diffs">3. Deterministic Line-Range Filtering</h3>
-      <p>
-        To guarantee that zero malformed review comments reach GitHub, the <code>validate_line_boundaries</code> node acts as a hard filter:
-      </p>
+      <p>The line boundary validator is the node that was born from the 422 errors. It builds a lookup of which lines were actually modified and drops anything the model invented:</p>
+
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> agent/nodes/validator.py — Line Boundary Gate</span>
-          <button class="copy-code-btn" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+          <span class="code-card-title">&#128196; agent/nodes/validator.py — Line Boundary Gate</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
 <pre><code>def validate_findings_node(state: ReviewState) -> Dict[str, Any]:
-    """
-    Validates that model-generated findings point strictly to modified lines within the PR diff.
-    Findings pointing to unedited lines or phantom line numbers are dropped.
-    """
+    """Drops any finding that points to a line not in the diff."""
     valid_findings = []
-    # Build lookup map of {file_path: set(valid_line_numbers_in_diff)}
-    hunk_map = {}
+
+    # Build {file_path: set(modified_line_numbers)} from parsed hunks
+    hunk_map: Dict[str, set] = {}
     for hunk in state["parsed_hunks"]:
-        f_path = hunk["file_path"]
-        if f_path not in hunk_map:
-            hunk_map[f_path] = set()
-        hunk_map[f_path].update(hunk["modified_line_numbers"])
+        path = hunk["file_path"]
+        hunk_map.setdefault(path, set()).update(hunk["modified_line_numbers"])
 
     for raw in state.get("raw_model_findings", []):
         try:
             finding = ReviewFinding(**raw)
-            # Verify file exists in PR diff
+            # File must exist in the diff
             if finding.file_path not in hunk_map:
                 continue
-            # Verify line number is actively modified in the diff
+            # Line must be actively modified — not just nearby
             if finding.line_number not in hunk_map[finding.file_path]:
                 continue
             valid_findings.append(finding)
         except Exception:
+            # Malformed finding — discard silently (accepted trade-off)
             continue
 
-    return {"validated_findings": valid_findings}
-</code></pre>
+    return {"validated_findings": valid_findings}</code></pre>
       </div>
 
-      <h3 id="cra-providers">4. Multi-Provider LLM Abstraction Factory</h3>
-      <p>
-        The review agent implements a polymorphic <code>BaseLLMBackend</code> interface. By updating an environment variable (<code>LLM_BACKEND=ollama</code> or <code>LLM_BACKEND=anthropic</code>), the agent switches between cloud APIs and on-premise local LLMs (e.g. Qwen 2.5 Coder or DeepSeek Coder) without modifying a single line of state machine or GitHub integration logic.
-      </p>
+      <p class="annotation warn">The trade-off is real: a valid finding inside a malformed JSON object is lost silently. The alternative — trying to fix malformed output — was worse. The contract is the contract. If the model can't produce it, the finding doesn't ship.</p>
+
+      <!-- ── What went wrong ── -->
+      <h3 id="e2-wrong" class="sec"><span class="sec-mark">05</span> What Went Wrong</h3>
+      <div class="went-wrong">
+        <div class="went-wrong-title">&#128165; Things that broke before the system worked</div>
+        <ul>
+          <li><strong>GitHub 422 errors.</strong> The model commented on line 47 of a file where the diff only touched lines 30–35. Diagnosis: LLMs can't count lines reliably — they see the hunk content but not its absolute position. Fix: the <code>validate_line_boundaries</code> node. Build a set of modified lines from the parsed diff, drop any finding outside it. Zero line-drift leakage after that.</li>
+          <li><strong>Webhook timeouts on local models.</strong> A 15–30 second local model run inside the handler exceeded GitHub's 10-second deadline. Diagnosis: the handler was doing work it shouldn't. Fix: move everything to a Celery worker. The handler verifies HMAC, applies a Redis rate limit, enqueues, and returns 200 in under 50ms.</li>
+          <li><strong>Malformed model output.</strong> The model sometimes returned findings missing the <code>line_number</code> field or with <code>severity</code> set to an unrecognised string. Diagnosis: the Pydantic <code>ReviewFinding</code> model raised a <code>ValidationError</code>. Fix: the <code>except Exception: continue</code> in the validator silently discards malformed findings. A real finding inside a broken structure is lost — accepted, because the alternative (lenient parsing) would let garbage through.</li>
+          <li><strong>Context that was too rich.</strong> I initially sent the full file contents around each hunk to give the model more context. This blew the token budget and introduced noise — the model started commenting on code outside the diff. Fix: a thin context layer only: the repo tree, the README, and the detected language. Changed hunks plus this thin layer is the sweet spot.</li>
+        </ul>
+      </div>
+
+      <div class="takeaway">
+        <div class="takeaway-label">&#128161; The Takeaway</div>
+        <p>When an external system imposes a deadline, your handler's job is to acknowledge — not to work. Move the work behind a queue. And when an LLM produces structured output that targets a specific location (a line number, a file path), never trust the location — validate it against ground truth before acting on it. The model proposes the comment; the diff decides whether it can be posted.</p>
+      </div>
     </article>
 
-    <!-- ========================================================================= -->
-    <!-- CHAPTER 03: SELF-HEALING MICROSERVICES MONITOR                            -->
-    <!-- ========================================================================= -->
-    <article id="self-healing-monitor" class="journal-chapter">
-      <div class="chapter-eyebrow">Case Study 03 &bull; Autonomous SRE & Remediation Safety</div>
-      <h2 class="chapter-title">Self-Healing Microservices Monitor (Autonomous SRE Agent)</h2>
-      <div class="chapter-stack-bar">Python 3.12 &bull; LangGraph &bull; ChromaDB Vector Store &bull; Prometheus Alertmanager &bull; PostgreSQL &bull; Docker SDK</div>
+    <!-- ════════════════════════════════════════════════════════════
+         ENTRY 3: SELF-HEALING SRE MONITOR
+         ════════════════════════════════════════════════════════════ -->
+    <article id="entry-3" class="entry">
+      <div class="entry-eyebrow">Entry 03 &bull; Autonomous SRE &amp; Remediation Safety</div>
+      <h2 class="entry-title">Self-Healing Microservices Monitor</h2>
+      <div class="entry-stack">Python 3.12 &bull; LangGraph &bull; ChromaDB &bull; Prometheus &bull; PostgreSQL &bull; Docker SDK</div>
 
-      <div class="metrics-dashboard">
-        <div class="metric-box">
-          <div class="metric-value">4 / 4</div>
-          <div class="metric-title">Action Correctness</div>
-          <div class="metric-sub">Simulated fault scenarios</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">4 / 4</div>
-          <div class="metric-title">Policy Invariants</div>
-          <div class="metric-sub">Risk boundaries enforced</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">&ge; 0.75</div>
-          <div class="metric-title">Confidence Gate</div>
-          <div class="metric-sub">Deterministic auto-execution</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">100%</div>
-          <div class="metric-title">Audit Logging</div>
-          <div class="metric-sub">PostgreSQL transaction log</div>
-        </div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">4 / 4</div><div class="metric-label">Action Correctness</div><div class="metric-sub">Simulated fault scenarios</div></div>
+        <div class="metric"><div class="metric-val">4 / 4</div><div class="metric-label">Policy Invariants</div><div class="metric-sub">Risk boundaries enforced</div></div>
+        <div class="metric"><div class="metric-val">&ge; 0.75</div><div class="metric-label">Confidence Gate</div><div class="metric-sub">Auto-execution threshold</div></div>
+        <div class="metric"><div class="metric-val">100%</div><div class="metric-label">Audit Logging</div><div class="metric-sub">PostgreSQL transaction log</div></div>
       </div>
 
-      <h3 id="shm-problem">1. The Problem Space: The Catastrophe of Unbounded Infrastructure AI</h3>
+      <p class="annotation danger">The AI proposes the action. Deterministic code decides whether it runs. That separation is the entire safety model.</p>
+
+      <!-- ── The Problem ── -->
+      <h3 id="e3-problem" class="sec"><span class="sec-mark">01</span> The Problem: Unbounded Infrastructure AI</h3>
       <p>
-        Giving generative AI direct write/restart access to production cloud infrastructure is dangerous. If a model hallucinates during an incident:
+        The idea: an agent that reads Prometheus alerts, gathers diagnostic context, and takes a recovery action — restart a container, scale a replica, notify an engineer. The danger is obvious. If the model hallucinates during an incident:
       </p>
       <ul>
         <li>It might restart a database replica during replication catch-up, corrupting the cluster.</li>
-        <li>It might execute unbounded shell commands that escalate a minor memory leak into a cascading regional outage.</li>
+        <li>It might execute an unbounded shell command that escalates a minor memory leak into a cascading regional outage.</li>
         <li>It operates as a black box: after an incident, human operators have no verifiable record of <em>why</em> the agent chose a specific destructive action.</li>
       </ul>
-
-      <h3 id="shm-policy">2. Core Architectural Invariant: Deterministic Policy Gate</h3>
       <p>
-        The central invariant of this system is that <strong>the AI diagnostic model only proposes actions; deterministic Python code decides whether to execute or escalate.</strong>
+        I needed the agent to be useful — to actually reduce incident response time — without the risk of it making things worse on its own.
       </p>
 
-      <div class="arch-diagram">
-+-----------------------------------------------------------------------------------------+
-|                              PROMETHEUS ALERTMANAGER WEBHOOK                            |
-|  Alert payload: service="payment-service", alert="HighMemoryUsage", pod="payment-0"    |
-+--------------------------------------------+--------------------------------------------+
-                                             |
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                               TELEMETRY CONTEXT GATHERER                                |
-|  - Queries Prometheus for 15-minute CPU/Memory timeseries window.                       |
-|  - Extracts last 100 stdout/stderr logs from Docker daemon.                              |
-|  - Retrieves semantic incident runbook from ChromaDB vector store.                      |
-+--------------------------------------------+--------------------------------------------+
-                                             |
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                               LANGGRAPH SRE REASONING AGENT                             |
-|  - Synthesizes alert + telemetry + runbook context.                                     |
-|  - Output: Diagnosis="Memory leak in worker pool", Action="restart_container", Conf=0.88|
-+--------------------------------------------+--------------------------------------------+
-                                             |
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                        FOUR-CONDITION DETERMINISTIC POLICY GATE                         |
-|                                                                                         |
-|  [Condition 1] Model Confidence Score >= 0.75?                     -> PASS (0.88)       |
-|  [Condition 2] Action in Strict Low-Risk AUTO_ALLOWLIST?           -> PASS (restart)    |
-|  [Condition 3] Service Blast Radius Impact is NOT HIGH?            -> PASS (low-risk)   |
-|  [Condition 4] Service does not enforce mandatory human approval?   -> PASS             |
-+--------------------------------------------+--------------------------------------------+
-                     |                                               |
-             [ALL CONDITIONS PASS]                           [ANY CONDITION FAILS]
-                     |                                               |
-                     v                                               v
-+-----------------------------------------+     +-----------------------------------------+
-|       DOCKER SDK AUTO-REMEDIATION       |     |        SRE OPERATOR APPROVAL QUEUE      |
-|  - Executes restart with 10s grace.     |     |  - Pauses execution.                    |
-|  - Verifies container returns to green. |     |  - Renders diagnosis & evidence in UI.  |
-+--------------------+--------------------+     +--------------------+--------------------+
-                     |                                               |
-                     +-----------------------+-----------------------+
-                                             |
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                        POSTGRESQL IMMUTABLE INCIDENT AUDIT TRAIL                        |
-|  Records: Alert payload, retrieved runbook ID, confidence, gate decisions, & logs.      |
-+-----------------------------------------------------------------------------------------+
+      <!-- ── Before you read on ── -->
+      <div class="thought-pause" id="tp3">
+        <div class="thought-pause-label">&#9999; Before you read on</div>
+        <p class="thought-pause-question">
+          An AI diagnoses a memory leak in the payment service and proposes restarting the container. The diagnosis is 88% confident. Do you let it restart? What conditions would you check before allowing autonomous execution? And what happens when a condition fails — does the action just not run, or does something else happen? Sketch the decision boundary.
+        </p>
+        <button class="thought-reveal-btn" onclick="revealThought('tp3')">&#9660; Reveal the reasoning</button>
+        <div class="thought-pause-answer">
+          <p>Four conditions, all conjunctive — every single one must pass. (1) Confidence at or above a threshold (0.75). (2) The proposed action is on a strict allowlist of low-risk operations. (3) The blast-radius impact of the target service is not HIGH. (4) The service is not flagged for mandatory human approval. If all four pass, the action runs automatically with one retry on failure. If any one fails, the action doesn't just silently not run — it goes to a human approval queue with the full diagnosis, evidence, and the gate's rejection reason visible. And every decision, whether auto-executed or queued, is written to an immutable audit trail. The AI never executes anything directly. It proposes; the gate decides.</p>
+        </div>
       </div>
 
-      <h3 id="shm-runbooks">3. Implementation: Policy Gate & Runbook Retrieval</h3>
+      <!-- ── What I tried first ── -->
+      <h3 id="e3-try" class="sec"><span class="sec-mark">02</span> What I Tried First</h3>
+      <p>
+        My first version let the LangGraph agent propose an action and execute it in the same node. The diagnosis and the execution were one step. If the model said "restart the container," the Docker SDK restarted it.
+      </p>
+      <p>
+        This felt fine in testing against deliberately faulty demo services. But the moment I thought about what could go wrong in a real incident, the design fell apart. The model could be 88% confident and still be wrong. A confident but wrong restart of a database replica during replication catch-up would corrupt the cluster. There was no boundary between "the AI thinks this is a good idea" and "this is safe to do."
+      </p>
+      <p class="annotation warn">A single confidence threshold isn't enough. 88% confidence on a container restart is fine. 88% confidence on a database failover is not. The risk of the action matters as much as the confidence in the diagnosis.</p>
+
+      <!-- ── The Decision ── -->
+      <h3 id="e3-decision" class="sec"><span class="sec-mark">03</span> The Decision</h3>
+      <div class="options">
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">AI proposes and executes directly</div>
+            <div class="option-reason">No safety boundary. A confident but wrong action has no gate. Black box — no record of why.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Single confidence threshold</div>
+            <div class="option-reason">Insufficient. High confidence on a high-risk action is still dangerous. Doesn't account for blast radius or service-specific policies.</div>
+          </div>
+        </div>
+        <div class="option chosen">
+          <span class="option-mark">&#10003;</span>
+          <div class="option-body">
+            <div class="option-name">AI proposes; deterministic 4-condition gate decides; audit trail records</div>
+            <div class="option-reason">The model's output is a suggestion, never a command. Four conjunctive conditions. All must pass. Any failure routes to a human approval queue with full evidence. Every decision is logged.</div>
+          </div>
+        </div>
+      </div>
+      <p>
+        The central invariant: <strong>the AI diagnostic model only proposes actions; deterministic Python code decides whether to execute or escalate.</strong> The gate is conjunctive — all four conditions must hold. This makes it impossible for a persuasive explanation to talk past the gate. The model can produce the most eloquent diagnosis in the world; if the action isn't on the allowlist, it's not running.
+      </p>
+
+      <!-- ── Building it ── -->
+      <h3 id="e3-build" class="sec"><span class="sec-mark">04</span> Building It</h3>
+      <div class="arch-sketch"> PROMETHEUS ALERTMANAGER
+  Alert: service="payment-service", alert="HighMemoryUsage"
+        │
+        ▼
+┌──────────────────────────────────────────────────────┐
+│  TELEMETRY CONTEXT GATHERER                          │
+│  • 15-min CPU/Memory timeseries from Prometheus      │
+│  • Last 100 stdout/stderr lines from Docker          │
+│  • Matching runbook from ChromaDB (embedding search) │
+└──────────────────────┬───────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  LANGGRAPH SRE REASONING AGENT                        │
+│  Output: Diagnosis + Action + Confidence + Risk       │
+│  e.g. "Memory leak in worker pool"                    │
+│       Action="restart_container", Conf=0.88           │
+└──────────────────────┬───────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  FOUR-CONDITION DETERMINISTIC POLICY GATE             │
+│                                                       │
+│  [1] Confidence >= 0.75?              → PASS (0.88)   │
+│  [2] Action in AUTO_ALLOWLIST?        → PASS (restart)│
+│  [3] Blast radius != HIGH?            → PASS (low)    │
+│  [4] No mandatory human approval?     → PASS          │
+│                                                       │
+│  ALL PASS ──────────────────────── ANY FAIL           │
+│      │                                │               │
+│      ▼                                ▼               │
+│  AUTO-EXECUTE                     APPROVAL QUEUE       │
+│  Docker SDK restart                Diagnosis +         │
+│  + 1 retry on failure             evidence rendered   │
+│                                   for human review     │
+└──────────────────────┬───────────────────────────────┘
+                       ▼
+┌──────────────────────────────────────────────────────┐
+│  POSTGRESQL IMMUTABLE AUDIT TRAIL                     │
+│  Alert payload, runbook ID, confidence, gate          │
+│  decisions, execution result, logs                   │
+└──────────────────────────────────────────────────────┘</div>
+
+      <p>The policy gate is a pure function — same inputs always produce the same decision. No model involvement, no ambiguity:</p>
+
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> engine/policy_gate.py — Deterministic Safety Gate</span>
-          <button class="copy-code-btn" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+          <span class="code-card-title">&#128196; engine/policy_gate.py — Four-Condition Safety Gate</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
 <pre><code>from dataclasses import dataclass
 from enum import Enum
-from typing import Set
+from typing import Set, Optional
 
 class ImpactRisk(Enum):
     LOW = "LOW"
     MEDIUM = "MEDIUM"
     HIGH = "HIGH"
 
-# Non-negotiable allowlist of actions permitted for autonomous execution
+# Non-negotiable: only these actions may ever run without a human
 AUTO_EXECUTION_ALLOWLIST: Set[str] = {
     "restart_container",
     "clear_redis_cache_key",
@@ -1022,111 +1471,188 @@ def evaluate_remediation_policy(
     action_risk: ImpactRisk,
     service_requires_manual_gate: bool
 ) -> PolicyEvaluationResult:
-    """
-    Evaluates strict boolean policy invariants before allowing automated infrastructure action.
-    """
+    # Order matters: check the cheapest rejections first
+
     if service_requires_manual_gate:
-        return PolicyEvaluationResult(False, True, "Service is configured for mandatory human sign-off.")
+        return PolicyEvaluationResult(
+            False, True, "Service is configured for mandatory human sign-off."
+        )
 
     if confidence_score &lt; 0.75:
-        return PolicyEvaluationResult(False, True, f"Model confidence ({confidence_score:.2f}) below 0.75 threshold.")
+        return PolicyEvaluationResult(
+            False, True,
+            f"Model confidence ({confidence_score:.2f}) below 0.75 threshold."
+        )
 
     if proposed_action not in AUTO_EXECUTION_ALLOWLIST:
-        return PolicyEvaluationResult(False, True, f"Action '{proposed_action}' is not on the autonomous allowlist.")
+        return PolicyEvaluationResult(
+            False, True,
+            f"Action '{proposed_action}' is not on the autonomous allowlist."
+        )
 
     if action_risk == ImpactRisk.HIGH:
-        return PolicyEvaluationResult(False, True, "High blast-radius remediation flagged for SRE review.")
+        return PolicyEvaluationResult(
+            False, True,
+            "High blast-radius remediation flagged for SRE review."
+        )
 
-    return PolicyEvaluationResult(True, False, None)
-</code></pre>
+    # All four conditions passed — auto-execute
+    return PolicyEvaluationResult(True, False, None)</code></pre>
       </div>
+
+      <p class="annotation">The <code>frozen=True</code> dataclass is intentional. The policy result is immutable — once the gate has decided, nothing downstream can modify the decision. The gate's output is a record, not a mutable state.</p>
+
+      <p>
+        Runbooks are retrieved by embedding similarity over a ChromaDB vector store, not by rule matching. This means runbooks can be written as prose — "If the payment service shows a memory leak pattern with rising GC pressure, restart the worker pool and check for connection pool exhaustion" — and the agent finds them by semantic proximity to the alert context. The trade-off: a semantically close but wrong runbook can be retrieved. The policy gate doesn't depend on the runbook being correct — it depends on the action being on the allowlist.
+      </p>
+
+      <!-- ── What went wrong ── -->
+      <h3 id="e3-wrong" class="sec"><span class="sec-mark">05</span> What Went Wrong</h3>
+      <div class="went-wrong">
+        <div class="went-wrong-title">&#128165; Things that broke before the system worked</div>
+        <ul>
+          <li><strong>Propose-and-execute in one node.</strong> The first version had no boundary between diagnosis and execution. Diagnosis: if the model is wrong, the action runs anyway. Fix: split into two nodes — the reasoning agent proposes, the policy gate decides. The agent has no Docker SDK access.</li>
+          <li><strong>Confidence alone is not a safety boundary.</strong> 0.88 confidence on a container restart is fine. 0.88 on a database failover is not. Diagnosis: confidence measures the model's certainty about the diagnosis, not the risk of the action. Fix: the four-condition gate — confidence is only one of four conditions. The action's blast radius and allowlist membership are independent checks.</li>
+          <li><strong>The black box problem.</strong> After a test incident, I couldn't tell why the agent had chosen to restart a specific container. Diagnosis: no audit trail. Fix: every decision — alert payload, retrieved runbook ID, confidence score, each gate condition's pass/fail, execution result — is written to a PostgreSQL transaction log. The audit trail is not optional; it's the difference between a tool and a rogue agent.</li>
+          <li><strong>Wrong runbook retrieval.</strong> ChromaDB returned a semantically close but incorrect runbook for a network error — it suggested a container restart when the real issue was a misconfigured sidecar. Diagnosis: embedding similarity doesn't guarantee correctness. Accepted trade-off: the policy gate doesn't depend on the runbook being correct. If the proposed action isn't on the allowlist, it goes to the human queue regardless of which runbook was retrieved.</li>
+        </ul>
+      </div>
+
+      <div class="takeaway">
+        <div class="takeaway-label">&#128161; The Takeaway</div>
+        <p>When an AI acts on infrastructure, the proposal and the execution must be separated by a deterministic gate that the AI cannot influence. The gate should be conjunctive (all conditions must pass) and conservative (default to human approval). The audit trail is not optional — it's the difference between a tool and a rogue agent. And confidence measures the model's certainty, not the action's risk. Those are two different axes.</p>
+      </div>
+      <p><em>Verified against four simulated fault scenarios: 4/4 action-correctness and 4/4 policy-correctness. The demo services are deliberately faulty — the evidence establishes that the policy gate behaves as specified, not that the agent has run production infrastructure unattended.</em></p>
     </article>
 
-    <!-- ========================================================================= -->
-    <!-- CHAPTER 04: REALTIME MULTI-ROOM CHAT BACKEND                              -->
-    <!-- ========================================================================= -->
-    <article id="realtime-chat" class="journal-chapter">
-      <div class="chapter-eyebrow">Case Study 04 &bull; Distributed Systems & Real-Time Networking</div>
-      <h2 class="chapter-title">Realtime Multi-Room Chat Backend</h2>
-      <div class="chapter-stack-bar">Python 3.12 &bull; FastAPI &bull; WebSockets &bull; Redis 7 Pub/Sub &bull; JWT Authentication &bull; Docker</div>
+    <!-- ════════════════════════════════════════════════════════════
+         ENTRY 4: DISTRIBUTED CHAT BACKEND
+         ════════════════════════════════════════════════════════════ -->
+    <article id="entry-4" class="entry">
+      <div class="entry-eyebrow">Entry 04 &bull; Distributed Systems &amp; Real-Time Networking</div>
+      <h2 class="entry-title">Realtime Multi-Room Chat Backend</h2>
+      <div class="entry-stack">Python 3.12 &bull; FastAPI &bull; WebSockets &bull; Redis 7 Pub/Sub &bull; JWT &bull; SQLite</div>
 
-      <div class="metrics-dashboard">
-        <div class="metric-box">
-          <div class="metric-value">Ref-Counted</div>
-          <div class="metric-title">Redis Subscriptions</div>
-          <div class="metric-sub">Zero channel explosion</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">O(1)</div>
-          <div class="metric-title">Presence Tracking</div>
-          <div class="metric-sub">Redis hash deduplication</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">JWT Auth</div>
-          <div class="metric-title">Pre-Handshake Gate</div>
-          <div class="metric-sub">Zero unauthed socket state</div>
-        </div>
-        <div class="metric-box">
-          <div class="metric-value">Cursor-Based</div>
-          <div class="metric-title">Stable Pagination</div>
-          <div class="metric-sub">15 msgs/page, no drift</div>
-        </div>
+      <div class="metrics">
+        <div class="metric"><div class="metric-val">Ref-Counted</div><div class="metric-label">Subscriptions</div><div class="metric-sub">Zero channel explosion</div></div>
+        <div class="metric"><div class="metric-val">O(1)</div><div class="metric-label">Presence</div><div class="metric-sub">Redis hash per user</div></div>
+        <div class="metric"><div class="metric-val">Pre-Accept</div><div class="metric-label">JWT Gate</div><div class="metric-sub">Zero unauthed sockets</div></div>
+        <div class="metric"><div class="metric-val">Cursor</div><div class="metric-label">Pagination</div><div class="metric-sub">15 msgs/page, no drift</div></div>
       </div>
 
-      <h3 id="rtc-problem">1. The Problem Space: The Multi-Worker Socket Wall</h3>
+      <p class="annotation">A single-process design that works in dev will fail in production when you add workers. Ask: "what breaks when two processes serve the same resource?" The answer is always: anything in process-local memory.</p>
+
+      <!-- ── The Problem ── -->
+      <h3 id="e4-problem" class="sec"><span class="sec-mark">01</span> The Problem: The Multi-Worker Socket Wall</h3>
       <p>
-        In a single-process development environment, maintaining active WebSocket connections in a Python dictionary (e.g. <code>active_rooms[room_id] = [ws1, ws2]</code>) works seamlessly. But when scaling to production with 4 Uvicorn worker processes behind Nginx:
+        In development, the chat server was a Python dictionary: <code>active_rooms[room_id] = [ws1, ws2]</code>. One process, one dict, messages fan out to every socket in the room. It worked perfectly.
+      </p>
+      <p>
+        Then I deployed with 4 Uvicorn worker processes behind Nginx, and it broke immediately:
       </p>
       <ul>
-        <li><strong>Worker Isolation Barrier:</strong> Client A connects to Worker 1, and Client B connects to Worker 2. When Client A sends a message in Room 101, Worker 1's memory dictionary has no reference to Client B's socket. Client B never receives the message.</li>
-        <li><strong>The Subscription Explosion Trap:</strong> If every worker process blindly subscribes to all 5,000 chat rooms in Redis on boot, Redis memory and network I/O are saturated with idle channel overhead.</li>
-        <li><strong>Unauthenticated Connection Floods:</strong> If authentication is performed <em>after</em> calling <code>await websocket.accept()</code>, malicious attackers can open thousands of idle TCP sockets, exhausting server file descriptors before sending auth credentials.</li>
+        <li><strong>Worker isolation barrier.</strong> Client A connected to Worker 1, Client B connected to Worker 2. Both joined Room 101. Client A sent a message. Worker 1's dict had <code>{ws_A}</code> — no reference to Client B. Client B never received the message. The dict only reached sockets on the same process.</li>
+        <li><strong>Subscription explosion.</strong> If every worker subscribed to all 5,000 chat rooms in Redis on boot, Redis memory and network I/O were saturated with idle channel overhead — most rooms had zero active users on any given worker.</li>
+        <li><strong>Unauthenticated socket floods.</strong> If authentication happened <em>after</em> <code>await websocket.accept()</code>, an attacker could open thousands of idle TCP sockets without sending credentials, exhausting server file descriptors.</li>
       </ul>
 
-      <h3 id="rtc-pubsub">2. Architecture: Reference-Counted Redis Pub/Sub</h3>
-      <p>
-        I designed a distributed connection manager that uses <strong>reference counting per worker process</strong>:
-      </p>
-
-      <div class="arch-diagram">
-   [Client A (Worker 1)]                            [Client B (Worker 2)]
-            |                                                 |
-            | (WebSocket Frame)                               | (WebSocket Frame)
-            v                                                 v
-+-----------------------+                         +-----------------------+
-|    FASTAPI WORKER 1   |                         |    FASTAPI WORKER 2   |
-|  - local_rooms:       |                         |  - local_rooms:       |
-|    "room_101": {ws_A} |                         |    "room_101": {ws_B} |
-|  - Subscribed to:     |                         |  - Subscribed to:     |
-|    "channel:room_101" |                         |    "channel:room_101" |
-+-----------+-----------+                         +-----------+-----------+
-            |                                                 ^
-            | (PUBLISH "room:room_101" payload)               | (SUBSCRIBE Event)
-            v                                                 |
-+-------------------------------------------------------------+-----------+
-|                          REDIS 7 CLUSTER / BROKER                       |
-|                          Channel: "room:room_101"                       |
-+-------------------------------------------------------------------------+
+      <!-- ── Before you read on ── -->
+      <div class="thought-pause" id="tp4">
+        <div class="thought-pause-label">&#9999; Before you read on</div>
+        <p class="thought-pause-question">
+          Client A connects to Worker 1, Client B connects to Worker 2. Both join Room 101. Client A sends a message. How does Client B receive it? And how do you keep Redis from subscribing to all 5,000 rooms when most are empty on any given worker? Sketch the delivery path and the subscription lifecycle — when does a subscription open, and when does it close?
+        </p>
+        <button class="thought-reveal-btn" onclick="revealThought('tp4')">&#9660; Reveal the reasoning</button>
+        <div class="thought-pause-answer">
+          <p>Use Redis pub/sub as a message broker between workers. Each room gets one Redis channel: <code>room:101</code>. When a message arrives, the worker publishes it to the Redis channel — not to local sockets. Every worker that has a local connection in that room listens on that channel and fans out to its own sockets. The subscription lifecycle is reference-counted: a worker subscribes to <code>room:101</code> only when its first local client joins that room, and unsubscribes when its last local client leaves. This means Redis only carries channels for rooms that have active participants on each worker — no idle subscriptions, no explosion. Messages always go through Redis even when sender and recipient share a worker, so there's one delivery path to reason about and test.</p>
+        </div>
       </div>
 
-      <h3 id="rtc-jwt">3. Implementation: Connection Manager & Handshake Gate</h3>
+      <!-- ── What I tried first ── -->
+      <h3 id="e4-try" class="sec"><span class="sec-mark">02</span> What I Tried First</h3>
+      <p>
+        The in-memory dict worked fine in development and I shipped it to production with 4 workers. The first bug report: "messages don't arrive." I spent an hour thinking the WebSocket connection was broken before realising the dict was per-process. Worker 1's dict had no reference to Worker 2's sockets.
+      </p>
+      <p>
+        The fix was obvious — add Redis. But the first Redis implementation subscribed every worker to every room on boot. With 5,000 rooms and 4 workers, that was 20,000 subscriptions carrying idle overhead. Redis memory climbed and the pub/sub listener loop spent most of its time ignoring messages for rooms with no local connections.
+      </p>
+      <p>
+        The third problem I didn't even notice until I read about it: authentication was happening <em>after</em> <code>websocket.accept()</code>. The socket was open before the JWT was checked. An attacker could open thousands of sockets and never send a token.
+      </p>
+
+      <!-- ── The Decision ── -->
+      <h3 id="e4-decision" class="sec"><span class="sec-mark">03</span> The Decision</h3>
+      <div class="options">
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">In-memory dict per worker</div>
+            <div class="option-reason">Messages don't cross worker boundaries. The dict only reaches sockets on the same process.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Subscribe to all rooms on boot</div>
+            <div class="option-reason">Redis memory and I/O saturated with idle channels. Most rooms have zero active users on any given worker.</div>
+          </div>
+        </div>
+        <div class="option rejected">
+          <span class="option-mark">&#10007;</span>
+          <div class="option-body">
+            <div class="option-name">Auth after websocket.accept()</div>
+            <div class="option-reason">Attackers open thousands of idle TCP sockets without credentials. File descriptor exhaustion.</div>
+          </div>
+        </div>
+        <div class="option chosen">
+          <span class="option-mark">&#10003;</span>
+          <div class="option-body">
+            <div class="option-name">Ref-counted Redis pub/sub + JWT before accept + cursor pagination</div>
+            <div class="option-reason">Subscribe on first joiner, unsubscribe on last leaver. Verify JWT before the socket is accepted. Cursor-paginate history so pages don't drift.</div>
+          </div>
+        </div>
+      </div>
+      <p>
+        The reference-counting pattern is the key insight. A worker subscribes to a room's Redis channel <strong>only when it has its first local connection</strong> to that room, and unsubscribes when its <strong>last local connection leaves</strong>. Redis only carries channels for rooms that have active participants on each worker. Messages always go through Redis — even when sender and recipient share a worker — so there's one delivery path to reason about and test.
+      </p>
+
+      <!-- ── Building it ── -->
+      <h3 id="e4-build" class="sec"><span class="sec-mark">04</span> Building It</h3>
+      <div class="arch-sketch"> [Client A on Worker 1]              [Client B on Worker 2]
+       │                                    │
+       │ ws.send(msg)                       │ ws.recv(msg)
+       ▼                                    ▲
+┌──────────────────┐               ┌──────────────────┐
+│  FASTAPI WORKER 1 │               │  FASTAPI WORKER 2 │
+│  local_rooms:    │               │  local_rooms:    │
+│   "room_101":    │               │   "room_101":    │
+│     {ws_A}      │               │     {ws_B}       │
+│  Subscribed to:  │               │  Subscribed to:  │
+│   "room:101" ✓  │               │   "room:101" ✓   │
+└───────┬──────────┘               └──────────▲───────┘
+        │                                     │
+        │ PUBLISH "room:101" payload          │ SUBSCRIBE event
+        ▼                                     │
+┌──────────────────────────────────────────────────────┐
+│              REDIS 7  —  Channel: "room:101"          │
+│     (opened on first joiner, closed after last)       │
+└──────────────────────────────────────────────────────┘</div>
+
+      <p>The connection manager handles authentication, joining, leaving, and the pub/sub listener:</p>
+
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> server/manager.py — Distributed Connection Manager</span>
-          <button class="copy-code-btn" onclick="navigator.clipboard.writeText(this.closest('.code-card').querySelector('pre').innerText); this.innerText='Copied!'; setTimeout(()=>this.innerText='Copy', 2000)">Copy</button>
+          <span class="code-card-title">&#128196; server/manager.py — Reference-Counted Connection Manager</span>
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
         </div>
 <pre><code>import asyncio
 import json
 from typing import Dict, Set, Optional
-from fastapi import WebSocket, WebSocketDisconnect, status
+from fastapi import WebSocket, status
 import redis.asyncio as aioredis
 import jwt
 
 class DistributedConnectionManager:
-    """
-    Manages multi-worker WebSocket synchronization over Redis Pub/Sub.
-    Enforces reference-counted channel subscriptions to eliminate idle overhead.
-    """
     def __init__(self, redis_url: str, jwt_secret: str):
         self.redis = aioredis.from_url(redis_url, decode_responses=True)
         self.pubsub = self.redis.pubsub()
@@ -1135,7 +1661,7 @@ class DistributedConnectionManager:
         self.listener_task: Optional[asyncio.Task] = None
 
     async def authenticate_and_accept(self, websocket: WebSocket, token: str) -> Optional[str]:
-        """Validates JWT BEFORE accepting socket to prevent unauthenticated resource exhaustion."""
+        """Validate JWT BEFORE accepting — invalid tokens never open a socket."""
         try:
             payload = jwt.decode(token, self.jwt_secret, algorithms=["HS256"])
             user_id = payload.get("sub")
@@ -1148,7 +1674,7 @@ class DistributedConnectionManager:
     async def join_room(self, room_id: str, websocket: WebSocket):
         if room_id not in self.local_rooms:
             self.local_rooms[room_id] = set()
-            # First client on this worker: Subscribe to Redis room channel
+            # First local joiner → subscribe to this room's Redis channel
             await self.pubsub.subscribe(f"room:{room_id}")
             if not self.listener_task or self.listener_task.done():
                 self.listener_task = asyncio.create_task(self._pubsub_listener())
@@ -1158,62 +1684,84 @@ class DistributedConnectionManager:
         if room_id in self.local_rooms:
             self.local_rooms[room_id].discard(websocket)
             if not self.local_rooms[room_id]:
-                # Last client on this worker left: Unsubscribe to release Redis resources
+                # Last local client left → release the Redis subscription
                 del self.local_rooms[room_id]
                 await self.pubsub.unsubscribe(f"room:{room_id}")
 
     async def broadcast_to_room(self, room_id: str, message: dict):
-        """Publishes to Redis; all active workers serving this room receive and fan out."""
+        """Publish to Redis — never write straight to local sockets."""
         await self.redis.publish(f"room:{room_id}", json.dumps(message))
 
     async def _pubsub_listener(self):
-        """Worker background loop receiving Redis messages and fanning out to local WebSockets."""
+        """Background loop: receive Redis messages, fan out to local sockets."""
         async for msg in self.pubsub.listen():
             if msg["type"] == "message":
-                channel = msg["channel"]
-                room_id = channel.removeprefix("room:")
+                room_id = msg["channel"].removeprefix("room:")
                 data = json.loads(msg["data"])
                 if room_id in self.local_rooms:
-                    # Broadcast to all local sockets concurrently
                     sockets = list(self.local_rooms[room_id])
                     await asyncio.gather(
                         *[s.send_json(data) for s in sockets],
                         return_exceptions=True
-                    )
-</code></pre>
+                    )</code></pre>
       </div>
 
-      <h3 id="rtc-pagination">4. Cursor-Based Pagination vs. Offset Drift</h3>
+      <p class="annotation">Messages go through Redis even when sender and recipient are on the same worker. The trade-off: a round trip on every message. The payoff: one delivery path to reason about and test. There's no "same-worker shortcut" branch in the code.</p>
+
       <p>
-        During active chat conversations, traditional SQL <code>LIMIT 15 OFFSET 30</code> pagination introduces severe bugs: as new messages arrive at the top of the table, offset pointers shift, causing users to see duplicate messages or miss intermediate messages entirely.
+        History uses cursor-based pagination. The traditional <code>LIMIT 15 OFFSET 30</code> introduces drift: as new messages arrive, the offset shifts and users see duplicates or gaps. The cursor is a composite tuple <code>(created_at, id)</code> — stable under insertion:
       </p>
-      <p>
-        I implemented <strong>cursor-based pagination</strong> keyed on a composite tuple <code>(created_at, message_id)</code>:
-      </p>
+
       <div class="code-card">
         <div class="code-card-header">
-          <span class="code-card-title"><span>&#128196;</span> server/queries.sql — Stable Cursor Query</span>
+          <span class="code-card-title">&#128196; server/queries.sql — Stable Cursor Pagination</span>
         </div>
-<pre><code>-- Stable cursor pagination query: Immune to active message insertion drift
+<pre><code>-- Immune to active message insertion: the cursor is a fixed point,
+-- not a count from the top of a changing table.
 SELECT id, room_id, user_id, message_text, created_at
 FROM messages
 WHERE room_id = :room_id
   AND (created_at, id) &lt; (:cursor_created_at, :cursor_id)
 ORDER BY created_at DESC, id DESC
-LIMIT 15;
-</code></pre>
+LIMIT 15;</code></pre>
       </div>
+
+      <p>
+        Presence is a Redis hash counter per user, not a boolean. If the same person opens two tabs, they're counted once — the counter increments on join and decrements on leave. The trade-off: if a worker dies without cleaning up, the counter never decrements and the user shows as online indefinitely. A TTL on the presence key would fix this, but it's a known limitation in the current build.
+      </p>
+
+      <!-- ── What went wrong ── -->
+      <h3 id="e4-wrong" class="sec"><span class="sec-mark">05</span> What Went Wrong</h3>
+      <div class="went-wrong">
+        <div class="went-wrong-title">&#128165; Things that broke before the system worked</div>
+        <ul>
+          <li><strong>Messages not arriving across workers.</strong> The in-memory dict only reached sockets on the same process. Diagnosis: I thought the WebSocket was broken and spent an hour debugging the connection before realising the dict was per-process. Fix: Redis pub/sub. Messages publish to a room channel; every worker with a local connection in that room fans out to its own sockets.</li>
+          <li><strong>Subscription explosion.</strong> First Redis implementation subscribed every worker to every room on boot — 20,000 subscriptions for 5,000 rooms. Diagnosis: Redis memory climbed steadily. Fix: reference counting. Subscribe on first local joiner, unsubscribe on last local leaver. Redis only carries channels for rooms with active participants on each worker.</li>
+          <li><strong>Unauthenticated socket floods.</strong> Authentication was after <code>websocket.accept()</code>. Diagnosis: I hadn't thought about it — I was focused on message delivery. Fix: move JWT verification before <code>accept()</code>. Invalid tokens get <code>WS_1008_POLICY_VIOLATION</code> and never open a socket.</li>
+          <li><strong>Offset pagination drift.</strong> <code>LIMIT 15 OFFSET 30</code> shifted as new messages arrived — users saw duplicates or gaps. Diagnosis: the offset is a count from the top of a changing table. Fix: cursor-based pagination on <code>(created_at, id)</code>. The cursor is a fixed point, not a count. Pages stay stable under insertion.</li>
+          <li><strong>Presence as boolean.</strong> Same person on two tabs was counted as two people. Diagnosis: a boolean can't distinguish "one person with two tabs" from "two people." Fix: a Redis hash counter per user. Join increments, leave decrements. The person is present while the counter is above zero.</li>
+          <li><strong>Redis subscriber connection drops silently.</strong> If a worker's Redis subscriber connection drops, that process stops receiving room messages — with no error raised. This is a known limitation: there's no health check on the pub/sub connection in the current build.</li>
+        </ul>
+      </div>
+
+      <div class="takeaway">
+        <div class="takeaway-label">&#128161; The Takeaway</div>
+        <p>A single-process design that works in dev will almost always fail in production when you add workers. Ask: "what breaks when two processes serve the same resource?" The answer is always: anything held in process-local memory. Redis pub/sub solves delivery. Reference counting solves resource pressure. Authentication before accept solves the security boundary. Cursor pagination solves history stability. Each fix came from a specific failure — not from foresight.</p>
+      </div>
+      <p><em>The cross-worker test asserts that two ASGI workers exchange messages. No latency, throughput, or concurrent-connection figure is published — the tests prove behaviour, not performance.</em></p>
     </article>
 
+    <!-- ── Footer ── -->
     <footer class="journal-footer">
-      <div>&copy; 2026 Taiwo Henry Fadeni &bull; Software & AI Engineer</div>
-      <div>Published via Vercel &bull; <a href="/v2/journal/" style="color: var(--primary);">henryfadeni.vercel.app/v2/journal/</a></div>
+      <div>&copy; 2026 Taiwo Henry Fadeni &bull; Software &amp; AI Engineer</div>
+      <div>Published via Vercel &bull; <a href="/v2/journal/">henryfadeni.vercel.app/v2/journal/</a></div>
     </footer>
 
   </main>
 </div>
 
 <script>
+  // ── Theme toggle ──
   function toggleTheme() {
     const html = document.documentElement;
     const current = html.getAttribute('data-theme');
@@ -1221,25 +1769,43 @@ LIMIT 15;
     html.setAttribute('data-theme', next);
     localStorage.setItem('journal_theme', next);
   }
-
-  // Restore saved theme
-  const savedTheme = localStorage.getItem('journal_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const savedTheme = localStorage.getItem('journal_theme') ||
+    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   document.documentElement.setAttribute('data-theme', savedTheme);
 
-  // Active scrollspy for sidebar Table of Contents
-  window.addEventListener('scroll', () => {
-    const sections = document.querySelectorAll('.journal-chapter');
-    const navLinks = document.querySelectorAll('.toc-nav a');
-    let current = '';
+  // ── Thought reveal ──
+  function revealThought(id) {
+    document.getElementById(id).classList.add('revealed');
+  }
 
-    sections.forEach(section => {
-      const sectionTop = section.offsetTop - 120;
-      if (window.pageYOffset >= sectionTop) {
-        current = section.getAttribute('id');
+  // ── Copy code ──
+  function copyCode(btn) {
+    const pre = btn.closest('.code-card').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.innerText = 'Copied!';
+      setTimeout(() => btn.innerText = 'Copy', 2000);
+    });
+  }
+
+  // ── Reading progress bar ──
+  const progressBar = document.getElementById('progressBar');
+  window.addEventListener('scroll', () => {
+    const scrollH = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = scrollH > 0 ? (window.pageYOffset / scrollH) * 100 : 0;
+    progressBar.style.width = pct + '%';
+  });
+
+  // ── Scrollspy for sidebar ──
+  const entries = document.querySelectorAll('.entry');
+  const tocLinks = document.querySelectorAll('.toc > li > a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    entries.forEach(entry => {
+      if (window.pageYOffset >= entry.offsetTop - 120) {
+        current = entry.getAttribute('id');
       }
     });
-
-    navLinks.forEach(link => {
+    tocLinks.forEach(link => {
       link.classList.remove('active');
       if (link.getAttribute('href') === `#${current}`) {
         link.classList.add('active');

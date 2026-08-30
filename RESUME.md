@@ -6,16 +6,16 @@ Lagos, Nigeria (Available for Remote & Relocation) | +234 706 616 1980 | [hfaden
 ---
 
 ## PROFESSIONAL SUMMARY
-Software & AI Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, evaluated RAG architectures, autonomous agent workflows (LangGraph), and high-throughput distributed backends. Experienced in building deterministic guardrails, human-in-the-loop controls, automated evaluation suites (Spider golden set), and observable backend architectures (FastAPI, Redis, Celery, DuckDB, WebSockets). Proven track record of shipping end-to-end applications from distributed system architecture to polished user interfaces (React, Next.js).
+Software & AI Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, evaluated RAG architectures, autonomous agent workflows, and high-throughput distributed backends. Experienced in building deterministic guardrails, human-in-the-loop controls, automated evaluation suites, and observable asynchronous backend pipelines. Proven track record of shipping end-to-end applications from distributed backend architecture to polished user interfaces.
 
 ---
 
 ## TECHNICAL SKILLS
-- **Programming Languages:** Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, TypeScript, MATLAB, HTML5, CSS3
+- **Programming Languages:** Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, MATLAB, HTML5
 - **AI & LLM Systems:** LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations (Golden Sets, Spider Benchmark)
 - **Backend & Distributed Systems:** FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark, ETL Pipelines
-- **Frontend & UI Engineering:** React, Next.js, Vite, TypeScript, Tailwind CSS, Responsive Design, State Management, Interactive Data Dashboards
-- **DevOps, Cloud & Observability:** AWS, Cloudflare, Docker, Docker Compose, GitHub Actions (CI/CD), Git, GitHub, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Structured JSON Logging, Loki, Supabase, Vercel
+- **Frontend & UI Engineering:** React, Next.js, Tailwind CSS, Responsive Design, State Management, Interactive Data Dashboards
+- **DevOps, Cloud & Observability:** AWS, Cloudflare, Docker, Docker Compose, GitHub Actions (CI/CD), Git, GitHub, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel
 
 ---
 
