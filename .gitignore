@@ -29,6 +29,7 @@ edge-cdp-profile/
 !api/**/*.py
 !tests/**/*.py
 !scripts/run_chat_evals.py
+!scripts/generate_resume.py
 __pycache__/
 *.py[cod]
 eval-results/
