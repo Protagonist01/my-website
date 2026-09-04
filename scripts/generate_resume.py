@@ -68,8 +68,8 @@ def generate_docx(output_path: Path):
         table = doc.add_table(rows=1, cols=2)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
         table.autofit = False
-        table.columns[0].width = Inches(5.7)
-        table.columns[1].width = Inches(1.8)
+        table.columns[0].width = Inches(5.8)
+        table.columns[1].width = Inches(1.7)
         
         cell_l = table.cell(0, 0)
         cell_r = table.cell(0, 1)
@@ -128,7 +128,7 @@ def generate_docx(output_path: Path):
     p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_sub.paragraph_format.space_before = Pt(0)
     p_sub.paragraph_format.space_after = Pt(2.0)
-    run_sub = p_sub.add_run("SOFTWARE & AI ENGINEER | LLM SYSTEMS • RAG & AGENT WORKFLOWS • DISTRIBUTED BACKENDS")
+    run_sub = p_sub.add_run("APPLIED AI & SOFTWARE ENGINEER | LLM SYSTEMS • RAG & AGENT WORKFLOWS • DISTRIBUTED BACKENDS")
     run_sub.bold = True
     run_sub.font.size = Pt(8.6)
     run_sub.font.color.rgb = RGBColor(0x25, 0x63, 0xEB)
@@ -152,10 +152,10 @@ def generate_docx(output_path: Path):
     p_sum.paragraph_format.space_after = Pt(3)
     p_sum.paragraph_format.line_spacing = 1.08
     run_sum = p_sum.add_run(
-        "Software & AI Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, "
-        "evaluated RAG architectures, autonomous agent workflows, and high-throughput distributed backends. Experienced in building "
-        "deterministic guardrails, human-in-the-loop controls, automated evaluation suites, and observable asynchronous "
-        "backend pipelines. Proven track record of shipping end-to-end applications from distributed backend architecture to polished user interfaces."
+        "Applied AI & Software Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, "
+        "evaluated RAG architectures, autonomous agent workflows, and high-throughput asynchronous backends. Experienced in building "
+        "deterministic guardrails, human-in-the-loop controls, automated evaluation suites, and observable asynchronous backend pipelines. "
+        "Proven track record of shipping end-to-end applications from distributed backend architecture to polished user interfaces."
     )
     run_sum.font.size = Pt(8.4)
 
@@ -165,8 +165,9 @@ def generate_docx(output_path: Path):
         ("Programming Languages: ", "Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, MATLAB"),
         ("AI & LLM Systems: ", "LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations (Golden Sets, Spider Benchmark)"),
         ("Backend & Distributed Systems: ", "FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark"),
-        ("Frontend & UI Engineering: ", "React, Next.js, Responsive Design, State Management, Interactive Data Dashboards"),
-        ("DevOps, Cloud & Observability: ", "AWS, Cloudflare, Docker, GitHub Actions (CI/CD), Git, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel")
+        ("Frontend & UI Engineering: ", "React, Next.js, State Management, Interactive Data Dashboards"),
+        ("DevOps, Cloud & Observability: ", "AWS, Cloudflare, Docker, GitHub Actions (CI/CD), Git, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel"),
+        ("Automation: ", "n8n (self-hosted workflows, webhook orchestration, custom code nodes), event-driven pipelines, scheduled ETL, apps integration")
     ]
     for label, val in skills:
         p_sk = doc.add_paragraph()
@@ -180,39 +181,38 @@ def generate_docx(output_path: Path):
         r_val = p_sk.add_run(val)
         r_val.font.size = Pt(8.2)
 
-    # --- Selected AI & Backend Projects ---
-    add_section_heading("SELECTED AI & BACKEND PROJECTS")
+    # --- Applied AI & Backend Projects ---
+    add_section_heading("APPLIED AI & BACKEND PROJECTS")
     
     # Project 1: RAA
-    add_item_header("Retrieval-Augmented Analytics Dashboard (Text-to-SQL)", "FastAPI · DuckDB · sqlglot · Redis · SSE", "2026", is_first_item=True)
-    add_bullet("Architected a natural-language to SQL analytics workspace executing sandboxed, read-only analytical queries against DuckDB with streamed SSE explanations and dynamic charts.")
+    add_item_header("Retrieval-Augmented Analytics Workspace (Text-to-SQL)", "FastAPI · DuckDB · sqlglot · Redis · SSE", "2026", is_first_item=True)
+    add_bullet("Natural-language analytics interface executing sandboxed, read-only analytical queries against DuckDB with streamed SSE explanations and dynamic charts.")
     add_bullet("Built a 2-stage AST validation pipeline using sqlglot (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.")
-    add_bullet("Engineered an automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving 96% SQL validity, 74% execution accuracy, 61% failure self-correction, and ~4.2s p95 latency.")
+    add_bullet("Automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving 96% SQL validity, 74% execution accuracy, 61% failure self-correction, and ~4.2s p95 latency.")
 
     # Project 2: Code Review Agent
-    add_item_header("Autonomous AI Code Review Agent", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2026")
-    add_bullet("Developed an event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.")
-    add_bullet("Implemented HMAC-SHA256 webhook verification, Redis sliding-window rate limiting, and asynchronous job queuing via Celery workers to decouple webhook intake from model inference.")
-    add_bullet("Built pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama), structured JSON validation, and an evaluation harness with an 80% CI code coverage gate.")
+    add_item_header("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025")
+    add_bullet("Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.")
+    add_bullet("Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.")
+    add_bullet("Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an 80% CI code coverage gate.")
 
     # Project 3: Self-Healing Monitor
-    add_item_header("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres", "2026")
-    add_bullet("Built an incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.")
-    add_bullet("Engineered a 4-condition deterministic policy gate (confidence >= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.")
-    add_bullet("Achieved 100% (4/4) action and policy correctness across simulated failure scenarios with a live React operator dashboard.")
+    add_item_header("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres · React", "2026")
+    add_bullet("Incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.")
+    add_bullet("Designed a 4-condition deterministic policy gate (confidence >= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.")
+    add_bullet("Scored 100% action and policy correctness across simulated failure scenarios with a live React operator dashboard.")
 
     # Project 4: Realtime Chat
-    add_item_header("Realtime Multi-Room Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026")
-    add_bullet("Engineered a distributed multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).")
-    add_bullet("Implemented JWT authentication during WebSocket handshakes, Redis hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page).")
-    add_bullet("Authored cross-process integration test suites verifying synchronized multi-worker message delivery and connection fault isolation.")
+    add_item_header("Distributed Realtime Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026")
+    add_bullet("Multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).")
+    add_bullet("JWT authentication at handshake, Redis-hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page); verified by cross-process integration tests for multi-worker delivery and connection fault isolation.")
 
-    # --- Professional Experience & Research ---
-    add_section_heading("PROFESSIONAL EXPERIENCE & RESEARCH")
+    # --- Experience ---
+    add_section_heading("EXPERIENCE")
     
-    add_item_header("Freelance Software & AI Engineer", "Independent Engineering & Consulting", "Jan 2025 – Present", "Remote", is_first_item=True)
-    add_bullet("Designed and delivered production-grade AI systems, RAG workflows, agentic automation pipelines, and backend APIs for international clients and product builds.")
-    add_bullet("Implemented rigorous evaluation harnesses, safety guardrails, and deterministic tool-use boundaries across web, voice, and developer automation applications.")
+    add_item_header("Freelance Applied AI & Software Engineer", "Independent Engineering & Consulting", "Jan 2025 – Present", "Remote", is_first_item=True)
+    add_bullet("Delivered LLM systems, RAG workflows, agentic automation pipelines, and backend APIs across three engagements: a Series A logistics SaaS (Germany), an e-commerce operator (Nigeria), and a recruitment agency (Netherlands). Named references available on request.")
+    add_bullet("Automated lead qualification end-to-end with n8n and a classification agent, tripling qualified-lead volume (~45 → ~140/week) with no added headcount.")
 
     add_item_header("Electrical & Automation Engineering Intern", "Promasidor Nigeria Limited", "May 2024 – Sep 2024", "Lagos, NG")
     add_bullet("Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.")
@@ -222,14 +222,14 @@ def generate_docx(output_path: Path):
     add_bullet("Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.")
     add_bullet("Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.")
 
-    # --- Education & Professional Development ---
-    add_section_heading("EDUCATION & PROFESSIONAL DEVELOPMENT")
+    # --- Education ---
+    add_section_heading("EDUCATION")
     add_item_header("B.Eng., Electrical & Electronics Engineering", "Obafemi Awolowo University", "2019 – 2025", "Ile-Ife, Nigeria", is_first_item=True)
     
     p_train = doc.add_paragraph()
     p_train.paragraph_format.space_before = Pt(1.5)
     p_train.paragraph_format.space_after = Pt(1)
-    r_tr_lbl = p_train.add_run("Specialized Training: ")
+    r_tr_lbl = p_train.add_run("Additional Training: ")
     r_tr_lbl.bold = True
     r_tr_lbl.font.size = Pt(8.0)
     r_tr_val = p_train.add_run("Data Engineering Track (DataCamp, 2024–2025)  •  Software & Data Engineering (Data Epic, 2025)  •  Computational Thinking for Problem Solving (UPenn, 2022)")
@@ -304,7 +304,7 @@ def generate_pdf(output_path: Path):
         leading=9.0,
         alignment=1,
         textColor=c_text,
-        spaceAfter=11.0
+        spaceAfter=10.0
     )
     
     section_style = ParagraphStyle(
@@ -314,7 +314,7 @@ def generate_pdf(output_path: Path):
         fontSize=8.8,
         leading=10.5,
         textColor=c_primary,
-        spaceBefore=11.0,
+        spaceBefore=10.0,
         spaceAfter=1.0,
         keepWithNext=True
     )
@@ -324,17 +324,17 @@ def generate_pdf(output_path: Path):
         parent=styles['Normal'],
         fontName='Helvetica',
         fontSize=7.6,
-        leading=9.4,
+        leading=9.3,
         textColor=c_text,
-        spaceAfter=2.0
+        spaceAfter=1.8
     )
     
     item_title_style = ParagraphStyle(
         'ItemTitle',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=7.8,
-        leading=9.4,
+        fontSize=7.7,
+        leading=9.3,
         textColor=c_primary
     )
     
@@ -342,8 +342,8 @@ def generate_pdf(output_path: Path):
         'ItemDate',
         parent=styles['Normal'],
         fontName='Helvetica-Bold',
-        fontSize=7.6,
-        leading=9.4,
+        fontSize=7.5,
+        leading=9.3,
         alignment=2,
         textColor=c_primary
     )
@@ -357,41 +357,41 @@ def generate_pdf(output_path: Path):
         textColor=c_text,
         leftIndent=9,
         firstLineIndent=-9,
-        spaceAfter=1.2
+        spaceAfter=1.0
     )
     
     story = []
     
     # Header
     story.append(Paragraph("TAIWO HENRY FADENI", name_style))
-    story.append(Paragraph("SOFTWARE & AI ENGINEER | LLM SYSTEMS &bull; RAG & AGENT WORKFLOWS &bull; DISTRIBUTED BACKENDS", title_style))
+    story.append(Paragraph("APPLIED AI &amp; SOFTWARE ENGINEER | LLM SYSTEMS &bull; RAG &amp; AGENT WORKFLOWS &bull; DISTRIBUTED BACKENDS", title_style))
     contact_text = (
         "Lagos, Nigeria (Remote / Relocation) &nbsp;&bull;&nbsp; +234 706 616 1980 &nbsp;&bull;&nbsp; "
-        '<a href="mailto:hfadeni@gmail.com" color="#2563EB">hfadeni@gmail.com</a> &nbsp;&bull;&nbsp; '
-        '<a href="https://henryfadeni.vercel.app/" color="#2563EB">Portfolio</a> &nbsp;&bull;&nbsp; '
-        '<a href="https://github.com/Protagonist01" color="#2563EB">GitHub</a> &nbsp;&bull;&nbsp; '
-        '<a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" color="#2563EB">LinkedIn</a>'
+        '<a href="mailto:hfadeni@gmail.com" color="#2563EB">hfadeni@gmail.com</a><br/>'
+        'Portfolio: <a href="https://henryfadeni.vercel.app/" color="#2563EB">henryfadeni.vercel.app</a> &nbsp;&bull;&nbsp; '
+        'GitHub: <a href="https://github.com/Protagonist01" color="#2563EB">github.com/Protagonist01</a> &nbsp;&bull;&nbsp; '
+        'LinkedIn: <a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" color="#2563EB">linkedin.com/in/henry-fadeni-ai-engineer</a>'
     )
     story.append(Paragraph(contact_text, contact_style))
     
     def section_header(title, is_first=False):
-        sb = 0 if is_first else 11.0
+        sb = 0 if is_first else 10.0
         sec_st = ParagraphStyle(
             f'Sec_{title}',
             parent=section_style,
             spaceBefore=sb
         )
         story.append(Paragraph(title, sec_st))
-        story.append(HRFlowable(width="100%", thickness=0.5, color=c_border, spaceBefore=1.0, spaceAfter=3.5))
+        story.append(HRFlowable(width="100%", thickness=0.5, color=c_border, spaceBefore=1.0, spaceAfter=3.2))
         
     def item_row(left_title, left_stack, right_date, right_loc="", is_first_item=False):
-        top_pad = 0.5 if is_first_item else 4.0
+        top_pad = 0.5 if is_first_item else 3.5
         left_p = Paragraph(f"<b>{left_title}</b>" + (f" &nbsp;|&nbsp; <i><font color='#475569'>{left_stack}</font></i>" if left_stack else ""), item_title_style)
         right_str = f"<b>{right_date}</b>"
         if right_loc:
             right_str += f" &nbsp;<font color='#64748B' size='6.5'>({right_loc})</font>"
         right_p = Paragraph(right_str, item_date_style)
-        t = Table([[left_p, right_p]], colWidths=[424, 140])
+        t = Table([[left_p, right_p]], colWidths=[444, 120])
         t.setStyle(TableStyle([
             ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
             ('LEFTPADDING', (0,0), (-1,-1), 0),
@@ -401,77 +401,77 @@ def generate_pdf(output_path: Path):
         ]))
         return t
 
-    # Summary
+    # 1. Professional Summary
     section_header("PROFESSIONAL SUMMARY", is_first=True)
     summary_p = (
-        "Software & AI Engineer with an Electrical & Electronics Engineering foundation, specializing in production-grade LLM systems, "
-        "evaluated RAG architectures, autonomous agent workflows, and high-throughput distributed backends. Experienced in building "
-        "deterministic guardrails, human-in-the-loop controls, automated evaluation suites, and observable asynchronous "
-        "backend pipelines. Proven track record of shipping end-to-end applications from distributed backend architecture to polished user interfaces."
+        "Applied AI &amp; Software Engineer with an Electrical &amp; Electronics Engineering foundation, specializing in production-grade LLM systems, "
+        "evaluated RAG architectures, autonomous agent workflows, and high-throughput asynchronous backends. Experienced in building "
+        "deterministic guardrails, human-in-the-loop controls, automated evaluation suites, and observable asynchronous backend pipelines. "
+        "Proven track record of shipping end-to-end applications from distributed backend architecture to polished user interfaces."
     )
     story.append(Paragraph(summary_p, body_style))
     
-    # Skills
+    # 2. Technical Skills
     section_header("TECHNICAL SKILLS")
     skills_data = [
         ("<b>Programming Languages:</b>", "Python, SQL (PostgreSQL, DuckDB, SQLite), JavaScript, MATLAB"),
-        ("<b>AI & LLM Systems:</b>", "LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails & Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations"),
-        ("<b>Backend & Distributed Systems:</b>", "FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark"),
-        ("<b>Frontend & UI Engineering:</b>", "React, Next.js, Responsive Design, State Management, Interactive Data Dashboards"),
-        ("<b>DevOps, Cloud & Observability:</b>", "AWS, Cloudflare, Docker, GitHub Actions (CI/CD), Git, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel")
+        ("<b>AI &amp; LLM Systems:</b>", "LangGraph, LangChain, RAG Architecture, Vector Databases (Pinecone, ChromaDB), Embeddings, Semantic Caching, Prompt Engineering, Guardrails &amp; Policy Gates, Structured Outputs (Pydantic), Human-in-the-Loop (HITL), Automated Evaluations (Golden Sets, Spider Benchmark)"),
+        ("<b>Backend &amp; Distributed Systems:</b>", "FastAPI, WebSockets, RESTful APIs, Server-Sent Events (SSE), Celery, Redis (Pub/Sub, Caching, Sliding-Window Rate Limiting), AsyncIO, DuckDB, PostgreSQL, SQLite, Alembic, Pandas, PySpark"),
+        ("<b>Frontend &amp; UI Engineering:</b>", "React, Next.js, State Management, Interactive Data Dashboards"),
+        ("<b>DevOps, Cloud &amp; Observability:</b>", "AWS, Cloudflare, Docker, GitHub Actions (CI/CD), Git, Pytest (80%+ CI Coverage Gates), Prometheus, Grafana, Loki, Supabase, Vercel"),
+        ("<b>Automation:</b>", "n8n (self-hosted workflows, webhook orchestration, custom code nodes), event-driven pipelines, scheduled ETL, apps integration")
     ]
     for lbl, val in skills_data:
         p = Paragraph(f"{lbl} <font color='#334155'>{val}</font>", body_style)
         story.append(p)
         
-    # Projects
-    section_header("SELECTED AI & BACKEND PROJECTS")
+    # 3. Applied AI & Backend Projects
+    section_header("APPLIED AI &amp; BACKEND PROJECTS")
     
     # Project 1: RAA
-    story.append(item_row("Retrieval-Augmented Analytics Dashboard (Text-to-SQL)", "FastAPI · DuckDB · sqlglot · Redis · SSE", "2026", is_first_item=True))
-    story.append(Paragraph("&bull; Architected a natural-language to SQL analytics workspace executing sandboxed, read-only analytical queries against DuckDB with streamed SSE explanations and dynamic charts.", bullet_style))
+    story.append(item_row("Retrieval-Augmented Analytics Workspace (Text-to-SQL)", "FastAPI · DuckDB · sqlglot · Redis · SSE", "2026", is_first_item=True))
+    story.append(Paragraph("&bull; Natural-language analytics interface executing sandboxed, read-only analytical queries against DuckDB with streamed SSE explanations and dynamic charts.", bullet_style))
     story.append(Paragraph("&bull; Built a 2-stage AST validation pipeline using sqlglot (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.", bullet_style))
-    story.append(Paragraph("&bull; Engineered an automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving <b>96% SQL validity</b>, <b>74% execution accuracy</b>, <b>61% failure self-correction</b>, and <b>~4.2s p95 latency</b>.", bullet_style))
+    story.append(Paragraph("&bull; Automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving <b>96% SQL validity</b>, <b>74% execution accuracy</b>, <b>61% failure self-correction</b>, and <b>~4.2s p95 latency</b>.", bullet_style))
     
     # Project 2: Code Review Agent
-    story.append(item_row("Autonomous AI Code Review Agent", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2026"))
-    story.append(Paragraph("&bull; Developed an event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.", bullet_style))
-    story.append(Paragraph("&bull; Implemented HMAC-SHA256 webhook verification, Redis sliding-window rate limiting, and asynchronous job queuing via Celery workers to decouple webhook intake from model inference.", bullet_style))
-    story.append(Paragraph("&bull; Built pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama), structured JSON validation, and an evaluation harness with an <b>80% CI code coverage gate</b>.", bullet_style))
+    story.append(item_row("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025"))
+    story.append(Paragraph("&bull; Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.", bullet_style))
+    story.append(Paragraph("&bull; Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.", bullet_style))
+    story.append(Paragraph("&bull; Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an <b>80% CI code coverage gate</b>.", bullet_style))
 
     # Project 3: Self-Healing Monitor
-    story.append(item_row("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres", "2026"))
-    story.append(Paragraph("&bull; Built an incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.", bullet_style))
-    story.append(Paragraph("&bull; Engineered a 4-condition deterministic policy gate (confidence >= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.", bullet_style))
-    story.append(Paragraph("&bull; Achieved <b>100% (4/4) action and policy correctness</b> across simulated failure scenarios with a live React operator dashboard.", bullet_style))
+    story.append(item_row("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres · React", "2026"))
+    story.append(Paragraph("&bull; Incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.", bullet_style))
+    story.append(Paragraph("&bull; Designed a 4-condition deterministic policy gate (confidence &gt;= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.", bullet_style))
+    story.append(Paragraph("&bull; Scored <b>100% action and policy correctness</b> across simulated failure scenarios with a live React operator dashboard.", bullet_style))
 
     # Project 4: Realtime Chat
-    story.append(item_row("Realtime Multi-Room Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026"))
-    story.append(Paragraph("&bull; Engineered a distributed multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).", bullet_style))
-    story.append(Paragraph("&bull; Implemented JWT authentication during WebSocket handshakes, Redis hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page).", bullet_style))
-    story.append(Paragraph("&bull; Authored cross-process integration test suites verifying synchronized multi-worker message delivery and connection fault isolation.", bullet_style))
+    story.append(item_row("Distributed Realtime Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026"))
+    story.append(Paragraph("&bull; Multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).", bullet_style))
+    story.append(Paragraph("&bull; JWT authentication at handshake, Redis-hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page); verified by cross-process integration tests for multi-worker delivery and connection fault isolation.", bullet_style))
 
-    # Experience
-    section_header("PROFESSIONAL EXPERIENCE & RESEARCH")
+    # 4. Experience
+    section_header("EXPERIENCE")
     
-    story.append(item_row("Freelance Software & AI Engineer", "Independent Engineering & Consulting", "Jan 2025 – Present", "Remote", is_first_item=True))
-    story.append(Paragraph("&bull; Designed and delivered production-grade AI systems, RAG workflows, agentic automation pipelines, and backend APIs for international clients and product builds.", bullet_style))
-    story.append(Paragraph("&bull; Implemented rigorous evaluation harnesses, safety guardrails, and deterministic tool-use boundaries across web, voice, and developer automation applications.", bullet_style))
+    story.append(item_row("Freelance Applied AI &amp; Software Engineer", "Independent Engineering &amp; Consulting", "Jan 2025 – Present", "Remote", is_first_item=True))
+    story.append(Paragraph("&bull; Delivered LLM systems, RAG workflows, agentic automation pipelines, and backend APIs across three engagements: a Series A logistics SaaS (Germany), an e-commerce operator (Nigeria), and a recruitment agency (Netherlands). Named references available on request.", bullet_style))
+    story.append(Paragraph("&bull; Automated lead qualification end-to-end with n8n and a classification agent, tripling qualified-lead volume (~45 &rarr; ~140/week) with no added headcount.", bullet_style))
 
-    story.append(item_row("Electrical & Automation Engineering Intern", "Promasidor Nigeria Limited", "May 2024 – Sep 2024", "Lagos, NG"))
+    story.append(item_row("Electrical &amp; Automation Engineering Intern", "Promasidor Nigeria Limited", "May 2024 – Sep 2024", "Lagos, NG"))
     story.append(Paragraph("&bull; Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.", bullet_style))
     story.append(Paragraph("&bull; Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.", bullet_style))
 
-    story.append(item_row("Student Research Assistant", "Communication Research Group & Control Systems Lab", "2020 – 2025", "OAU, NG"))
+    story.append(item_row("Student Research Assistant", "Communication Research Group &amp; Control Systems Lab", "2020 – 2025", "OAU, NG"))
     story.append(Paragraph("&bull; Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.", bullet_style))
     story.append(Paragraph("&bull; Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.", bullet_style))
 
-    # Education
-    section_header("EDUCATION & PROFESSIONAL DEVELOPMENT")
-    story.append(item_row("B.Eng., Electrical & Electronics Engineering", "Obafemi Awolowo University", "2019 – 2025", "Ile-Ife, Nigeria", is_first_item=True))
+    # 5. Education
+    section_header("EDUCATION")
+    story.append(item_row("B.Eng., Electrical &amp; Electronics Engineering", "Obafemi Awolowo University", "2019 – 2025", "Ile-Ife, Nigeria", is_first_item=True))
     training_p = (
-        "<b>Specialized Training:</b> Data Engineering Track (DataCamp, 2024–2025) &nbsp;&bull;&nbsp; "
-        "Software & Data Engineering (Data Epic, 2025) &nbsp;&bull;&nbsp; Computational Thinking for Problem Solving (UPenn, 2022)"
+        "<b>Additional Training:</b> Data Engineering Track (DataCamp, 2024–2025) &nbsp;&bull;&nbsp; "
+        "Software &amp; Data Engineering (Data Epic, 2025) &nbsp;&bull;&nbsp; Computational Thinking for Problem Solving (UPenn, 2022)"
     )
     story.append(Paragraph(training_p, body_style))
 
@@ -479,29 +479,41 @@ def generate_pdf(output_path: Path):
     doc.build(story, canvasmaker=NumberedCanvas)
     print(f"Generated PDF: {output_path}")
 
+def sync_resume_files(source_pdf: Path, source_docx: Path, target_dir: Path):
+    target_dir.mkdir(parents=True, exist_ok=True)
+    # Both filenames maintained for backwards compatibility and clarity
+    for pdf_name in ["Henry-Fadeni-Software-AI-Engineer-Resume.pdf", "Henry_Fadeni_Applied_AI_Software_Engineer.pdf"]:
+        target_pdf = target_dir / pdf_name
+        target_pdf.write_bytes(source_pdf.read_bytes())
+    for docx_name in ["Henry_Fadeni_Software_AI_Engineer_Resume.docx", "Henry_Fadeni_Applied_AI_Software_Engineer.docx"]:
+        target_docx = target_dir / docx_name
+        target_docx.write_bytes(source_docx.read_bytes())
+
 def main():
     root = Path(__file__).resolve().parent.parent
     
     # 1. Assets directory
     assets_dir = root / "assets"
     assets_dir.mkdir(exist_ok=True)
-    docx_asset = assets_dir / "Henry_Fadeni_Software_AI_Engineer_Resume.docx"
     pdf_asset = assets_dir / "Henry-Fadeni-Software-AI-Engineer-Resume.pdf"
-    generate_docx(docx_asset)
-    generate_pdf(pdf_asset)
+    docx_asset = assets_dir / "Henry_Fadeni_Applied_AI_Software_Engineer.docx"
     
-    # 2. Public assets directory (Vite bundles files from public/ directly into dist/)
+    generate_pdf(pdf_asset)
+    generate_docx(docx_asset)
+    
+    # Mirror both naming conventions in assets
+    (assets_dir / "Henry_Fadeni_Applied_AI_Software_Engineer.pdf").write_bytes(pdf_asset.read_bytes())
+    (assets_dir / "Henry_Fadeni_Software_AI_Engineer_Resume.docx").write_bytes(docx_asset.read_bytes())
+    
+    # 2. Public assets directory
     public_assets_dir = root / "public" / "assets"
-    public_assets_dir.mkdir(parents=True, exist_ok=True)
-    generate_docx(public_assets_dir / "Henry_Fadeni_Software_AI_Engineer_Resume.docx")
-    generate_pdf(public_assets_dir / "Henry-Fadeni-Software-AI-Engineer-Resume.pdf")
+    sync_resume_files(pdf_asset, docx_asset, public_assets_dir)
     print(f"Synchronized with public assets directory: {public_assets_dir}")
 
     # 3. Dist assets directory (if dist exists)
     dist_assets_dir = root / "dist" / "assets"
     if dist_assets_dir.exists():
-        generate_docx(dist_assets_dir / "Henry_Fadeni_Software_AI_Engineer_Resume.docx")
-        generate_pdf(dist_assets_dir / "Henry-Fadeni-Software-AI-Engineer-Resume.pdf")
+        sync_resume_files(pdf_asset, docx_asset, dist_assets_dir)
         print(f"Synchronized with dist assets directory: {dist_assets_dir}")
 
     # 4. Also sync to Codex outputs folder if it exists
@@ -509,7 +521,9 @@ def main():
     if codex_outputs.exists():
         generate_docx(codex_outputs / "Henry_Fadeni_Software_AI_Engineer_Resume_ATS.docx")
         generate_docx(codex_outputs / "Henry_Fadeni_AI_Python_Developer_Mimic.docx")
+        generate_docx(codex_outputs / "Henry_Fadeni_Applied_AI_Software_Engineer.docx")
         generate_pdf(codex_outputs / "Henry-Fadeni-Software-AI-Engineer-Resume.pdf")
+        generate_pdf(codex_outputs / "Henry_Fadeni_Applied_AI_Software_Engineer.pdf")
         print("Synchronized with Codex outputs directory.")
 
     doc = pymupdf.open(pdf_asset)
