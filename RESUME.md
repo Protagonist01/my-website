@@ -28,12 +28,6 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 - Built a 2-stage AST validation pipeline using `sqlglot` (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.
 - Automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving **96% SQL validity**, **74% execution accuracy**, **61% failure self-correction**, and **~4.2s p95 latency**.
 
-### Autonomous Code Review Agent (GitHub App) | [GitHub](https://github.com/Protagonist01/code-review-agent) · [Case Study](https://henryfadeni.vercel.app/v2/work/code-review-agent/)
-*Python · FastAPI · LangGraph · Celery · Redis · Docker* | **2025**
-- Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.
-- Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.
-- Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an **80% CI code coverage gate**.
-
 ### Self-Healing Microservices Monitor (Autonomous SRE Agent) | [GitHub](https://github.com/Protagonist01/self-healing-monitor) · [Case Study](https://henryfadeni.vercel.app/v2/work/self-healing-monitor/)
 *LangGraph · ChromaDB · Prometheus · Postgres · React* | **2026**
 - Incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.
@@ -44,6 +38,12 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 *FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker* | **2026**
 - Multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).
 - JWT authentication at handshake, Redis-hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page); verified by cross-process integration tests for multi-worker delivery and connection fault isolation.
+
+### Autonomous Code Review Agent (GitHub App) | [GitHub](https://github.com/Protagonist01/code-review-agent) · [Case Study](https://henryfadeni.vercel.app/v2/work/code-review-agent/)
+*Python · FastAPI · LangGraph · Celery · Redis · Docker* | **2025**
+- Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.
+- Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.
+- Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an **80% CI code coverage gate**.
 
 ---
 
@@ -60,7 +60,7 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 - Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.
 
 ### Student Research Assistant | Communication Research Group & Control Systems Lab
-*Obafemi Awolowo University, Ile-Ife, Nigeria* | **2020 – 2025**
+*Obafemi Awolowo University, Ile-Ife, Nigeria* | **2023 – 2025**
 - Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.
 - Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.
 

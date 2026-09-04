@@ -387,7 +387,7 @@ Henry supported maintenance and optimization of automated production-line system
 
 ### Obafemi Awolowo University - Communication Research Group, Student Research Assistant
 
-Dates: 2022-2025.  
+Dates: 2023-2025.  
 Location: Ile-Ife, Nigeria.
 
 Henry co-developed an IoT-compatible weather station and validated sensor-to-microcontroller communication using MATLAB and Simulink. He modeled Signal-to-Noise Ratio across network configurations and translated results into technical recommendations and documentation.

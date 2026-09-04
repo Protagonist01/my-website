@@ -225,22 +225,22 @@ def generate_docx(output_path: Path):
     add_bullet("Built a 2-stage AST validation pipeline using sqlglot (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.")
     add_bullet("Automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving 96% SQL validity, 74% execution accuracy, 61% failure self-correction, and ~4.2s p95 latency.")
 
-    # Project 2: Code Review Agent
-    add_item_header("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025")
-    add_bullet("Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.")
-    add_bullet("Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.")
-    add_bullet("Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an 80% CI code coverage gate.")
-
-    # Project 3: Self-Healing Monitor
+    # Project 2: Self-Healing Monitor
     add_item_header("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres · React", "2026")
     add_bullet("Incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.")
     add_bullet("Designed a 4-condition deterministic policy gate (confidence >= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.")
     add_bullet("Scored 100% action and policy correctness across simulated failure scenarios with a live React operator dashboard.")
 
-    # Project 4: Realtime Chat
+    # Project 3: Realtime Chat
     add_item_header("Distributed Realtime Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026")
     add_bullet("Multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).")
     add_bullet("JWT authentication at handshake, Redis-hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page); verified by cross-process integration tests for multi-worker delivery and connection fault isolation.")
+
+    # Project 4: Code Review Agent
+    add_item_header("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025")
+    add_bullet("Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.")
+    add_bullet("Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.")
+    add_bullet("Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an 80% CI code coverage gate.")
 
     # --- Experience ---
     add_section_heading("EXPERIENCE")
@@ -253,7 +253,7 @@ def generate_docx(output_path: Path):
     add_bullet("Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.")
     add_bullet("Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.")
 
-    add_item_header("Student Research Assistant", "Communication Research Group & Control Systems Lab", "2020 – 2025", "OAU, NG")
+    add_item_header("Student Research Assistant", "Communication Research Group & Control Systems Lab", "2023 – 2025", "OAU, NG")
     add_bullet("Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.")
     add_bullet("Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.")
 
@@ -469,22 +469,22 @@ def generate_pdf(output_path: Path):
     story.append(Paragraph("&bull; Built a 2-stage AST validation pipeline using sqlglot (enforcing table/column verification, write-query rejection, and injection safeguards) with self-correction retry logic.", bullet_style))
     story.append(Paragraph("&bull; Automated evaluation harness across an 80-pair Golden Set (adapted from Spider), achieving <b>96% SQL validity</b>, <b>74% execution accuracy</b>, <b>61% failure self-correction</b>, and <b>~4.2s p95 latency</b>.", bullet_style))
     
-    # Project 2: Code Review Agent
-    story.append(item_row("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025"))
-    story.append(Paragraph("&bull; Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.", bullet_style))
-    story.append(Paragraph("&bull; Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.", bullet_style))
-    story.append(Paragraph("&bull; Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an <b>80% CI code coverage gate</b>.", bullet_style))
-
-    # Project 3: Self-Healing Monitor
+    # Project 2: Self-Healing Monitor
     story.append(item_row("Self-Healing Microservices Monitor (Autonomous SRE Agent)", "LangGraph · ChromaDB · Prometheus · Postgres · React", "2026"))
     story.append(Paragraph("&bull; Incident-response agent integrating Prometheus Alertmanager webhooks, LangGraph multi-step diagnosis, and ChromaDB vector runbook retrieval.", bullet_style))
     story.append(Paragraph("&bull; Designed a 4-condition deterministic policy gate (confidence &gt;= 0.75, allowlisted low-risk actions, impact checks, human approval routing) preventing destructive runaway executions with PostgreSQL audit trails.", bullet_style))
     story.append(Paragraph("&bull; Scored <b>100% action and policy correctness</b> across simulated failure scenarios with a live React operator dashboard.", bullet_style))
 
-    # Project 4: Realtime Chat
+    # Project 3: Realtime Chat
     story.append(item_row("Distributed Realtime Chat Backend", "FastAPI · WebSockets · Redis Pub/Sub · SQLite · Docker", "2026"))
     story.append(Paragraph("&bull; Multi-room WebSocket backend scaling across workers using reference-counted Redis Pub/Sub channels (one channel per active room).", bullet_style))
     story.append(Paragraph("&bull; JWT authentication at handshake, Redis-hash presence tracking with multi-device deduplication, and cursor-paginated message history (15 msgs/page); verified by cross-process integration tests for multi-worker delivery and connection fault isolation.", bullet_style))
+
+    # Project 4: Code Review Agent
+    story.append(item_row("Autonomous Code Review Agent (GitHub App)", "Python · FastAPI · LangGraph · Celery · Redis · Docker", "2025"))
+    story.append(Paragraph("&bull; Event-driven GitHub App agent that parses pull-request diffs, retrieves relevant file context, and publishes line-level inline reviews and commit statuses.", bullet_style))
+    story.append(Paragraph("&bull; Decoupled webhook intake from model inference using Celery workers for asynchronous job queuing, with HMAC-SHA256 webhook verification and Redis sliding-window rate limiting.", bullet_style))
+    story.append(Paragraph("&bull; Built a pluggable multi-provider LLM abstraction (OpenAI, Anthropic, Groq, Ollama) behind an <b>80% CI code coverage gate</b>.", bullet_style))
 
     # 4. Experience
     section_header("EXPERIENCE")
@@ -497,7 +497,7 @@ def generate_pdf(output_path: Path):
     story.append(Paragraph("&bull; Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.", bullet_style))
     story.append(Paragraph("&bull; Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.", bullet_style))
 
-    story.append(item_row("Student Research Assistant", "Communication Research Group &amp; Control Systems Lab", "2020 – 2025", "OAU, NG"))
+    story.append(item_row("Student Research Assistant", "Communication Research Group &amp; Control Systems Lab", "2023 – 2025", "OAU, NG"))
     story.append(Paragraph("&bull; Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.", bullet_style))
     story.append(Paragraph("&bull; Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.", bullet_style))
 
