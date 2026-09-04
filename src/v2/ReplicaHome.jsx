@@ -130,6 +130,7 @@ function IntroSequence() {
                   href={action.href}
                   key={action.label}
                   download={action.download ? "" : undefined}
+                  onClick={action.onDownload ? (event) => action.onDownload(event) : undefined}
                 ><span>{action.label}</span><span className="replica-about__arrow" aria-hidden="true">{action.download ? "↓" : "↗"}</span></a>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { navigation, RESUME_PATH, resumeAvailable, workingStack } from "./data.js";
+import { downloadResume, navigation, RESUME_PATH, resumeAvailable, workingStack } from "./data.js";
 
 export const replicaContent = {
   name: "Henry",
@@ -22,7 +22,7 @@ export const replicaContent = {
   statement: "From idea to launch. I shape AI and software into clean, scalable products that move fast, stay simple, perform in real use, and support business growth.",
   aboutActions: [
     { label: "Get Started", href: "#contact" },
-    ...(resumeAvailable ? [{ label: "Download Resume", href: RESUME_PATH, download: true }] : []),
+    ...(resumeAvailable ? [{ label: "Download Resume", href: RESUME_PATH, download: true, onDownload: downloadResume }] : []),
   ],
   servicesHeading: "Capabilities",
   // Stated, not linked: there are no per-capability pages behind these.

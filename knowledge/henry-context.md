@@ -1232,6 +1232,7 @@ Offer an appropriate next step: portfolio navigation, email, project inquiry, or
 ### Supplied Profile Sources
 
 - Henry-Fadeni-Software-AI-Engineer-Resume.pdf (Current 1-page ATS Resume at `/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf`).
+- Henry_Fadeni_Applied_AI_Software_Engineer.docx (Current 1-page ATS Resume in Word format at `/assets/Henry_Fadeni_Applied_AI_Software_Engineer.docx`).
 - Engineering Systems Design Journal: `/v2/journal/` (In-depth first-principles architecture, AST validation, LangGraph state machine, and distributed pub/sub breakdown).
 - LinkedIn Profile PDF export, four pages, supplied by Henry.
 - Direct factual clarifications supplied on 2026-07-13 and 2026-08-30.

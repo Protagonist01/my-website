@@ -57,6 +57,30 @@ export const paths = {
 };
 
 export const RESUME_PATH = "/assets/Henry-Fadeni-Software-AI-Engineer-Resume.pdf";
+export const RESUME_DOCX_PATH = "/assets/Henry_Fadeni_Applied_AI_Software_Engineer.docx";
+
+export function downloadResume(event) {
+  if (event?.preventDefault) event.preventDefault();
+  if (typeof document === "undefined") return;
+
+  const files = [
+    { href: RESUME_PATH, download: "Henry-Fadeni-Software-AI-Engineer-Resume.pdf" },
+    { href: RESUME_DOCX_PATH, download: "Henry_Fadeni_Applied_AI_Software_Engineer.docx" },
+  ];
+
+  files.forEach(({ href, download }, index) => {
+    window.setTimeout(() => {
+      const link = document.createElement("a");
+      link.href = href;
+      link.download = download;
+      link.setAttribute("download", download);
+      if (link.style) link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }, index * 200);
+  });
+}
 
 // __RESUME_AVAILABLE__ is replaced at build time by vite.config.js, which checks
 // whether the PDF is actually present. Resume links stay out of the DOM until it is.
