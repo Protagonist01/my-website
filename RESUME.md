@@ -1,7 +1,7 @@
 # TAIWO HENRY FADENI
 **Applied AI & Software Engineer | LLM Systems • RAG & Agent Workflows • Distributed Backends**  
 Lagos, Nigeria (Available for Remote & Relocation) | +234 706 616 1980 | [hfadeni@gmail.com](mailto:hfadeni@gmail.com)  
-[Portfolio: henryfadeni.vercel.app](https://henryfadeni.vercel.app/) | [GitHub: github.com/Protagonist01](https://github.com/Protagonist01) | [LinkedIn: linkedin.com/in/henry-fadeni-ai-engineer](https://www.linkedin.com/in/henry-fadeni-ai-engineer/)
+[Portfolio](https://henryfadeni.vercel.app/) | [GitHub](https://github.com/Protagonist01) | [LinkedIn](https://www.linkedin.com/in/henry-fadeni-ai-engineer/)
 
 ---
 

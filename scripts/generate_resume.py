@@ -27,6 +27,28 @@ def set_cell_margins(cell, top=0, bottom=0, left=0, right=0):
     )
     tcPr.append(tcMar)
 
+def add_hyperlink(paragraph, url, text, color="2563EB", font_size_pt=8.0):
+    part = paragraph.part
+    r_id = part.relate_to(url, "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", is_external=True)
+    hyperlink = parse_xml(
+        f'<w:hyperlink xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+        f'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" r:id="{r_id}"/>'
+    )
+    new_run = parse_xml('<w:r xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"/>')
+    sz_val = int(font_size_pt * 2)
+    rPr = parse_xml(
+        f'<w:rPr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+        f'<w:rFonts w:ascii="Calibri" w:hAnsi="Calibri"/>'
+        f'<w:sz w:val="{sz_val}"/>'
+        f'<w:color w:val="{color}"/>'
+        f'</w:rPr>'
+    )
+    new_run.append(rPr)
+    t_elem = parse_xml(f'<w:t xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">{text}</w:t>')
+    new_run.append(t_elem)
+    hyperlink.append(new_run)
+    paragraph._p.append(hyperlink)
+
 def generate_docx(output_path: Path):
     doc = Document()
     
@@ -137,13 +159,26 @@ def generate_docx(output_path: Path):
     p_contact.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_contact.paragraph_format.space_before = Pt(0)
     p_contact.paragraph_format.space_after = Pt(4.0)
-    run_c = p_contact.add_run("Lagos, Nigeria (Remote / Relocation)  •  +234 706 616 1980  •  hfadeni@gmail.com\n")
+    run_c = p_contact.add_run("Lagos, Nigeria (Remote / Relocation)  •  +234 706 616 1980  •  ")
     run_c.font.size = Pt(8.0)
     run_c.font.color.rgb = RGBColor(0x47, 0x55, 0x69)
     
-    run_links = p_contact.add_run("Portfolio: henryfadeni.vercel.app  •  GitHub: github.com/Protagonist01  •  LinkedIn: linkedin.com/in/henry-fadeni-ai-engineer")
-    run_links.font.size = Pt(8.0)
-    run_links.font.color.rgb = RGBColor(0x25, 0x63, 0xEB)
+    add_hyperlink(p_contact, "mailto:hfadeni@gmail.com", "hfadeni@gmail.com", color="2563EB", font_size_pt=8.0)
+    
+    run_nl = p_contact.add_run("\n")
+    run_nl.font.size = Pt(8.0)
+    
+    add_hyperlink(p_contact, "https://henryfadeni.vercel.app/", "Portfolio", color="2563EB", font_size_pt=8.0)
+    run_sep1 = p_contact.add_run("  •  ")
+    run_sep1.font.size = Pt(8.0)
+    run_sep1.font.color.rgb = RGBColor(0x47, 0x55, 0x69)
+    
+    add_hyperlink(p_contact, "https://github.com/Protagonist01", "GitHub", color="2563EB", font_size_pt=8.0)
+    run_sep2 = p_contact.add_run("  •  ")
+    run_sep2.font.size = Pt(8.0)
+    run_sep2.font.color.rgb = RGBColor(0x47, 0x55, 0x69)
+    
+    add_hyperlink(p_contact, "https://www.linkedin.com/in/henry-fadeni-ai-engineer/", "LinkedIn", color="2563EB", font_size_pt=8.0)
 
     # --- Professional Summary ---
     add_section_heading("PROFESSIONAL SUMMARY", is_first=True)
@@ -368,9 +403,9 @@ def generate_pdf(output_path: Path):
     contact_text = (
         "Lagos, Nigeria (Remote / Relocation) &nbsp;&bull;&nbsp; +234 706 616 1980 &nbsp;&bull;&nbsp; "
         '<a href="mailto:hfadeni@gmail.com" color="#2563EB">hfadeni@gmail.com</a><br/>'
-        'Portfolio: <a href="https://henryfadeni.vercel.app/" color="#2563EB">henryfadeni.vercel.app</a> &nbsp;&bull;&nbsp; '
-        'GitHub: <a href="https://github.com/Protagonist01" color="#2563EB">github.com/Protagonist01</a> &nbsp;&bull;&nbsp; '
-        'LinkedIn: <a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" color="#2563EB">linkedin.com/in/henry-fadeni-ai-engineer</a>'
+        '<a href="https://henryfadeni.vercel.app/" color="#2563EB">Portfolio</a> &nbsp;&bull;&nbsp; '
+        '<a href="https://github.com/Protagonist01" color="#2563EB">GitHub</a> &nbsp;&bull;&nbsp; '
+        '<a href="https://www.linkedin.com/in/henry-fadeni-ai-engineer/" color="#2563EB">LinkedIn</a>'
     )
     story.append(Paragraph(contact_text, contact_style))
     
