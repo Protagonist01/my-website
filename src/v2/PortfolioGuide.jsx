@@ -216,6 +216,7 @@ function FeedbackPrompt({ feedback, onDismiss, onRate, onCommentChange, onSendNo
 }
 
 export default function PortfolioGuide({ page }) {
+  const isWorkflowDemo = page?.startsWith("demo-");
   const route = `${window.location.pathname}${window.location.hash}`;
   const isCasePage = page?.startsWith("case-") || page?.startsWith("offer-");
   // The brand is fixed for the life of the page: every visitor-facing string, the
@@ -433,6 +434,7 @@ export default function PortfolioGuide({ page }) {
     if (
       open
       || mobileCase
+      || isWorkflowDemo
       || document.visibilityState === "hidden"
       || sessionStorage.getItem(brand.storage.promptMuted) === "1"
       || prompt
@@ -463,7 +465,7 @@ export default function PortfolioGuide({ page }) {
     }, delay);
 
     return () => window.clearTimeout(showTimer);
-  }, [brand, mobileCase, open, prompt, promptContextKey, feedback]);
+  }, [brand, mobileCase, isWorkflowDemo, open, prompt, promptContextKey, feedback]);
 
   useEffect(() => {
     if (!prompt) return undefined;

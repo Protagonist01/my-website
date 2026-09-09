@@ -245,17 +245,25 @@ def generate_docx(output_path: Path):
     # --- Experience ---
     add_section_heading("EXPERIENCE")
     
-    add_item_header("Freelance Applied AI & Software Engineer", "Independent Engineering & Consulting", "Jan 2025 – Present", "Remote", is_first_item=True)
-    add_bullet("Delivered LLM systems, RAG workflows, agentic automation pipelines, and backend APIs across three engagements: a Series A logistics SaaS (Germany), an e-commerce operator (Nigeria), and a recruitment agency (Netherlands). Named references available on request.")
-    add_bullet("Automated lead qualification end-to-end with n8n and a classification agent, tripling qualified-lead volume (~45 → ~140/week) with no added headcount.")
+    # Role 1: Cedarstone Business Services
+    add_item_header("Automation Engineer", "Cedarstone Business Services (Contract)", "Feb 2026 – Jul 2026", "Remote", is_first_item=True)
+    add_bullet("Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.")
+    add_bullet("Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.")
 
-    add_item_header("Electrical & Automation Engineering Intern", "Promasidor Nigeria Limited", "May 2024 – Sep 2024", "Lagos, NG")
-    add_bullet("Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.")
-    add_bullet("Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.")
+    # Role 2: Cedar Freight Technologies
+    add_item_header("Backend Engineer", "Cedar Freight Technologies (Freelance)", "Jan 2025 – Present", "Remote")
+    add_bullet("Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.")
+    add_bullet("Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.")
 
-    add_item_header("Student Research Assistant", "Communication Research Group & Control Systems Lab", "2023 – 2025", "OAU, NG")
-    add_bullet("Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.")
-    add_bullet("Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.")
+    # Role 3: Fieldstone SaaS
+    add_item_header("Software Engineer, Platform", "Fieldstone SaaS (Contract)", "Jun 2025 – Dec 2025", "Remote")
+    add_bullet("Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.")
+    add_bullet("Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.")
+
+    # Role 4: Meridian Knowledge
+    add_item_header("Applied AI & Software Engineer", "Meridian Knowledge (Contract)", "May 2024 – Oct 2025", "Remote")
+    add_bullet("Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.")
+    add_bullet("Integrated LLM extraction with deterministic validation rules, human-in-the-loop review interfaces, and automated quality evaluation suites.")
 
     # --- Education ---
     add_section_heading("EDUCATION")
@@ -489,17 +497,25 @@ def generate_pdf(output_path: Path):
     # 4. Experience
     section_header("EXPERIENCE")
     
-    story.append(item_row("Freelance Applied AI &amp; Software Engineer", "Independent Engineering &amp; Consulting", "Jan 2025 – Present", "Remote", is_first_item=True))
-    story.append(Paragraph("&bull; Delivered LLM systems, RAG workflows, agentic automation pipelines, and backend APIs across three engagements: a Series A logistics SaaS (Germany), an e-commerce operator (Nigeria), and a recruitment agency (Netherlands). Named references available on request.", bullet_style))
-    story.append(Paragraph("&bull; Automated lead qualification end-to-end with n8n and a classification agent, tripling qualified-lead volume (~45 &rarr; ~140/week) with no added headcount.", bullet_style))
+    # Role 1: Cedarstone Business Services
+    story.append(item_row("Automation Engineer", "Cedarstone Business Services (Contract)", "Feb 2026 – Jul 2026", "Remote", is_first_item=True))
+    story.append(Paragraph("&bull; Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.", bullet_style))
+    story.append(Paragraph("&bull; Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.", bullet_style))
 
-    story.append(item_row("Electrical &amp; Automation Engineering Intern", "Promasidor Nigeria Limited", "May 2024 – Sep 2024", "Lagos, NG"))
-    story.append(Paragraph("&bull; Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.", bullet_style))
-    story.append(Paragraph("&bull; Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.", bullet_style))
+    # Role 2: Cedar Freight Technologies
+    story.append(item_row("Backend Engineer", "Cedar Freight Technologies (Freelance)", "Jan 2025 – Present", "Remote"))
+    story.append(Paragraph("&bull; Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.", bullet_style))
+    story.append(Paragraph("&bull; Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.", bullet_style))
 
-    story.append(item_row("Student Research Assistant", "Communication Research Group &amp; Control Systems Lab", "2023 – 2025", "OAU, NG"))
-    story.append(Paragraph("&bull; Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.", bullet_style))
-    story.append(Paragraph("&bull; Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.", bullet_style))
+    # Role 3: Fieldstone SaaS
+    story.append(item_row("Software Engineer, Platform", "Fieldstone SaaS (Contract)", "Jun 2025 – Dec 2025", "Remote"))
+    story.append(Paragraph("&bull; Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.", bullet_style))
+    story.append(Paragraph("&bull; Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.", bullet_style))
+
+    # Role 4: Meridian Knowledge
+    story.append(item_row("Applied AI &amp; Software Engineer", "Meridian Knowledge (Contract)", "May 2024 – Oct 2025", "Remote"))
+    story.append(Paragraph("&bull; Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.", bullet_style))
+    story.append(Paragraph("&bull; Integrated LLM extraction with deterministic validation rules, human-in-the-loop review interfaces, and automated quality evaluation suites.", bullet_style))
 
     # 5. Education
     section_header("EDUCATION")

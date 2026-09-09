@@ -12,6 +12,8 @@ import { ConfettiSuccess } from "./FormSuccess.jsx";
 import { commerceOffers } from "./offersData.js";
 import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 import { ContactOverlay, EndingSequence, FloatingNavigation } from "./SiteChrome.jsx";
+import AutomationShowcase from "../features/automation/AutomationShowcase.jsx";
+const AutomationWorkspace = lazy(() => import("../features/automation/AutomationWorkspace.jsx"));
 const ReplicaHome = lazy(() => import("./ReplicaHome.jsx"));
 const EcommerceLanding = lazy(() => import("./EcommerceLanding.jsx"));
 const CommerceInquiry = lazy(() => import("./EcommerceLanding.jsx").then((module) => ({ default: module.CommerceInquiry })));
@@ -308,8 +310,8 @@ function WorkSpecialisations({ items = projects }) {
   const sectionRef = useRef(null);
   useWorkSpecialisationsMotion(sectionRef);
   return (
-    <section className="v2-home-works" aria-label="Featured Projects">
-      <section ref={sectionRef} className="v2-works-scroll" id="work" data-work-specialisations style={{ "--works-count": items.length }}>
+    <section className="v2-home-works" aria-label="Featured Projects" id="work" data-section-static>
+      <section ref={sectionRef} className="v2-works-scroll" id="featured-work" data-work-specialisations style={{ "--works-count": items.length }}>
         <div className="v2-works-stage">
           <div className="v2-works-media">
             {items.map((project, index) => <WorkImageLayer project={project} index={index} key={project.id} />)}
@@ -353,6 +355,7 @@ function WorkSpecialisations({ items = projects }) {
           </article>
         ))}
       </section>
+      <AutomationShowcase />
     </section>
   );
 }
@@ -393,6 +396,7 @@ function ContactDialog({ open, onClose }) {
 }
 
 function Renderer({ page }) {
+  if (page.startsWith("demo-")) return <AutomationWorkspace key={page} workflowId={page.slice(5)} />;
   if (page === "storecraft") return <EcommerceLanding offerRail={<OffersShowcase />} />;
   if (page === "referrals") return <ReferralCampaign />;
   if (page === "referral-dashboard") return <ReferralDashboard />;
@@ -441,8 +445,8 @@ export function V2App({ page }) {
   if (page === "home") {
     return <Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} /></Suspense>;
   }
-  const isCasePage = page.startsWith("case-") || page.startsWith("offer-");
-  const usesProjectNavigation = page === "storecraft" || page === "referrals" || page === "referral-dashboard" || page.startsWith("case-") || page.startsWith("offer-");
+  const isCasePage = page.startsWith("case-") || page.startsWith("offer-") || page.startsWith("demo-");
+  const usesProjectNavigation = page === "storecraft" || page === "referrals" || page === "referral-dashboard" || isCasePage;
   // StoreCraft is its own brand: its own nav wordmark, its own footer, and its own
   // inquiry form as the ending cover instead of Henry's "Let's talk." section.
   const isStorecraft = page === "storecraft" || page.startsWith("offer-");

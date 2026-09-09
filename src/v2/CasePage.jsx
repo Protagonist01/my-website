@@ -93,7 +93,7 @@ function Gallery({ items }) {
         <figure key={item.image || item.video}>
           {item.video
             ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" />
-            : <img src={item.image} alt={item.alt} loading="lazy" />}
+            : <img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" />}
           <figcaption>{item.caption}</figcaption>
         </figure>
       ))}
@@ -118,11 +118,12 @@ function Head({ back, backLabel, eyebrow, category, evidence, live, title, lead,
   );
 }
 
-function Foot({ context, ctaLabel = "Discuss this work", live, liveLabel = "Open the live app", repository, repositoryLabel = "Open the repository", next, nextLabel = "Next case" }) {
+function Foot({ context, ctaLabel = "Discuss this work", live, demo, liveLabel = "Open the live app", repository, repositoryLabel = "Open the repository", next, nextLabel = "Next case" }) {
   return (
     <footer className="v2-cs__foot">
       <div className="v2-cs__actions">
         <a className="v2-cs__cta" href={paths.contact} data-contact-context={context}>{ctaLabel} <Arrow /></a>
+        {demo && <a className="v2-cs__repo" href={demo}>Try the interactive demo <Arrow /></a>}
         {live && (
           <a className="v2-cs__repo" href={live} target="_blank" rel="noopener noreferrer">
             {liveLabel} <Arrow />
@@ -172,6 +173,8 @@ export function ProjectCasePage({ project }) {
         ]}
       />
 
+      {project.demoUrl && <div className="v2-cs__demo-link"><a className="v2-cs__cta" href={project.demoUrl}>Try the interactive demo <Arrow /></a><p>Editable scenarios, review controls, and a simulated handoff.</p></div>}
+
       {project.measured?.length > 0 && (
         <Block label={project.measuredLabel || "Measured"} id="measured">
           <Numbers items={project.measured} note={project.measuredNote} />
@@ -219,6 +222,7 @@ export function ProjectCasePage({ project }) {
 
       <Foot
         context={`I'd like to discuss ${project.title}.`}
+        demo={project.demoUrl}
         live={project.liveUrl}
         repository={project.repository}
         next={next}

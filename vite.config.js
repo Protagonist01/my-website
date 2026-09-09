@@ -5,6 +5,7 @@ import { resolve } from "node:path";
 
 function localApiRoutes() {
   const routes = new Map([
+    ["/api/automation", () => import("./api/automation.js")],
     ["/api/chat", () => import("./scripts/local-python-chat.js")],
     ["/api/feedback", () => import("./scripts/local-python-feedback.js")],
     ["/api/referrals", () => import("./scripts/local-python-referrals.js")],
@@ -53,6 +54,18 @@ export default defineConfig(({ mode }) => {
       rollupOptions: {
         input: {
         home: resolve(__dirname, "index.html"),
+        "demo-proposal-operations": resolve(__dirname, "v2/demos/proposal-operations/index.html"),
+        "case-proposal-operations": resolve(__dirname, "v2/work/proposal-operations/index.html"),
+        "demo-receivables-operations": resolve(__dirname, "v2/demos/receivables-operations/index.html"),
+        "case-receivables-operations": resolve(__dirname, "v2/work/receivables-operations/index.html"),
+        "demo-customer-operations": resolve(__dirname, "v2/demos/customer-operations/index.html"),
+        "case-customer-operations": resolve(__dirname, "v2/work/customer-operations/index.html"),
+        "demo-purchase-invoice-operations": resolve(__dirname, "v2/demos/purchase-invoice-operations/index.html"),
+        "case-purchase-invoice-operations": resolve(__dirname, "v2/work/purchase-invoice-operations/index.html"),
+        "demo-onboarding-operations": resolve(__dirname, "v2/demos/onboarding-operations/index.html"),
+        "case-onboarding-operations": resolve(__dirname, "v2/work/onboarding-operations/index.html"),
+        "demo-employee-access-operations": resolve(__dirname, "v2/demos/employee-access-operations/index.html"),
+        "case-employee-access-operations": resolve(__dirname, "v2/work/employee-access-operations/index.html"),
         "v2-home": resolve(__dirname, "v2/index.html"),
         "v2-case-clear-skin": resolve(__dirname, "v2/work/clear-skin/index.html"),
         "v2-case-retrieval-analytics": resolve(__dirname, "v2/work/retrieval-analytics/index.html"),

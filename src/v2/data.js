@@ -1,15 +1,17 @@
+import { automationProjects } from "../features/automation/projectData.js";
+
 const clearSkinAnalysisImage = new URL("../../assets/images/v2-work/clear-skin-analysis.webp", import.meta.url).href;
 const clearSkinCartImage = new URL("../../assets/images/v2-work/clear-skin-cart.webp", import.meta.url).href;
 const clearSkinMobileImage = new URL("../../assets/images/v2-work/clear-skin-mobile.webp", import.meta.url).href;
 const clearSkinProductV4Image = new URL("../../assets/images/v2-work/premium/clear-skin-product-v4.webp", import.meta.url).href;
-const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/raa-cover-editorial.jpg", import.meta.url).href;
+const raaDashboardCoverImage = new URL("../../assets/images/v2-work/covers/retrieval-analytics-mockup.webp", import.meta.url).href;
 const clearSkinCoverImage = new URL("../../assets/images/v2-work/covers/clearskin-product-evidence.png", import.meta.url).href;
 const fruitQualityCoverImage = new URL("../../assets/images/v2-work/covers/fruit-quality-product-evidence.png", import.meta.url).href;
-const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-cover-editorial.jpg", import.meta.url).href;
-const codeReviewAgentCoverImage = new URL("../../assets/images/v2-work/covers/code-review-agent-cover-editorial.jpg", import.meta.url).href;
+const selfHealingMonitorCoverImage = new URL("../../assets/images/v2-work/covers/self-healing-monitor-mockup.webp", import.meta.url).href;
+const codeReviewAgentCoverImage = new URL("../../assets/images/v2-work/covers/code-review-agent-mockup.webp", import.meta.url).href;
 const snipurlCoverImage = new URL("../../assets/images/v2-work/covers/snipurl-cover-editorial.png", import.meta.url).href;
 const keepupCoverImage = new URL("../../assets/images/v2-work/covers/keepup-cover-editorial.png", import.meta.url).href;
-const realtimeChatCoverImage = new URL("../../assets/images/v2-work/covers/realtime-chat-cover-editorial.jpg", import.meta.url).href;
+const realtimeChatCoverImage = new URL("../../assets/images/v2-work/covers/realtime-chat-mockup.webp", import.meta.url).href;
 const testimonyOperationsCoverImage = new URL("../../assets/images/v2-work/covers/testimony-operations-cover-editorial.webp", import.meta.url).href;
 const smartTodoCoverImage = new URL("../../assets/images/v2-work/covers/smart-todo-product-evidence.png", import.meta.url).href;
 const portfolioWebsiteCoverImage = new URL("../../assets/images/v2-work/covers/portfolio-website-cover-editorial.webp", import.meta.url).href;
@@ -98,6 +100,7 @@ const allNavigation = [
 export const navigation = allNavigation.filter((item) => !item.gated || resumeAvailable);
 
 export const projects = [
+  ...automationProjects,
   {
     id: "keepup",
     index: "01",
@@ -116,7 +119,7 @@ export const projects = [
     imageAlt: "KeepUp live app showing the Chase goals together, not alone hero beside a demo room card with a six-character code",
     href: paths.keepup,
     tone: "warm",
-    featured: true,
+    featured: false,
     evidence: "built",
     status: "Built product / Live deployment",
     liveUrl: "https://use-keepup.vercel.app/",
@@ -183,8 +186,8 @@ export const projects = [
     visual: "retrieval-analytics",
     image: raaArchitectureImage,
     coverImage: raaDashboardCoverImage,
-    coverBackground: "#f0eee8",
-    imageAlt: "Retrieval-Augmented Analytics workspace showing a natural-language question, generated SQL, and analytical result",
+    coverBackground: "#14263f",
+    imageAlt: "Product mockup of Retrieval Analytics with a business question, bar chart, validated SQL, and source trail",
     href: paths.retrievalAnalytics,
     tone: "cool",
     featured: true,
@@ -252,9 +255,9 @@ export const projects = [
     visual: "self-healing-monitor",
     image: selfHealingDashboardImage,
     coverImage: selfHealingMonitorCoverImage,
-    coverBackground: "#f0ede6",
+    coverBackground: "#91401f",
     coverInHero: true,
-    imageAlt: "Self-Healing Monitor operator dashboard showing incident status, service health, and the live event feed",
+    imageAlt: "Product mockup of Self-Healing Monitor with a service health timeline, recovery plan, and operator approval",
     href: paths.selfHealingMonitor,
     tone: "warm",
     featured: true,
@@ -384,9 +387,9 @@ export const projects = [
     visual: "code-review-agent",
     image: codeReviewAgentCoverImage,
     coverImage: codeReviewAgentCoverImage,
-    coverBackground: "#efede8",
+    coverBackground: "#deddf5",
     coverInHero: true,
-    imageAlt: "Editorial code-review desk with focused diffs, repository context, a structured finding, and verification",
+    imageAlt: "Product mockup of AI Code Review Agent with a code diff and a finding tied to a changed line",
     href: paths.codeReviewAgent,
     tone: "warm",
     featured: true,
@@ -598,7 +601,8 @@ export const projects = [
     stack: ["FastAPI", "WebSockets", "Redis", "SQLite"],
     visual: "realtime-chat",
     coverImage: realtimeChatCoverImage,
-    coverBackground: "#f0ede4",
+    coverBackground: "#e0f2ef",
+    imageAlt: "Product mockup of Realtime.chat with team conversations, online presence, and a message delivery detail",
     href: paths.realtimeChat,
     tone: "warm",
     featured: true,
@@ -833,7 +837,6 @@ export const archiveProjects = [
 ];
 
 const homeFeaturedProjectOrder = [
-  { id: "keepup", title: "KeepUp" },
   { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
   { id: "aboutface-chatbot", title: "AboutFace Chatbot" },
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },

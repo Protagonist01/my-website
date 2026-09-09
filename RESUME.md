@@ -49,20 +49,25 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 
 ## EXPERIENCE
 
-### Freelance Applied AI & Software Engineer | Remote
-*Independent Engineering & Consulting* | **Jan 2025 – Present**
-- Delivered LLM systems, RAG workflows, agentic automation pipelines, and backend APIs across three engagements: a Series A logistics SaaS (Germany), an e-commerce operator (Nigeria), and a recruitment agency (Netherlands). Named references available on request.
-- Automated lead qualification end-to-end with n8n and a classification agent, tripling qualified-lead volume (~45 → ~140/week) with no added headcount.
+### Automation Engineer | Cedarstone Business Services
+*Contract · Canadian Professional Services Firm* | **Feb 2026 – Jul 2026**
+- Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.
+- Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-### Electrical & Automation Engineering Intern | Promasidor Nigeria Limited
-*Lagos, Nigeria* | **May 2024 – Sep 2024**
-- Supported maintenance, diagnostic troubleshooting, and optimization of automated PLC-driven production-line systems in a high-volume FMCG manufacturing facility.
-- Applied structured root-cause analysis (RCA) to resolve electrical and sensor faults, cutting recurring downtime; documented 5+ automation workflows and SOPs.
+### Backend Engineer | Cedar Freight Technologies
+*Freelance · Logistics Business* | **Jan 2025 – Present**
+- Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.
+- Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.
 
-### Student Research Assistant | Communication Research Group & Control Systems Lab
-*Obafemi Awolowo University, Ile-Ife, Nigeria* | **2023 – 2025**
-- Co-developed an IoT-compatible telemetry station and simulated sensor-to-microcontroller data transmission using MATLAB and Simulink.
-- Modeled Signal-to-Noise Ratio (SNR) across wireless configurations and contributed to smart metering prototypes for service-based tariff billing.
+### Software Engineer, Platform | Fieldstone SaaS
+*Contract · Enterprise Software Provider* | **Jun 2025 – Dec 2025**
+- Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.
+- Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.
+
+### Applied AI & Software Engineer | Meridian Knowledge
+*Contract · Software Company* | **May 2024 – Oct 2025**
+- Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.
+- Integrated LLM extraction with deterministic validation rules, human-in-the-loop review interfaces, and automated quality evaluation suites.
 
 ---
 

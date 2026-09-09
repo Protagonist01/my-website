@@ -35,6 +35,12 @@ the decisions behind them, how the systems work, the evidence available, and the
 
 ## 🗂 Project Showcase
 
+### Business Automation Demonstrations
+
+Six working workflow demos are integrated into the homepage at `/#automation`, with individual case studies and interactive routes under `/v2/work/` and `/v2/demos/`. They cover proposals, receivables, customer service, purchase invoices, onboarding, and employee access. The server runs real validation and review transitions using fictional records and simulated connectors; these are not client deployments or live AI integrations.
+
+See [the automation guide](docs/automation/README.md) for code organization, local setup, API behavior, outreach walkthroughs, and production boundaries. Run `npm run test:automation` to verify the workflow rules and API.
+
 ### Featured Case Studies
 
 | Project | Category | Type | Route |
@@ -48,7 +54,7 @@ the decisions behind them, how the systems work, the evidence available, and the
 | **SnipURL** | Full-Stack Product Engineering | Built link service · [live app](https://snipurl-f23p.onrender.com/) · [public repo](https://github.com/Protagonist01/url-shortener) | `/v2/work/url-shortener/` |
 | **Realtime Chat Service** | Full-Stack Product Engineering | Built multi-worker chat backend · [live app](https://realtime-chat-9kwe.onrender.com/) · [public repo](https://github.com/Protagonist01/realtime-chat) | `/v2/work/realtime-chat/` |
 
-Every project on the site has either a public repository or a delivered client system behind it.
+The existing projects link to public repositories or delivered client systems. The six new automation demos are implemented in this portfolio repository and explicitly labeled as demonstrations.
 
 ### Client Work and Archive
 

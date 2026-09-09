@@ -4,6 +4,7 @@ const HOME_PROGRESS = Object.freeze({
   work: .06,
   offers: .08,
   stack: 0,
+  automation: 0,
 });
 
 const HOME_SECTION_IDS = new Set(Object.keys(HOME_PROGRESS).concat("contact"));
@@ -57,6 +58,9 @@ function revealTarget(target) {
 }
 
 function triggerForTarget(ScrollTrigger, target) {
+  // A static collection may contain a pinned feature below it. Its navigation
+  // target is the collection's own top, not the descendant animation's start.
+  if (target.hasAttribute?.("data-section-static")) return null;
   const triggers = ScrollTrigger.getAll();
   return triggers.find((trigger) => trigger.trigger === target)
     || triggers.find((trigger) => trigger.vars?.pin && trigger.trigger?.contains?.(target))

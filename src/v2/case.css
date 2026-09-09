@@ -403,3 +403,6 @@
   .v2-cs__foot { padding-top: 2.75rem; }
   .v2-cs__cta { width: 100%; justify-content: space-between; }
 }
+/* Working automation demos use the existing case-study action styling. */
+.v2-cs__demo-link { margin: 0 0 48px; display: flex; flex-wrap: wrap; align-items: center; gap: 20px; }
+.v2-cs__demo-link p { margin: 0; font-size: 13px; color: #526056; line-height: 1.7; }

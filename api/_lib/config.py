@@ -15,6 +15,19 @@ CAL_EVENT_SLUGS = frozenset(
 RAA_REPOSITORY_URL = "https://github.com/Protagonist01/retrieval-augumented-analytics-dashboard"
 
 APPROVED_ROUTES = {
+    "/#automation": "Business automation demonstrations",
+    "/v2/work/proposal-operations/": "Quote & Proposal Operations",
+    "/v2/demos/proposal-operations/": "Quote & Proposal Operations interactive demo",
+    "/v2/work/receivables-operations/": "Receivables & Dispute Operations",
+    "/v2/demos/receivables-operations/": "Receivables & Dispute Operations interactive demo",
+    "/v2/work/customer-operations/": "Customer Service Operations",
+    "/v2/demos/customer-operations/": "Customer Service Operations interactive demo",
+    "/v2/work/purchase-invoice-operations/": "Purchase Invoice Processing & Approval",
+    "/v2/demos/purchase-invoice-operations/": "Purchase Invoice Processing & Approval interactive demo",
+    "/v2/work/onboarding-operations/": "Client & Vendor Onboarding",
+    "/v2/demos/onboarding-operations/": "Client & Vendor Onboarding interactive demo",
+    "/v2/work/employee-access-operations/": "Employee Access & Offboarding",
+    "/v2/demos/employee-access-operations/": "Employee Access & Offboarding interactive demo",
     "/": "Home",
     "/#about": "About Henry",
     "/#services": "Services",

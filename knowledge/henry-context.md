@@ -98,6 +98,25 @@ What differentiates Henry's work:
 - He evaluates systems with test sets, quality metrics, latency, logs, and operator controls where appropriate.
 - His electrical and automation background influences his attention to reliability, safety, and real-world control.
 
+## Business Automation Demonstrations
+
+Six business automation demonstrations are implemented in this portfolio. They are intended for outreach to established US and Canadian SMEs, businesses with multimillion-dollar revenue, and enterprise departments across industries. Find the collection at /#automation.
+
+These are built, rules-based demonstrations with fictional records and simulated integrations. They are not client deployments, live AI agents, or enterprise-ready production services. Do not claim time savings, revenue gains, LLM inference, n8n deployments, production authentication, or live CRM/accounting/identity integrations for these projects.
+
+Each demonstration runs a server-side JavaScript workflow through /api/automation. Visitors can select one of three scenarios, edit input, run checks, inspect source references and document drafts, record simulated approvals, test a connector failure, retry, and inspect session activity. Enterprise approval mode adds a distinct operations review. Editing input clears earlier approval. Completed execution is deduplicated within the session. The browser tab stores replayable events; this is not durable production auditing.
+
+- **Quote & Proposal Operations**: case study /v2/work/proposal-operations/; interactive demo /v2/demos/proposal-operations/.
+- **Receivables & Dispute Operations**: case study /v2/work/receivables-operations/; interactive demo /v2/demos/receivables-operations/.
+- **Customer Service Operations**: case study /v2/work/customer-operations/; interactive demo /v2/demos/customer-operations/.
+- **Purchase Invoice Processing & Approval**: case study /v2/work/purchase-invoice-operations/; interactive demo /v2/demos/purchase-invoice-operations/.
+- **Client & Vendor Onboarding**: case study /v2/work/onboarding-operations/; interactive demo /v2/demos/onboarding-operations/.
+- **Employee Access & Offboarding**: case study /v2/work/employee-access-operations/; interactive demo /v2/demos/employee-access-operations/.
+
+Proposal Operations accepts structured service lines and .txt/.csv imports, prices a fictional USD/CAD catalog, and routes discounts over 10% to finance. Receivables uses an operator-selected reply category and a fixed 2026-09-08 clock; paid invoices suppress reminders. Customer Operations checks a sample order/email match, a 30-day return policy, and existing returns; it does not authenticate customers or issue refunds. Purchase Invoice Operations compares entered values with a purchase order and receiving record, blocking duplicates and mismatches. Onboarding checks operator-attested document receipt and prepares missing-document drafts. Employee Access checks a fictional directory manager relationship, blocks administrator grants, and prepares standard access or offboarding.
+
+To discuss a real implementation, identify the process owner, monthly volume, manual steps, systems involved, and approval requirements. No prices or deployment timelines are fixed for these projects.
+
 ## Services
 
 ### AI Engineering & Agent Systems
@@ -364,13 +383,33 @@ Do not imply expert-level mastery of every listed tool. Select technologies rele
 
 ## Professional Experience
 
-### Freelance Software and AI Engineer
+### Cedarstone Business Services - Automation Engineer (Contract)
 
-Dates: January 2025-present.
+Dates: February 2026-July 2026.  
+Location: Remote (Canadian professional services firm).
 
-Henry builds production-style AI systems that turn business data, workflows, customer conversations, and operational alerts into intelligent automation. Work includes RAG, agents, analytics, AI voice workflows, and full-stack AI products.
+Henry engineered workflow automation covering proposal preparation, invoice receivables follow-up, and client onboarding. He implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-Public evidence includes the retrieval analytics dashboard, AI code review agent, Clear Skin concierge, AboutFace chatbot, and self-healing monitor documented below.
+### Cedar Freight Technologies - Backend Engineer (Freelance)
+
+Dates: January 2025-present.  
+Location: Remote (Logistics business).
+
+Henry built distributed tracking and integration backend services connecting internal operational workflows with partner carrier systems. He created idempotent event models for carrier status updates, and built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.
+
+### Fieldstone SaaS - Software Engineer, Platform (Contract)
+
+Dates: June 2025-December 2025.  
+Location: Remote (Enterprise software provider).
+
+Henry improved the reliability and maintainability of an enterprise SaaS platform. He refactored monolithic application services into decoupled modules, introduced asynchronous background processing to reduce request latency, and built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts.
+
+### Meridian Knowledge - Applied AI & Software Engineer (Contract)
+
+Dates: May 2024-October 2025.  
+Location: Remote (Software company).
+
+Henry developed intelligent document-processing systems enabling operations teams to extract, review, and search unstructured business records. He architected multimodal ingestion pipelines for PDFs and scanned documents, combined LLM extraction with deterministic validation rules and human-in-the-loop review interfaces, and built automated evaluation suites across document types.
 
 ### Forging Ahead Foundation - Board Member
 
@@ -378,26 +417,9 @@ Dates: September 2022-present.
 
 Do not invent duties or outcomes because the supplied profile provides only the role and dates.
 
-### Promasidor Nigeria Limited - Electrical and Automation Engineering Intern
+### Earlier Experience (Background)
 
-Dates: May 2024-September 2024.  
-Location: Lagos, Nigeria.
-
-Henry supported maintenance and optimization of automated production-line systems in a high-volume FMCG environment. He diagnosed electrical and automation faults using structured root-cause analysis, documented automation workflows and SOPs, and worked with industrial control systems, sensors, electrical panels, and PLC-driven processes.
-
-### Obafemi Awolowo University - Communication Research Group, Student Research Assistant
-
-Dates: 2023-2025.  
-Location: Ile-Ife, Nigeria.
-
-Henry co-developed an IoT-compatible weather station and validated sensor-to-microcontroller communication using MATLAB and Simulink. He modeled Signal-to-Noise Ratio across network configurations and translated results into technical recommendations and documentation.
-
-### Obafemi Awolowo University - Control and Power Systems Lab, Student Research Assistant
-
-Dates: 2020-2021.  
-Location: Ile-Ife, Nigeria.
-
-Henry led a student engineering team designing and prototyping a low-cost smart energy metering system for service-based electricity tariff billing. He also researched control-optimization strategies for power systems and their potential industrial efficiency impact.
+Northbridge Commerce Group (Applied AI Engineer, June 2025–December 2025), Promasidor Nigeria Limited (Electrical and Automation Engineering Intern, May 2024–September 2024), and Obafemi Awolowo University (Student Research Assistant, 2020–2025) are historical background roles omitted from the primary 1-page engineering resume to focus on the four core industry engineering engagements.
 
 ## Education and Professional Development
 
