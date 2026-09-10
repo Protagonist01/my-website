@@ -54,11 +54,6 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 - Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.
 - Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-### Backend Engineer | Cedar Freight Technologies
-*Freelance · Logistics Business* | **Jan 2025 – Present**
-- Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.
-- Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.
-
 ### Software Engineer, Platform | Fieldstone SaaS
 *Contract · Enterprise Software Provider* | **Jun 2025 – Dec 2025**
 - Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.

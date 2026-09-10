@@ -250,17 +250,12 @@ def generate_docx(output_path: Path):
     add_bullet("Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.")
     add_bullet("Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.")
 
-    # Role 2: Cedar Freight Technologies
-    add_item_header("Backend Engineer", "Cedar Freight Technologies (Freelance)", "Jan 2025 – Present", "Remote")
-    add_bullet("Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.")
-    add_bullet("Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.")
-
-    # Role 3: Fieldstone SaaS
+    # Role 2: Fieldstone SaaS
     add_item_header("Software Engineer, Platform", "Fieldstone SaaS (Contract)", "Jun 2025 – Dec 2025", "Remote")
     add_bullet("Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.")
     add_bullet("Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.")
 
-    # Role 4: Meridian Knowledge
+    # Role 3: Meridian Knowledge
     add_item_header("Applied AI & Software Engineer", "Meridian Knowledge (Contract)", "May 2024 – Oct 2025", "Remote")
     add_bullet("Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.")
     add_bullet("Integrated LLM extraction with deterministic validation rules, human-in-the-loop review interfaces, and automated quality evaluation suites.")
@@ -502,17 +497,12 @@ def generate_pdf(output_path: Path):
     story.append(Paragraph("&bull; Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.", bullet_style))
     story.append(Paragraph("&bull; Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.", bullet_style))
 
-    # Role 2: Cedar Freight Technologies
-    story.append(item_row("Backend Engineer", "Cedar Freight Technologies (Freelance)", "Jan 2025 – Present", "Remote"))
-    story.append(Paragraph("&bull; Engineered distributed backend tracking services integrating third-party carrier APIs into a normalized, idempotent event model.", bullet_style))
-    story.append(Paragraph("&bull; Built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.", bullet_style))
-
-    # Role 3: Fieldstone SaaS
+    # Role 2: Fieldstone SaaS
     story.append(item_row("Software Engineer, Platform", "Fieldstone SaaS (Contract)", "Jun 2025 – Dec 2025", "Remote"))
     story.append(Paragraph("&bull; Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.", bullet_style))
     story.append(Paragraph("&bull; Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.", bullet_style))
 
-    # Role 4: Meridian Knowledge
+    # Role 3: Meridian Knowledge
     story.append(item_row("Applied AI &amp; Software Engineer", "Meridian Knowledge (Contract)", "May 2024 – Oct 2025", "Remote"))
     story.append(Paragraph("&bull; Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.", bullet_style))
     story.append(Paragraph("&bull; Integrated LLM extraction with deterministic validation rules, human-in-the-loop review interfaces, and automated quality evaluation suites.", bullet_style))

@@ -390,13 +390,6 @@ Location: Remote (Canadian professional services firm).
 
 Henry engineered workflow automation covering proposal preparation, invoice receivables follow-up, and client onboarding. He implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-### Cedar Freight Technologies - Backend Engineer (Freelance)
-
-Dates: January 2025-present.  
-Location: Remote (Logistics business).
-
-Henry built distributed tracking and integration backend services connecting internal operational workflows with partner carrier systems. He created idempotent event models for carrier status updates, and built resilient background workers with exponential retry handling, duplicate-event safeguards, structured logging, and distributed tracing.
-
 ### Fieldstone SaaS - Software Engineer, Platform (Contract)
 
 Dates: June 2025-December 2025.  
