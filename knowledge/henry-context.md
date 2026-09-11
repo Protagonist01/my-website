@@ -390,13 +390,6 @@ Location: Remote (Canadian professional services firm).
 
 Henry engineered workflow automation covering proposal preparation, invoice receivables follow-up, and client onboarding. He implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-### Fieldstone SaaS - Software Engineer, Platform (Contract)
-
-Dates: June 2025-December 2025.  
-Location: Remote (Enterprise software provider).
-
-Henry improved the reliability and maintainability of an enterprise SaaS platform. He refactored monolithic application services into decoupled modules, introduced asynchronous background processing to reduce request latency, and built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts.
-
 ### Meridian Knowledge - Applied AI & Software Engineer (Contract)
 
 Dates: May 2024-October 2025.  

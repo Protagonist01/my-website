@@ -54,11 +54,6 @@ Applied AI & Software Engineer with an Electrical & Electronics Engineering foun
 - Engineered business automation workflows covering proposal preparation, invoice receivables follow-up, and client onboarding.
 - Implemented automated pricing calculations, multi-tier discount approval routing, dispute-aware payment tracking, and onboarding exception handling.
 
-### Software Engineer, Platform | Fieldstone SaaS
-*Contract · Enterprise Software Provider* | **Jun 2025 – Dec 2025**
-- Refactored monolithic application services into decoupled modules, introducing asynchronous background workers to offload request-path latency.
-- Built automated CI/CD pipelines with migration and deployment gates, health checks, and telemetry alerts resolving recurring timeouts.
-
 ### Applied AI & Software Engineer | Meridian Knowledge
 *Contract · Software Company* | **May 2024 – Oct 2025**
 - Architected multimodal document ingestion pipelines extracting and indexing data from PDFs, scanned forms, and structured records.
