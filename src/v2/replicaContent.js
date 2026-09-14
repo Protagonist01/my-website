@@ -27,7 +27,7 @@ export const replicaContent = {
   servicesHeading: "Capabilities",
   // Stated, not linked: there are no per-capability pages behind these.
   services: [
-    { title: "AI Engineering", details: ["RAG & Agents", "Tool Use", "Evaluation & Guardrails"] },
+    { title: "Applied AI Engineering", details: ["RAG & Agents", "Tool Use", "Evaluation & Guardrails"] },
     { title: "Full-Stack Product Engineering", details: ["Product UX", "Frontend & APIs", "Production Delivery"] },
     { title: "Automation", details: ["Workflows", "Integrations", "Scheduled Jobs"] },
   ],
