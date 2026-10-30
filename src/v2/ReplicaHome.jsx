@@ -13,28 +13,10 @@ export { ContactSection, ContactOverlay, EndingSequence, FloatingNavigation, Sit
 
 const portrait = new URL("../../assets/images/v2-hero/henry-bw.webp", import.meta.url).href;
 const portraitBlue = new URL("../../assets/images/v2-hero/henry-blue.webp", import.meta.url).href;
-const HERO_TYPE_START_DELAY = 1350;
-const HERO_TYPE_INTERVAL = 130;
-
-function GlossIcon({ bolt = false, className = "" }) {
-  return (
-    <svg className={className} viewBox="0 0 100 100" aria-hidden="true" onAnimationEnd={(event) => {
-      if (event.animationName === "replica-hero-icon-in") event.currentTarget.classList.add("is-animation-complete");
-    }}>
-      <defs>
-        <linearGradient id={bolt ? "edge-bolt" : "edge-star"} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#fff" /><stop offset=".42" stopColor="#111" />
-          <stop offset=".72" stopColor="#735cff" /><stop offset="1" stopColor="#fff" />
-        </linearGradient>
-      </defs>
-      {bolt ? (
-        <path d="M57 3 18 55l25 4-12 38 51-57-27-4Z" fill="#0d0d0d" stroke="url(#edge-bolt)" strokeWidth="5" strokeLinejoin="round" />
-      ) : (
-        <path d="M50 4c6 28 15 37 45 46-30 9-39 18-45 46C43 68 34 59 5 50 34 41 43 32 50 4Z" fill="#0d0d0d" stroke="url(#edge-star)" strokeWidth="5" strokeLinejoin="round" />
-      )}
-    </svg>
-  );
-}
+const HERO_TYPE_START_DELAY = 800;
+const HERO_TYPE_INTERVAL = 200;
+const HERO_TYPE_SPACE_PAUSE = 320;
+const HERO_TYPE_LINE_PAUSE = 640;
 
 function PortraitFlipCard() {
   return (
@@ -47,69 +29,81 @@ function PortraitFlipCard() {
   );
 }
 
-function TypedHeroTitle({ onComplete }) {
-  const [visibleCharacters, setVisibleCharacters] = useState(0);
+function TypedHeroTitle() {
   const characterCount = replicaContent.heroTitle.reduce((total, line) => total + line.length, 0);
+  const [visibleCharacters, setVisibleCharacters] = useState(() => (
+    typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? characterCount
+      : 0
+  ));
 
   useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) {
+      setVisibleCharacters(characterCount);
+      return undefined;
+    }
+
     let current = 0;
-    let interval;
-    const start = window.setTimeout(() => {
-      setVisibleCharacters(1);
-      current = 1;
-      interval = window.setInterval(() => {
-        current += 1;
-        setVisibleCharacters(Math.min(current, characterCount));
-        if (current >= characterCount) {
-          window.clearInterval(interval);
-          onComplete?.();
-        }
-      }, HERO_TYPE_INTERVAL);
-    }, HERO_TYPE_START_DELAY);
+    let timer;
+    let lineEnd = 0;
+    const lineEnds = new Set(replicaContent.heroTitle.map((line) => (lineEnd += line.length)));
+    const characters = replicaContent.heroTitle.join("");
+    const typeNext = () => {
+      current += 1;
+      setVisibleCharacters(current);
+      if (current >= characterCount) return;
+      const lastCharacter = characters[current - 1];
+      const delay = lineEnds.has(current)
+        ? HERO_TYPE_LINE_PAUSE
+        : lastCharacter === " " ? HERO_TYPE_SPACE_PAUSE : HERO_TYPE_INTERVAL;
+      timer = window.setTimeout(typeNext, delay);
+    };
+    const start = window.setTimeout(typeNext, HERO_TYPE_START_DELAY);
     return () => {
       window.clearTimeout(start);
-      window.clearInterval(interval);
+      window.clearTimeout(timer);
     };
-  }, [characterCount, onComplete]);
+  }, [characterCount]);
 
-  let characterIndex = 0;
+  let remainingCharacters = visibleCharacters;
+  let activeLineEnd = 0;
+  const activeLineIndex = visibleCharacters > 0 && visibleCharacters < characterCount
+    ? replicaContent.heroTitle.findIndex((line) => {
+      activeLineEnd += line.length;
+      return visibleCharacters <= activeLineEnd;
+    })
+    : -1;
+
   return (
     <h1 aria-label={replicaContent.heroTitle.join(" ")}>
-      {replicaContent.heroTitle.map((line) => (
-        <span className="replica-hero__line" key={line} aria-hidden="true">
-          {[...line].map((character, lineCharacterIndex) => {
-            const index = characterIndex;
-            characterIndex += 1;
-            return (
-              <span className={`replica-hero__character${index < visibleCharacters ? " is-typed" : ""}`} key={`${line}-${lineCharacterIndex}`}>
-                {character === " " ? "\u00a0" : character}
+      {replicaContent.heroTitle.map((line, lineIndex) => {
+        const lineCharacterCount = Math.min(line.length, Math.max(remainingCharacters, 0));
+        remainingCharacters -= line.length;
+
+        return (
+          <span className="replica-hero__line" key={line} aria-hidden="true">
+            <span className="replica-hero__line-measure">
+              {line}
+              <span className="replica-hero__line-typed">
+                {line.slice(0, lineCharacterCount)}
+                {lineIndex === activeLineIndex && <span className="replica-hero__caret" aria-hidden="true" />}
               </span>
-            );
-          })}
-        </span>
-      ))}
+            </span>
+          </span>
+        );
+      })}
     </h1>
   );
 }
 
 function IntroSequence() {
-  const [typingComplete, setTypingComplete] = useState(false);
-  const [sparkComplete, setSparkComplete] = useState(false);
-  const handleTypingComplete = useCallback(() => setTypingComplete(true), []);
-
-  useEffect(() => {
-    const timer = window.setTimeout(() => setSparkComplete(true), 1400);
-    return () => window.clearTimeout(timer);
-  }, []);
-
   return (
     <section className="replica-intro" aria-label="Introduction">
       <div className="replica-intro__sticky">
         <div className="replica-hero">
           <div className="replica-hero__title">
-            <GlossIcon className={`replica-hero__spark${sparkComplete ? " is-animation-complete" : ""}`} />
-            <TypedHeroTitle onComplete={handleTypingComplete} />
-            <GlossIcon bolt className={`replica-hero__bolt${typingComplete ? " is-revealed" : ""}`} />
+            <TypedHeroTitle />
           </div>
           <strong className="replica-hero__year">{replicaContent.year}</strong>
           <span className="replica-hero__since">{replicaContent.since}</span>
@@ -432,7 +426,7 @@ function WorkingStackSection() {
       <div className="replica-stack__sticky">
         <div className="replica-stack__inner">
           <header className="replica-stack__header">
-            <h2 className="replica-stack__eyebrow" id="replica-stack-heading">/{replicaContent.stackHeading}</h2>
+            <h2 className="replica-stack__eyebrow" id="replica-stack-heading">{replicaContent.stackHeading}</h2>
           </header>
           <div className="replica-stack__scene">
             <ol className="replica-stack__rack">

@@ -1497,6 +1497,33 @@
 
 .hf-guide-form select {
   color-scheme: var(--hf-scheme);
+  padding-right: 38px;
+  appearance: none;
+}
+
+.hf-guide-form label:has(select) {
+  position: relative;
+}
+
+.hf-guide-form label:has(select)::before,
+.hf-guide-form label:has(select)::after {
+  position: absolute;
+  right: 12px;
+  bottom: 18px;
+  width: 10px;
+  height: 1px;
+  background: var(--hf-muted);
+  content: "";
+  pointer-events: none;
+}
+
+.hf-guide-form label:has(select)::after {
+  transform: rotate(90deg);
+}
+
+.hf-guide-form label:has(select:focus)::before,
+.hf-guide-form label:has(select:focus)::after {
+  background: var(--hf-accent);
 }
 
 .hf-guide-form input:focus,

@@ -31,11 +31,11 @@ function AutomationCard({ item, index, active = true }) {
             ))}
           </div>
         </div>
-        <span className="automation-card__open">Try demo <span aria-hidden="true">↗</span></span>
+        <span className="automation-card__open site-quick-link">Try demo</span>
       </a>
       <div className="automation-card__copy">
         <h3>{item.shortTitle}</h3>
-        <a href={caseHref(item.id)} aria-label={`${item.shortTitle} case study`}>Case study <span aria-hidden="true">↗</span></a>
+        <a className="site-quick-link" href={caseHref(item.id)} aria-label={`${item.shortTitle} case study`}>Case study</a>
       </div>
     </article>
   );

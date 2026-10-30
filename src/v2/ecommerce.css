@@ -80,9 +80,14 @@ body[data-v2-page="storecraft"], .commerce-page {
 .commerce-inquiry > div > .commerce-eyebrow { display: block; margin-bottom: 1.1rem; }
 .commerce-inquiry > div > p { max-width: 34rem; margin: 1.5rem 0 0; color: #666; font-size: .92rem; line-height: 1.55; }
 .commerce-inquiry form { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.2rem; align-content: start; }
-.commerce-inquiry label { display: grid; gap: .5rem; color: #4b4a45; font: .68rem/1.2 var(--mono); text-transform: uppercase; }
+.commerce-inquiry label { position: relative; display: grid; gap: .5rem; color: #4b4a45; font: .68rem/1.2 var(--mono); text-transform: uppercase; }
 .commerce-inquiry input, .commerce-inquiry select, .commerce-inquiry textarea { width: 100%; min-height: 3.2rem; padding: .85rem; border: 1px solid #bbb; border-radius: 0; background: #fff; color: #111; font: .9rem var(--sans); transition: border-color .25s, box-shadow .25s; }
-.commerce-inquiry select { appearance: none; padding-right: 2.5rem; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1.5 6 6.5l5-5' fill='none' stroke='%2311110f' stroke-width='1.5'/></svg>"); background-repeat: no-repeat; background-position: right .9rem center; background-size: .7rem; cursor: pointer; }
+.commerce-inquiry select { appearance: none; padding-right: 2.5rem; background-image: none; cursor: pointer; }
+.commerce-inquiry label:has(select)::before,
+.commerce-inquiry label:has(select)::after { position: absolute; right: .95rem; bottom: 1.32rem; width: .6rem; height: 1px; background: rgba(17,17,17,.6); content: ""; pointer-events: none; }
+.commerce-inquiry label:has(select)::after { transform: rotate(90deg); }
+.commerce-inquiry label:has(select:focus)::before,
+.commerce-inquiry label:has(select:focus)::after { background: var(--commerce-blue); }
 .commerce-inquiry textarea { min-height: 8.5rem; line-height: 1.5; resize: vertical; }
 .commerce-inquiry :is(input, select, textarea):hover { border-color: #8a8a84; }
 .commerce-inquiry :is(input, select, textarea):focus-visible { border-color: var(--commerce-blue); outline: 0; box-shadow: 0 0 0 2px rgba(25,72,255,.25); }

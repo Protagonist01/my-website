@@ -329,9 +329,9 @@ function WorkSpecialisations({ items = projects }) {
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                     <nav className="v2-works-entry__actions" aria-label={`${project.title} actions`}>
-                      <a href={project.href} tabIndex={index === 0 ? 0 : -1}>View case study <Arrow /></a>
-                      {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>Open live app <Arrow /></a>}
-                      {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>GitHub <Arrow /></a>}
+                      <a className="site-quick-link" href={project.href} tabIndex={index === 0 ? 0 : -1}>View case study</a>
+                      {project.liveUrl && <a className="site-quick-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>Open live app</a>}
+                      {project.repository && <a className="site-quick-link" href={project.repository} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>GitHub</a>}
                     </nav>
                   </article>
                 ))}
@@ -348,9 +348,9 @@ function WorkSpecialisations({ items = projects }) {
             <h2>{project.title}</h2>
             <p>{project.summary}</p>
             <nav className="v2-works-mobile__actions" aria-label={`${project.title} actions`}>
-              <a href={project.href}>View case study <Arrow /></a>
-              {project.liveUrl && <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">Open live app <Arrow /></a>}
-              {project.repository && <a href={project.repository} target="_blank" rel="noopener noreferrer">GitHub <Arrow /></a>}
+              <a className="site-quick-link" href={project.href}>View case study</a>
+              {project.liveUrl && <a className="site-quick-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">Open live app</a>}
+              {project.repository && <a className="site-quick-link" href={project.repository} target="_blank" rel="noopener noreferrer">GitHub</a>}
             </nav>
           </article>
         ))}

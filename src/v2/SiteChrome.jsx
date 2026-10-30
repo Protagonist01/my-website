@@ -170,12 +170,18 @@ function ContactForm({ initialProject = "", formId = "replica", variant }) {
         {variant.collectRoleIntent && <>
           <div className="replica-field">
             <label htmlFor={`${formId}-intent`}>What are you reaching out about?</label>
-            <select id={`${formId}-intent`} name="inquiry_intent" defaultValue="" aria-invalid={Boolean(errors.intent)} aria-describedby={errors.intent ? `${formId}-intent-error` : undefined}><option value="" disabled>Select intent</option><option>Full-time role</option><option>Contract role</option><option>Freelance project</option><option>Technical collaboration</option><option>General inquiry</option></select>
+            <span className="replica-field__select-wrap">
+              <select id={`${formId}-intent`} name="inquiry_intent" defaultValue="" aria-invalid={Boolean(errors.intent)} aria-describedby={errors.intent ? `${formId}-intent-error` : undefined}><option value="" disabled>Select intent</option><option>Full-time role</option><option>Contract role</option><option>Freelance project</option><option>Technical collaboration</option><option>General inquiry</option></select>
+              <span className="replica-field__select-mark" aria-hidden="true" />
+            </span>
             {errors.intent && <span className="replica-field__error" id={`${formId}-intent-error`}>{errors.intent}</span>}
           </div>
           <div className="replica-field">
             <label htmlFor={`${formId}-arrangement`}>Work arrangement</label>
-            <select id={`${formId}-arrangement`} name="work_arrangement" defaultValue=""><option value="">Not applicable</option><option>Remote</option><option>Hybrid in Lagos</option><option>On-site in Lagos</option><option>Relocation discussion</option></select>
+            <span className="replica-field__select-wrap">
+              <select id={`${formId}-arrangement`} name="work_arrangement" defaultValue=""><option value="">Not applicable</option><option>Remote</option><option>Hybrid in Lagos</option><option>On-site in Lagos</option><option>Relocation discussion</option></select>
+              <span className="replica-field__select-mark" aria-hidden="true" />
+            </span>
           </div>
         </>}
         <div className="replica-field replica-field--project">
@@ -267,7 +273,7 @@ export function SiteFooter({ brand = replicaContent }) {
           <p className="replica-footer__statement">{brand.footerStatement.map((line) => <span key={line}>{line}</span>)}</p>
           <nav className="replica-footer__links" aria-label="Footer navigation">
             <h2>/Quick links</h2>
-            <div>{brand.navigation.map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined}>{item.label}</a>)}</div>
+            <div>{brand.navigation.map((item) => <a className="site-quick-link" href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined}>{item.label}</a>)}</div>
           </nav>
           <div className="replica-footer__contact"><h2>/Contact</h2><a href={`mailto:${brand.contact.email}`}>{brand.contact.email}</a></div>
         </div>
@@ -285,6 +291,7 @@ export function EndingSequence({ brand = replicaContent, cover }) {
   useEffect(() => {
     const ending = endingRef.current;
     if (!ending) return undefined;
+    const sticky = ending.querySelector(".replica-ending__sticky");
     const cover = ending.querySelector(".replica-ending__cover");
     const under = ending.querySelector(".replica-ending__under");
     const wordmark = ending.querySelector(".replica-footer__wordmark-text");
@@ -322,21 +329,18 @@ export function EndingSequence({ brand = replicaContent, cover }) {
     };
     const updateEnding = () => {
       frame = 0;
+      // Clear the height previously used for the mobile pinned scroll track.
+      ending.style.removeProperty("height");
       const rect = ending.getBoundingClientRect();
-      const sticky = ending.querySelector(".replica-ending__sticky");
       const viewportHeight = sticky?.clientHeight || window.innerHeight;
-      const mobileOverlay = window.matchMedia("(max-width: 700px)").matches;
       const animated = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
       if (!animated) {
         gsap.set([cover, under], { clearProps: "transform" });
         gsap.set(wordmark, { clearProps: "transform,opacity,visibility" });
         return;
       }
-      // On StoreCraft mobile the cover is the inquiry form, which is far taller than one panel, so
-      // the CSS unstacks the overlay and lets the form scroll normally. That collapses `travel` to
-      // nothing, so progress would saturate the moment the section's top cleared the viewport and
-      // the wordmark would fire while the visitor was still at the top of the form. Detect it from
-      // layout rather than a page slug, and take the floor from the wordmark's own seat instead.
+      // If a layout intentionally flattens the overlay, let the footer wordmark reveal
+      // follow its actual seat rather than trying to derive progress from a collapsed track.
       const stacked = sticky ? getComputedStyle(sticky).position !== "sticky" : false;
       if (stacked) {
         gsap.set([cover, under], { clearProps: "transform" });
@@ -354,7 +358,7 @@ export function EndingSequence({ brand = replicaContent, cover }) {
       }
       const travel = Math.max(1, rect.height - viewportHeight);
       const progress = Math.min(1, Math.max(0, -rect.top / travel));
-      const reveal = mobileOverlay ? progress : progress * progress * (3 - (2 * progress));
+      const reveal = progress * progress * (3 - (2 * progress));
       gsap.set(cover, { y: -under.getBoundingClientRect().height * reveal });
       gsap.set(under, { clearProps: "transform" });
       if (progress >= .995 && !floorReached) {
@@ -368,11 +372,16 @@ export function EndingSequence({ brand = replicaContent, cover }) {
     const requestUpdate = () => {
       if (!frame) frame = window.requestAnimationFrame(updateEnding);
     };
+    const resizeObserver = window.ResizeObserver ? new window.ResizeObserver(requestUpdate) : null;
+    resizeObserver?.observe(cover);
+    resizeObserver?.observe(under);
+    if (sticky) resizeObserver?.observe(sticky);
     window.addEventListener("scroll", requestUpdate, { passive: true });
     window.addEventListener("resize", requestUpdate, { passive: true });
     updateEnding();
     return () => {
       if (frame) window.cancelAnimationFrame(frame);
+      resizeObserver?.disconnect();
       window.removeEventListener("scroll", requestUpdate);
       window.removeEventListener("resize", requestUpdate);
       wordmarkMotion?.kill();
