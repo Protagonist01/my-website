@@ -230,3 +230,17 @@
   .ops-outro { padding: 16px 4px 32px; }
 }
 @media (prefers-reduced-motion: reduce) { .ops-page *, .ops-page *::before, .ops-page *::after { transition: none !important; animation: none !important; } }
+
+/* Use the site's quiet plus mark in place of the browser-specific select arrow. */
+.ops-page select,
+.ops-page .ops-field select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 36px;
+  background-image:
+    linear-gradient(color-mix(in srgb, currentColor 72%, transparent), color-mix(in srgb, currentColor 72%, transparent)),
+    linear-gradient(color-mix(in srgb, currentColor 72%, transparent), color-mix(in srgb, currentColor 72%, transparent));
+  background-repeat: no-repeat;
+  background-size: 8px 1px, 1px 8px;
+  background-position: calc(100% - 15px) 50%, calc(100% - 18.5px) 50%;
+}

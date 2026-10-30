@@ -323,7 +323,7 @@ function WorkSpecialisations({ items = projects }) {
               <div className="v2-works-panel__track" data-work-copy-track>
                 {items.map((project, index) => (
                   <article className="v2-works-entry" data-work-copy-entry aria-hidden={index === 0 ? "false" : "true"} key={project.id}>
-                    <span>{project.sector}<CategoryTag category={project.category} /><LiveTag project={project} /></span>
+                    <span><CategoryTag category={project.category} /><LiveTag project={project} /></span>
                     <h3>{project.title}</h3>
                     <p>{project.summary}</p>
                     <nav className="v2-works-entry__actions" aria-label={`${project.title} actions`}>
@@ -342,7 +342,7 @@ function WorkSpecialisations({ items = projects }) {
         {items.map((project, index) => (
           <article key={project.id}>
             <a href={project.href}><ProjectMedia project={project} compact loading={index === 0 ? "eager" : "lazy"} /></a>
-            <span>{project.index} / {project.sector}<CategoryTag category={project.category} /><LiveTag project={project} /></span>
+            <span>{project.index}<CategoryTag category={project.category} /><LiveTag project={project} /></span>
             <h2>{project.title}</h2>
             <p>{project.summary}</p>
             <nav className="v2-works-mobile__actions" aria-label={`${project.title} actions`}>

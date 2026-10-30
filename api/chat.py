@@ -100,7 +100,9 @@ def _run_local_bridge() -> None:
     envelope = json.loads(sys.stdin.buffer.read().decode("utf-8"))
     raw_body = envelope.get("body", "").encode("utf-8")
     status, headers, payload = handle_request(envelope.get("method", "POST"), raw_body, envelope.get("headers", {}))
-    sys.stdout.write(json.dumps({"status": status, "headers": headers, "body": payload}, ensure_ascii=False))
+    # Vite's Node bridge consumes stdout as UTF-8. ASCII escapes keep Windows console
+    # code pages from replacing smart punctuation before the JSON reaches the browser.
+    sys.stdout.buffer.write(json.dumps({"status": status, "headers": headers, "body": payload}).encode("ascii"))
 
 
 if __name__ == "__main__" and "--local" in sys.argv:

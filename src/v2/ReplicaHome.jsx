@@ -214,7 +214,7 @@ function useReplicaMotion(rootRef) {
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.13)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.018, ease: "power2.out" }, 0.39)
           .to(".replica-hero", { autoAlpha: 0, duration: 0.08 }, 0.44)
-          .to([".replica-about", ".replica-portrait-wrap"], { y: `-=${Math.round(window.innerHeight * 0.78)}`, autoAlpha: 0, duration: .2, ease: "power1.in" }, 0.8);
+          .to([".replica-about", ".replica-portrait-wrap"], { y: `-=${Math.round(window.innerHeight * 0.78)}`, autoAlpha: 0, duration: .24, ease: "none" }, 0.76);
       });
 
       mm.add("(max-width: 700px)", () => {
@@ -273,13 +273,13 @@ function useReplicaMotion(rootRef) {
             y: () => -aboutOverflow() - viewportHeight() * .78,
             autoAlpha: 0,
             duration: .2,
-            ease: "power1.in",
+            ease: "none",
           }, 0.78)
           .to(".replica-portrait-wrap", {
             y: () => portraitLift() - aboutOverflow() - viewportHeight() * .78,
             autoAlpha: 0,
             duration: .2,
-            ease: "power1.in",
+            ease: "none",
           }, 0.78);
         return () => {
           ScrollTrigger.removeEventListener("refreshInit", reserveAboutGap);

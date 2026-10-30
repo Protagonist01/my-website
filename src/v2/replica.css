@@ -40,7 +40,7 @@
   100% { scale: 1.025; }
 }
 
-.replica-intro { position: relative; height: 210vh; }
+.replica-intro { position: relative; height: 280vh; }
 .replica-intro__sticky { position: sticky; top: 0; height: var(--replica-vh); min-height: 0; overflow: hidden; perspective: 1200px; }
 .replica-hero, .replica-about { position: absolute; inset: 0; }
 .replica-hero__lede { position: absolute; z-index: 3; top: 24px; left: max(calc((100vw - 1200px) / 2), 7vw); display: grid; gap: 10px; max-width: 310px; }
@@ -296,7 +296,7 @@
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
   /* Give the full hero-to-about sequence enough scroll travel to let each change register. */
-  .replica-intro { height: 205svh; }
+  .replica-intro { height: 300svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__lede { top: 108px; right: 20px; left: 20px; max-width: none; gap: 7px; }
   .replica-hero__subline { max-width: 30ch; font-size: 12px; }
