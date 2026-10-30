@@ -18,7 +18,7 @@ function AutomationCard({ item, index, active = true }) {
   }, []);
   return (
     <article ref={cardRef} className={`automation-card${entered ? " has-entered" : ""}`} data-playing={inView && active}
-      style={{ "--automation-accent": item.accent, "--card-column": index % 3 }} aria-label={item.shortTitle}>
+      style={{ "--automation-accent": item.accent, "--automation-index": index }} aria-label={item.shortTitle}>
       <a className="automation-card__visual" href={demoHref(item.id)} aria-label={`Try ${item.shortTitle} demo`}>
         <span className="automation-card__number">{item.number} / {item.category.replace(/ operations$/i, "")}</span>
         <div className="automation-card__sheet">
@@ -26,7 +26,7 @@ function AutomationCard({ item, index, active = true }) {
           <div className="automation-card__steps">
             {item.preview.map((text, step) => (
               <div className="automation-card__step" key={text} style={{ "--step": step }}>
-                <span className="automation-card__marker" aria-hidden="true">{step === 2 ? "↗" : "✓"}</span><span>{text}</span>
+                <span className="automation-card__marker" aria-hidden="true">✓</span><span>{text}</span>
               </div>
             ))}
           </div>
@@ -87,7 +87,7 @@ function AutomationDeck() {
     <div className="automation-deck" role="region" aria-roledescription="carousel" aria-label="Automation projects">
       <div className="automation-deck__toolbar">
         <span className="automation-deck__count" aria-live="polite" aria-atomic="true">
-          {String(activeIndex + 1).padStart(2, "0")} / 06
+          {String(activeIndex + 1).padStart(2, "0")} / {String(automationCatalog.length).padStart(2, "0")}
         </span>
         <div className="automation-deck__arrows">
           <button type="button" onClick={() => advance(-1)} disabled={activeIndex === 0} aria-label="Previous automation project">←</button>
@@ -112,7 +112,7 @@ function AutomationDeck() {
 
 export default function AutomationShowcase() {
   return <section className="automation-showcase" id="automation" data-section-static aria-labelledby="automation-title">
-    <header className="automation-showcase__head"><h2 id="automation-title">Automation</h2><span>06 projects</span></header>
+    <header className="automation-showcase__head"><h2 id="automation-title">Automation</h2></header>
     <div className="automation-showcase__grid">{automationCatalog.map((item, index) => <AutomationCard key={item.id} item={item} index={index} />)}</div>
     <AutomationDeck />
     <p className="automation-showcase__note">Demo data · Simulated integrations</p>

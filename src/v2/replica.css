@@ -72,10 +72,8 @@
 .replica-about__left strong { width: 275px; font-size: 21px; font-weight: 600; line-height: 1.42; }
 .replica-about__right { grid-column: 3; align-self: center; padding-top: 185px; }
 .replica-about__right p { width: 345px; margin: 0 0 22px; font-size: 18px; line-height: 1.38; }
-.replica-about__right a { display: inline-flex; align-items: center; gap: 10px; color: inherit; font-size: 18px; text-decoration: none; pointer-events: auto; }
-.replica-about__actions { display: flex; flex-wrap: wrap; gap: 26px; align-items: center; }
-.replica-about__arrow { display: grid; width: 29px; height: 29px; border: 1px solid #111; border-radius: 7px; font-size: 17px; transition: transform .2s; place-items: center; }
-.replica-about__right a:hover .replica-about__arrow { transform: translate(2px, -2px); }
+.replica-about__right .site-quick-link { pointer-events: auto; }
+.replica-about__actions { display: flex; flex-wrap: wrap; gap: .75rem 1.25rem; align-items: center; }
 
 .replica-statement-scene { position: relative; height: 150vh; }
 .replica-statement { position: sticky; top: 0; display: grid; height: var(--replica-vh); padding: 0 20px; place-items: center; }
@@ -320,7 +318,7 @@
   .replica-about__left strong { display: block; width: 100%; margin-bottom: 14px; font-size: 15px; line-height: 1.35; }
   .replica-about__right { padding: 0; }
   .replica-about__right p { width: 100%; margin-bottom: 10px; font-size: 14px; line-height: 1.35; }
-  .replica-about__right a { margin-top: 2px; font-size: 14px; }
+  .replica-about__right .site-quick-link { margin-top: 2px; }
   .replica-statement-scene { height: 100svh; }
   .replica-statement { padding: 0 24px; }
   .replica-statement p { width: 100%; font-size: 24px; line-height: 1.19; letter-spacing: -.025em; }
@@ -441,7 +439,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-about__arrow, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
+  .replica-nav, .replica-nav__links, .replica-nav__links a, .replica-nav__link-arrow, .replica-socials a, .replica-contact-form button, .replica-field input, .replica-field textarea, .replica-footer__links a { transition: none; }
   .replica-nav__links a { animation: none !important; }
   .replica-footer__wordmark-text { opacity: 1; transform: none; animation: none; transition: none; }
   .replica-intro { height: 200vh; }

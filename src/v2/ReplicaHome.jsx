@@ -121,11 +121,12 @@ function IntroSequence() {
             <div className="replica-about__actions">
               {replicaContent.aboutActions.map((action) => (
                 <a
+                  className="site-quick-link"
                   href={action.href}
                   key={action.label}
                   download={action.download ? "" : undefined}
                   onClick={action.onDownload ? (event) => action.onDownload(event) : undefined}
-                ><span>{action.label}</span><span className="replica-about__arrow" aria-hidden="true">{action.download ? "↓" : "↗"}</span></a>
+                >{action.label}</a>
               ))}
             </div>
           </div>
@@ -193,6 +194,8 @@ function useReplicaMotion(rootRef) {
     if (!root) return undefined;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const mm = gsap.matchMedia();
+    const about = root.querySelector(".replica-about");
+    const portraitWrap = root.querySelector(".replica-portrait-wrap");
     const context = gsap.context(() => {
       if (reduced) {
         gsap.set(".replica-portrait-card", { rotateY: 180 });
@@ -215,15 +218,18 @@ function useReplicaMotion(rootRef) {
       });
 
       mm.add("(max-width: 700px)", () => {
-        // invalidateOnRefresh so the tweens re-read viewportHeight() whenever the scene is
-        // re-measured. Without it a rotate or a collapsing URL bar leaves the portrait's rise
-        // fixed at the old height while the hole reserved for it moves, which is the desync this
-        // scene is built to avoid.
-        const timeline = gsap.timeline({ scrollTrigger: { trigger: ".replica-intro", start: "top top", end: "bottom bottom", scrub: replicaAnimation.mobileScrub, invalidateOnRefresh: true } });
-        const about = root.querySelector(".replica-about");
         const sticky = root.querySelector(".replica-intro__sticky");
-        const portraitWrap = root.querySelector(".replica-portrait-wrap");
+        const intro = root.querySelector(".replica-intro");
         const viewportHeight = () => sticky?.clientHeight || window.innerHeight;
+        // Derive the end from the stable CSS stage heights. A bottom/bottom end can shift when a
+        // phone browser expands or collapses its address bar, although the stage itself uses svh.
+        const timeline = gsap.timeline({ scrollTrigger: {
+          trigger: ".replica-intro",
+          start: "top top",
+          end: () => `+=${Math.max(1, (intro?.offsetHeight || 0) - (sticky?.clientHeight || window.innerHeight))}`,
+          scrub: replicaAnimation.mobileScrub,
+          invalidateOnRefresh: true,
+        } });
         // Only a real spill earns the lift. Adding the breathing room unconditionally moved the
         // copy up on every viewport, which slid "Hey!" under the fixed nav on short screens.
         const aboutOverflow = () => {
@@ -257,7 +263,21 @@ function useReplicaMotion(rootRef) {
           // portrait landed, so moving one without the other closes it again. It starts where the
           // portrait's own rise ends, so nothing tweens the portrait's y in two places at once.
           .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.56)
-          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .06, ease: "none" }, 0.56);
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .06, ease: "none" }, 0.56)
+          // Clear the pinned stage before it releases into the next section. The prior timeline
+          // left the about content in place while the next section entered at the bottom.
+          .to(".replica-about", {
+            y: () => -aboutOverflow() - viewportHeight(),
+            autoAlpha: 0,
+            duration: .28,
+            ease: "power1.in",
+          }, 0.7)
+          .to(".replica-portrait-wrap", {
+            y: () => portraitLift() - aboutOverflow() - viewportHeight(),
+            autoAlpha: 0,
+            duration: .28,
+            ease: "power1.in",
+          }, 0.7);
         return () => {
           ScrollTrigger.removeEventListener("refreshInit", reserveAboutGap);
           sticky?.style.removeProperty("--mobile-about-gap");
