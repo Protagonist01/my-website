@@ -417,7 +417,7 @@
 
 /* Shorten the post-intro mobile handoff without bringing the statement into the exit tween. */
 @media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
-  .replica-intro { margin-bottom: -8svh; }
+  .replica-intro { margin-bottom: -20svh; }
 }
 
 @media (prefers-reduced-motion: reduce) {
