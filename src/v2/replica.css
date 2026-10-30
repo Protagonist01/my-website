@@ -415,6 +415,11 @@
   .replica-socials { margin-top: 22px; }
 }
 
+/* Shorten the post-intro mobile handoff without bringing the statement into the exit tween. */
+@media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
+  .replica-intro { margin-bottom: -8svh; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .replica-hero__line-measure { visibility: visible; }
   .replica-hero__line-typed { display: none; }
