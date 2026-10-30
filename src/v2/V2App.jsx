@@ -171,10 +171,8 @@ function useWorkSpecialisationsMotion(sectionRef) {
         start: () => window.innerWidth <= 700 ? "top 116px" : window.innerWidth <= 900 ? "top 148px" : "top 160px",
         end: "bottom bottom",
         animation: timeline,
-        // Desktop keeps the rigid 1:1 coupling a wheel handles well. Touch scrolling arrives in
-        // momentum bursts, so the same coupling reproduces every jolt on the way through the
-        // transitions; a small catch-up window smooths them without feeling detached.
-        scrub: window.innerWidth <= 700 ? replicaAnimation.mobileScrub : true,
+        // Keep the project sequence in the same measured catch-up range as the other scroll scenes.
+        scrub: window.innerWidth <= 700 ? replicaAnimation.mobileScrub : replicaAnimation.scrub,
         invalidateOnRefresh: true,
         anticipatePin: 1,
         markers: false,

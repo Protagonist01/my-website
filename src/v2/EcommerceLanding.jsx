@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import StoreCraftMark from "./StoreCraftMark.jsx";
 import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
+import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { trackCommerceEvent } from "./analytics.js";
 
 const commerceMedia = (name) => new URL(`../../ecommerce demo gallery/e-commerce demo media assets/shopify final videos/${name}`, import.meta.url).href;
@@ -156,7 +157,9 @@ function useCommerceMotion(rootRef) {
             // Without the phone the hero is roughly half as tall, so scrubbing over its own
             // height alone would run the fade at twice the speed. Extend the window to match.
             end: () => window.matchMedia("(max-width: 700px)").matches ? "bottom+=80% top" : "bottom top",
-            scrub: 1,
+            scrub: window.matchMedia("(max-width: 700px)").matches
+              ? replicaAnimation.mobileScrub
+              : replicaAnimation.scrub,
           },
         })
           .to(".commerce-hero__copy", { y: -72, autoAlpha: 0.38, ease: "none" }, 0);

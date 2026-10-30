@@ -214,7 +214,7 @@ function useReplicaMotion(rootRef) {
           .to(".replica-portrait-card", { rotateY: 180, duration: .32, ease: "none" }, 0.13)
           .fromTo(".replica-about__left > *, .replica-about__right > *", { y: 90, opacity: 0 }, { y: 0, opacity: 1, duration: .16, stagger: 0.018, ease: "power2.out" }, 0.39)
           .to(".replica-hero", { autoAlpha: 0, duration: 0.08 }, 0.44)
-          .to([".replica-about", ".replica-portrait-wrap"], { y: `-=${Math.round(window.innerHeight * 0.92)}`, autoAlpha: 0, duration: .2, ease: "power1.in" }, 0.8);
+          .to([".replica-about", ".replica-portrait-wrap"], { y: `-=${Math.round(window.innerHeight * 0.78)}`, autoAlpha: 0, duration: .2, ease: "power1.in" }, 0.8);
       });
 
       mm.add("(max-width: 700px)", () => {
@@ -262,22 +262,25 @@ function useReplicaMotion(rootRef) {
           // Copy and portrait take this last step together — the hole is sized for where the
           // portrait landed, so moving one without the other closes it again. It starts where the
           // portrait's own rise ends, so nothing tweens the portrait's y in two places at once.
-          .to(".replica-about", { y: () => -aboutOverflow(), duration: .06, ease: "none" }, 0.56)
-          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .06, ease: "none" }, 0.56)
+          // The copy needs to travel enough to clear the portrait, while the heading anchors the
+          // scene. Counter-move it halfway so “Hey!” leaves at a calmer pace on short screens.
+          .to(".replica-about", { y: () => -aboutOverflow(), duration: .12, ease: "none" }, 0.66)
+          .to(".replica-about__left h2", { y: () => aboutOverflow() * .5, duration: .12, ease: "none" }, 0.66)
+          .to(".replica-portrait-wrap", { y: () => portraitLift() - aboutOverflow(), duration: .12, ease: "none" }, 0.66)
           // Clear the pinned stage before it releases into the next section. The prior timeline
           // left the about content in place while the next section entered at the bottom.
           .to(".replica-about", {
-            y: () => -aboutOverflow() - viewportHeight(),
+            y: () => -aboutOverflow() - viewportHeight() * .78,
             autoAlpha: 0,
-            duration: .28,
+            duration: .2,
             ease: "power1.in",
-          }, 0.7)
+          }, 0.78)
           .to(".replica-portrait-wrap", {
-            y: () => portraitLift() - aboutOverflow() - viewportHeight(),
+            y: () => portraitLift() - aboutOverflow() - viewportHeight() * .78,
             autoAlpha: 0,
-            duration: .28,
+            duration: .2,
             ease: "power1.in",
-          }, 0.7);
+          }, 0.78);
         return () => {
           ScrollTrigger.removeEventListener("refreshInit", reserveAboutGap);
           sticky?.style.removeProperty("--mobile-about-gap");
@@ -297,7 +300,7 @@ function useReplicaMotion(rootRef) {
           trigger: ".replica-statement-scene",
           start: "top top",
           end: "bottom bottom",
-          scrub: replicaAnimation.statementScrub,
+          scrub: replicaAnimation.scrub,
         },
       });
       reveal.to(wordElements, { color: "#111111", duration: .12, stagger: { amount: 1.88, from: "start" }, ease: "none" });
@@ -308,9 +311,11 @@ function useReplicaMotion(rootRef) {
       const servicesTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: services,
-          start: mobileScroll ? "top bottom" : "top top",
+          // Let the list begin arriving as the previous statement leaves, instead of hiding the
+          // whole section until its sticky panel has already reached the top of the viewport.
+          start: "top bottom",
           end: mobileScroll ? "top top" : "bottom bottom",
-          scrub: mobileScroll ? replicaAnimation.mobileScrub : .6,
+          scrub: mobileScroll ? replicaAnimation.mobileScrub : replicaAnimation.scrub,
           invalidateOnRefresh: true,
         },
       });

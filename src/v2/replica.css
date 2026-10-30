@@ -40,7 +40,7 @@
   100% { scale: 1.025; }
 }
 
-.replica-intro { position: relative; height: 190vh; }
+.replica-intro { position: relative; height: 210vh; }
 .replica-intro__sticky { position: sticky; top: 0; height: var(--replica-vh); min-height: 0; overflow: hidden; perspective: 1200px; }
 .replica-hero, .replica-about { position: absolute; inset: 0; }
 .replica-hero__lede { position: absolute; z-index: 3; top: 24px; left: max(calc((100vw - 1200px) / 2), 7vw); display: grid; gap: 10px; max-width: 310px; }
@@ -295,10 +295,8 @@
   .replica-nav__top > a { font-size: 21px; }
   .replica-nav__menu { max-height: calc(100svh - 120px); max-height: calc(100dvh - 120px); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: none; }
   .replica-nav__menu::-webkit-scrollbar { display: none; }
-  /* 150svh crammed the whole hero-to-about choreography into half a screen of scroll past the
-     first, so the portrait flip, the title exit and the copy reveal all raced. 185svh gives it
-     close to the desktop ratio (190vh) and lets the same timeline read at a walking pace. */
-  .replica-intro { height: 185svh; }
+  /* Give the full hero-to-about sequence enough scroll travel to let each change register. */
+  .replica-intro { height: 205svh; }
   .replica-intro__sticky { min-height: 0; }
   .replica-hero__lede { top: 108px; right: 20px; left: 20px; max-width: none; gap: 7px; }
   .replica-hero__subline { max-width: 30ch; font-size: 12px; }
@@ -415,9 +413,13 @@
   .replica-socials { margin-top: 22px; }
 }
 
-/* Shorten the post-intro mobile handoff without bringing the statement into the exit tween. */
+/* Pull the next scene closer so the intro never leaves a long empty scroll interval. */
+@media (prefers-reduced-motion: no-preference) {
+  .replica-intro { margin-bottom: -30vh; }
+}
+
 @media (max-width: 700px) and (prefers-reduced-motion: no-preference) {
-  .replica-intro { margin-bottom: -20svh; }
+  .replica-intro { margin-bottom: -28svh; }
 }
 
 @media (prefers-reduced-motion: reduce) {

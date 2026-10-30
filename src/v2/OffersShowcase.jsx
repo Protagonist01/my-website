@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { commerceOffers, OFFER_FILTERS, OFFERS_DEBUG, OFFERS_STATEMENT } from "./offersData.js";
+import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { trackCommerceEvent } from "./analytics.js";
 
 // Drives srcset selection for both rail surfaces: the mobile stage card is
@@ -79,7 +80,7 @@ export default function OffersShowcase() {
             start: "top top",
             end: () => `+=${Math.round(distance() * 1.04 + viewport.clientWidth * 1.55)}`,
             pin: viewport,
-            scrub: 0.8,
+            scrub: replicaAnimation.scrub,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             markers: OFFERS_DEBUG,
