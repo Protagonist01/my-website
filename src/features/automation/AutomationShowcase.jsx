@@ -8,6 +8,7 @@ function AutomationCard({ item, index, active = true }) {
   const cardRef = useRef(null);
   const [inView, setInView] = useState(false);
   const [entered, setEntered] = useState(false);
+  const [entranceComplete, setEntranceComplete] = useState(false);
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
       setInView(entry.isIntersecting);
@@ -16,8 +17,13 @@ function AutomationCard({ item, index, active = true }) {
     observer.observe(cardRef.current);
     return () => observer.disconnect();
   }, []);
+  // Start the step-by-step preview only after the card's own entrance has settled.
+  const finishEntrance = (event) => {
+    if (event.target === cardRef.current && event.propertyName === "transform") setEntranceComplete(true);
+  };
   return (
-    <article ref={cardRef} className={`automation-card${entered ? " has-entered" : ""}`} data-playing={inView && active}
+    <article ref={cardRef} onTransitionEnd={finishEntrance}
+      className={`automation-card${entered ? " has-entered" : ""}`} data-playing={inView && active && entranceComplete}
       style={{ "--automation-accent": item.accent, "--automation-index": index }} aria-label={item.shortTitle}>
       <a className="automation-card__visual" href={demoHref(item.id)} aria-label={`Try ${item.shortTitle} demo`}>
         <span className="automation-card__number">{item.number} / {item.category.replace(/ operations$/i, "")}</span>
