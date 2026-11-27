@@ -23,6 +23,10 @@
   letter-spacing: .06em;
   text-decoration: none;
   text-transform: uppercase;
+  /* A 44px hit area around 11px type, without moving the type itself. */
+  padding: .9rem .6rem;
+  margin: -.9rem -.6rem;
+  transition: color .2s ease;
 }
 
 .v2-cs__back:hover { color: var(--ink); }

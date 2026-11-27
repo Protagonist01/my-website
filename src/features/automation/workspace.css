@@ -5,7 +5,8 @@
 .ops-page button:disabled { cursor: not-allowed; opacity: .48; }
 .ops-page :is(a, button, input, select, textarea):focus-visible { outline: 3px solid #277055; outline-offset: 4px; }
 .ops-intro { max-width: 1280px; margin: 0 auto 24px; }
-.ops-back { color: var(--ops-muted); display: block; font-size: 12px; margin-bottom: 18px; text-decoration: none; }
+.ops-back { color: var(--ops-muted); display: block; width: fit-content; font-size: 12px; margin: -14px -8px 4px; padding: 14px 8px; text-decoration: none; transition: color .2s ease; }
+.ops-back:hover { color: var(--ops-ink, currentColor); }
 .ops-eyebrow { font: 10px/1.6 "IBM Plex Mono", monospace; text-transform: uppercase; letter-spacing: .09em; }
 .ops-intro__title { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 24px; margin-top: 0; }
 .ops-intro h1 { margin: 0; font-size: clamp(28px, 3vw, 40px); font-weight: 500; line-height: 1; letter-spacing: -.055em; }
@@ -191,7 +192,7 @@
 @media (max-width: 540px) {
   .ops-page { padding: 104px 12px 0; }
   .ops-intro { padding: 0 4px; }
-  .ops-back { margin-bottom: 14px; }
+  .ops-back { margin-bottom: 0; }
   .ops-intro__title { gap: 12px; }
   .ops-intro h1 { font-size: 28px; line-height: 1.1; }
   .ops-intro .ops-eyebrow { font-size: 9px; }

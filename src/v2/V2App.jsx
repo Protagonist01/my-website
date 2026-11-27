@@ -1,16 +1,13 @@
 import React, { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { allWork, caseStudies, homeFeaturedProjects, navigation, paths, projectNotes, projects } from "./data.js";
+import { allWork, caseStudies, homeFeaturedProjects, projectNotes, projects } from "./data.js";
 import { replicaContent } from "./replicaContent.js";
 import { replicaAnimation } from "./replicaAnimationConfig.js";
 import { storecraftContent } from "./storecraftContent.js";
 import { hasProjectVisual, ProjectVisual } from "./ProjectVisuals.jsx";
 import { handleSectionNavigationClick, revealSectionById } from "./sectionNavigation.js";
-import { ConfettiSuccess } from "./FormSuccess.jsx";
 import { commerceOffers } from "./offersData.js";
-import { CONTACT_ERROR_MESSAGE, recordContactReferral, submitContactForm } from "./contactSubmit.js";
 import { ContactOverlay, EndingSequence, FloatingNavigation } from "./SiteChrome.jsx";
 import AutomationShowcase from "../features/automation/AutomationShowcase.jsx";
 const AutomationWorkspace = lazy(() => import("../features/automation/AutomationWorkspace.jsx"));
@@ -223,71 +220,9 @@ function useWorkSpecialisationsMotion(sectionRef) {
   }, [sectionRef]);
 }
 
-function Header({ onContact }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <>
-      <header className="v2-header">
-        <a className="v2-brand" href={paths.home}>Henry</a>
-        <button className="v2-menu" type="button" aria-label={open ? "Close main navigation" : "Open main navigation"} aria-expanded={open} onClick={() => setOpen(!open)}>
-          <strong>{open ? "Close" : "Menu"}</strong><i aria-hidden="true"><span /><span /><span /></i>
-        </button>
-      </header>
-      {open && createPortal(
-        <div className="v2-mobile-nav">
-          <button type="button" aria-label="Close navigation" onClick={() => setOpen(false)}>{"\u00d7"}</button>
-          {navigation.filter((item) => item.href !== "/#contact").map((item) => <a href={item.href} key={item.label} target={item.target} rel={item.target === "_blank" ? "noopener" : undefined} onClick={() => setOpen(false)}>{item.label}</a>)}
-          <button type="button" onClick={() => { setOpen(false); onContact(); }}>Start a project <Arrow /></button>
-        </div>,
-        document.body,
-      )}
-    </>
-  );
-}
-
-function InlineContactForm() {
-  const [status, setStatus] = useState("idle");
-  const formRef = useRef(null);
-  const submit = async (event) => {
-    event.preventDefault();
-    const form = formRef.current;
-    setStatus("sending");
-    const formData = new FormData(form);
-    try {
-      await submitContactForm(formData);
-      recordContactReferral({
-        name: formData.get("name"),
-        email: formData.get("email"),
-        description: formData.get("description"),
-        source: "V2 inline contact form",
-      });
-      form?.reset();
-      setStatus("sent");
-    } catch (submissionError) {
-      console.error(submissionError);
-      // Keep the visitor's message on screen so the lead is recoverable.
-      setStatus("error");
-    }
-  };
-  return (
-    <>
-      <form ref={formRef} className="v2-inline-form" onSubmit={submit}>
-        <label>Name<input name="name" required /></label>
-        <label>Email<input name="email" type="email" required /></label>
-        <label>Phone<input name="phone" type="tel" /></label>
-        <label>Company<input name="company" /></label>
-        <label className="v2-inline-form__brief">Tell me about the role or project<textarea name="description" rows="2" required /></label>
-        <button type="submit" disabled={status === "sending"}>{status === "sending" ? "Sending" : "Send"} <Arrow /></button>
-        <p role={status === "error" ? "alert" : undefined} aria-live="polite">{status === "error" ? CONTACT_ERROR_MESSAGE : ""}</p>
-      </form>
-      {status === "sent" && <ConfettiSuccess title="Excited to build with You" subtitle="Received. I will reply within one business day." onClose={() => { formRef.current?.reset(); setStatus("idle"); }} />}
-    </>
-  );
-}
-
 function ProjectMedia({ project, compact = false, artifact = false, loading = "lazy" }) {
   if (project.coverImage && (compact || project.coverInHero)) {
-    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground }} />;
+    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground, "--cover-position": project.coverPosition }} />;
   }
   if (hasProjectVisual(project.id)) return <ProjectVisual id={project.id} compact={compact} artifact={artifact} />;
   return <img src={project.image} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} />;
@@ -388,11 +323,6 @@ function ProjectNote({ project }) {
   </article>;
 }
 
-function ContactDialog({ open, onClose }) {
-  if (!open) return null;
-  return createPortal(<div className="v2-dialog" role="dialog" aria-modal="true" aria-label="Start a project"><button className="v2-dialog__close" type="button" onClick={onClose} aria-label="Close">{"\u00d7"}</button><div><span>Start a project</span><h2>What are we building?</h2></div><InlineContactForm /></div>, document.body);
-}
-
 function Renderer({ page }) {
   if (page.startsWith("demo-")) return <AutomationWorkspace key={page} workflowId={page.slice(5)} />;
   if (page === "storecraft") return <EcommerceLanding offerRail={<OffersShowcase />} />;
@@ -444,10 +374,9 @@ export function V2App({ page }) {
     return <Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ReplicaHome works={<WorkSpecialisations home items={homeFeaturedProjects} />} /></Suspense>;
   }
   const isCasePage = page.startsWith("case-") || page.startsWith("offer-") || page.startsWith("demo-");
-  const usesProjectNavigation = page === "storecraft" || page === "referrals" || page === "referral-dashboard" || isCasePage;
   // StoreCraft is its own brand: its own nav wordmark, its own footer, and its own
   // inquiry form as the ending cover instead of Henry's "Let's talk." section.
   const isStorecraft = page === "storecraft" || page.startsWith("offer-");
   const brand = isStorecraft ? storecraftContent : replicaContent;
-  return <div className={`v2-site${isCasePage ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}>{usesProjectNavigation ? <FloatingNavigation brand={brand} /> : <Header onContact={() => { setContactContext(""); setContactOpen(true); }} />}<main><Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ContentReady onReady={noteContentReady}><Renderer page={page} /></ContentReady></Suspense></main>{!isCasePage && <div className="replica-end"><EndingSequence brand={brand} cover={isStorecraft ? <Suspense fallback={null}><CommerceInquiry sectionId="" /></Suspense> : undefined} /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
+  return <div className={`v2-site${isCasePage ? " is-case-page" : ""}`} id="top" ref={root} onClick={handleRootClick}><FloatingNavigation brand={brand} /><main><Suspense fallback={<div className="v2-page-pending" aria-hidden="true" />}><ContentReady onReady={noteContentReady}><Renderer page={page} /></ContentReady></Suspense></main>{!isCasePage && <div className="replica-end"><EndingSequence brand={brand} cover={isStorecraft ? <Suspense fallback={null}><CommerceInquiry sectionId="" /></Suspense> : undefined} /></div>}<ContactOverlay open={contactOpen} onClose={() => setContactOpen(false)} initialProject={contactContext} /></div>;
 }

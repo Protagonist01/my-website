@@ -34,7 +34,6 @@ APPROVED_ROUTES = {
     "/#work": "Featured work",
     "/#stack": "Working stack",
     "/#contact": "Contact",
-    "/v2/proof/": "Proof",
     "/v2/contact/": "Contact",
     "/v2/storecraft/": "StoreCraft commerce systems",
     "/v2/referrals/": "Referral programme",

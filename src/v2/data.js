@@ -35,7 +35,6 @@ const smartTodoImage = "https://raw.githubusercontent.com/Protagonist01/smart-to
 
 export const paths = {
   home: "/",
-  proof: "/v2/proof/",
   contact: "/v2/contact/",
   storecraft: "/v2/storecraft/",
   referrals: "/v2/referrals/",
@@ -255,6 +254,7 @@ export const projects = [
     visual: "self-healing-monitor",
     image: selfHealingDashboardImage,
     coverImage: selfHealingMonitorCoverImage,
+    coverPosition: "left center",
     coverBackground: "#141716",
     coverInHero: true,
     imageAlt: "Product mockup of Self-Healing Microservices Monitor with service topology, incident overview, service metrics, policy gate, and audit trail",
@@ -324,6 +324,7 @@ export const projects = [
     visual: "aboutface-chatbot",
     image: aboutFaceImage,
     coverImage: aboutFaceImage,
+    coverPosition: "center top",
     coverBackground: "#f3e9e5",
     coverInHero: true,
     imageAlt: "AboutFace cosmetics product imagery used by the chatbot experience",
@@ -528,6 +529,7 @@ export const projects = [
     stack: ["FastAPI", "PostgreSQL", "Redis", "Celery"],
     visual: "url-shortener",
     coverImage: snipurlCoverImage,
+    imageAlt: "SnipURL live app with the Paste. Snip. Share. hero and a URL field ready to shorten a link",
     coverBackground: "#f0eee6",
     href: paths.urlShortener,
     tone: "cool",
@@ -945,7 +947,7 @@ export const evidence = [
   { value: "7", label: "Typed concierge actions", detail: "Clear Skin", href: paths.clearSkin },
   { value: "90.10%", label: "Classification accuracy", detail: "Fruit Quality Prediction", href: paths.fruitQuality },
   { value: "11", label: "Public repositories you can read", detail: "Every project but the NDA one", href: "/#work" },
-  { value: "3", label: "Built systems documented", detail: "Public or NDA-safe", href: paths.proof },
+  { value: "3", label: "Built systems documented", detail: "Public or NDA-safe", href: "/#work" },
 ];
 
 export const contactChannels = [
