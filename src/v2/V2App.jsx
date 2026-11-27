@@ -222,7 +222,7 @@ function useWorkSpecialisationsMotion(sectionRef) {
 
 function ProjectMedia({ project, compact = false, artifact = false, loading = "lazy" }) {
   if (project.coverImage && (compact || project.coverInHero)) {
-    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground }} />;
+    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground, "--cover-position": project.coverPosition }} />;
   }
   if (hasProjectVisual(project.id)) return <ProjectVisual id={project.id} compact={compact} artifact={artifact} />;
   return <img src={project.image} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} />;
