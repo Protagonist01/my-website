@@ -144,10 +144,82 @@ function Foot({ context, ctaLabel = "Discuss this work", live, demo, liveLabel =
   );
 }
 
+// The concise layout: what the system is made of, the tradeoffs behind it, and the demo
+// videos. Each section appears only when it has content, so a project can ship without a
+// system design or before its video exists.
+function SystemDesignBody({ project }) {
+  const videos = (project.gallery || []).filter((item) => item.video);
+  const hasDesign = project.systemDesign?.length > 0;
+
+  return (
+    <>
+      {hasDesign && (
+        <Block label="System design" id="system-design">
+          <Flow items={project.systemDesign} />
+          {project.diagram && (
+            <figure className="v2-cs__diagram">
+              <img src={project.diagram} alt={project.diagramAlt} loading="lazy" />
+              {project.diagramCaption && <figcaption>{project.diagramCaption}</figcaption>}
+            </figure>
+          )}
+        </Block>
+      )}
+
+      {project.decisions?.length > 0 && (
+        <Block label="Tradeoffs" id="tradeoffs">
+          <Decisions items={project.decisions} />
+          {project.limits?.map((limit) => <p className="v2-cs__note" key={limit}>{limit}</p>)}
+        </Block>
+      )}
+
+      {videos.length > 0 && (
+        <Block label={videos.length > 1 ? "Demo videos" : "Demo video"} id="demo" wide>
+          <Gallery items={videos} />
+        </Block>
+      )}
+    </>
+  );
+}
+
 export function ProjectCasePage({ project }) {
   const position = caseStudies.findIndex((item) => item.id === project.id);
   const next = caseStudies[(position + 1) % caseStudies.length];
   const evidence = project.evidence || "built";
+
+  if (project.caseLayout === "system-design") {
+    return (
+      <article className="v2-cs">
+        <Head
+          back={`${paths.home}#work`}
+          backLabel="Work"
+          eyebrow={`${project.index} / ${project.sector}`}
+          category={project.category}
+          evidence={evidence}
+          live={Boolean(project.liveUrl)}
+          title={project.title}
+          lead={project.lead || project.outcome}
+          facts={[
+            ["Status", project.status],
+            ["Stack", project.stack?.join(" · ")],
+            ["Live", project.liveUrl
+              ? <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.liveLabel || "Open the deployment"} <Arrow /></a>
+              : null],
+            ["Source", project.repository
+              ? <a href={project.repository} target="_blank" rel="noopener noreferrer">Open on GitHub <Arrow /></a>
+              : project.sourceNote],
+          ]}
+        />
+        <SystemDesignBody project={project} />
+        <Foot
+          context={`I'd like to discuss ${project.title}.`}
+          live={project.liveUrl}
+          liveLabel={project.liveLabel}
+          repository={project.repository}
+          next={next}
+        />
+      </article>
+    );
+  }
 
   return (
     <article className="v2-cs">
@@ -165,7 +237,7 @@ export function ProjectCasePage({ project }) {
           ["Stack", project.stack?.join(" · ")],
           ["Role", project.role],
           ["Live", project.liveUrl
-            ? <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">Open the deployment <Arrow /></a>
+            ? <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.liveLabel || "Open the deployment"} <Arrow /></a>
             : null],
           ["Source", project.repository
             ? <a href={project.repository} target="_blank" rel="noopener noreferrer">Open on GitHub <Arrow /></a>
@@ -224,6 +296,7 @@ export function ProjectCasePage({ project }) {
         context={`I'd like to discuss ${project.title}.`}
         demo={project.demoUrl}
         live={project.liveUrl}
+        liveLabel={project.liveLabel}
         repository={project.repository}
         next={next}
       />

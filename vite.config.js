@@ -2,6 +2,13 @@ import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { syncedProjects } from "./src/v2/synced-work/index.js";
+
+const __dirname = fileURLToPath(new URL(".", import.meta.url));
+const syncedCaseInputs = Object.fromEntries(syncedProjects.map(({ id }) =>
+  [`v2-case-${id}`, resolve(__dirname, `v2/work/${id}/index.html`)]
+));
 
 function localApiRoutes() {
   const routes = new Map([
@@ -53,6 +60,7 @@ export default defineConfig(({ mode }) => {
     build: {
       rollupOptions: {
         input: {
+        ...syncedCaseInputs,
         home: resolve(__dirname, "index.html"),
         "demo-proposal-operations": resolve(__dirname, "v2/demos/proposal-operations/index.html"),
         "case-proposal-operations": resolve(__dirname, "v2/work/proposal-operations/index.html"),

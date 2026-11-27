@@ -1,0 +1,78 @@
+{
+  "id": "beautiful-md",
+  "index": "01",
+  "type": "Built product",
+  "sector": "Document publishing",
+  "category": "Full-Stack Product Engineering",
+  "title": "Beautiful MD",
+  "summary": "A browser-based Markdown workspace for styling, checking, and exporting documents.",
+  "outcome": "Give Markdown authors a direct path from draft to a styled, shareable document.",
+  "stack": [
+    "JavaScript",
+    "HTML/CSS",
+    "IndexedDB",
+    "Google Apps Script"
+  ],
+  "featured": true,
+  "evidence": "built",
+  "status": "Browser app and private Workspace add-on testing",
+  "liveUrl": "https://beautiful-md.netlify.app/",
+  "repository": "https://github.com/Protagonist01/beautiful-md",
+  "lead": "Write in Markdown, preview a typeset page, and export a document suited to print, editing, or sharing.",
+  "challenge": "Markdown makes drafts portable. Preparing one for print or handoff still takes work, especially when the document has charts, local images, tables, or page breaks.",
+  "flow": [
+    {
+      "step": "Open the draft",
+      "detail": "Paste Markdown or import a folder or document package. A zipped Google Docs HTML export provides another path for documents with images."
+    },
+    {
+      "step": "Render and check it",
+      "detail": "The browser parses and sanitizes the document, applies typography and print layout, and reports broken links, missing images and invalid charts."
+    },
+    {
+      "step": "Save or export",
+      "detail": "IndexedDB keeps named documents, attachments, and recoverable drafts in the browser. Export options include styled PDF or PNG, browser-print PDF, editable Word, and a portable ZIP."
+    },
+    {
+      "step": "Hand off from Google Workspace",
+      "detail": "The Apps Script sidebar supports native actions in Docs, Sheets, Slides, and Gmail plus a handoff to the browser renderer."
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Keep the standalone renderer and document library in the browser.",
+      "tradeoff": "Document processing stays local. Recovery depends on the same browser profile unless the user exports a package."
+    },
+    {
+      "decision": "Offer destination-specific exports.",
+      "tradeoff": "Styled, print, and editable outputs each preserve different aspects of the source. Preflight can flag those differences before export."
+    }
+  ],
+  "limits": [
+    "The release checklist records tests on a private Workspace installation. Public Marketplace availability and parity with the public web deployment remain unverified."
+  ],
+  "diagram": "/portfolio-sync/beautiful-md/architecture.svg",
+  "diagramAlt": "Markdown input passes through the browser renderer to document exports. The browser also saves drafts and attachments in IndexedDB.",
+  "diagramCaption": "Browser rendering, export and local document storage.",
+  "coverImage": "/portfolio-sync/beautiful-md/reader.png",
+  "imageAlt": "Beautiful MD reader showing a fictional chart and diagram sample",
+  "gallery": [
+    {
+      "image": "/portfolio-sync/beautiful-md/chart.png",
+      "alt": "Beautiful MD reader showing a sample monthly readership bar chart",
+      "width": 1440,
+      "height": 900,
+      "caption": "The browser renders a bar chart from the built-in Markdown example."
+    },
+    {
+      "image": "/portfolio-sync/beautiful-md/export.png",
+      "alt": "Exported sample with a publishing workflow and readership chart",
+      "caption": "Styled export from the built-in chart and diagram example."
+    },
+    {
+      "video": "/portfolio-sync/beautiful-md/walkthrough.webm",
+      "alt": "Silent Beautiful MD walkthrough from the sample picker to the chart in the reader",
+      "caption": "Open the built-in charts example and jump to the chart from the document contents."
+    }
+  ]
+}

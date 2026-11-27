@@ -1,4 +1,5 @@
 import { automationProjects } from "../features/automation/projectData.js";
+import { syncedProjects } from "./synced-work/index.js";
 
 const clearSkinAnalysisImage = new URL("../../assets/images/v2-work/clear-skin-analysis.webp", import.meta.url).href;
 const clearSkinCartImage = new URL("../../assets/images/v2-work/clear-skin-cart.webp", import.meta.url).href;
@@ -663,7 +664,43 @@ export const projects = [
   },
 ];
 
-export const featuredProjects = projects.filter((project) => project.featured);
+// Case-page shape for the synced projects, kept here rather than in the synced JSON so the
+// portfolio-sync tool still owns those files. "system-design" pages show only a component
+// breakdown with its diagram, the tradeoffs, and demo videos (CasePage.jsx). A section with
+// no content is left out: Beautiful MD has no system design yet, and the two agents' demo
+// videos are still in production, so adding a { video } gallery item is all a video needs.
+const syncedCaseOverrides = {
+  "olist-support": {
+    caseLayout: "system-design",
+    systemDesign: [
+      { step: "Support desk", detail: "Sign-in-protected customer and reviewer screens. The hosted demo accepts built-in fictional order requests only." },
+      { step: "FastAPI console", detail: "Authenticated API with operator and reviewer roles, each scoped to assigned orders." },
+      { step: "Intent router (Nemotron)", detail: "Proposes a route for each request. It can suggest a refund but never authorises one." },
+      { step: "LangGraph workflow and policy", detail: "Checks the route against scoped order and delivery facts, then sends the case to review or to customer confirmation." },
+      { step: "PostgreSQL", detail: "Workflow checkpoints, cases and the simulated refund ledger. Idempotent writes record one receipt per confirmed action." },
+      { step: "Azure Container Apps", detail: "Hosts the desk and API for the fictional-order demo." },
+    ],
+  },
+  "revenue-integrity": {
+    caseLayout: "system-design",
+    systemDesign: [
+      { step: "Operator and reviewer interface", detail: "Walkthrough screens for checking an invoice, requesting a correction and approving it as a separate person." },
+      { step: "FastAPI service", detail: "Signs in each role and serves the walkthrough over registered fictional agreements and invoices." },
+      { step: "Agreement assessment", detail: "A deterministic parser locally; the hosted demo can run a bounded Nemotron assessment, limited by an attempt budget kept in PostgreSQL." },
+      { step: "Reconciliation and approval rules", detail: "Validates the quoted terms, compares them with stored invoice facts using exact arithmetic, and binds a correction to the invoice version." },
+      { step: "PostgreSQL", detail: "Records, proposals and the correction ledger. A retried delivery returns the original receipt instead of booking a second correction." },
+      { step: "Azure Container Apps", detail: "Hosts the sign-in-protected walkthrough." },
+    ],
+  },
+  "beautiful-md": {
+    caseLayout: "system-design",
+  },
+};
+
+const syncedAdditions = syncedProjects
+  .filter(({ id }) => !projects.some((project) => project.id === id))
+  .map((project) => ({ ...project, ...syncedCaseOverrides[project.id] }));
+export const featuredProjects = [...projects, ...syncedAdditions].filter((project) => project.featured);
 
 export const projectNotes = [
   {
@@ -839,18 +876,30 @@ export const archiveProjects = [
   },
 ];
 
+const caseProjects = [...projects, ...archiveProjects, ...syncedAdditions.filter(({ id }) =>
+  !archiveProjects.some((project) => project.id === id) && !projectNotes.some((project) => project.id === id)
+)];
+
+// The newest work leads; any other featured synced project joins at the end.
+const leadingFeaturedIds = ["olist-support", "revenue-integrity", "beautiful-md"];
 const homeFeaturedProjectOrder = [
+  { id: "olist-support", title: "Olist Support Agent" },
+  { id: "revenue-integrity", title: "Revenue Integrity" },
+  { id: "beautiful-md", title: "Beautiful MD" },
   { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
   { id: "aboutface-chatbot", title: "AboutFace Chatbot" },
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },
   { id: "code-review-agent", title: "AI Code Review Agent" },
   { id: "url-shortener", title: "SnipURL" },
   { id: "realtime-chat", title: "Realtime.chat" },
+  ...caseProjects.filter((project) => syncedAdditions.includes(project) && project.featured
+    && !leadingFeaturedIds.includes(project.id))
+    .map(({ id, title }) => ({ id, title })),
 ];
 
 export const homeFeaturedProjects = homeFeaturedProjectOrder
   .map(({ id, title }, index) => {
-    const project = [...projects, ...archiveProjects].find((item) => item.id === id);
+    const project = caseProjects.find((item) => item.id === id);
 
     return project
       ? {
@@ -862,8 +911,8 @@ export const homeFeaturedProjects = homeFeaturedProjectOrder
   })
   .filter(Boolean);
 
-export const caseStudies = [...projects, ...archiveProjects];
-export const allWork = [...projects, ...archiveProjects, ...projectNotes];
+export const caseStudies = caseProjects;
+export const allWork = [...caseStudies, ...projectNotes];
 
 export const demonstrations = [
   {
