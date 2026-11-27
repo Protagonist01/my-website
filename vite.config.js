@@ -79,7 +79,6 @@ export default defineConfig(({ mode }) => {
         "v2-note-portfolio-website": resolve(__dirname, "v2/work/portfolio-website/index.html"),
         "v2-case-testimony-operations": resolve(__dirname, "v2/work/archive/testimony-operations/index.html"),
         "v2-case-fruit-quality": resolve(__dirname, "v2/work/archive/fruit-quality/index.html"),
-        "v2-proof": resolve(__dirname, "v2/proof/index.html"),
         "v2-contact": resolve(__dirname, "v2/contact/index.html"),
         "v2-storecraft": resolve(__dirname, "v2/storecraft/index.html"),
         "v2-referrals": resolve(__dirname, "v2/referrals/index.html"),

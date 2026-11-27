@@ -969,7 +969,6 @@ Example:
 
 - Home: /v2/
 - Featured Projects: /#work (the Featured Projects section of the home page; the dedicated /v2/work/ page was removed and now redirects there)
-- Evidence: /v2/proof/
 - Contact: /v2/contact/
 
 ### Home Sections

@@ -21,6 +21,11 @@ const FOLLOW_UP_PROMPT_DELAY_MAX_MS = 20_000;
 const SECTION_PROMPT_SETTLE_MIN_MS = 3_000;
 const SECTION_PROMPT_SETTLE_MAX_MS = 5_000;
 const PROMPT_VISIBLE_MS = 5_000;
+// The cloud is a nudge, not a ticker: a few per page, gone once the reader scrolls on,
+// and faded out rather than unmounted so it never blinks off mid-read.
+const MAX_PROMPTS_PER_PAGE = 3;
+const PROMPT_EXIT_MS = 220;
+const PROMPT_SCROLL_DISMISS_PX = 160;
 const CHAT_TRANSITION_MS = 800;
 const COMMERCE_CONTEXT_PATTERN = /\b(e-?commerce|shopify|online store|store pressure|revenue leak|cart|checkout|returns?|retention|inventory|margin|commerce brief)\b/i;
 const COMMERCE_ROUTE_PATTERN = /\/storecraft(?:\/|%20|$)|\/work\/clear-skin(?:\/|$)/i;
@@ -228,6 +233,7 @@ export default function PortfolioGuide({ page }) {
   const [activeSection, setActiveSection] = useState("");
   const [atFloor, setAtFloor] = useState(false);
   const [prompt, setPrompt] = useState(null);
+  const [promptLeaving, setPromptLeaving] = useState(false);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [activeCard, setActiveCard] = useState(null);
@@ -252,6 +258,7 @@ export default function PortfolioGuide({ page }) {
   );
   const observedPromptContextRef = useRef(promptContextKey);
   const hasShownPromptOnPageRef = useRef(false);
+  const promptsShownOnPageRef = useRef(0);
 
   useEffect(() => {
     if (!isCasePage) return undefined;
@@ -439,6 +446,7 @@ export default function PortfolioGuide({ page }) {
       || sessionStorage.getItem(brand.storage.promptMuted) === "1"
       || prompt
       || feedback
+      || promptsShownOnPageRef.current >= MAX_PROMPTS_PER_PAGE
     ) return undefined;
 
     const isFirstPromptOnPage = !hasShownPromptOnPageRef.current;
@@ -459,6 +467,7 @@ export default function PortfolioGuide({ page }) {
       promptIndexRef.current += 1;
       lastPromptContextRef.current = promptContextKey;
       hasShownPromptOnPageRef.current = true;
+      promptsShownOnPageRef.current += 1;
       sessionStorage.setItem(brand.storage.promptCount, String(promptIndexRef.current));
       sessionStorage.setItem(brand.storage.promptContext, promptContextKey);
       setPrompt(nextPrompt);
@@ -469,8 +478,27 @@ export default function PortfolioGuide({ page }) {
 
   useEffect(() => {
     if (!prompt) return undefined;
-    const hideTimer = window.setTimeout(() => setPrompt(null), PROMPT_VISIBLE_MS);
-    return () => window.clearTimeout(hideTimer);
+    let exitTimer = 0;
+    const startY = window.scrollY;
+    const retire = () => {
+      if (exitTimer) return;
+      setPromptLeaving(true);
+      exitTimer = window.setTimeout(() => {
+        setPrompt(null);
+        setPromptLeaving(false);
+      }, PROMPT_EXIT_MS);
+    };
+    const onScroll = () => {
+      if (Math.abs(window.scrollY - startY) > PROMPT_SCROLL_DISMISS_PX) retire();
+    };
+    const hideTimer = window.setTimeout(retire, PROMPT_VISIBLE_MS);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.clearTimeout(hideTimer);
+      window.clearTimeout(exitTimer);
+      window.removeEventListener("scroll", onScroll);
+      setPromptLeaving(false);
+    };
   }, [prompt]);
 
   useEffect(() => {
@@ -765,7 +793,7 @@ export default function PortfolioGuide({ page }) {
       )}
 
       {!open && !feedback && prompt && (
-        <div className="hf-guide-prompt" role="status">
+        <div className={`hf-guide-prompt${promptLeaving ? " is-leaving" : ""}`} role="status">
           <span className="hf-guide-prompt__cloud" aria-hidden="true">
             {Array.from({ length: 8 }, (_, index) => (
               <i key={index} />

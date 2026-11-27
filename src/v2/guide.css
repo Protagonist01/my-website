@@ -342,6 +342,11 @@
   will-change: opacity, transform;
 }
 
+.hf-guide-prompt.is-leaving {
+  animation: hf-guide-prompt-out 220ms cubic-bezier(.4, 0, .2, 1) both;
+  pointer-events: none;
+}
+
 .hf-guide.has-prompt .hf-guide-launcher .hf-guide-avatar img,
 .hf-guide.has-prompt .hf-guide-launcher .hf-guide-avatar__monogram {
   animation-play-state: paused;
@@ -1815,6 +1820,11 @@ body.hf-guide-max-open {
 @keyframes hf-guide-prompt-in {
   from { opacity: 0; transform: translateY(14px) scale(.96); }
   to { opacity: 1; transform: none; }
+}
+
+@keyframes hf-guide-prompt-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(8px) scale(.97); }
 }
 
 @keyframes hf-guide-feedback-in {

@@ -21,7 +21,9 @@ test("navigation is declared in exactly one place", () => {
 test("replicaContent and V2App consume the shared navigation", () => {
   assert.match(replicaSource, /import \{[^}]*\bnavigation\b[^}]*\} from "\.\/data\.js"/);
   assert.match(replicaSource, /^\s*navigation,$/m);
-  assert.match(appSource, /import \{[^}]*\bnavigation\b[^}]*\} from "\.\/data\.js"/);
+  // Every non-home page renders the shared floating nav, which reads replicaContent.navigation.
+  assert.match(appSource, /<FloatingNavigation brand=\{brand\} \/>/);
+  assert.doesNotMatch(appSource, /function Header\(/);
   assert.doesNotMatch(appSource, /PROJECT_PAGE_NAVIGATION/);
 });
 

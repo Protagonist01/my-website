@@ -48,8 +48,8 @@ class AssistantTests(unittest.TestCase):
 
     def test_navigation_actions_are_allowlisted(self):
         self.assertIsNone(assistant._validate_action({"type": "navigate", "label": "Bad", "target": "https://example.com"}))
-        valid = assistant._validate_action({"type": "navigate", "label": "Proof", "target": "/v2/proof/"})
-        self.assertEqual(valid["target"], "/v2/proof/")
+        valid = assistant._validate_action({"type": "navigate", "label": "Contact", "target": "/v2/contact/"})
+        self.assertEqual(valid["target"], "/v2/contact/")
 
     def test_python_routes_match_the_existing_javascript_registry(self):
         source = (Path(__file__).parents[1] / "api" / "_lib" / "config.js").read_text(encoding="utf-8")

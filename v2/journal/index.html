@@ -267,6 +267,7 @@
     .journal-content {
       padding: 52px 60px 120px;
       max-width: 960px;
+      min-width: 0;
       position: relative;
     }
 
@@ -421,6 +422,7 @@
       padding: 1.5px 5px;
       border-radius: 4px;
       color: var(--ink-red);
+      overflow-wrap: anywhere;
     }
 
     /* ── Margin annotation (handwritten note) ── */
@@ -753,7 +755,7 @@
     /* ── Responsive ── */
     @media (max-width: 1024px) {
       .metrics { grid-template-columns: repeat(2, 1fr); }
-      .layout-wrapper { grid-template-columns: 1fr; }
+      .layout-wrapper { grid-template-columns: minmax(0, 1fr); }
       .sidebar { display: none; }
       .journal-content { padding: 36px 24px 80px; }
       .journal-content::before { display: none; }
