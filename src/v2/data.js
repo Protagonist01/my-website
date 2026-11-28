@@ -717,6 +717,16 @@ const syncedCaseOverrides = {
     // The featured card keeps the reader still as its cover; "View demo" opens the
     // walkthrough video in the case study's Demo video section.
     demoVideoUrl: "/v2/work/beautiful-md/#demo",
+    // The full narrated demo (1:38, with sound) replaces the synced 10-second silent clip.
+    gallery: [
+      {
+        video: "/portfolio-sync/beautiful-md/demo.mp4",
+        poster: "/portfolio-sync/beautiful-md/demo-poster.jpg",
+        sound: true,
+        alt: "Beautiful MD product demo video, with sound",
+        caption: "The full Beautiful MD demo, with sound.",
+      },
+    ],
   },
 };
 
