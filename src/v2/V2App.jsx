@@ -268,6 +268,7 @@ function WorkSpecialisations({ items = projects }) {
                     <p>{project.summary}</p>
                     <nav className="v2-works-entry__actions" aria-label={`${project.title} actions`}>
                       <a className="site-quick-link" href={project.href} tabIndex={index === 0 ? 0 : -1}>View case study</a>
+                      {project.demoVideoUrl && <a className="site-quick-link" href={project.demoVideoUrl} tabIndex={index === 0 ? 0 : -1}>View demo</a>}
                       {project.liveUrl && <a className="site-quick-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>{project.liveLabel || "Open live app"}</a>}
                       {project.repository && <a className="site-quick-link" href={project.repository} target="_blank" rel="noopener noreferrer" tabIndex={index === 0 ? 0 : -1}>GitHub</a>}
                     </nav>
@@ -287,6 +288,7 @@ function WorkSpecialisations({ items = projects }) {
             <p>{project.summary}</p>
             <nav className="v2-works-mobile__actions" aria-label={`${project.title} actions`}>
               <a className="site-quick-link" href={project.href}>View case study</a>
+              {project.demoVideoUrl && <a className="site-quick-link" href={project.demoVideoUrl}>View demo</a>}
               {project.liveUrl && <a className="site-quick-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">{project.liveLabel || "Open live app"}</a>}
               {project.repository && <a className="site-quick-link" href={project.repository} target="_blank" rel="noopener noreferrer">GitHub</a>}
             </nav>

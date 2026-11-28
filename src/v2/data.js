@@ -714,10 +714,9 @@ const syncedCaseOverrides = {
   },
   "beautiful-md": {
     caseLayout: "system-design",
-    // Featured card plays the walkthrough; the reader still is its poster.
-    coverVideo: "/portfolio-sync/beautiful-md/walkthrough.webm",
-    liveLabel: "View demo",
-    imageAlt: "Beautiful MD walkthrough: opening the built-in charts example and jumping to its chart",
+    // The featured card keeps the reader still as its cover; "View demo" opens the
+    // walkthrough video in the case study's Demo video section.
+    demoVideoUrl: "/v2/work/beautiful-md/#demo",
   },
 };
 
