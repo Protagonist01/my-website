@@ -221,8 +221,13 @@ function useWorkSpecialisationsMotion(sectionRef) {
 }
 
 function ProjectMedia({ project, compact = false, artifact = false, loading = "lazy" }) {
+  const coverStyle = { backgroundColor: project.coverBackground, "--cover-position": project.coverPosition, "--cover-fit": project.coverFit };
+  // A cover video plays muted and looped in the card; the cover image is its poster.
+  if (project.coverVideo && compact) {
+    return <video className="v2-project-cover" src={project.coverVideo} poster={project.coverImage} aria-label={project.imageAlt} autoPlay muted loop playsInline preload={loading === "eager" ? "auto" : "metadata"} style={coverStyle} />;
+  }
   if (project.coverImage && (compact || project.coverInHero)) {
-    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={{ backgroundColor: project.coverBackground, "--cover-position": project.coverPosition }} />;
+    return <img className="v2-project-cover" src={project.coverImage} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} style={coverStyle} />;
   }
   if (hasProjectVisual(project.id)) return <ProjectVisual id={project.id} compact={compact} artifact={artifact} />;
   return <img src={project.image} alt={project.imageAlt} loading={loading} fetchPriority={loading === "eager" ? "high" : "auto"} />;

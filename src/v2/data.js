@@ -672,6 +672,10 @@ export const projects = [
 const syncedCaseOverrides = {
   "olist-support": {
     caseLayout: "system-design",
+    // Featured card mockup composed from real demo screens (docs/project-cover-mockups.md).
+    coverImage: "/portfolio-sync/olist-support/cover-mockup.webp",
+    imageAlt: "Product mockup of the Olist support desk: a reviewer weighs a fictional $37.25 refund request while the customer's card asks them to confirm the exact amount",
+    coverBackground: "#17323a",
     systemDesign: [
       { step: "Support desk", detail: "Sign-in-protected customer and reviewer screens. The hosted demo accepts built-in fictional order requests only." },
       { step: "FastAPI console", detail: "Authenticated API with operator and reviewer roles, each scoped to assigned orders." },
@@ -683,6 +687,10 @@ const syncedCaseOverrides = {
   },
   "revenue-integrity": {
     caseLayout: "system-design",
+    // Featured card mockup composed from the real walkthrough screen (docs/project-cover-mockups.md).
+    coverImage: "/portfolio-sync/revenue-integrity/cover-mockup.webp",
+    imageAlt: "Product mockup of Revenue Integrity: a correction from 35.00 to 30.00 SIM is ready for review, with a separate reviewer's approval card",
+    coverBackground: "#8f4a33",
     systemDesign: [
       { step: "Operator and reviewer interface", detail: "Walkthrough screens for checking an invoice, requesting a correction and approving it as a separate person." },
       { step: "FastAPI service", detail: "Signs in each role and serves the walkthrough over registered fictional agreements and invoices." },
@@ -694,6 +702,9 @@ const syncedCaseOverrides = {
   },
   "beautiful-md": {
     caseLayout: "system-design",
+    // Featured card plays the walkthrough; the reader still is its poster.
+    coverVideo: "/portfolio-sync/beautiful-md/walkthrough.webm",
+    imageAlt: "Beautiful MD walkthrough: opening the built-in charts example and jumping to its chart",
   },
 };
 
