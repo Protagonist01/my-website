@@ -1,0 +1,76 @@
+{
+  "id": "olist-support",
+  "index": "02",
+  "type": "Built product",
+  "sector": "E-commerce support",
+  "category": "AI Engineering",
+  "title": "Olist Support Agent",
+  "summary": "A support desk that routes fictional order requests and gates simulated refunds with policy and review.",
+  "outcome": "Let reviewers trace an order request from customer intent to an exact, auditable simulated action.",
+  "stack": [
+    "Python",
+    "FastAPI",
+    "LangGraph",
+    "PostgreSQL",
+    "Azure Container Apps",
+    "Nemotron"
+  ],
+  "featured": true,
+  "evidence": "built",
+  "status": "Sign-in-protected fictional-order demo",
+  "liveUrl": "https://olist-portfolio-stage.livelysky-df793877.canadacentral.azurecontainerapps.io/",
+  "liveLabel": "Open demo sign-in",
+  "sourceNote": "Source reviewed from the project worktree.",
+  "lead": "An order support desk that uses a model to propose a route and puts refund decisions behind policy, review and customer confirmation.",
+  "challenge": "A support request can describe a delivery question, a damaged order, or a refund without using those labels. The desk needs to interpret the request while keeping authority to issue a refund separate.",
+  "flow": [
+    {
+      "step": "Route the request",
+      "detail": "The hosted demo accepts built-in fictional requests and uses Nemotron to propose an intent route."
+    },
+    {
+      "step": "Read scoped order evidence",
+      "detail": "Application policy combines the route with scoped order and delivery facts to determine the next step."
+    },
+    {
+      "step": "Review the exact action",
+      "detail": "Where required, a separate reviewer assesses the proposal. The customer confirms the specific action and amount."
+    },
+    {
+      "step": "Record the simulation",
+      "detail": "The controlled workflow guards the PostgreSQL write and uses idempotency to avoid duplicate simulated refund receipts."
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Use the model for routing and keep action rules in application code.",
+      "tradeoff": "Unclear requests can be handed back for review. Supported actions and acceptable evidence have to be defined in advance."
+    },
+    {
+      "decision": "Bind review and confirmation to an exact action.",
+      "tradeoff": "Changes to the action or amount require fresh confirmation, keeping approval tied to what the customer sees."
+    }
+  ],
+  "limits": [
+    "The Azure demo uses built-in fictional orders. Recorded refund receipts represent simulated actions without payment settlement."
+  ],
+  "diagram": "/portfolio-sync/olist-support/architecture.svg",
+  "diagramAlt": "Fictional requests are routed by Nemotron. Policy and scoped facts determine whether review and confirmation can lead to a simulated receipt.",
+  "diagramCaption": "The model proposes a route. Policy and confirmation gate the simulated write.",
+  "coverImage": "/portfolio-sync/olist-support/refund-review.png",
+  "imageAlt": "Olist support console showing a fictional refund review",
+  "gallery": [
+    {
+      "image": "/portfolio-sync/olist-support/poster.png",
+      "alt": "Olist Support Agent walkthrough title card",
+      "width": 1920,
+      "height": 1080,
+      "caption": "Title card for the fictional-order walkthrough."
+    },
+    {
+      "image": "/portfolio-sync/olist-support/refund-review.png",
+      "alt": "Support console with a simulated refund case",
+      "caption": "A fictional refund case at the review stage."
+    }
+  ]
+}

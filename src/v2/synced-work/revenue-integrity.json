@@ -1,0 +1,69 @@
+{
+  "id": "revenue-integrity",
+  "index": "03",
+  "type": "Built product",
+  "sector": "Billing operations",
+  "category": "AI Engineering",
+  "title": "Revenue Integrity",
+  "summary": "An invoice review workflow that compares bills with cited agreement terms and records approved corrections.",
+  "outcome": "Give a billing reviewer the source evidence and approval history behind a proposed correction.",
+  "stack": [
+    "Python",
+    "FastAPI",
+    "PostgreSQL",
+    "JavaScript",
+    "Azure Container Apps",
+    "Nemotron"
+  ],
+  "featured": true,
+  "evidence": "built",
+  "status": "Sign-in-protected fictional-invoice walkthrough",
+  "liveUrl": "https://revenue-portfolio-recording.livelysky-df793877.canadacentral.azurecontainerapps.io/walkthrough",
+  "liveLabel": "Open demo sign-in",
+  "sourceNote": "Source reviewed from the project worktree.",
+  "lead": "Review the difference between an invoice and its agreement, approve the exact correction, and verify the resulting receipt.",
+  "challenge": "A billed amount can differ from the agreement governing it. A correction needs the cited terms, the current invoice version, and a clear record of who approved it.",
+  "flow": [
+    {
+      "step": "Find the governing terms",
+      "detail": "The local walkthrough parses registered fictional agreements deterministically. The hosted demo can run a bounded model assessment on those registered inputs."
+    },
+    {
+      "step": "Reconcile the invoice",
+      "detail": "The service validates the quoted terms and compares amounts against PostgreSQL-backed invoice facts with exact arithmetic."
+    },
+    {
+      "step": "Approve the correction",
+      "detail": "A separate reviewer approves the proposed correction tied to the source, invoice version, and action."
+    },
+    {
+      "step": "Apply and verify",
+      "detail": "The operator applies the correction. The ledger records a receipt and returns the same receipt for duplicate delivery."
+    }
+  ],
+  "decisions": [
+    {
+      "decision": "Keep model evidence validation and reconciliation separate from approval.",
+      "tradeoff": "An agreement assessment can supply a citation. Failed or uncertain assessments still require review."
+    },
+    {
+      "decision": "Bind the correction to the invoice version and use a durable receipt.",
+      "tradeoff": "A changed invoice needs a new review. Delivery can be retried without booking the same correction twice."
+    }
+  ],
+  "limits": [
+    "The walkthrough uses fictional invoices. Performance on unseen customer agreements, missed discrepancies, and false alarms remains unqualified."
+  ],
+  "diagram": "/portfolio-sync/revenue-integrity/architecture.svg",
+  "diagramAlt": "Agreement evidence and invoice facts feed reconciliation. Separate review gates a transactional correction and ledger receipt.",
+  "diagramCaption": "Agreement evidence, human review and the correction ledger.",
+  "coverImage": "/portfolio-sync/revenue-integrity/review.webp",
+  "imageAlt": "Revenue Integrity showing a proposed correction and its agreement evidence",
+  "gallery": [
+    {
+      "image": "/portfolio-sync/revenue-integrity/walkthrough.gif",
+      "alt": "Revenue Integrity operator and reviewer walkthrough with fictional billing data",
+      "caption": "Existing local walkthrough showing review, application and duplicate-delivery handling."
+    }
+  ]
+}

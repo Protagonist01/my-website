@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 378" role="img" aria-labelledby="title">
+  <title id="title">Revenue Integrity architecture</title>
+  <rect width="400" height="378" rx="12" fill="#0f1a17"/>
+  <g font-family="system-ui, sans-serif">
+  <rect x="28" y="25" width="344" height="65" rx="7" fill="#1d3029" stroke="#466154"/>
+  <text x="48" y="52" font-size="17" font-weight="700" fill="#f8f4eb">Agreement and invoice</text>
+  <text x="48" y="73" font-size="13" fill="#bcd1c4">Registered demo inputs</text>
+  <rect x="28" y="113" width="344" height="65" rx="7" fill="#1d3029" stroke="#466154"/>
+  <text x="48" y="140" font-size="17" font-weight="700" fill="#f8f4eb">Reconciliation</text>
+  <text x="48" y="161" font-size="13" fill="#bcd1c4">Citations and amount check</text>
+  <rect x="28" y="201" width="344" height="65" rx="7" fill="#1d3029" stroke="#466154"/>
+  <text x="48" y="228" font-size="17" font-weight="700" fill="#f8f4eb">Separate approval</text>
+  <text x="48" y="249" font-size="13" fill="#bcd1c4">Approve exact correction</text>
+  <rect x="28" y="289" width="344" height="65" rx="7" fill="#1d3029" stroke="#466154"/>
+  <text x="48" y="316" font-size="17" font-weight="700" fill="#f8f4eb">PostgreSQL</text>
+  <text x="48" y="337" font-size="13" fill="#bcd1c4">Idempotent ledger receipt</text>
+  </g>
+  <g fill="none" stroke="#bcd1c4" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M200 93v17 m-4 -4 4 4 4 -4"/>
+    <path d="M200 181v17 m-4 -4 4 4 4 -4"/>
+    <path d="M200 269v17 m-4 -4 4 4 4 -4"/>
+
+  </g>
+</svg>
