@@ -913,7 +913,6 @@ const homeFeaturedProjectOrder = [
   { id: "retrieval-analytics", title: "Retrieval-Augmented Analytics" },
   { id: "aboutface-chatbot", title: "AboutFace Chatbot" },
   { id: "self-healing-monitor", title: "Self-Healing Monitor" },
-  { id: "code-review-agent", title: "AI Code Review Agent" },
   { id: "url-shortener", title: "SnipURL" },
   { id: "realtime-chat", title: "Realtime.chat" },
   ...caseProjects.filter((project) => syncedAdditions.includes(project) && project.featured
