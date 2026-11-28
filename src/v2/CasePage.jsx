@@ -92,7 +92,8 @@ function Gallery({ items }) {
       {items.map((item) => (
         <figure key={item.image || item.video}>
           {item.video
-            ? <video src={item.video} aria-label={item.alt} controls muted playsInline preload="metadata" />
+            // Silent clips stay muted; a narrated demo (`sound: true`) plays with its audio.
+            ? <video src={item.video} poster={item.poster} aria-label={item.alt} controls muted={!item.sound} playsInline preload="metadata" />
             : <img src={item.image} alt={item.alt} width={item.width} height={item.height} loading="lazy" />}
           <figcaption>{item.caption}</figcaption>
         </figure>
