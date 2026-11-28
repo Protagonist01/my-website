@@ -684,6 +684,12 @@ const syncedCaseOverrides = {
       { step: "PostgreSQL", detail: "Workflow checkpoints, cases and the simulated refund ledger. Idempotent writes record one receipt per confirmed action." },
       { step: "Azure Container Apps", detail: "Hosts the desk and API for the fictional-order demo." },
     ],
+    diagrams: [
+      { src: "/portfolio-sync/olist-support/diagrams/00-overview.webp", alt: "Olist Support Agent system overview: evidence from assigned fictional orders, a LangGraph workflow where Nemotron proposes an intent and policy checks it, role-based operator, reviewer and customer accounts, PostgreSQL stores, and Azure hosting", caption: "00 · Overview. Evidence, the decision workflow, the people involved, storage and delivery." },
+      { src: "/portfolio-sync/olist-support/diagrams/01-request-anatomy.webp", alt: "Anatomy of a support request: the desk saves the request, Nemotron proposes an intent, policy checks it, and the case ends as needs review, status recorded or customer confirmation required", caption: "01 · Anatomy of a support request. Saved first, interpreted, checked, then recorded." },
+      { src: "/portfolio-sync/olist-support/diagrams/02-money-authority.webp", alt: "How a demo refund is authorized: Nemotron proposes, policy checks, a reviewer approves when required, the customer confirms the exact refund, and PostgreSQL records it with a receipt", caption: "02 · How a demo refund is authorized. The customer confirms the exact refund before the ledger records it." },
+      { src: "/portfolio-sync/olist-support/diagrams/03-azure-delivery.webp", alt: "Shipping to Azure: GitHub Actions publishes a pinned image, Azure Container Apps runs the desk inside a private network with private PostgreSQL, and Nemotron is called through OpenRouter", caption: "03 · Shipping to Azure. Delivered from main, run in a private network." },
+    ],
   },
   "revenue-integrity": {
     caseLayout: "system-design",
@@ -699,11 +705,18 @@ const syncedCaseOverrides = {
       { step: "PostgreSQL", detail: "Records, proposals and the correction ledger. A retried delivery returns the original receipt instead of booking a second correction." },
       { step: "Azure Container Apps", detail: "Hosts the sign-in-protected walkthrough." },
     ],
+    diagrams: [
+      { src: "/portfolio-sync/revenue-integrity/diagrams/00-overview.webp", alt: "Revenue Integrity Agent system overview: SHA-256 pinned agreement and billing evidence, a deterministic check with a Nemotron cross-check, two-person approval, a PostgreSQL ledger, and Azure delivery", caption: "00 · Overview. Evidence, the agreement check, two-person approval, the ledger and delivery." },
+      { src: "/portfolio-sync/revenue-integrity/diagrams/01-correction-anatomy.webp", alt: "Anatomy of one correction: registered input is checked through preflight, parsing, reconciliation and a Nemotron cross-check, then proposed, reviewed and applied once with a receipt", caption: "01 · Anatomy of one correction. Checked, requested, approved by someone else and committed once." },
+      { src: "/portfolio-sync/revenue-integrity/diagrams/02-money-authority.webp", alt: "Who can change an invoice: session, document binding, reconciler, reviewer and PostgreSQL each hold a separate key, with transaction guards and failure handling", caption: "02 · Who can change an invoice. Five independent keys stand between a finding and a committed correction." },
+      { src: "/portfolio-sync/revenue-integrity/diagrams/03-evidence-boundaries.webp", alt: "Evidence boundaries: real CUAD contracts, constructed billing worlds and signed public records are each scored on their own, and answer keys never reach the agent", caption: "03 · Evidence boundaries. Each kind of evidence is scored apart." },
+    ],
   },
   "beautiful-md": {
     caseLayout: "system-design",
     // Featured card plays the walkthrough; the reader still is its poster.
     coverVideo: "/portfolio-sync/beautiful-md/walkthrough.webm",
+    liveLabel: "View demo",
     imageAlt: "Beautiful MD walkthrough: opening the built-in charts example and jumping to its chart",
   },
 };

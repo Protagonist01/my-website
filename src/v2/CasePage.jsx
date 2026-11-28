@@ -150,18 +150,24 @@ function Foot({ context, ctaLabel = "Discuss this work", live, demo, liveLabel =
 function SystemDesignBody({ project }) {
   const videos = (project.gallery || []).filter((item) => item.video);
   const hasDesign = project.systemDesign?.length > 0;
+  // A diagram series (overview first, then zoom-ins) replaces the single diagram. The
+  // diagrams are dense, so each opens at full size in a new tab.
+  const diagrams = project.diagrams
+    || (project.diagram ? [{ src: project.diagram, alt: project.diagramAlt, caption: project.diagramCaption }] : []);
 
   return (
     <>
       {hasDesign && (
         <Block label="System design" id="system-design">
           <Flow items={project.systemDesign} />
-          {project.diagram && (
-            <figure className="v2-cs__diagram">
-              <img src={project.diagram} alt={project.diagramAlt} loading="lazy" />
-              {project.diagramCaption && <figcaption>{project.diagramCaption}</figcaption>}
+          {diagrams.map((diagram) => (
+            <figure className="v2-cs__diagram" key={diagram.src}>
+              <a href={diagram.src} target="_blank" rel="noopener noreferrer" aria-label={`Open full size: ${diagram.alt}`}>
+                <img src={diagram.src} alt={diagram.alt} loading="lazy" />
+              </a>
+              {diagram.caption && <figcaption>{diagram.caption}</figcaption>}
             </figure>
-          )}
+          ))}
         </Block>
       )}
 

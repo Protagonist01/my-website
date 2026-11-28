@@ -289,6 +289,7 @@
 /* Diagram and gallery */
 
 .v2-cs__diagram { margin: var(--space-12) 0 0; }
+.v2-cs__diagram a { display: block; cursor: zoom-in; }
 
 .v2-cs__diagram img {
   display: block;
